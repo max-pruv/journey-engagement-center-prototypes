@@ -1241,37 +1241,6 @@ const STAGES=[
     note:"One honest attempt, then stop. Most suppressed messages come from here."}
 ];
 
-const ACTIVITY=[
-  {who:"Ana R.",id:"+1 415 ••• 2140",stage:"First-time buyer",eng:"Cross-sell & complements",s:"ACE",
-   why:"Day 51 of a 62-day second-order window; bought Winter Tights, never a base layer.",when:"12 min ago",st:"pending",
-   conv:[["out","Hey Ana — how are the Winter Tights holding up? Most people pair them with the Merino base layer once it drops below 5°. Want me to show you the two that fit your size?"]]},
-  {who:"Marc D.",id:"+33 6 •• •• 71",stage:"VIP",eng:"Replenishment & reorder",s:"ACE",
-   why:"2.1× past his own 38-day reorder gap. No open ticket, no recent return.",when:"18 min ago",st:"pending",
-   conv:[["out","Marc — it's been a while. You usually restock the care kit around now. Anything changed, or should I set one aside before Friday?"]]},
-  {who:"Sam K.",id:"+44 7•• ••• 903",stage:"At risk",eng:"Fit-return recovery",s:"Custom",
-   why:"Returned for fit last spring; the dial was redesigned in March.",when:"41 min ago",st:"sent",
-   conv:[["out","Hi Sam — you sent back the shorts last spring because the length ran short. We changed the dial and the cut in March. Want me to work out your size properly this time?"],
-         ["in","oh really? yeah I'd give it another go"],
-         ["out","Great. What's your usual waist and inseam? I'll pick the exact size and returns are free if it's still off."]]},
-  {who:"Lena P.",id:"+49 15• ••• 22",stage:"Repeat",eng:"Replenishment due",s:"Default",
-   why:"Day 40 on a 38-day median cadence for care products.",when:"1 h ago",st:"sent",
-   conv:[["out","Lena, you're about due for the care kit refill — want the same one, or the new concentrate?"],["in","same one please"],["out","Done — here's the link, it's in your basket ready to go."]]},
-  {who:"Tom W.",id:"+1 206 ••• 8871",stage:"First-time buyer",eng:"Second-order window",s:"ACE",
-   why:"Day 49 of the window, but he has an open ticket about a delayed parcel.",when:"1 h ago",st:"suppressed",
-   sup:"Open support ticket — the engine will retry once it's resolved.",conv:[]},
-  {who:"Priya S.",id:"+1 646 ••• 3390",stage:"VIP",eng:"Post-ticket sizing upsell",s:"ACE",
-   why:"Asked about sizing in chat yesterday, left without ordering.",when:"2 h ago",st:"dry",
-   conv:[["out","Priya — you asked about the 38 in the shell yesterday. It runs true to size with a mid-layer underneath. Want me to hold one?"]]},
-  {who:"Jonas M.",id:"+46 7• ••• 12",stage:"Dormant",eng:"Win-back",s:"Default",
-   why:"210 days since last order, still opted in.",when:"3 h ago",st:"suppressed",
-   sup:"Frequency cap — already had 3 messages this week.",conv:[]},
-  {who:"Chloé B.",id:"+33 7 •• •• 08",stage:"Repeat",eng:"Helmet cross-sell",s:"Custom",
-   why:"Bought a frame 5 days ago, zero helmets in her lifetime orders.",when:"4 h ago",st:"sent",
-   conv:[["out","Chloé — nice frame. One thing you'll want before the first proper ride: a helmet that actually fits the way you ride. Want me to narrow it to two?"],["in","sure"],["out","Here they are — both size S, both in stock. Free returns if the fit's off."]]}
-];
-const ACT_ST={pending:["Pending approval","tag-orange"],sent:["Sent","tag-green"],
-  dry:["Would have sent","tag-blue"],suppressed:["Suppressed","tag-grey"]};
-
 const VARIANTS=[
   {k:"A",n:"Answer the objection",ins:"Lead with why the mid-layer matters below 5°. No offer at all in the first message. If they ask about price, answer plainly and stop.",
    off:"No offer",sent:137,rep:"11.7%",cvr:"6.6%",rev:"$4.82",marg:"full margin",win:true},
@@ -1619,59 +1588,10 @@ function renderEng(){
   $("#navEngCount").textContent=ENG.filter(r=>r.st==="on").length;
 }
 
-function insBody(r){
-  const custom = r.ins==="Customized";
-  return `
-  <div class="row between wrap gap-sm">
-    <div class="row gap-xs wrap">
-      <span class="tag ${SRC[r.s].tag}"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span>
-      <span class="tag tag-grey">${r.trg}</span>
-      ${r.sent?`<span class="tag tag-grey">${fmt(r.sent)} sent · 30d</span>`:""}
-      ${r.cvr!=="—"?`<span class="tag tag-green">${r.cvr} CVR</span>`:""}
-    </div>
-    <div class="row gap-xs"><span class="t-sm sec">Status</span><span class="toggle ${r.st==="on"?"on":""}" data-toggle></span></div>
-  </div>
-
-  <div class="col gap-xs">
-    <div class="row between">
-      <div class="row gap-xs">
-        <h3 class="h-md">Instruction</h3>
-        <span class="tag ${custom?"tag-purple":"tag-grey"}">${custom?"Customized":"Default"}</span>
-      </div>
-      ${custom?`<button class="btn btn-tertiary sm ter">Reset to default</button>`:""}
-    </div>
-    <p class="t-sm sec">One instruction per engagement. It's a skill the agent loads when this engagement fires — nothing else stacks on top of it.</p>
-    <div class="card pad-md" style="background:var(--grey-50)">
-      <div class="row between" style="margin-bottom:var(--xs)">
-        <span class="mono ter">skill · ${r.n.toLowerCase().replace(/[^a-z0-9]+/g,"-")}</span>
-        <span class="t-xs ter">v4 · edited 3 days ago by Maria</span>
-      </div>
-      <textarea class="textarea" style="min-height:150px;background:var(--white)">${instructionText(r)}</textarea>
-    </div>
-    <div class="row gap-xs">
-      <span class="t-xs ter">Guardrails apply on top and can't be overridden here:</span>
-      <span class="tag tag-grey">≤3 msg / week</span><span class="tag tag-grey">quiet 21:00–09:00</span><span class="tag tag-grey">discount ≤10%</span>
-    </div>
-  </div>
-
-  <div class="col gap-xs">
-    <h3 class="h-md">What it produced last time</h3>
-    <div class="phone">
-      <div class="bubble out">${samplePreview(r)}</div>
-      <div class="bubble in">yes please, I'm a medium</div>
-      <div class="bubble out">Perfect — medium it is. Here are the two that work with what you already have: [link]. Free returns if the fit's off.</div>
-    </div>
-  </div>`;
-}
 function instructionText(r){
   if(r.s==="ACE") return "State the reason we're reaching out in the first line. Name the exact product they bought, never the category. Suggest the companion item, not a bigger version of the same thing. No offer in the first message — if they hesitate, use the loyalty levers before any discount. Keep it to two sentences.";
   if(r.s==="Custom") return "Lead with fit and safety, never price. Do not discount in the first message. If the shopper asks a sizing question, answer it properly and offer to hold the item. Stop selling the moment they raise a problem with an existing order.";
   return "Remind them what's in the cart by name. Offer sizing help before any incentive. Never promise a delivery date. If they reply with a support question, answer it and hand off rather than continuing to sell.";
-}
-function samplePreview(r){
-  if(r.s==="ACE") return "Hey Ana — how are the Winter Tights holding up? Most people pair them with the Merino base layer once it drops below 5°. Want me to show you the two that fit your size?";
-  if(r.s==="Custom") return "Nice frame. One thing you'll want before the first proper ride: a helmet that actually fits the way you ride. Want me to narrow it to two?";
-  return "You left the Merino base layer in your basket — still deciding on the size? I can tell you which one fits with the tights you already have.";
 }
 function openEngagement(i){ studioForEng(i) }
 
@@ -2224,7 +2144,6 @@ $$("#audMode button").forEach(b=>b.addEventListener("click",()=>{
   $("#audNl").classList.toggle("hidden",!nl);
   $("#audRules").classList.toggle("hidden",nl);
 }));
-
 
 /* chart / table views */
 $$("[data-view]").forEach(seg=>seg.addEventListener("click",e=>{
