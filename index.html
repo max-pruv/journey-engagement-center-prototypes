@@ -193,8 +193,8 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .banner-ok{background:var(--green-50);border:1px solid var(--green-100)}
 
 /* big mode cards */
-.modeBig{display:flex;flex-direction:column;gap:var(--xs);text-align:left;padding:var(--md);border-radius:12px;
-  border:1px solid var(--border-neutral-default);background:var(--white);min-height:210px;transition:.12s}
+.modeBig{display:flex;flex-direction:column;gap:var(--xxs);text-align:left;padding:var(--md);border-radius:12px;
+  border:1px solid var(--border-neutral-default);background:var(--white);min-height:132px;transition:.12s}
 .modeBig:hover{border-color:var(--purple-300)}
 .modeBig.on{border-color:var(--purple-500);box-shadow:0 0 0 1px var(--purple-500);
   background:linear-gradient(150deg,var(--purple-50),transparent 70%)}
@@ -319,6 +319,11 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
   box-shadow:0 24px 48px rgba(16,24,40,.18);z-index:50;display:flex;flex-direction:column;
   transform:translateX(calc(100% + 16px));transition:transform .22s cubic-bezier(.32,.72,0,1)}
 .panel.on{transform:none}
+.panel.wide{width:min(1080px,96vw)}
+.studio{display:grid;grid-template-columns:1fr 1fr;gap:var(--lg);min-height:520px}
+.studioCol{display:flex;flex-direction:column;gap:var(--xs);min-width:0}
+@media (max-width:900px){.studio{grid-template-columns:1fr}
+  .studioCol{border-left:0 !important;padding-left:0 !important}}
 .panelHead{padding:var(--md) var(--lg);display:flex;align-items:flex-start;gap:var(--sm);
   border-bottom:1px solid var(--border-neutral-default)}
 .panelBody{flex:1;overflow-y:auto;padding:var(--lg);display:flex;flex-direction:column;gap:var(--lg)}
@@ -520,7 +525,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         <header class="pageHeader">
           <div class="ttl">
             <h1 class="h-xxl">Engagements</h1>
-            <p class="t-md sec">Everything that reaches out to a shopper — the part that decides for itself, and the part you configure.</p>
+            <p class="t-md sec">Everything that reaches out to a shopper: the engagement the AI decides on its own, and the engagement you define.</p>
           </div>
           <div class="pageActions">
             <button class="btn btn-secondary" data-goto="conversations">Activity log</button>
@@ -543,8 +548,8 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </div>
 
         <div class="tabList">
-          <button class="tabItem on" data-tab="ace">ACE <span class="tag tag-purple" id="aceTabBadge">Automatic</span></button>
-          <button class="tabItem" data-tab="scenarios">Scenarios you own <span class="tag tag-grey" id="scnBadge">18</span></button>
+          <button class="tabItem on" data-tab="ace">AI engagement <span class="tag tag-purple" id="aceTabBadge">Automatic</span></button>
+          <button class="tabItem" data-tab="scenarios">Custom engagement <span class="tag tag-grey" id="scnBadge">18</span></button>
         </div>
 
         <!-- ---------- TAB: ACE ---------- -->
@@ -580,7 +585,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
               <p class="t-sm sec">What ACE is allowed to work on — the control that matters if you need to bound an autonomous system. Turn a domain off and it stops looking there entirely: it won't propose it, won't send it, won't count it. We keep sizing the opportunity anyway, so you can see what you're declining.</p>
             </div>
             <table id="aceDomainTable">
-              <thead><tr><th style="width:34%">Domain</th><th>Shoppers reached</th><th>GMV</th>
+              <thead><tr><th style="width:30%">Domain</th><th>Instruction</th><th>Shoppers reached</th><th>GMV</th>
                 <th>Conversion</th><th>Opt-out</th><th style="width:110px">Allowed</th></tr></thead>
               <tbody></tbody>
             </table>
@@ -591,19 +596,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             </div>
           </div>
 
-          <details class="card" style="overflow:hidden">
-            <summary class="row between wrap gap-sm" style="cursor:pointer;padding:var(--md) var(--lg)">
-              <div class="col gap-xxxs">
-                <span class="t-md med">What happens behind the switch</span>
-                <span class="t-sm sec">Not one model — a handful of agents, each with one job, handing off to the next.</span>
-              </div>
-              <span class="tag tag-grey">6 steps</span>
-            </summary>
-            <div class="col gap-sm" style="padding:0 var(--lg) var(--lg)">
-              <div class="col gap-xs" id="aceChain"></div>
-            </div>
-          </details>
-        </div>
+                  </div>
 
         <!-- ---------- TAB: SCENARIOS ---------- -->
         <div class="zone top tabPanel hidden" data-panel-for="scenarios">
@@ -625,14 +618,14 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           <div class="card" style="overflow:hidden">
             <table id="engTable">
               <thead><tr>
-                <th style="width:30%">Engagement</th><th>Source</th><th>Trigger</th>
+                <th style="width:30%">Engagement</th><th>Built by</th><th>Trigger</th>
                 <th>Instruction</th><th>Sent · 30d</th><th>CVR</th><th style="width:150px">Status</th>
               </tr></thead>
               <tbody></tbody>
             </table>
           </div>
 
-          <p class="t-sm ter">Pre-built ones and the ones you described yourself sit in the same list — the only difference is who wrote them. Each carries one instruction.</p>
+          <p class="t-sm ter">Pre-built and self-written engagements sit in the same list — the only difference is who wrote them. Each carries one instruction.</p>
         </div>
       </section>
 
@@ -1154,21 +1147,21 @@ const ENG=[
 /* ACE is one switch, not a list of scenarios. Domains are the only dial:
    they bound what the agent chain is allowed to work on. */
 const ACE_DOMAINS=[
-  {n:"Replenishment & reorder",d:"Someone is due, or overdue, for something they already buy.",
+  {n:"Replenishment & reorder",d:"Someone is due, or overdue, for something they already buy.",ins:"Customized",
    on:true, reach:2410,gmv:14900,cvr:"8.1%",opt:"0.7%", potReach:2400,potGmv:14000,potCvr:"7.8%",potOpt:"0.9%"},
-  {n:"Retention & win-back",d:"Going quiet, or already gone, and worth one honest attempt.",
+  {n:"Retention & win-back",ins:"Default",d:"Going quiet, or already gone, and worth one honest attempt.",
    on:true, reach:1980,gmv:9100,cvr:"4.4%",opt:"1.6%", potReach:2000,potGmv:9000,potCvr:"4.2%",potOpt:"1.7%"},
-  {n:"Cross-sell & complements",d:"They own the thing; the companion piece is the obvious next step.",
+  {n:"Cross-sell & complements",ins:"Customized",d:"They own the thing; the companion piece is the obvious next step.",
    on:true, reach:1640,gmv:11300,cvr:"6.9%",opt:"0.9%", potReach:1600,potGmv:11000,potCvr:"6.6%",potOpt:"1.0%"},
-  {n:"Service recovery",d:"Something went wrong and the relationship is worth repairing.",
+  {n:"Service recovery",ins:"Default",d:"Something went wrong and the relationship is worth repairing.",
    on:true, reach:520,gmv:2400,cvr:"3.2%",opt:"0.4%", potReach:500,potGmv:2300,potCvr:"3.1%",potOpt:"0.5%"},
-  {n:"Subscriptions",d:"Renewals, failed payments, pauses worth saving.",
+  {n:"Subscriptions",ins:"Default",d:"Renewals, failed payments, pauses worth saving.",
    on:true, reach:410,gmv:5800,cvr:"12.6%",opt:"0.3%", potReach:400,potGmv:5600,potCvr:"12.1%",potOpt:"0.4%"},
-  {n:"Loyalty moments",d:"A tier within reach, points about to expire, an anniversary.",
+  {n:"Loyalty moments",ins:"Default",d:"A tier within reach, points about to expire, an anniversary.",
    on:true, reach:280,gmv:3800,cvr:"9.8%",opt:"0.5%", potReach:280,potGmv:3700,potCvr:"9.5%",potOpt:"0.6%"},
-  {n:"Consideration & browse",d:"Looking, hesitating, not yet a customer.",
+  {n:"Consideration & browse",ins:"Default",d:"Looking, hesitating, not yet a customer.",
    on:false, reach:0,gmv:0,cvr:"—",opt:"—", potReach:3100,potGmv:12800,potCvr:"3.4%",potOpt:"1.8%"},
-  {n:"Seasonal & inventory",d:"A restock, a weather swing, a range that suddenly matters.",
+  {n:"Seasonal & inventory",ins:"Default",d:"A restock, a weather swing, a range that suddenly matters.",
    on:false, reach:0,gmv:0,cvr:"—",opt:"—", potReach:1450,potGmv:6600,potCvr:"5.1%",potOpt:"1.2%"}
 ];
 const ACE_CHAIN=[
@@ -1474,15 +1467,21 @@ function renderCampaigns(){
 const ACE_MODES=[
   {k:"off",n:"Off",tag:"tag-grey",
    sum:"ACE stops looking entirely.",
-   det:"Your own scenarios and campaigns carry on exactly as before. Nothing is deleted — turn it back on and it picks up where it left off.",
+   brief:"Nothing is deleted. Turn it back on and it resumes.",
+   det:"Your own engagements and campaigns carry on exactly as before. ACE stops watching your data, stops proposing and stops sending. Anything it had queued is dropped rather than held, so nothing goes out days late when you switch back on.",
+   see:"Nothing new in Conversations from ACE. History stays.",
    who:"Pick this if you want the machine out of the loop while you sort something else out."},
   {k:"manual",n:"Manual acceptance",tag:"tag-blue",
    sum:"It prepares everything. You press send.",
-   det:"ACE finds the moment, picks the person, writes the message and runs the guardrails — then waits. Each one lands in Conversations with its reasoning attached, and you approve or reject it.",
+   brief:"It does all the work, then waits for you.",
+   det:"ACE finds the moment, picks the person, writes the message and runs every guardrail — then stops. Nothing sends without you. Each one lands in Conversations with the full reasoning attached: the lifecycle stage, the loyalty state, the timing it chose and the lever it picked. You approve, edit or reject. Anything you leave untouched for 48 hours expires rather than going out stale.",
+   see:"A queue in Conversations, each with its reasoning and a sample message.",
    who:"Pick this for the first few weeks, or on any domain where you want a human in the loop for good."},
   {k:"auto",n:"Automatic",tag:"tag-purple",
    sum:"It sends on its own, inside your guardrails.",
-   det:"Same work, no waiting. Guardrails still run last and can stop anything. Every message is still logged in Conversations with the reasoning that produced it, so nothing is unaccountable — you review after instead of before.",
+   brief:"Same work, no waiting. You review after, not before.",
+   det:"ACE sends on its own. The guardrails still run last and can stop anything the agents decided — frequency, quiet hours, exclusions and discount ceilings are not negotiable. Every message is logged in Conversations with the reasoning that produced it, so nothing is unaccountable; the difference is that you read it after rather than before. You can drop back to manual at any time, and anything in flight finishes cleanly.",
+   see:"Everything in Conversations as it happens, with the reasoning attached.",
    who:"Pick this once you've read a few dozen and you trust what it's doing."}
 ];
 let aceState="auto";
@@ -1512,8 +1511,8 @@ function renderAce(){
         <span class="radioRing ${sel?"on":""}"></span>
       </div>
       <span class="t-md med" style="color:${sel?"var(--content-accent-default)":"var(--content-neutral-default)"}">${m.sum}</span>
-      <span class="t-sm sec">${m.det}</span>
-      <span class="t-sm ter" style="margin-top:auto;font-style:italic">${m.who}</span>
+      <span class="t-sm sec">${m.brief}</span>
+      <span class="t-sm acc med" style="margin-top:auto" data-learn="${m.k}">Learn more →</span>
     </button>`}).join("");
 
   /* domains */
@@ -1534,6 +1533,7 @@ function renderAce(){
         <span class="t-md med">${d.n}</span><span class="t-sm sec">${d.d}</span>
         ${live?"":`<span class="tag tag-purple" style="margin-top:4px;width:fit-content">Not allowed — figures are estimates</span>`}
       </div></td>
+      <td><button class="pill" data-dominstr="${i}">${d.ins==="Customized"?"Customized":"Add instruction"}</button></td>
       ${cell(fmt(d.reach),"≈"+fmt(d.potReach))}
       ${cell("$"+fmt(d.gmv),"≈$"+fmt(d.potGmv))}
       ${cell(d.cvr,"≈"+d.potCvr)}
@@ -1542,14 +1542,6 @@ function renderAce(){
     tb.appendChild(tr);
   });
 
-  $("#aceChain").innerHTML=ACE_CHAIN.map((c,i)=>`
-    <div class="row gap-sm" style="align-items:flex-start">
-      <span style="width:22px;height:22px;border-radius:var(--xxs);flex-shrink:0;display:grid;place-items:center;
-        font-size:11px;font-weight:600;background:var(--purple-50);color:var(--purple-800)">${i+1}</span>
-      <div class="col gap-xxxs" style="flex:1">
-        <span class="t-md med">${c[0]}</span><span class="t-sm sec">${c[1]}</span>
-      </div>
-    </div>`).join("");
 }
 
 function renderBench(){
@@ -1669,13 +1661,7 @@ function samplePreview(r){
   if(r.s==="Custom") return "Nice frame. One thing you'll want before the first proper ride: a helmet that actually fits the way you ride. Want me to narrow it to two?";
   return "You left the Merino base layer in your basket — still deciding on the size? I can tell you which one fits with the tights you already have.";
 }
-function openEngagement(i){
-  const r=ENG[i];
-  openPanel(r.n, r.d, insBody(r),
-    `<button class="btn btn-secondary" data-test="${i}">Test</button>
-     <button class="btn btn-secondary">Duplicate</button>
-     <button class="btn btn-primary">Save</button>`);
-}
+function openEngagement(i){ studioForEng(i) }
 
 const NEW_BODY=`
   <div class="banner banner-ai">
@@ -1746,15 +1732,7 @@ function renderVariants(){
       <button class="btn btn-secondary sm" data-act="test-campaign" style="margin-top:var(--xxs)">Test this one</button>`;
     g.appendChild(c);
   });
-  const tb=$("#waveTable tbody"); tb.innerHTML="";
-  VARIANTS.forEach(v=>{
-    const tr=el("tr");
-    tr.innerHTML=`<td><div class="row gap-xs"><span class="tag tag-grey">${v.k}</span><span class="t-md med">${v.n}</span></div></td>
-      <td class="t-md num-t">${v.sent}</td><td class="t-md num-t">${v.rep}</td><td class="t-md num-t">${v.cvr}</td>
-      <td class="t-md num-t bold">${v.rev}</td><td class="t-sm sec">${v.marg}</td>
-      <td>${v.win?`<span class="tag tag-green">Winner</span>`:`<span class="t-sm ter">—</span>`}</td>`;
-    tb.appendChild(tr);
-  });
+  const tb=$("#waveTable tbody"); if(!tb) return;
 }
 
 /* =======================================================================
@@ -2076,11 +2054,13 @@ function renderLoyalty(){
    ======================================================================= */
 const panel=$("#panel"), overlay=$("#overlay");
 function openPanel(t,s,b,f){
+  if(!/studio/.test(b||"")) panel.classList.remove("wide");
   $("#panelTitle").textContent=t; $("#panelSub").textContent=s;
   $("#panelBody").innerHTML=b; $("#panelFoot").innerHTML=f;
   panel.classList.add("on"); overlay.classList.add("on");
 }
-function closePanel(){panel.classList.remove("on");overlay.classList.remove("on")}
+function closePanel(){panel.classList.remove("on");overlay.classList.remove("on");
+  setTimeout(()=>panel.classList.remove("wide"),220)}
 $("#panelClose").addEventListener("click",closePanel);
 overlay.addEventListener("click",closePanel);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
@@ -2142,6 +2122,14 @@ document.addEventListener("click",e=>{
   const dm=e.target.closest("[data-dom]");
   if(dm){const i=+dm.dataset.dom;ACE_DOMAINS[i].on=!ACE_DOMAINS[i].on;renderAce();return}
 
+  const lm=e.target.closest("[data-learn]");
+  if(lm){e.stopPropagation();openLearn(lm.dataset.learn);return}
+
+  const di=e.target.closest("[data-dominstr]");
+  if(di){e.stopPropagation();studioForDomain(+di.dataset.dominstr);return}
+
+  if(e.target.closest("[data-closepanel]")) closePanel();
+
   const ex=e.target.closest("[data-excl]");
   if(ex){const i=+ex.dataset.excl;EXCLUSIONS[i].on=!EXCLUSIONS[i].on;renderExclusions();return}
 
@@ -2171,8 +2159,10 @@ document.addEventListener("click",e=>{
     renderVariants(); return;
   }
 
-  const tst=e.target.closest("[data-test]")||e.target.closest('[data-act^="test"]');
-  if(tst){openPanel("Test run","No message leaves the building",TEST_BODY,
+  const tst=e.target.closest("[data-test]");
+  if(tst){studioForEng(+tst.dataset.test);return}
+  const tsg=e.target.closest('[data-act^="test"]');
+  if(tsg){openPanel("Test run","No message leaves the building",TEST_BODY,
     `<button class="btn btn-secondary">Try another shopper</button><button class="btn btn-primary">Looks right</button>`);return}
 
   const p=e.target.closest("[data-panel]");
@@ -2439,6 +2429,169 @@ function openTier(i){
     body, `${i==null?"":`<button class="btn btn-secondary" style="color:var(--content-error-default)">Delete tier</button>`}
     <button class="btn btn-secondary">Preview who qualifies</button>
     <button class="btn btn-primary">${i==null?"Create tier":"Save tier"}</button>`);
+}
+
+/* ===================== LEARN MORE (per ACE mode) ===================== */
+function openLearn(k){
+  const m=ACE_MODES.find(x=>x.k===k), cur=k===aceState;
+  openPanel(m.n, m.sum, `
+    <div class="row gap-xs wrap">
+      <span class="tag ${m.tag}">${m.n}</span>
+      ${cur?`<span class="tag tag-green">This is what you're on</span>`:""}
+    </div>
+    <div class="col gap-xs">
+      <span class="t-sm bold">What it does</span>
+      <span class="t-md sec">${m.det}</span>
+    </div>
+    <div class="col gap-xs">
+      <span class="t-sm bold">What you'll see</span>
+      <span class="t-md sec">${m.see}</span>
+    </div>
+    <div class="col gap-xs">
+      <span class="t-sm bold">When to pick it</span>
+      <span class="t-md sec">${m.who}</span>
+    </div>
+    <div class="col gap-xs">
+      <span class="t-sm bold">What runs underneath, in every mode</span>
+      <span class="t-sm sec">Not one model — a handful of agents, each with one job, handing off to the next.</span>
+      <div class="col gap-xs" style="margin-top:var(--xxs)">
+        ${ACE_CHAIN.map((c,i)=>`<div class="row gap-sm" style="align-items:flex-start">
+          <span style="width:20px;height:20px;border-radius:var(--xxs);flex-shrink:0;display:grid;place-items:center;
+            font-size:11px;font-weight:600;background:var(--purple-50);color:var(--purple-800)">${i+1}</span>
+          <div class="col gap-xxxs" style="flex:1"><span class="t-sm med">${c[0]}</span>
+            <span class="t-sm sec">${c[1]}</span></div></div>`).join("")}
+      </div>
+    </div>`,
+    cur?`<button class="btn btn-primary" data-closepanel>Close</button>`
+       :`<button class="btn btn-secondary" data-closepanel>Cancel</button>
+         <button class="btn btn-primary" data-acemode="${k}" data-closepanel>Switch to ${m.n}</button>`);
+}
+
+/* ===================== INSTRUCTION STUDIO (skill + live test) ===================== */
+const SIM_SHOPPERS=[
+  {n:"Ana R.",meta:"First-time buyer · Member · bought Winter Tights 51 days ago"},
+  {n:"Marc D.",meta:"VIP · Gold · care kit, 2.1× past his rhythm"},
+  {n:"Sam K.",meta:"At risk · Silver · returned for fit last spring"},
+  {n:"Hugo T.",meta:"At risk · Member · 900 points, browsed twice, no order"}
+];
+function simOpener(ctx,shopper){
+  if(ctx.kind==="ACE") return `Hey ${shopper.n.split(" ")[0]} — how are the Winter Tights holding up? Most people pair them with the Merino base layer once it drops below 5°. Want me to show you the two that fit your size?`;
+  if(ctx.kind==="Custom") return `${shopper.n.split(" ")[0]} — nice frame. One thing you'll want before the first proper ride: a helmet that actually fits the way you ride. Want me to narrow it to two?`;
+  return `You left the Merino base layer in your basket — still deciding on the size? I can tell you which one fits with the tights you already have.`;
+}
+function simReply(text){
+  const t=text.toLowerCase();
+  if(/size|sizing|fit|medium|small|large|\b\d\d\b/.test(t))
+    return {msg:"Medium is the one — it sits under the tights without bunching. Here are the two in stock: [link]. Free returns if the fit's off.",
+            note:"Answered the sizing question before selling. No offer used."};
+  if(/discount|cheaper|price|expensive|deal|off\b/.test(t))
+    return {msg:"I can't drop the price on this one, but shipping's on us if you order this week — and you're 60 points from a free-shipping reward anyway.",
+            note:"Discount withheld: guardrail caps the AI at 10% and the loyalty lever was cheaper."};
+  if(/broke|late|missing|wrong|refund|return|complain/.test(t))
+    return {msg:"That's on us — let me get that sorted first. I've flagged it to the team and I'll stop the product talk here.",
+            note:"Stopped selling and handed off. Centre-level rule: answer support questions first."};
+  if(/no|not now|stop|later|maybe/.test(t))
+    return {msg:"No problem at all — I'll leave it there. Shout if you want a hand with sizing later.",
+            note:"Closed cleanly. Won't re-enter this shopper for 30 days."};
+  return {msg:"Got it. Want me to put the two that fit alongside what you already own so you can compare?",
+          note:"Kept it to one question. Two-sentence limit respected."};
+}
+let studio={ctx:null,shopper:0,thread:[]};
+function openStudio(ctx){
+  studio={ctx,shopper:0,thread:[]};
+  panel.classList.add("wide");
+  openPanel(ctx.title, ctx.sub, `
+    <div class="studio">
+      <div class="studioCol">
+        <div class="row between wrap gap-xs">
+          <div class="row gap-xs"><span class="t-sm bold">Instruction</span>
+            <span class="tag ${ctx.ins==="Customized"?"tag-purple":"tag-grey"}">${ctx.ins}</span></div>
+          ${ctx.ins==="Customized"?`<button class="btn btn-tertiary sm ter">Reset to default</button>`:""}
+        </div>
+        <span class="t-sm sec">One instruction. It's a skill the agent loads when this fires — nothing stacks on top of it.</span>
+        <div class="card pad-md" style="background:var(--grey-50);flex:1;display:flex;flex-direction:column;gap:var(--xs)">
+          <div class="row between">
+            <span class="mono ter">skill · ${ctx.slug}</span>
+            <span class="t-xs ter">v4 · edited 3 days ago</span>
+          </div>
+          <textarea class="textarea" id="studioIns" style="background:var(--white);flex:1;min-height:220px">${ctx.text}</textarea>
+        </div>
+        <div class="row gap-xxs wrap">
+          <span class="t-xs ter" style="width:100%">Guardrails apply on top and can't be overridden here:</span>
+          <span class="tag tag-grey">≤3 msg / week</span><span class="tag tag-grey">quiet 21:00–09:00</span>
+          <span class="tag tag-grey">discount ≤10%</span><span class="tag tag-grey">exclusions</span>
+        </div>
+      </div>
+
+      <div class="studioCol" style="border-left:1px solid var(--border-neutral-default);padding-left:var(--lg)">
+        <div class="row between wrap gap-xs">
+          <span class="t-sm bold">Live test</span>
+          <span class="tag tag-green">Nothing is sent</span>
+        </div>
+        <div class="field">
+          <span class="label">Run it against</span>
+          <select class="selectEl" id="studioWho">
+            ${SIM_SHOPPERS.map((s,i)=>`<option value="${i}">${s.n} — ${s.meta}</option>`).join("")}
+          </select>
+        </div>
+        <div class="phone" id="studioThread" style="flex:1;min-height:220px;overflow-y:auto"></div>
+        <div class="row gap-xs">
+          <input class="input" id="studioSay" placeholder="Reply as the shopper…">
+          <button class="btn btn-secondary" id="studioSend">Send</button>
+        </div>
+        <span class="t-xs ter" id="studioNote">Press Run to see what this instruction produces for the shopper above.</span>
+      </div>
+    </div>`,
+    `<button class="btn btn-secondary" id="studioRun">Run test</button>
+     <button class="btn btn-primary">Save instruction</button>`);
+  drawStudio();
+  $("#studioRun").addEventListener("click",()=>{
+    studio.shopper=+$("#studioWho").value; studio.thread=[];
+    const sh=SIM_SHOPPERS[studio.shopper];
+    studio.thread.push(["out",simOpener(studio.ctx,sh)]);
+    $("#studioNote").textContent="Generated from the instruction on the left, for "+sh.n+". Nothing left the building.";
+    drawStudio();
+  });
+  $("#studioSend").addEventListener("click",studioSay);
+  $("#studioSay").addEventListener("keydown",e=>{if(e.key==="Enter")studioSay()});
+  $("#studioWho").addEventListener("change",()=>{studio.thread=[];drawStudio();
+    $("#studioNote").textContent="Press Run to see what this instruction produces for this shopper."});
+}
+function studioSay(){
+  const inp=$("#studioSay"), v=inp.value.trim();
+  if(!v||!studio.thread.length) return;
+  inp.value="";
+  studio.thread.push(["in",v]);
+  drawStudio();
+  setTimeout(()=>{
+    const r=simReply(v);
+    studio.thread.push(["out",r.msg]);
+    $("#studioNote").textContent=r.note;
+    drawStudio();
+  },420);
+}
+function drawStudio(){
+  const t=$("#studioThread"); if(!t) return;
+  t.innerHTML=studio.thread.length
+    ? studio.thread.map(m=>`<div class="bubble ${m[0]}">${m[1]}</div>`).join("")
+      +`<span class="bTime">Test run — nothing sent</span>`
+    : `<div class="col gap-xxs" style="align-items:center;margin:auto;padding:var(--lg)">
+         <span class="t-sm sec">No test running</span>
+         <span class="t-xs ter">Pick a shopper and press Run test.</span></div>`;
+  t.scrollTop=t.scrollHeight;
+}
+function studioForEng(i){
+  const r=ENG[i];
+  openStudio({title:r.n,sub:r.d,ins:r.ins,kind:r.s,
+    slug:r.n.toLowerCase().replace(/[^a-z0-9]+/g,"-"),text:instructionText(r)});
+}
+function studioForDomain(i){
+  const d=ACE_DOMAINS[i];
+  openStudio({title:d.n,sub:"ACE domain · optional instruction",ins:d.ins,kind:"ACE",
+    slug:"ace-"+d.n.toLowerCase().replace(/[^a-z0-9]+/g,"-"),
+    text:d.ins==="Customized"
+      ? "On replenishment, name the exact product and the interval we learned for this shopper, never a store average. Offer the loyalty reward before any discount. If they've changed cadence, ask rather than assume."
+      : "ACE writes this domain from your brand profile and the shopper's own history. Add an instruction here only if this domain needs something the rest of your account doesn't."});
 }
 
 /* boot */
