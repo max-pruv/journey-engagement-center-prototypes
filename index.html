@@ -192,6 +192,71 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .banner-warn{background:var(--orange-50);border:1px solid var(--orange-100)}
 .banner-ok{background:var(--green-50);border:1px solid var(--green-100)}
 
+/* big mode cards */
+.modeBig{display:flex;flex-direction:column;gap:var(--xs);text-align:left;padding:var(--md);border-radius:12px;
+  border:1px solid var(--border-neutral-default);background:var(--white);min-height:210px;transition:.12s}
+.modeBig:hover{border-color:var(--purple-300)}
+.modeBig.on{border-color:var(--purple-500);box-shadow:0 0 0 1px var(--purple-500);
+  background:linear-gradient(150deg,var(--purple-50),transparent 70%)}
+.radioRing{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--grey-300);flex-shrink:0}
+.radioRing.on{border-color:var(--purple-500);background:var(--purple-500);box-shadow:inset 0 0 0 3.5px #fff}
+
+/* shopper rows in the drawer */
+.shopRow{display:flex;align-items:center;gap:var(--sm);width:100%;text-align:left;padding:var(--xs) var(--sm);
+  border-radius:var(--xs);border:1px solid transparent}
+.shopRow:hover{background:var(--states-hover-default);border-color:var(--border-neutral-default)}
+
+/* the conversations inbox needs its own height */
+#page-conversations{display:flex;flex-direction:column;height:100%}
+.inbox{min-height:520px}
+
+/* wizard stepper */
+.stepper{display:flex;gap:var(--xs);padding:0 var(--lg) var(--md);flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:var(--xs);padding:var(--xs) var(--sm);border-radius:10px;
+  border:1px solid var(--border-neutral-default);background:var(--white);color:var(--content-neutral-secondary);
+  font-size:14px;font-weight:500}
+.step:hover{background:var(--states-hover-default)}
+.step.on{border-color:var(--purple-500);background:var(--surface-accent-default);color:var(--content-accent-default)}
+.step.done{border-color:var(--green-300);background:var(--surface-success-default);color:var(--content-success-default)}
+.step .dotN{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;
+  background:var(--surface-neutral-secondary);color:var(--content-neutral-secondary)}
+.step.on .dotN{background:var(--purple-500);color:var(--white)}
+.step.done .dotN{background:var(--green-500);color:var(--white)}
+.step .stepSub{font-size:12px;font-weight:400;color:var(--content-neutral-tertiary)}
+.step.on .stepSub{color:var(--purple-700)}
+
+/* conversational block */
+.convo{display:flex;flex-direction:column;gap:var(--sm);max-width:760px}
+.convoRow{display:flex;gap:var(--sm);align-items:flex-start}
+.convoAv{width:26px;height:26px;border-radius:var(--xxs);flex-shrink:0;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500))}
+.convoAsk{background:var(--white);border:1px solid var(--purple-100);border-radius:12px;border-top-left-radius:4px;
+  padding:var(--sm) var(--md);flex:1}
+.convoAns{align-self:flex-end;max-width:80%;background:var(--surface-neutral-secondary);border-radius:12px;
+  border-bottom-right-radius:4px;padding:var(--sm) var(--md)}
+.convoInput{display:flex;gap:var(--xs);align-items:flex-end;max-width:760px}
+.convoInput .textarea{min-height:60px}
+
+/* inbox */
+.inbox{display:grid;grid-template-columns:344px 1fr;flex:1;min-height:0;border-top:1px solid var(--border-neutral-default)}
+.inboxList{border-right:1px solid var(--border-neutral-default);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.convItems{flex:1;overflow-y:auto}
+.convItem{width:100%;text-align:left;padding:var(--sm) var(--md);border-bottom:1px solid var(--border-neutral-default);
+  display:flex;flex-direction:column;gap:var(--xxxs)}
+.convItem:hover{background:var(--states-hover-default)}
+.convItem.on{background:var(--surface-accent-default)}
+.convItem.unread .who{font-weight:600}
+.inboxThread{overflow-y:auto;padding:var(--lg);display:flex;flex-direction:column;gap:var(--md)}
+.searchWrap{display:flex;align-items:center;gap:var(--xs);border:1px solid var(--border-neutral-default);
+  border-radius:var(--xs);padding:0 var(--xs);background:var(--white);height:34px}
+.searchInput{border:0;outline:0;background:none;flex:1;font-size:13px;height:100%}
+
+/* lever object rows */
+.lever{border:1px solid var(--border-neutral-default);border-radius:10px;background:var(--white)}
+.leverHead{display:flex;align-items:center;gap:var(--xs);padding:var(--xs) var(--sm)}
+.leverGrip{color:var(--grey-300);cursor:grab;flex-shrink:0}
+.leverCfg{padding:0 var(--sm) var(--sm);display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:var(--xs)}
+
 /* tabs */
 .tabList{display:flex;gap:var(--lg);padding:0 var(--lg);border-bottom:1px solid var(--border-neutral-default)}
 .tabItem{padding:var(--xs) 0 10px;font-size:14px;font-weight:500;color:var(--content-neutral-secondary);
@@ -336,9 +401,9 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
       Lifecycle <span class="count">6</span></button>
 
     <div class="navGroup">Operate</div>
-    <button class="navItem" data-page="activity">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l2.5-6 3 12 2.5-6h6"/></svg>
-      Activity <span class="count" id="navPending">12</span></button>
+    <button class="navItem" data-page="conversations">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4-.9L3 21l1.9-4.9A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>
+      Conversations <span class="count" id="navPending">4</span></button>
     <button class="navItem" data-page="loyalty">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>
       Loyalty <span class="count">4</span></button>
@@ -458,30 +523,27 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <p class="t-md sec">Everything that reaches out to a shopper — the part that decides for itself, and the part you configure.</p>
           </div>
           <div class="pageActions">
-            <button class="btn btn-secondary" data-goto="activity">Activity log</button>
+            <button class="btn btn-secondary" data-goto="conversations">Activity log</button>
             <button class="btn btn-primary" data-panel="new">New engagement</button>
           </div>
         </header>
 
-        <!-- persistent ACE strip: the switch is never hidden behind a tab -->
+        <!-- persistent ACE strip: state is never hidden behind a tab -->
         <div class="aceStrip" id="aceStrip">
           <div style="width:28px;height:28px;border-radius:var(--xs);flex-shrink:0;display:grid;place-items:center;
                background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500))">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>
           </div>
-          <span class="t-md med" id="aceStripTitle">ACE is on</span>
-          <div class="seg" id="aceMode">
-            <button data-a="off">Off</button>
-            <button data-a="dry">Dry run</button>
-            <button class="on" data-a="on">On</button>
-          </div>
-          <span class="t-sm sec trunc" id="aceStripNote" style="flex:1;min-width:120px">Finding, deciding and sending on its own, inside your guardrails.</span>
-          <span class="t-sm sec num-t" id="aceStripStats">7,240 sent · $47,300 GMV</span>
+          <span class="t-md med" id="aceStripTitle">ACE · sends automatically</span>
+          <span class="tag tag-purple" id="aceStripTag">Automatic</span>
+          <span class="t-sm sec trunc" id="aceStripNote" style="flex:1;min-width:120px">6 of 8 domains allowed.</span>
+          <span class="t-sm sec num-t" id="aceStripStats">7,240 reached · $47,300 GMV</span>
+          <button class="btn btn-secondary sm" id="acePendingBtn" data-goto="conversations" style="display:none">Review 4 waiting</button>
           <button class="btn btn-tertiary sm acc" data-tab="ace">Manage →</button>
         </div>
 
         <div class="tabList">
-          <button class="tabItem on" data-tab="ace">ACE <span class="tag tag-purple" id="aceTabBadge">On</span></button>
+          <button class="tabItem on" data-tab="ace">ACE <span class="tag tag-purple" id="aceTabBadge">Automatic</span></button>
           <button class="tabItem" data-tab="scenarios">Scenarios you own <span class="tag tag-grey" id="scnBadge">18</span></button>
         </div>
 
@@ -491,37 +553,42 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ai-gradient)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>
             <div class="col gap-xxxs" style="flex:1">
               <span class="t-md med">There is nothing to build here.</span>
-              <span class="t-sm sec">ACE finds the moment, decides who should hear from you, writes the message and sends it. You decide whether it's on, and which domains it may work in. That's the whole surface.</span>
+              <span class="t-sm sec">ACE finds the moment, decides who should hear from you, writes the message and sends it. You choose how much rope it gets, and which domains it may work in. That's the whole surface.</span>
             </div>
-            <button class="btn btn-secondary sm" data-goto="activity">Read what it sent</button>
+            <button class="btn btn-secondary sm" data-goto="conversations">Read every conversation</button>
           </div>
 
-          <div class="grid g-stat" id="aceStats">
-            <div class="card pad-md"><div class="t-sm sec">Sent · 30d</div>
-              <div class="h-xxl num-t" style="margin-top:2px">7,240</div><div class="t-sm sec">15% of all outbound</div></div>
-            <div class="card pad-md"><div class="t-sm sec">GMV</div>
-              <div class="h-xxl num-t" style="margin-top:2px">$47,300</div>
-              <div class="t-sm" style="color:var(--content-success-default)">$18,900 measured vs holdout</div></div>
-            <div class="card pad-md"><div class="t-sm sec">Conversion rate</div>
-              <div class="h-xxl num-t" style="margin-top:2px">7.6%</div>
-              <div class="t-sm sec">vs 3.4% on default flows</div></div>
-            <div class="card pad-md"><div class="t-sm sec">Opt-out rate</div>
-              <div class="h-xxl num-t" style="margin-top:2px">1.1%</div><div class="t-sm sec">under the 1.5% cap</div></div>
+          <!-- ===== MODE: three cards, properly sized, with the education in them ===== -->
+          <div class="col gap-xs">
+            <div class="row between wrap gap-sm">
+              <h2 class="h-lg">How much rope does ACE get?</h2>
+              <span class="t-sm ter">You can change this at any time. Nothing in flight is lost.</span>
+            </div>
+            <div class="grid g-3" id="aceModeCards"></div>
           </div>
 
+          <!-- ===== DOMAINS ===== -->
           <div class="card" style="overflow:hidden">
             <div class="col gap-xxxs" style="padding:var(--md) var(--lg)">
               <div class="row between wrap gap-sm">
-                <h2 class="h-md">What it's allowed to work on</h2>
-                <span class="tag tag-grey" id="aceDomCount">6 of 8 allowed</span>
+                <h2 class="h-md">Domains</h2>
+                <div class="row gap-xs">
+                  <span class="tag tag-grey" id="aceDomCount">6 of 8 allowed</span>
+                  <span class="tag tag-purple" id="aceDomPotential">2 off · ≈$19,400 GMV left on the table</span>
+                </div>
               </div>
-              <p class="t-sm sec">The only dial there is. Turn a domain off and ACE stops looking there entirely — it won't propose it, won't send it, won't count it.</p>
+              <p class="t-sm sec">What ACE is allowed to work on — the control that matters if you need to bound an autonomous system. Turn a domain off and it stops looking there entirely: it won't propose it, won't send it, won't count it. We keep sizing the opportunity anyway, so you can see what you're declining.</p>
             </div>
             <table id="aceDomainTable">
-              <thead><tr><th style="width:38%">Domain</th><th>Sent · 30d</th><th>CVR</th>
-                <th>GMV</th><th style="width:110px">Allowed</th></tr></thead>
+              <thead><tr><th style="width:34%">Domain</th><th>Shoppers reached</th><th>GMV</th>
+                <th>Conversion</th><th>Opt-out</th><th style="width:110px">Allowed</th></tr></thead>
               <tbody></tbody>
             </table>
+            <div class="sepH"></div>
+            <div class="row between wrap gap-sm" style="padding:var(--sm) var(--lg)">
+              <span class="t-sm ter">Rows in purple italics are estimates for domains you've turned off — modelled on comparable merchants, not measured on you.</span>
+              <button class="btn btn-secondary sm" data-goto="conversations">See the conversations behind these numbers</button>
+            </div>
           </div>
 
           <details class="card" style="overflow:hidden">
@@ -601,129 +668,124 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </div>
       </section>
 
-      <!-- ======== CAMPAIGNS · NEW ======== -->
+      <!-- ======== CAMPAIGNS · NEW (3-step conversational wizard) ======== -->
       <section class="page hidden" id="page-campaign-new">
         <header class="pageHeader">
           <div class="ttl">
-            <div class="row gap-xs">
-              <button class="btn btn-tertiary sm ter" data-goto="campaigns">← Campaigns</button>
-            </div>
+            <button class="btn btn-tertiary sm ter" data-goto="campaigns" style="margin-left:-8px;width:fit-content">← Campaigns</button>
             <h1 class="h-xxl">New campaign</h1>
-            <p class="t-md sec">Pick who it goes to, then let three instructions compete for the send.</p>
+            <p class="t-md sec">Three questions. Answer them the way you'd answer a colleague.</p>
           </div>
           <div class="pageActions">
-            <button class="btn btn-secondary" data-act="test-campaign">Test</button>
             <button class="btn btn-secondary">Save draft</button>
-            <button class="btn btn-primary">Launch test wave</button>
           </div>
         </header>
 
-        <div class="zone">
-          <!-- AUDIENCE -->
-          <div class="card pad">
-            <div class="row between wrap gap-sm" style="margin-bottom:var(--md)">
-              <div class="col gap-xxxs">
-                <h2 class="h-lg">1 · Audience</h2>
-                <p class="t-sm sec">Build it with rules, or just describe it.</p>
-              </div>
-              <div class="seg" id="audMode">
-                <button class="on" data-m="nl">Describe it</button>
-                <button data-m="rules">Rules</button>
-              </div>
-            </div>
+        <div class="stepper" id="wizSteps">
+          <button class="step on" data-step="1"><span class="dotN">1</span> Who<span class="stepSub">the audience</span></button>
+          <button class="step" data-step="2"><span class="dotN">2</span> What<span class="stepSub">the message</span></button>
+          <button class="step" data-step="3"><span class="dotN">3</span> How<span class="stepSub">the rollout</span></button>
+        </div>
 
-            <!-- rules mode -->
-            <div id="audRules" class="hidden">
-              <div class="col gap-xs" id="ruleList"></div>
-              <div class="row gap-xs" style="margin-top:var(--sm)">
-                <button class="btn btn-secondary sm" id="addRule">Add condition</button>
-                <button class="btn btn-tertiary sm ter">Add a group</button>
-              </div>
-            </div>
-
-            <!-- nl mode -->
-            <div id="audNl">
-              <textarea class="textarea" id="audNlInput">Customers who bought a hardshell last winter, still active, who have never bought a mid-layer — skip anyone who returned something in the last month.</textarea>
-              <div class="row between wrap gap-sm" style="margin-top:var(--sm)">
-                <div class="chips">
-                  <button class="chip audSample">Lapsed subscribers who paused after a delivery issue</button>
-                  <button class="chip audSample">VIPs who haven't bought the new season yet</button>
+        <div class="zone top">
+          <!-- ---------- STEP 1 ---------- -->
+          <div class="wizStep" data-wiz="1">
+            <div class="convo" id="convo1"></div>
+            <div class="card pad" id="w1Result" style="display:none">
+              <div class="row between wrap gap-sm" style="margin-bottom:var(--md)">
+                <div class="col gap-xxxs">
+                  <h2 class="h-md">Your audience</h2>
+                  <p class="t-sm sec">Read it back and change anything that's off. You can switch to rules if you'd rather be exact.</p>
                 </div>
-                <button class="btn btn-ai" id="audEstimate">Estimate audience</button>
+                <div class="seg" id="audMode">
+                  <button class="on" data-m="nl">As I described it</button>
+                  <button data-m="rules">As rules</button>
+                </div>
               </div>
-              <div id="audNlResult" class="hidden" style="margin-top:var(--md)">
-                <div class="sepH" style="margin-bottom:var(--md)"></div>
-                <div class="t-sm bold" style="margin-bottom:var(--xs)">Read back as rules — edit anything that's off</div>
-                <div class="chips" style="margin-bottom:var(--md)">
+
+              <div id="audNl">
+                <div class="chips">
                   <span class="tag tag-blue">bought in <b style="margin-left:3px">Hardshells</b></span>
                   <span class="tag tag-blue">order date <b style="margin-left:3px">Oct–Feb</b></span>
                   <span class="tag tag-blue">lifetime <b style="margin-left:3px">Mid-layers</b> = 0</span>
                   <span class="tag tag-grey">stage in <b style="margin-left:3px">Repeat, VIP</b></span>
                   <span class="tag tag-red">exclude: return in last 30 d</span>
+                  <button class="chip">+ condition</button>
                 </div>
               </div>
-            </div>
 
-            <div class="sepH" style="margin:var(--md) 0"></div>
-            <div class="row wrap gap-lg" id="audEstimateRow">
-              <div class="kv"><span class="k">Matching shoppers</span><span class="h-lg num-t" id="estTotal">4,120</span></div>
-              <div class="kv"><span class="k">Reachable now</span><span class="h-lg num-t" id="estReach">3,180</span>
-                <span class="t-xs ter">consent + frequency headroom</span></div>
-              <div class="kv"><span class="k">Held out for measurement</span><span class="h-lg num-t">318</span>
-                <span class="t-xs ter">10% never messaged</span></div>
-              <div class="kv" style="min-width:220px"><span class="k">By lifecycle stage</span>
-                <div class="row gap-xxs wrap" style="margin-top:4px">
-                  <span class="tag tag-grey">First-time 1,240</span><span class="tag tag-grey">Repeat 1,610</span>
-                  <span class="tag tag-grey">VIP 220</span><span class="tag tag-grey">At risk 110</span>
-                </div></div>
+              <div id="audRules" class="hidden">
+                <div class="col gap-xs" id="ruleList"></div>
+                <div class="row gap-xs" style="margin-top:var(--sm)">
+                  <button class="btn btn-secondary sm" id="addRule">Add condition</button>
+                </div>
+              </div>
+
+              <div class="sepH" style="margin:var(--md) 0"></div>
+              <div class="row wrap gap-lg">
+                <div class="kv"><span class="k">Matching shoppers</span><span class="h-lg num-t" id="estTotal">2,840</span></div>
+                <div class="kv"><span class="k">Reachable now</span><span class="h-lg num-t" id="estReach">2,190</span>
+                  <span class="t-xs ter">consent + frequency headroom</span></div>
+                <div class="kv"><span class="k">Held out</span><span class="h-lg num-t">219</span>
+                  <span class="t-xs ter">10% never messaged, so lift is measured</span></div>
+                <div class="kv"><span class="k">Excluded by guardrails</span><span class="h-lg num-t">431</span>
+                  <span class="t-xs ter">bad review, open ticket, frequency</span></div>
+                <div class="kv" style="min-width:200px"><span class="k">By lifecycle stage</span>
+                  <div class="row gap-xxs wrap" style="margin-top:4px">
+                    <span class="tag tag-grey">Repeat 1,610</span><span class="tag tag-grey">VIP 220</span>
+                    <span class="tag tag-grey">At risk 360</span></div></div>
+              </div>
+              <div class="row" style="justify-content:flex-end;margin-top:var(--md)">
+                <button class="btn btn-primary" data-wizgo="2">Next — what should we say?</button>
+              </div>
             </div>
           </div>
 
-          <!-- INSTRUCTION A/B -->
-          <div class="card pad">
-            <div class="row between wrap gap-sm" style="margin-bottom:var(--sm)">
-              <div class="col gap-xxxs">
-                <h2 class="h-lg">2 · Instructions, tested against each other</h2>
-                <p class="t-sm sec">Three approaches. A slice of the audience decides which one the rest gets.</p>
+          <!-- ---------- STEP 2 ---------- -->
+          <div class="wizStep hidden" data-wiz="2">
+            <div class="convo" id="convo2"></div>
+            <div class="card pad" id="w2Result" style="display:none">
+              <div class="row between wrap gap-sm" style="margin-bottom:var(--sm)">
+                <div class="col gap-xxxs">
+                  <h2 class="h-md">Three approaches to test</h2>
+                  <p class="t-sm sec">Each one is a full instruction. Remove any you don't want tested.</p>
+                </div>
+                <div class="row gap-xs">
+                  <span class="t-sm sec">Pick the winner on</span>
+                  <select class="selectEl auto"><option>Revenue per recipient</option><option>Margin per recipient</option><option>Conversion rate</option><option>Reply rate</option></select>
+                </div>
               </div>
-              <div class="row gap-xs">
-                <span class="t-sm sec">Pick the winner on</span>
-                <select class="selectEl auto"><option>Revenue per recipient</option><option>Conversion rate</option><option>Reply rate</option><option>Margin per recipient</option></select>
+              <div class="grid g-3" id="variantGrid"></div>
+              <div class="row between" style="margin-top:var(--md)">
+                <button class="btn btn-secondary sm" data-addvar>Add a variant</button>
+                <button class="btn btn-primary" data-wizgo="3">Next — how should it roll out?</button>
               </div>
-            </div>
-
-            <div class="banner banner-info" style="margin-bottom:var(--md)">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-900)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.5"/></svg>
-              <div class="row wrap gap-xs" style="flex:1;align-items:center">
-                <span class="t-md">Send to</span><input class="input num" value="10%" style="height:30px">
-                <span class="t-md">of the audience, wait</span><input class="input num" value="1h" style="height:30px">
-                <span class="t-md">, then send the winner to the remaining</span><span class="t-md med">90%</span>
-                <span class="t-md">— unless no variant is ahead by more than</span><input class="input num" value="5%" style="height:30px">
-                <span class="t-md">, in which case hold and tell me.</span>
-              </div>
-            </div>
-
-            <div class="grid g-3" id="variantGrid"></div>
-            <div class="row gap-xs" style="margin-top:var(--md)">
-              <button class="btn btn-secondary sm" data-addvar>Add a variant</button>
-              <button class="btn btn-secondary sm" data-act="test-campaign">Preview all three on one shopper</button>
             </div>
           </div>
 
-          <!-- LIVE RESULT -->
-          <div class="card" style="overflow:hidden">
-            <div class="row between" style="padding:var(--md) var(--lg)">
-              <div class="col gap-xxxs">
-                <h2 class="h-md">Test wave · sent 58 minutes ago</h2>
-                <p class="t-sm sec">412 recipients, evenly split. Winner call in 2 minutes.</p>
+          <!-- ---------- STEP 3 ---------- -->
+          <div class="wizStep hidden" data-wiz="3">
+            <div class="convo" id="convo3"></div>
+            <div class="card pad" id="w3Result" style="display:none">
+              <h2 class="h-md">Rollout</h2>
+              <p class="t-sm sec" style="margin-bottom:var(--md)">A slice decides for the rest.</p>
+              <div class="banner banner-info">
+                <div class="row wrap gap-xs" style="flex:1;align-items:center">
+                  <span class="t-md">Send to</span><input class="input num" value="10%" style="height:30px">
+                  <span class="t-md">of the audience, wait</span><input class="input num" value="1h" style="height:30px">
+                  <span class="t-md">, then send the winner to the rest — unless nothing leads by more than</span>
+                  <input class="input num" value="5%" style="height:30px">
+                  <span class="t-md">, in which case hold and tell me.</span>
+                </div>
               </div>
-              <span class="tag tag-orange"><span class="dot" style="background:var(--orange-500)"></span>Measuring</span>
+              <div class="sepH" style="margin:var(--md) 0"></div>
+              <h3 class="h-sm" style="margin-bottom:var(--xs)">Before it goes out</h3>
+              <div class="col gap-xs" id="wizChecks"></div>
+              <div class="row between" style="margin-top:var(--md)">
+                <button class="btn btn-secondary" data-act="test-campaign">Preview on one shopper</button>
+                <button class="btn btn-primary">Launch the test wave</button>
+              </div>
             </div>
-            <table id="waveTable">
-              <thead><tr><th>Variant</th><th>Sent</th><th>Replies</th><th>CVR</th>
-                <th>Revenue / recipient</th><th>Margin impact</th><th style="width:110px">Call</th></tr></thead>
-              <tbody></tbody>
-            </table>
           </div>
         </div>
       </section>
@@ -736,7 +798,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <p class="t-md sec">The hard limits every engagement obeys. An instruction can ask; a guardrail decides.</p>
           </div>
           <div class="pageActions">
-            <button class="btn btn-secondary" data-goto="activity">What was suppressed</button>
+            <button class="btn btn-secondary" data-goto="conversations">What was suppressed</button>
             <button class="btn btn-primary">Save guardrails</button>
           </div>
         </header>
@@ -793,6 +855,23 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
               <h2 class="h-md">Who never gets messaged</h2>
               <p class="t-sm sec" style="margin-bottom:var(--md)">Checked before any decision. The locked ones can't be turned off.</p>
               <div class="col gap-sm" id="suppressionList"></div>
+            </div>
+
+            <div class="card pad">
+              <div class="row between wrap gap-xs">
+                <h2 class="h-md">Who we never contact</h2>
+                <span class="tag tag-grey" id="exclCount">4,180 shoppers excluded</span>
+              </div>
+              <p class="t-sm sec" style="margin-bottom:var(--md)">Suppression above is about timing — this is about people. Anyone matching a rule here is out of every audience, every engagement, every campaign.</p>
+              <div class="col gap-sm" id="exclusionList"></div>
+              <div class="sepH" style="margin:var(--md) 0"></div>
+              <div class="row between">
+                <div class="col gap-xxxs" style="max-width:72%">
+                  <span class="t-md med">Never-contact list</span>
+                  <span class="t-sm sec">Uploaded or added by hand — competitors, press, employees, anyone who asked.</span>
+                </div>
+                <button class="btn btn-secondary sm">312 people · manage</button>
+              </div>
             </div>
 
             <div class="card pad">
@@ -875,62 +954,44 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </div>
       </section>
 
-      <!-- ======== ACTIVITY ======== -->
-      <section class="page hidden" id="page-activity">
+      <!-- ======== CONVERSATIONS — a marketing inbox ======== -->
+      <section class="page hidden" id="page-conversations">
         <header class="pageHeader">
           <div class="ttl">
-            <h1 class="h-xxl">Activity</h1>
-            <p class="t-md sec">Every decision the engine made, per shopper, with the reason. One row is one person.</p>
+            <h1 class="h-xxl">Conversations</h1>
+            <p class="t-md sec">Every outbound conversation, why it started, and what happened next.</p>
           </div>
           <div class="pageActions">
             <button class="btn btn-secondary">Export</button>
-            <button class="btn btn-primary" id="approveAll">Approve 12 pending</button>
+            <button class="btn btn-primary" id="approveAll">Approve 4 waiting</button>
           </div>
         </header>
 
-        <div class="zone">
-          <div class="row between wrap gap-sm">
-            <div class="chips" id="actFilter">
-              <button class="chip on" data-f="all">All</button>
-              <button class="chip" data-f="pending">Pending approval <span class="ter">12</span></button>
-              <button class="chip" data-f="sent">Sent <span class="ter">1,204</span></button>
-              <button class="chip" data-f="dry">Would have sent <span class="ter">86</span></button>
-              <button class="chip" data-f="suppressed">Suppressed <span class="ter">1,842</span></button>
+        <div class="inbox">
+          <!-- list -->
+          <div class="inboxList">
+            <div class="col gap-xs" style="padding:var(--sm) var(--sm) var(--xs)">
+              <div class="searchWrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ter"><circle cx="11" cy="11" r="7"/><path d="m20 20-4.3-4.3"/></svg>
+                <input class="searchInput" id="convSearch" placeholder="Search a shopper, a product, a reason…">
+              </div>
+              <div class="chips" id="convFilter">
+                <button class="chip on" data-f="all">All</button>
+                <button class="chip" data-f="pending">Waiting for you <span class="ter">4</span></button>
+                <button class="chip" data-f="live">Live <span class="ter">2</span></button>
+                <button class="chip" data-f="closed">Closed</button>
+                <button class="chip" data-f="stopped">Stopped</button>
+              </div>
+              <select class="selectEl" id="convSrc" style="height:32px;padding:4px 8px">
+                <option value="all">Every source</option><option>ACE</option><option>Default</option><option>Custom</option><option>Campaign</option>
+              </select>
             </div>
-            <div class="row gap-xs">
-              <select class="selectEl auto" id="actSrc"><option value="all">Any source</option><option>Default</option><option>Custom</option><option>ACE</option></select>
-              <select class="selectEl auto"><option>Last 7 days</option><option>Last 24 hours</option><option>Last 30 days</option></select>
-            </div>
+            <div class="sepH"></div>
+            <div class="convItems" id="convItems"></div>
           </div>
 
-          <div class="card" style="overflow:hidden">
-            <table id="actTable">
-              <thead><tr><th style="width:20%">Shopper</th><th>Stage</th><th>Engagement</th>
-                <th style="width:28%">Why this shopper, now</th><th>Decided</th><th style="width:130px">Outcome</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-
-          <details class="card pad-md">
-            <summary class="row gap-xs" style="cursor:pointer">
-              <span class="t-md med">Patterns worth knowing</span>
-              <span class="tag tag-grey">3 observations · last 30 days</span>
-            </summary>
-            <div class="col gap-sm" style="margin-top:var(--md)">
-              <div class="row gap-xs" style="align-items:flex-start">
-                <span class="dot" style="background:var(--purple-500);margin-top:7px"></span>
-                <span class="t-md sec" style="flex:1">Messages that name the product bought convert 2.3× better than ones that name a category. Applied to 4 engagements so far.</span>
-              </div>
-              <div class="row gap-xs" style="align-items:flex-start">
-                <span class="dot" style="background:var(--purple-500);margin-top:7px"></span>
-                <span class="t-md sec" style="flex:1">Nothing sent between 12:00 and 14:00 local converts — the engine has stopped choosing that slot on its own.</span>
-              </div>
-              <div class="row gap-xs" style="align-items:flex-start">
-                <span class="dot" style="background:var(--purple-500);margin-top:7px"></span>
-                <span class="t-md sec" style="flex:1">Free shipping beat 10% off on every at-risk cohort tested. Cheaper for you, and it won.</span>
-              </div>
-            </div>
-          </details>
+          <!-- thread -->
+          <div class="inboxThread" id="convThread"></div>
         </div>
       </section>
 
@@ -966,14 +1027,17 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           <!-- tiers -->
           <div class="card" style="overflow:hidden">
             <div class="col gap-xs" style="padding:var(--md) var(--lg)">
-              <h2 class="h-md">Tiers</h2>
-              <p class="t-sm sec">Each tier maps to a lifecycle stage, so "VIP" means one thing across the whole product.</p>
+              <div class="row between wrap gap-xs">
+                <h2 class="h-md">Tiers</h2>
+                <button class="btn btn-secondary sm" data-tier="new">New tier</button>
+              </div>
+              <p class="t-sm sec">You define them: the conditions that get someone in, the perks, and which lifecycle stage the tier maps to — so "VIP" means one thing across the whole product.</p>
               <div class="tierBar" id="tierBar" style="margin-top:var(--xs)"></div>
               <div class="legend" id="tierLegend"></div>
             </div>
             <table id="tierTable">
-              <thead><tr><th>Tier</th><th>Enters at</th><th>Members</th><th>Maps to stage</th>
-                <th style="width:30%">Perks</th><th style="width:110px">AI may offer</th></tr></thead>
+              <thead><tr><th>Tier</th><th>Enters when</th><th>Members</th><th>Maps to stage</th>
+                <th style="width:24%">Perks</th><th style="width:150px">AI may offer</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
@@ -1090,14 +1154,22 @@ const ENG=[
 /* ACE is one switch, not a list of scenarios. Domains are the only dial:
    they bound what the agent chain is allowed to work on. */
 const ACE_DOMAINS=[
-  {n:"Replenishment & reorder",d:"Someone is due, or overdue, for something they already buy.",on:true,sent:2410,cvr:"8.1%",rev:"$14,900"},
-  {n:"Retention & win-back",d:"Going quiet, or already gone, and worth one honest attempt.",on:true,sent:1980,cvr:"4.4%",rev:"$9,100"},
-  {n:"Cross-sell & complements",d:"They own the thing; the companion piece is the obvious next step.",on:true,sent:1640,cvr:"6.9%",rev:"$11,300"},
-  {n:"Service recovery",d:"Something went wrong and the relationship is worth repairing.",on:true,sent:520,cvr:"3.2%",rev:"$2,400"},
-  {n:"Subscriptions",d:"Renewals, failed payments, pauses worth saving.",on:true,sent:410,cvr:"12.6%",rev:"$5,800"},
-  {n:"Consideration & browse",d:"Looking, hesitating, not yet a customer.",on:false,sent:0,cvr:"—",rev:"—",note:"Off — you asked it to leave pre-purchase to your own flows"},
-  {n:"Loyalty moments",d:"A tier within reach, points about to expire, an anniversary.",on:true,sent:280,cvr:"9.8%",rev:"$3,800"},
-  {n:"Seasonal & inventory",d:"A restock, a weather swing, a range that suddenly matters.",on:false,sent:0,cvr:"—",rev:"—",note:"Off — you run these as campaigns"}
+  {n:"Replenishment & reorder",d:"Someone is due, or overdue, for something they already buy.",
+   on:true, reach:2410,gmv:14900,cvr:"8.1%",opt:"0.7%", potReach:2400,potGmv:14000,potCvr:"7.8%",potOpt:"0.9%"},
+  {n:"Retention & win-back",d:"Going quiet, or already gone, and worth one honest attempt.",
+   on:true, reach:1980,gmv:9100,cvr:"4.4%",opt:"1.6%", potReach:2000,potGmv:9000,potCvr:"4.2%",potOpt:"1.7%"},
+  {n:"Cross-sell & complements",d:"They own the thing; the companion piece is the obvious next step.",
+   on:true, reach:1640,gmv:11300,cvr:"6.9%",opt:"0.9%", potReach:1600,potGmv:11000,potCvr:"6.6%",potOpt:"1.0%"},
+  {n:"Service recovery",d:"Something went wrong and the relationship is worth repairing.",
+   on:true, reach:520,gmv:2400,cvr:"3.2%",opt:"0.4%", potReach:500,potGmv:2300,potCvr:"3.1%",potOpt:"0.5%"},
+  {n:"Subscriptions",d:"Renewals, failed payments, pauses worth saving.",
+   on:true, reach:410,gmv:5800,cvr:"12.6%",opt:"0.3%", potReach:400,potGmv:5600,potCvr:"12.1%",potOpt:"0.4%"},
+  {n:"Loyalty moments",d:"A tier within reach, points about to expire, an anniversary.",
+   on:true, reach:280,gmv:3800,cvr:"9.8%",opt:"0.5%", potReach:280,potGmv:3700,potCvr:"9.5%",potOpt:"0.6%"},
+  {n:"Consideration & browse",d:"Looking, hesitating, not yet a customer.",
+   on:false, reach:0,gmv:0,cvr:"—",opt:"—", potReach:3100,potGmv:12800,potCvr:"3.4%",potOpt:"1.8%"},
+  {n:"Seasonal & inventory",d:"A restock, a weather swing, a range that suddenly matters.",
+   on:false, reach:0,gmv:0,cvr:"—",opt:"—", potReach:1450,potGmv:6600,potCvr:"5.1%",potOpt:"1.2%"}
 ];
 const ACE_CHAIN=[
   ["Watch","Orders, tickets, sessions, consent and catalog, continuously."],
@@ -1139,6 +1211,17 @@ const TONE_TEXT={
   "Dormant":"One honest attempt. Acknowledge the gap without guilt-tripping, make it easy to come back or to leave, and then stop."};
 const DISCOUNTS=["No discount, ever","Free shipping only","Loyalty points instead of money","Up to 10% with approval","Up to 20%, at-risk only"];
 const LEVERS=["Answer the objection","Early access","Points boost","Free shipping","Tier fast-track","Discount"];
+/* each lever is an object you configure, not a label */
+const LEVER_CFG={
+  0:[],
+  1:[["Window","hours",["24","48","72"],1]],
+  2:[["Multiplier","",["2×","3×","5×"],0],["For","",["one order","7 days","14 days"],1]],
+  3:[["Minimum order","",["none","$50","$65","$100"],2]],
+  4:[["Jump","",["one tier","to Gold","to Summit"],0],["Holds for","",["30 days","60 days","90 days"],1]],
+  5:[["Type","",["% off","fixed amount","free shipping"],0],["Value","",["5%","10%","15%","20%"],1],
+     ["Code","",["unique per shopper","shared pool"],0],["Expires in","",["3 days","5 days","7 days","no expiry"],1],
+     ["Minimum order","",["none","$50","$100"],1]]
+};
 
 const STAGES=[
   {n:"Visitor",rule:["Sessions ≥ 1","Opt-in = no"],pop:"18,400",days:"—",col:"var(--grey-300)",
@@ -1387,34 +1470,74 @@ function renderCampaigns(){
   });
 }
 
-/* ACE — one switch, domains as the only dial */
-let aceState="on";
+/* ACE — modes get real estate; domains are the enterprise control */
+const ACE_MODES=[
+  {k:"off",n:"Off",tag:"tag-grey",
+   sum:"ACE stops looking entirely.",
+   det:"Your own scenarios and campaigns carry on exactly as before. Nothing is deleted — turn it back on and it picks up where it left off.",
+   who:"Pick this if you want the machine out of the loop while you sort something else out."},
+  {k:"manual",n:"Manual acceptance",tag:"tag-blue",
+   sum:"It prepares everything. You press send.",
+   det:"ACE finds the moment, picks the person, writes the message and runs the guardrails — then waits. Each one lands in Conversations with its reasoning attached, and you approve or reject it.",
+   who:"Pick this for the first few weeks, or on any domain where you want a human in the loop for good."},
+  {k:"auto",n:"Automatic",tag:"tag-purple",
+   sum:"It sends on its own, inside your guardrails.",
+   det:"Same work, no waiting. Guardrails still run last and can stop anything. Every message is still logged in Conversations with the reasoning that produced it, so nothing is unaccountable — you review after instead of before.",
+   who:"Pick this once you've read a few dozen and you trust what it's doing."}
+];
+let aceState="auto";
 function renderAce(){
-  const on=aceState!=="off";
-  const T={on:["ACE is on","Finding, deciding and sending on its own, inside your guardrails.","On","tag-purple"],
-    dry:["ACE is in dry run","Still finding and deciding — it just doesn't send. Read it all in Activity before you commit.","Dry run","tag-blue"],
-    off:["ACE is off","It has stopped looking. Your own scenarios carry on as normal.","Off","tag-grey"]}[aceState];
-  $("#aceStripTitle").textContent=T[0];
-  $("#aceStripNote").textContent=T[1];
-  $("#aceStripStats").textContent = on ? "7,240 sent · $47,300 GMV" : "nothing running";
+  const M=ACE_MODES.find(m=>m.k===aceState), on=aceState!=="off";
+  const allowed=ACE_DOMAINS.filter(d=>d.on), off=ACE_DOMAINS.filter(d=>!d.on);
+  const lostGmv=off.reduce((a,d)=>a+(d.potGmv||0),0);
+
+  /* strip */
+  $("#aceStripTitle").textContent = aceState==="off" ? "ACE is off"
+    : aceState==="manual" ? "ACE · waiting for your approval" : "ACE · sends automatically";
+  const tag=$("#aceStripTag"); tag.textContent=M.n; tag.className="tag "+M.tag;
+  $("#aceStripNote").textContent = on
+    ? allowed.length+" of "+ACE_DOMAINS.length+" domains allowed."
+    : "Nothing running.";
+  $("#aceStripStats").textContent = on ? "7,240 reached · $47,300 GMV" : "—";
   $("#aceStrip").classList.toggle("off",!on);
-  const badge=$("#aceTabBadge"); badge.textContent=T[2]; badge.className="tag "+T[3];
-  $("#aceDomCount").textContent=ACE_DOMAINS.filter(d=>d.on).length+" of "+ACE_DOMAINS.length+" allowed";
-  $("#aceStats").style.opacity=on?1:.45;
+  $("#acePendingBtn").style.display = aceState==="manual" ? "" : "none";
+  const badge=$("#aceTabBadge"); badge.textContent=M.n; badge.className="tag "+M.tag;
+
+  /* mode cards */
+  $("#aceModeCards").innerHTML=ACE_MODES.map(m=>{
+    const sel=m.k===aceState;
+    return `<button class="modeBig ${sel?"on":""}" data-acemode="${m.k}">
+      <div class="row between">
+        <div class="row gap-xs"><span class="h-md">${m.n}</span>${sel?`<span class="tag ${m.tag}">Current</span>`:""}</div>
+        <span class="radioRing ${sel?"on":""}"></span>
+      </div>
+      <span class="t-md med" style="color:${sel?"var(--content-accent-default)":"var(--content-neutral-default)"}">${m.sum}</span>
+      <span class="t-sm sec">${m.det}</span>
+      <span class="t-sm ter" style="margin-top:auto;font-style:italic">${m.who}</span>
+    </button>`}).join("");
+
+  /* domains */
+  $("#aceDomCount").textContent=allowed.length+" of "+ACE_DOMAINS.length+" allowed";
+  const pot=$("#aceDomPotential");
+  if(off.length&&on){pot.style.display="";pot.textContent=off.length+" off · ≈$"+fmt(lostGmv)+" GMV left on the table"}
+  else pot.style.display="none";
 
   const tb=$("#aceDomainTable tbody"); tb.innerHTML="";
   ACE_DOMAINS.forEach((d,i)=>{
     const live=d.on&&on;
+    const cell=(real,potential)=>live
+      ? `<td class="t-md num-t">${real}</td>`
+      : `<td class="t-md num-t" style="color:var(--content-accent-default);font-style:italic">${potential}</td>`;
     const tr=el("tr");
-    tr.style.opacity=on?1:.5;
     tr.innerHTML=`
       <td><div class="col gap-xxxs">
         <span class="t-md med">${d.n}</span><span class="t-sm sec">${d.d}</span>
-        ${d.note?`<span class="tag tag-grey" style="margin-top:4px;width:fit-content">${d.note}</span>`:""}
+        ${live?"":`<span class="tag tag-purple" style="margin-top:4px;width:fit-content">Not allowed — figures are estimates</span>`}
       </div></td>
-      <td class="t-md num-t ${live&&d.sent?"":"ter"}">${live&&d.sent?fmt(d.sent):"—"}</td>
-      <td class="t-md num-t ${live&&d.sent?"":"ter"}">${live&&d.sent?d.cvr:"—"}</td>
-      <td class="t-md num-t ${live&&d.sent?"bold":"ter"}">${live&&d.sent?d.rev:"—"}</td>
+      ${cell(fmt(d.reach),"≈"+fmt(d.potReach))}
+      ${cell("$"+fmt(d.gmv),"≈$"+fmt(d.potGmv))}
+      ${cell(d.cvr,"≈"+d.potCvr)}
+      ${cell(d.opt,"≈"+d.potOpt)}
       <td><span class="toggle ${d.on?"on":""}" data-dom="${i}" ${on?"":'style="opacity:.5;pointer-events:none"'}></span></td>`;
     tb.appendChild(tr);
   });
@@ -1427,7 +1550,6 @@ function renderAce(){
         <span class="t-md med">${c[0]}</span><span class="t-sm sec">${c[1]}</span>
       </div>
     </div>`).join("");
-
 }
 
 function renderBench(){
@@ -1674,7 +1796,7 @@ function renderLifecycle(){
         <span class="tag tag-grey">${s.pop} shoppers</span>
         ${s.days!=="—"?`<span class="tag tag-grey">avg ${s.days} in stage</span>`:""}
       </div>
-      <button class="btn btn-secondary sm">See the shoppers</button>
+      <button class="btn btn-secondary sm" data-shoppers="${s.n}">See the ${s.pop} shoppers</button>
     </div>
 
     <div class="card pad">
@@ -1704,9 +1826,27 @@ function renderLifecycle(){
       </div>
       <div class="sepH" style="margin:var(--md) 0"></div>
       <div class="grid g-2">
-        <div class="field"><span class="label">Levers, in the order we'd use them</span>
-          <div class="chipInput">${s.lever.map(i=>`<span class="tag ${i===5?"tag-orange":i===0?"tag-grey":"tag-purple"}">${LEVERS[i]}</span>`).join("")}
-            <span class="t-sm ter">+ add</span></div></div>
+        <div class="field"><span class="label">Levers, in the order we'd use them <span class="ter">— each one is configured, not just named</span></span>
+          <div class="col gap-xs">
+            ${s.lever.map((i,pos)=>{
+              const cfg=LEVER_CFG[i]||[];
+              return `<div class="lever">
+                <div class="leverHead">
+                  <svg class="leverGrip" width="12" height="14" viewBox="0 0 12 14" fill="currentColor"><circle cx="3" cy="3" r="1.3"/><circle cx="9" cy="3" r="1.3"/><circle cx="3" cy="7" r="1.3"/><circle cx="9" cy="7" r="1.3"/><circle cx="3" cy="11" r="1.3"/><circle cx="9" cy="11" r="1.3"/></svg>
+                  <span class="tag tag-grey">${pos+1}</span>
+                  <span class="t-md med" style="flex:1">${LEVERS[i]}</span>
+                  ${cfg.length?"":`<span class="t-xs ter">nothing to configure</span>`}
+                  ${i===5?`<span class="tag tag-orange">costs margin</span>`:i===0?"":`<span class="tag tag-purple">cheap</span>`}
+                  <button class="btn btn-tertiary sm ter">✕</button>
+                </div>
+                ${cfg.length?`<div class="leverCfg">${cfg.map(c=>`
+                  <div class="field"><span class="label">${c[0]}</span>
+                    <select class="selectEl" style="height:32px;padding:4px 8px">
+                      ${c[2].map((o,oi)=>`<option ${oi===c[3]?"selected":""}>${o}</option>`).join("")}
+                    </select></div>`).join("")}</div>`:""}
+              </div>`}).join("")}
+            <button class="btn btn-secondary sm" style="width:fit-content">Add a lever</button>
+          </div></div>
         <div class="field"><span class="label">Sources allowed to touch this stage</span>
           <div class="chipInput">${["Default","Custom","ACE"].map(x=>{const on=s.src.includes(x);
             return `<span class="tag ${on?SRC[x].tag:"tag-grey"}" style="${on?"":"opacity:.4;text-decoration:line-through"}">${x}</span>`}).join("")}</div></div>
@@ -1727,69 +1867,173 @@ function renderLifecycle(){
     </div>`;
 }
 
-/* =======================================================================
-   ACTIVITY
-   ======================================================================= */
-let actFilter="all";
-function renderActivity(){
-  const src=$("#actSrc").value;
-  const rows=ACTIVITY.filter(r=>(actFilter==="all"||r.st===actFilter)&&(src==="all"||r.s===src));
-  const tb=$("#actTable tbody"); tb.innerHTML="";
-  if(!rows.length){
-    tb.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:var(--xxl)">
-      <div class="col gap-xxs" style="align-items:center"><span class="t-md sec">Nothing here right now</span>
-      <span class="t-sm ter">Try another filter.</span></div></td></tr>`;
-    return;
-  }
-  rows.forEach(r=>{
-    const i=ACTIVITY.indexOf(r), st=ACT_ST[r.st];
-    const tr=el("tr","rowLink");
-    tr.innerHTML=`
-      <td><div class="col gap-xxxs"><span class="t-md med">${r.who}</span><span class="t-xs ter mono">${r.id}</span></div></td>
-      <td><span class="tag tag-grey">${r.stage}</span></td>
-      <td><div class="col gap-xxxs"><span class="t-md">${r.eng}</span>
-        <span class="tag ${SRC[r.s].tag}" style="width:fit-content"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span></div></td>
-      <td class="t-sm sec">${r.why}</td>
-      <td class="t-sm sec">${r.when}</td>
-      <td><span class="tag ${st[1]}">${st[0]}</span></td>`;
-    tr.addEventListener("click",()=>openActivity(i));
-    tb.appendChild(tr);
-  });
+/* ===================== CONVERSATIONS (marketing inbox) ===================== */
+const CONV=[
+  {who:"Ana R.",id:"+1 415 ••• 2140",stage:"First-time buyer",tier:"Member",src:"ACE",domain:"Cross-sell & complements",
+   st:"pending",when:"12 min ago",unread:true,
+   why:"Day 51 of her 62-day second-order window. Bought the Winter Tights, never a base layer, and no flow of yours covers day 48–58.",
+   reason:[["Lifecycle","First-time buyer · goal is a second order"],["Loyalty","Member · 340 points, 60 short of a free-shipping reward"],
+           ["Timing","09:40 local — when she replied last time"],["Lever","Answer the objection. No offer; loyalty reward held in reserve"]],
+   thread:[["out","Hey Ana — how are the Winter Tights holding up? Most people pair them with the Merino base layer once it drops below 5°. Want me to show you the two that fit your size?","waiting"]]},
+
+  {who:"Marc D.",id:"+33 6 •• •• 71",stage:"VIP",tier:"Gold",src:"ACE",domain:"Replenishment & reorder",
+   st:"pending",when:"18 min ago",unread:true,
+   why:"2.1× past his own 38-day reorder gap on the care kit. No open ticket, no recent return — the silence isn't a service problem.",
+   reason:[["Lifecycle","VIP · protect the relationship"],["Loyalty","Gold · early access is available, so no discount needed"],
+           ["Timing","18:20 local, his usual window"],["Lever","Early access to the new formula"]],
+   thread:[["out","Marc — it's been a while. You usually restock the care kit around now. Anything changed, or should I set one aside before Friday?","waiting"]]},
+
+  {who:"Sam K.",id:"+44 7•• ••• 903",stage:"At risk",tier:"Silver",src:"Custom",domain:"Fit-return recovery",
+   st:"live",when:"41 min ago",unread:true,
+   why:"Returned for fit last spring and never came back. The dial and the cut were both changed in March, which is exactly what they complained about.",
+   reason:[["Lifecycle","At risk · re-engage before they go quiet"],["Loyalty","Silver · free returns already included, used as the reassurance"],
+           ["Guardrails","Discount withheld — free returns was enough"],["Lever","Lead with the product change, not an apology"]],
+   thread:[["out","Hi Sam — you sent back the shorts last spring because the length ran short. We changed the dial and the cut in March. Want me to work out your size properly this time?"],
+           ["in","oh really? yeah I'd give it another go"],
+           ["out","Great. What's your usual waist and inseam? I'll pick the exact size, and returns are free on your tier if it's still off."]]},
+
+  {who:"Lena P.",id:"+49 15• ••• 22",stage:"Repeat",tier:"Silver",src:"Default",domain:"Replenishment due",
+   st:"closed",when:"1 h ago",outcome:"Ordered · $64",
+   why:"Day 40 on her own 38-day cadence for care products.",
+   reason:[["Lifecycle","Repeat · build the rhythm"],["Loyalty","Silver · earned 80 points on this order"],
+           ["Timing","Morning, her usual"],["Lever","None needed"]],
+   thread:[["out","Lena, you're about due for the care kit refill — want the same one, or the new concentrate?"],
+           ["in","same one please"],["out","Done — it's in your basket ready to go. That order takes you to 1,120 points."]]},
+
+  {who:"Priya S.",id:"+1 646 ••• 3390",stage:"VIP",tier:"Summit",src:"Campaign",domain:"Mid-layer season opener",
+   st:"live",when:"2 h ago",
+   why:"In the Mid-layer season opener audience, and she asked about sizing on the shell in chat yesterday without ordering.",
+   reason:[["Campaign","Mid-layer season opener · variant A, no offer"],["Loyalty","Summit · concierge sizing offered instead of a discount"],
+           ["Lifecycle","VIP · deference, early access over money"],["Lever","Answer the objection first"]],
+   thread:[["out","Priya — you asked about the 38 in the shell yesterday. It runs true to size with a mid-layer underneath. Want me to hold one?"],
+           ["in","yes please, and can someone check the sleeve length"],
+           ["out","Booked you a sizing session for tomorrow 11:00 — that's on your Summit tier. I'll hold the 38 until then."]]},
+
+  {who:"Tom W.",id:"+1 206 ••• 8871",stage:"First-time buyer",tier:"Member",src:"ACE",domain:"Cross-sell & complements",
+   st:"stopped",when:"1 h ago",
+   why:"Day 49 of his second-order window — but he has an open ticket about a delayed parcel.",
+   stop:"Stopped by guardrails: open support ticket. It will try again once the ticket is resolved.",
+   reason:[["Guardrail","Open support ticket — don't sell to someone waiting on a problem"],["Retry","Queued, re-evaluates on ticket close"]],
+   thread:[]},
+
+  {who:"Jonas M.",id:"+46 7• ••• 12",stage:"Dormant",tier:"Member",src:"Default",domain:"Win-back",
+   st:"stopped",when:"3 h ago",
+   why:"210 days since his last order, still opted in.",
+   stop:"Stopped by guardrails: frequency cap. He's already had 3 messages this week.",
+   reason:[["Guardrail","3 of 3 messages used this week"],["Retry","Next Monday at the earliest"]],
+   thread:[]},
+
+  {who:"Chloé B.",id:"+33 7 •• •• 08",stage:"Repeat",tier:"Silver",src:"Custom",domain:"Helmet cross-sell",
+   st:"closed",when:"4 h ago",outcome:"Ordered · $89",
+   why:"Bought a frame 5 days ago, zero helmets in her lifetime orders.",
+   reason:[["Lifecycle","Repeat · familiar tone"],["Loyalty","Silver · 1.25 points per dollar mentioned at close"],
+           ["Lever","Fit and safety, never price"]],
+   thread:[["out","Chloé — nice frame. One thing you'll want before the first proper ride: a helmet that actually fits the way you ride. Want me to narrow it to two?"],
+           ["in","sure"],["out","Here they are — both size S, both in stock. Free returns if the fit's off."]]},
+
+  {who:"Hugo T.",id:"+34 6•• ••• 41",stage:"At risk",tier:"Member",src:"ACE",domain:"Retention & win-back",
+   st:"pending",when:"5 h ago",unread:true,
+   why:"1.7× past his own rhythm, and he browsed twice last week without buying.",
+   reason:[["Lifecycle","At risk · open question before any offer"],["Loyalty","Member · 900 points, enough for free shipping"],
+           ["Lever","Points before discount — costs you $6.40 instead of $12"]],
+   thread:[["out","Hugo — saw you back looking at the trail shoes. Anything holding you up? You've got enough points for free shipping if that helps.","waiting"]]},
+
+  {who:"Ingrid L.",id:"+47 4•• •• 90",stage:"VIP",tier:"Gold",src:"ACE",domain:"Loyalty moments",
+   st:"pending",when:"6 h ago",unread:true,
+   why:"120 points from Summit, and 1,400 points expire at the end of the month.",
+   reason:[["Loyalty","Gold → Summit within reach; expiring points are the hook"],["Lifecycle","VIP · reward, don't sell"],
+           ["Lever","Tier fast-track mentioned, no discount"]],
+   thread:[["out","Ingrid — you're 120 points from Summit, and 1,400 of yours expire on the 31st. Want me to show you what they'd cover?","waiting"]]}
+];
+const CONV_ST={pending:["Waiting for you","tag-orange"],live:["Live","tag-blue"],
+  closed:["Closed","tag-green"],stopped:["Stopped","tag-grey"]};
+const SRC_TAG={ACE:"tag-purple",Default:"tag-blue",Custom:"tag-coral",Campaign:"tag-teal"};
+
+let convFilter="all", convSel=0, convQ="";
+function convRows(){
+  const src=$("#convSrc").value;
+  return CONV.filter(c=>(convFilter==="all"||c.st===convFilter)
+    &&(src==="all"||c.src===src)
+    &&(!convQ||(c.who+" "+c.domain+" "+c.why+" "+c.tier).toLowerCase().includes(convQ)));
 }
-function openActivity(i){
-  const r=ACTIVITY[i], st=ACT_ST[r.st];
-  const body=`
-    <div class="row gap-xs wrap">
-      <span class="tag ${st[1]}">${st[0]}</span>
-      <span class="tag ${SRC[r.s].tag}"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span>
-      <span class="tag tag-grey">${r.stage}</span><span class="tag tag-grey">${r.when}</span>
-    </div>
-    <div class="col gap-xs">
-      <h3 class="h-md">Why this shopper, now</h3>
-      <div class="card pad-md"><span class="t-md sec">${r.why}</span></div>
-      <div class="col gap-xs" style="margin-top:var(--xs)">
-        ${[["Lifecycle stage",r.stage],["Engagement",r.eng+" · "+r.s],["Instruction","Loaded as a skill, v4"],
-           ["Frequency headroom","1 of 3 used this week"],["Timing chosen","09:40 local, when they usually reply"],
-           ["Offer used","None — objection answered instead"]]
-          .map(x=>`<div class="row between"><span class="t-sm sec">${x[0]}</span><span class="t-sm med">${x[1]}</span></div>`).join("")}
+function renderConv(){
+  const rows=convRows(), list=$("#convItems"); list.innerHTML="";
+  $("#navPending").textContent=CONV.filter(c=>c.st==="pending").length;
+  if(!rows.length){
+    list.innerHTML=`<div class="col gap-xxs" style="align-items:center;padding:var(--xxl) var(--md)">
+      <span class="t-md sec">Nothing matches</span><span class="t-sm ter">Try another filter or clear the search.</span></div>`;
+    $("#convThread").innerHTML=""; return;
+  }
+  if(!rows.includes(CONV[convSel])) convSel=CONV.indexOf(rows[0]);
+  rows.forEach(c=>{
+    const i=CONV.indexOf(c), st=CONV_ST[c.st];
+    const b=el("button","convItem"+(i===convSel?" on":"")+(c.unread?" unread":""));
+    b.innerHTML=`
+      <div class="row between gap-xs">
+        <span class="t-md who trunc">${c.who}</span>
+        <span class="t-xs ter" style="flex-shrink:0">${c.when}</span>
+      </div>
+      <div class="row gap-xxs wrap">
+        <span class="tag ${SRC_TAG[c.src]}">${c.src}</span>
+        <span class="tag ${st[1]}">${st[0]}</span>
+      </div>
+      <span class="t-sm sec trunc">${c.domain}</span>`;
+    b.addEventListener("click",()=>{convSel=i;c.unread=false;renderConv()});
+    list.appendChild(b);
+  });
+  renderThread(CONV[convSel]);
+}
+function renderThread(c){
+  const st=CONV_ST[c.st];
+  $("#convThread").innerHTML=`
+    <div class="row between wrap gap-sm">
+      <div class="col gap-xxxs">
+        <div class="row gap-xs"><h2 class="h-lg">${c.who}</h2>
+          <span class="tag ${st[1]}">${st[0]}</span></div>
+        <span class="t-sm ter mono">${c.id} · ${c.stage} · ${c.tier}</span>
+      </div>
+      <div class="row gap-xs">
+        <button class="btn btn-secondary sm" data-shopperone="${CONV.indexOf(c)}">Open shopper</button>
+        ${c.st==="pending"?`<button class="btn btn-secondary sm">Reject</button>
+          <button class="btn btn-primary sm">Approve &amp; send</button>`:""}
       </div>
     </div>
-    ${r.sup?`<div class="banner banner-warn"><div class="col gap-xxxs">
-        <span class="t-md med">Not sent</span><span class="t-sm sec">${r.sup}</span></div></div>`:""}
-    ${r.conv.length?`<div class="col gap-xs">
-      <h3 class="h-md">${r.st==="dry"?"What would have been sent":"The conversation"}</h3>
-      <div class="phone">${r.conv.map(c=>`<div class="bubble ${c[0]}">${c[1]}</div>`).join("")}
-        ${r.st==="dry"?`<span class="bTime">Dry run — nothing left the building</span>`:""}</div>
-    </div>`:""}`;
-  const foot = r.st==="pending"
-    ? `<button class="btn btn-secondary">Reject</button><button class="btn btn-secondary">Edit and send</button><button class="btn btn-primary">Approve</button>`
-    : `<button class="btn btn-secondary">Open in Tickets</button><button class="btn btn-primary">Close</button>`;
-  openPanel(r.who, r.eng, body, foot);
+
+    <div class="card pad-md" style="background:var(--blue-50);border-color:var(--blue-100)">
+      <div class="row gap-xs" style="margin-bottom:var(--xxs)">
+        <span class="t-sm bold">Why this conversation started</span>
+        <span class="tag ${SRC_TAG[c.src]}">${c.src} · ${c.domain}</span>
+      </div>
+      <span class="t-md sec">${c.why}</span>
+    </div>
+
+    <div class="col gap-xs">
+      <span class="t-sm bold">What it was reasoning from</span>
+      <div class="card" style="overflow:hidden">
+        ${c.reason.map((r,i)=>`<div class="row between" style="padding:var(--xs) var(--md);
+          ${i?'border-top:1px solid var(--border-neutral-default)':''}">
+          <span class="t-sm sec">${r[0]}</span><span class="t-sm med" style="text-align:right">${r[1]}</span></div>`).join("")}
+      </div>
+    </div>
+
+    ${c.stop?`<div class="banner banner-warn"><div class="col gap-xxxs">
+      <span class="t-md med">Never sent</span><span class="t-sm sec">${c.stop}</span></div></div>`:""}
+
+    ${c.thread.length?`<div class="col gap-xs">
+      <div class="row between">
+        <span class="t-sm bold">${c.st==="pending"?"Ready to send":"The conversation"}</span>
+        ${c.outcome?`<span class="tag tag-green">${c.outcome}</span>`:""}
+      </div>
+      <div class="phone">${c.thread.map(m=>`<div class="bubble ${m[0]}">${m[1]}</div>
+        ${m[2]==="waiting"?`<span class="bTime">Held for your approval</span>`:""}`).join("")}</div>
+    </div>`:""}
+
+    ${c.st==="pending"?`<div class="row gap-xs" style="justify-content:flex-end">
+      <button class="btn btn-secondary">Edit the message</button>
+      <button class="btn btn-secondary">Reject</button>
+      <button class="btn btn-primary">Approve &amp; send</button></div>`:""}`;
 }
 
-/* =======================================================================
-   LOYALTY
-   ======================================================================= */
 function renderLoyalty(){
   const tot=TIERS.reduce((a,t)=>a+t.m,0);
   $("#tierBar").innerHTML=TIERS.map(t=>
@@ -1799,12 +2043,15 @@ function renderLoyalty(){
   const tb=$("#tierTable tbody"); tb.innerHTML="";
   TIERS.forEach(t=>{
     const tr=el("tr");
+    tr.className="rowLink";
     tr.innerHTML=`<td><div class="row gap-xs"><span class="srcSwatch" style="background:${t.c};width:10px;height:10px"></span>
         <span class="t-md med">${t.n}</span></div></td>
       <td class="t-sm sec">${t.at}</td><td class="t-md num-t">${fmt(t.m)}</td>
       <td><span class="tag tag-grey">${t.stage}</span></td>
       <td class="t-sm sec">${t.perks}</td>
-      <td><span class="toggle ${t.ai?"on":""}" data-toggle></span></td>`;
+      <td><div class="row gap-xs" style="justify-content:flex-end">
+        <button class="btn btn-secondary sm" data-tier="${TIERS.indexOf(t)}">Edit</button>
+        <span class="toggle ${t.ai?"on":""}" data-toggle></span></div></td>`;
     tb.appendChild(tr);
   });
   const e=$("#earnList"); e.innerHTML="";
@@ -1895,6 +2142,27 @@ document.addEventListener("click",e=>{
   const dm=e.target.closest("[data-dom]");
   if(dm){const i=+dm.dataset.dom;ACE_DOMAINS[i].on=!ACE_DOMAINS[i].on;renderAce();return}
 
+  const ex=e.target.closest("[data-excl]");
+  if(ex){const i=+ex.dataset.excl;EXCLUSIONS[i].on=!EXCLUSIONS[i].on;renderExclusions();return}
+
+  const ws=e.target.closest("[data-wizsend]");
+  if(ws){wizSend(+ws.dataset.wizsend);return}
+  const wg=e.target.closest("[data-wizgo]");
+  if(wg){wizStep=+wg.dataset.wizgo;renderWiz();$("#scroller").scrollTop=0;return}
+  const wsp=e.target.closest("#wizSteps .step");
+  if(wsp){wizStep=+wsp.dataset.step;renderWiz();return}
+
+  const tn=e.target.closest("[data-tier]");
+  if(tn){openTier(tn.dataset.tier==="new"?null:+tn.dataset.tier);return}
+
+  const sh=e.target.closest("[data-shoppers]");
+  if(sh){openShoppers(sh.dataset.shoppers);return}
+  const bk=e.target.closest('[data-back="shoppers"]');
+  if(bk){openShoppers(STAGES[stg].n);return}
+  const s1=e.target.closest("[data-shopperone]");
+  if(s1){const c=CONV[+s1.dataset.shopperone];
+    openShopper({name:c.who,tier:c.tier,orders:c.stage==="VIP"?7:2,ltv:"$412",last:c.when,id:c.id});return}
+
   const dv=e.target.closest("[data-delvar]");
   if(dv){VARIANTS.splice(+dv.dataset.delvar,1);renderVariants();return}
   if(e.target.closest("[data-addvar]")){
@@ -1929,17 +2197,18 @@ $$("#srcFilter .chip").forEach(c=>c.addEventListener("click",()=>{
   engFilter=c.dataset.f; renderEng();
 }));
 $("#statusFilter").addEventListener("change",renderEng);
-$$("#actFilter .chip").forEach(c=>c.addEventListener("click",()=>{
-  $$("#actFilter .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
-  actFilter=c.dataset.f; renderActivity();
+$$("#convFilter .chip").forEach(c=>c.addEventListener("click",()=>{
+  $$("#convFilter .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
+  convFilter=c.dataset.f; renderConv();
 }));
-$("#actSrc").addEventListener("change",renderActivity);
+$("#convSrc").addEventListener("change",renderConv);
+$("#convSearch").addEventListener("input",e=>{convQ=e.target.value.toLowerCase();renderConv()});
 
 /* ACE — the switch, and the domain dial */
-$$("#aceMode button").forEach(b=>b.addEventListener("click",()=>{
-  $$("#aceMode button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
-  aceState=b.dataset.a; renderAce();
-}));
+document.addEventListener("click",e=>{
+  const m=e.target.closest("[data-acemode]");
+  if(m){aceState=m.dataset.acemode;renderAce()}
+});
 $$("#campFilter .chip").forEach(c=>c.addEventListener("click",()=>{
   $$("#campFilter .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
   renderCampaigns();
@@ -1952,13 +2221,7 @@ $$("#audMode button").forEach(b=>b.addEventListener("click",()=>{
   $("#audNl").classList.toggle("hidden",!nl);
   $("#audRules").classList.toggle("hidden",nl);
 }));
-$("#audEstimate").addEventListener("click",()=>{
-  const b=$("#audEstimate");b.textContent="Counting…";b.disabled=true;
-  setTimeout(()=>{$("#audNlResult").classList.remove("hidden");
-    $("#estTotal").textContent="2,840";$("#estReach").textContent="2,190";
-    b.textContent="Estimate audience";b.disabled=false},600);
-});
-$$(".audSample").forEach(s=>s.addEventListener("click",()=>{$("#audNlInput").value=s.textContent.trim()}));
+
 
 /* chart / table views */
 $$("[data-view]").forEach(seg=>seg.addEventListener("click",e=>{
@@ -1968,6 +2231,215 @@ $$("[data-view]").forEach(seg=>seg.addEventListener("click",e=>{
   if(which==="vol"){$("#chartVol").classList.toggle("hidden",table);$("#tableVol").classList.toggle("hidden",!table)}
   else{$("#chartCvr").classList.toggle("hidden",table);$("#tableCvr").classList.toggle("hidden",!table)}
 }));
+
+/* ===================== EXCLUSIONS (who we never contact) ===================== */
+const EXCLUSIONS=[
+  {n:"Left a review of 3★ or less",d:"Within the last 90 days. They told you something; don't sell over it.",on:true,n2:"640 people"},
+  {n:"Rated a support conversation 1 or 2",d:"AI or human — a bad experience is not a sales moment.",on:true,n2:"310 people"},
+  {n:"Opened a dispute or chargeback",d:"Permanent until resolved and manually cleared.",on:true,n2:"48 people"},
+  {n:"Asked not to be contacted, in words",d:"Detected in a reply even without a formal STOP.",on:true,locked:true,n2:"1,290 people"},
+  {n:"Returned more than half of what they bought",d:"Often a fit problem, not a demand problem.",on:false,n2:"210 people"},
+  {n:"Wholesale, press, employees and test accounts",d:"Tagged in your CRM or on the never-contact list.",on:true,n2:"312 people"},
+  {n:"Flagged by your team as do-not-market",d:"A manual switch on the shopper profile.",on:true,locked:true,n2:"1,380 people"}
+];
+function renderExclusions(){
+  const l=$("#exclusionList"); if(!l) return;
+  l.innerHTML="";
+  EXCLUSIONS.forEach((x,i)=>{
+    const r=el("div","row between");
+    r.innerHTML=`<div class="col gap-xxxs" style="max-width:70%">
+        <div class="row gap-xxs"><span class="t-md med">${x.n}</span>
+          ${x.locked?`<span class="tag tag-grey">Locked</span>`:""}
+          <span class="tag ${x.on?"tag-red":"tag-grey"}">${x.n2}</span></div>
+        <span class="t-sm sec">${x.d}</span></div>
+      <span class="toggle ${x.on?"on":""}" ${x.locked?'style="opacity:.55;pointer-events:none"':`data-excl="${i}"`}></span>`;
+    l.appendChild(r);
+  });
+  const total=EXCLUSIONS.filter(x=>x.on).reduce((a,x)=>a+parseInt(x.n2.replace(/[^0-9]/g,""),10),0);
+  $("#exclCount").textContent=fmt(total)+" shoppers excluded";
+}
+
+/* ===================== SHOPPERS DRAWER ===================== */
+const FIRST=["Ana","Marc","Sam","Lena","Priya","Tom","Jonas","Chloé","Hugo","Ingrid","Nils","Sofia","Ruben","Mei","Otto","Clara","Diego","Aisha","Pieter","Nora"];
+const LAST=["R.","D.","K.","P.","S.","W.","M.","B.","T.","L.","V.","N.","A.","J.","H.","F."];
+function shopperList(stage){
+  const out=[];
+  for(let i=0;i<24;i++){
+    const orders=stage==="VIP"?5+(i%7):stage==="Repeat"?2+(i%3):stage==="First-time buyer"?1:0;
+    out.push({name:FIRST[i%FIRST.length]+" "+LAST[(i*3)%LAST.length],
+      tier:orders>=5?"Gold":orders>=2?"Silver":"Member",
+      orders, ltv:"$"+fmt(80+orders*74+(i*13)%90),
+      last:(3+(i*7)%140)+" days ago",
+      id:"+"+(1+i%4)+" ••• "+(1000+i*37)});
+  }
+  return out;
+}
+function openShoppers(stage){
+  const all=shopperList(stage);
+  const body=`
+    <div class="searchWrap" style="height:38px">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ter"><circle cx="11" cy="11" r="7"/><path d="m20 20-4.3-4.3"/></svg>
+      <input class="searchInput" id="shopQ" placeholder="Search by name, phone or tier…">
+    </div>
+    <div class="col gap-xxxs" id="shopRows"></div>`;
+  openPanel(stage+" shoppers", fmt(all.length)+" of "+STAGES.find(s=>s.n===stage).pop+" shown · click one to open their profile",
+    body, `<button class="btn btn-secondary">Export this list</button>`);
+  const draw=q=>{
+    const rows=all.filter(s=>!q||(s.name+" "+s.tier+" "+s.id).toLowerCase().includes(q));
+    $("#shopRows").innerHTML=rows.length?rows.map((s,i)=>`
+      <button class="shopRow" data-shopper="${i}">
+        <div class="col gap-xxxs" style="flex:1;min-width:0">
+          <span class="t-md med trunc">${s.name}</span>
+          <span class="t-xs ter mono">${s.id}</span>
+        </div>
+        <span class="tag ${s.tier==="Gold"?"tag-yellow":s.tier==="Silver"?"tag-grey":"tag-blue"}">${s.tier}</span>
+        <span class="t-sm sec num-t" style="width:64px;text-align:right">${s.ltv}</span>
+        <span class="t-sm ter" style="width:96px;text-align:right">${s.last}</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ter"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>
+      </button>`).join(""):`<div class="col" style="align-items:center;padding:var(--xl)">
+        <span class="t-md sec">No shopper matches</span></div>`;
+    $$("#shopRows [data-shopper]").forEach(b=>b.addEventListener("click",()=>openShopper(rows[+b.dataset.shopper])));
+  };
+  draw("");
+  $("#shopQ").addEventListener("input",e=>draw(e.target.value.toLowerCase()));
+}
+function openShopper(s){
+  openPanel(s.name, "Opens in its own tab in the real product", `
+    <div class="banner banner-info"><div class="col gap-xxxs">
+      <span class="t-md med">This is a stand-in for the shopper profile.</span>
+      <span class="t-sm sec">In the product this opens in a new tab so you can keep the list you were working through.</span>
+    </div></div>
+    <div class="grid g-3">
+      <div class="card pad-md"><div class="kv"><span class="k">Lifetime value</span><span class="h-md">${s.ltv}</span></div></div>
+      <div class="card pad-md"><div class="kv"><span class="k">Orders</span><span class="h-md">${s.orders}</span></div></div>
+      <div class="card pad-md"><div class="kv"><span class="k">Tier</span><span class="h-md">${s.tier}</span></div></div>
+    </div>
+    <div class="col gap-xs">
+      <span class="t-sm bold">Recent conversations</span>
+      <div class="card" style="overflow:hidden">
+        ${CONV.slice(0,3).map((c,i)=>`<div class="row between" style="padding:var(--xs) var(--md);
+          ${i?'border-top:1px solid var(--border-neutral-default)':''}">
+          <span class="t-sm">${c.domain}</span>
+          <span class="tag ${SRC_TAG[c.src]}">${c.src}</span></div>`).join("")}
+      </div>
+    </div>`,
+    `<button class="btn btn-secondary" data-back="shoppers">← Back to the list</button>
+     <button class="btn btn-primary">Open in a new tab</button>`);
+}
+
+/* ===================== CAMPAIGN WIZARD ===================== */
+const WIZ=[
+  {ask:"Who do you want to reach?",
+   hint:"Describe them however you'd say it out loud. I'll turn it into an audience and tell you how many there are.",
+   answer:"Customers who bought a hardshell last winter, still active, who have never bought a mid-layer — skip anyone who returned something in the last month.",
+   ack:"Got it. That's 2,840 shoppers, 2,190 of them reachable right now. 431 are excluded by your guardrails — mostly bad reviews and open tickets. I've held back 10% so we can measure this properly."},
+  {ask:"What do you want to say to them?",
+   hint:"Tell me the point you want to land. I'll write three ways of making it and we'll let a slice of the audience decide.",
+   answer:"The mid-layer is the piece that makes the hardshell work below 5 degrees. Don't discount unless we have to — margin matters more than volume on this one.",
+   ack:"Here are three approaches. One answers the objection with no offer at all, one uses free shipping, one uses 10% off. Margin is protected in that order, so if the first one wins you keep the most."},
+  {ask:"How should it go out?",
+   hint:"I'd send a slice first and let it pick the winner. You can change any of it.",
+   answer:"Send 10% first, wait an hour, then send the best one to the rest.",
+   ack:"That's set. I'll check the guardrails before anything leaves and tell you if a variant is too close to call."}
+];
+const WIZ_CHECKS=[
+  ["Frequency","2,190 of 2,840 have headroom this week","tag-green"],
+  ["Quiet hours","Spread across each shopper's local morning","tag-green"],
+  ["Exclusions","431 removed: bad reviews, open tickets, do-not-market","tag-green"],
+  ["Discount ceiling","Variant C at 10% — inside your limit, no approval needed","tag-green"],
+  ["Collisions","64 shoppers already queued for Replenishment — they'll be deferred","tag-orange"],
+  ["Holdout","219 never messaged, so the lift is measured not modelled","tag-green"]
+];
+let wizStep=1;
+function renderWiz(){
+  $$("#wizSteps .step").forEach(b=>{
+    const n=+b.dataset.step;
+    b.classList.toggle("on",n===wizStep);
+    b.classList.toggle("done",n<wizStep);
+  });
+  $$(".wizStep").forEach(p=>p.classList.toggle("hidden",+p.dataset.wiz!==wizStep));
+  [1,2,3].forEach(n=>{
+    const host=$("#convo"+n); if(!host||host.dataset.built) return;
+    const w=WIZ[n-1];
+    host.dataset.built="1";
+    host.innerHTML=`
+      <div class="convoRow">
+        <span class="convoAv"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg></span>
+        <div class="convoAsk"><div class="col gap-xxxs">
+          <span class="t-md med">${w.ask}</span><span class="t-sm sec">${w.hint}</span></div></div>
+      </div>
+      <div class="convoAns"><span class="t-md" id="wizAns${n}">${w.answer}</span></div>
+      <div class="convoInput" id="wizInput${n}">
+        <textarea class="textarea" id="wizTa${n}">${w.answer}</textarea>
+        <button class="btn btn-ai" data-wizsend="${n}">Send</button>
+      </div>
+      <div class="convoRow hidden" id="wizAck${n}">
+        <span class="convoAv"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg></span>
+        <div class="convoAsk"><span class="t-md sec">${w.ack}</span></div>
+      </div>`;
+    $("#wizAns"+n).parentElement.classList.add("hidden");
+  });
+  if($("#wizChecks")&&!$("#wizChecks").dataset.built){
+    $("#wizChecks").dataset.built="1";
+    $("#wizChecks").innerHTML=WIZ_CHECKS.map(c=>`<div class="row between">
+      <div class="col gap-xxxs"><span class="t-md med">${c[0]}</span><span class="t-sm sec">${c[1]}</span></div>
+      <span class="tag ${c[2]}">${c[2]==="tag-green"?"Pass":"Deferred"}</span></div>`).join("");
+  }
+}
+function wizSend(n){
+  const ta=$("#wizTa"+n), val=ta.value;
+  $("#wizAns"+n).textContent=val;
+  $("#wizAns"+n).parentElement.classList.remove("hidden");
+  $("#wizInput"+n).classList.add("hidden");
+  const btn=$(`[data-wizsend="${n}"]`); if(btn) btn.disabled=true;
+  setTimeout(()=>{
+    $("#wizAck"+n).classList.remove("hidden");
+    const res=$("#w"+n+"Result"); if(res) res.style.display="";
+  },500);
+}
+
+/* ===================== LOYALTY TIER EDITOR ===================== */
+function openTier(i){
+  const t=i==null?{n:"New tier",cond:[["Orders in the last 12 months","≥","6"]],perks:"",stage:"VIP",ai:true,m:0}:TIERS[i];
+  const body=`
+    <div class="field"><span class="label">Tier name</span><input class="input" value="${t.n}"></div>
+    <div class="col gap-xs">
+      <span class="label">Someone enters this tier when</span>
+      <div class="col gap-xs">
+        ${(t.cond||[["Spend in the last 12 months","≥","$750"]]).map(c=>`
+          <div class="ruleRow">
+            <span class="joinBadge">AND</span>
+            <select class="selectEl"><option selected>${c[0]}</option><option>Orders in the last 12 months</option>
+              <option>Spend in the last 12 months</option><option>Lifetime spend</option><option>Points balance</option>
+              <option>Subscription active</option></select>
+            <select class="selectEl"><option selected>${c[1]}</option><option>&gt;</option><option>=</option><option>&lt;</option></select>
+            <input class="input" value="${c[2]}">
+            <button class="btn btn-tertiary sm ter">✕</button>
+          </div>`).join("")}
+      </div>
+      <button class="btn btn-secondary sm" style="width:fit-content">Add a condition</button>
+    </div>
+    <div class="grid g-2">
+      <div class="field"><span class="label">Maps to lifecycle stage</span>
+        <select class="selectEl">${STAGES.map(s=>`<option ${s.n===t.stage?"selected":""}>${s.n}</option>`).join("")}</select></div>
+      <div class="field"><span class="label">Earn rate</span>
+        <select class="selectEl"><option>1 point per $1</option><option selected>1.5 points per $1</option><option>2 points per $1</option></select></div>
+    </div>
+    <div class="field"><span class="label">Perks</span>
+      <textarea class="textarea">${t.perks}</textarea></div>
+    <div class="row between">
+      <div class="col gap-xxxs" style="max-width:74%">
+        <span class="t-md med">The AI may offer this tier's perks unprompted</span>
+        <span class="t-sm sec">If off, perks still exist — the engine just won't reach for them in a conversation.</span>
+      </div>
+      <span class="toggle ${t.ai?"on":""}" data-toggle></span>
+    </div>
+    ${t.m?`<div class="row between"><span class="t-sm sec">Members today</span><span class="t-md med num-t">${fmt(t.m)}</span></div>`:""}`;
+  openPanel(i==null?"New tier":t.n, i==null?"Define the conditions that get someone in":"Edit the conditions, perks and mapping",
+    body, `${i==null?"":`<button class="btn btn-secondary" style="color:var(--content-error-default)">Delete tier</button>`}
+    <button class="btn btn-secondary">Preview who qualifies</button>
+    <button class="btn btn-primary">${i==null?"Create tier":"Save tier"}</button>`);
+}
 
 /* boot */
 legend($("#legVol"));
@@ -1979,7 +2451,8 @@ dataTable($("#tableVol"),VOL);
 dataTable($("#tableCvr"),CVR,"%");
 renderBench(); renderRev();
 renderEng(); renderAce(); renderCampaigns(); renderRules(); renderVariants();
-renderGuardrails(); renderLifecycle(); renderActivity(); renderLoyalty();
+renderGuardrails(); renderExclusions(); renderLifecycle();
+renderConv(); renderWiz(); renderLoyalty();
 </script>
 </body>
 </html>
