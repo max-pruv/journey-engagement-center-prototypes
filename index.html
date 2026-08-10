@@ -192,6 +192,21 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .banner-warn{background:var(--orange-50);border:1px solid var(--orange-100)}
 .banner-ok{background:var(--green-50);border:1px solid var(--green-100)}
 
+/* tabs */
+.tabList{display:flex;gap:var(--lg);padding:0 var(--lg);border-bottom:1px solid var(--border-neutral-default)}
+.tabItem{padding:var(--xs) 0 10px;font-size:14px;font-weight:500;color:var(--content-neutral-secondary);
+  border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:var(--xxs)}
+.tabItem:hover{color:var(--content-neutral-default)}
+.tabItem.on{color:var(--content-neutral-default);border-bottom-color:var(--black)}
+.zone.top{padding-top:var(--lg)}
+
+/* persistent ACE strip — sticky under the page header, above the tabs */
+.aceStrip{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:var(--sm);flex-wrap:wrap;
+  margin:0 var(--lg) var(--md);padding:var(--xs) var(--sm) var(--xs) var(--xs);border-radius:10px;
+  border:1px solid var(--purple-200);
+  background:linear-gradient(100deg,rgba(125,25,240,.07),rgba(126,85,246,.035) 60%,var(--white))}
+.aceStrip.off{border-color:var(--border-neutral-default);background:var(--grey-50)}
+
 /* segmented */
 .seg{display:inline-flex;background:var(--surface-neutral-secondary);border-radius:var(--xs);padding:2px}
 .seg button{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:500;color:var(--content-neutral-secondary)}
@@ -435,12 +450,12 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </div>
       </section>
 
-      <!-- ======== ENGAGEMENTS (ACE lives here too) ======== -->
+      <!-- ======== ENGAGEMENTS · ACE + scenarios, two tabs, one persistent switch ======== -->
       <section class="page hidden" id="page-engagements">
         <header class="pageHeader">
           <div class="ttl">
             <h1 class="h-xxl">Engagements</h1>
-            <p class="t-md sec">Everything that reaches out to a shopper. ACE is the part that decides for itself; below it, the scenarios you own.</p>
+            <p class="t-md sec">Everything that reaches out to a shopper — the part that decides for itself, and the part you configure.</p>
           </div>
           <div class="pageActions">
             <button class="btn btn-secondary" data-goto="activity">Activity log</button>
@@ -448,78 +463,83 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           </div>
         </header>
 
-        <div class="zone">
-          <!-- ============ ACE : ONE SWITCH ============ -->
-          <div class="card pad" id="aceHero" style="border-color:var(--purple-200);
-               background:linear-gradient(112deg,rgba(125,25,240,.06),rgba(126,85,246,.03) 55%,transparent)">
-            <div class="row between wrap gap-lg">
-              <div class="row gap-md" style="min-width:300px;flex:1">
-                <div style="width:44px;height:44px;border-radius:12px;flex-shrink:0;display:grid;place-items:center;
-                     background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500))">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>
-                </div>
-                <div class="col gap-xxxs">
-                  <div class="row gap-xs">
-                    <span class="h-lg" id="aceHeroTitle">ACE is on</span>
-                    <span class="tag tag-purple" id="aceStateTag">On</span>
-                  </div>
-                  <span class="t-md sec" style="max-width:56ch" id="aceHeroNote">It finds the moment, decides who should hear from you, writes the message and sends it — inside your guardrails. There is nothing to configure.</span>
-                </div>
-              </div>
-              <div class="col gap-xs" style="align-items:flex-end">
-                <div class="seg" id="aceMode">
-                  <button data-a="off">Off</button>
-                  <button data-a="dry">Dry run</button>
-                  <button class="on" data-a="on">On</button>
-                </div>
-                <span class="t-xs ter">Takes effect immediately</span>
-              </div>
-            </div>
+        <!-- persistent ACE strip: the switch is never hidden behind a tab -->
+        <div class="aceStrip" id="aceStrip">
+          <div style="width:28px;height:28px;border-radius:var(--xs);flex-shrink:0;display:grid;place-items:center;
+               background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500))">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>
+          </div>
+          <span class="t-md med" id="aceStripTitle">ACE is on</span>
+          <div class="seg" id="aceMode">
+            <button data-a="off">Off</button>
+            <button data-a="dry">Dry run</button>
+            <button class="on" data-a="on">On</button>
+          </div>
+          <span class="t-sm sec trunc" id="aceStripNote" style="flex:1;min-width:120px">Finding, deciding and sending on its own, inside your guardrails.</span>
+          <span class="t-sm sec num-t" id="aceStripStats">7,240 sent · $47,300 GMV</span>
+          <button class="btn btn-tertiary sm acc" data-tab="ace">Manage →</button>
+        </div>
 
-            <div class="sepH" style="margin:var(--md) 0"></div>
+        <div class="tabList">
+          <button class="tabItem on" data-tab="ace">ACE <span class="tag tag-purple" id="aceTabBadge">On</span></button>
+          <button class="tabItem" data-tab="scenarios">Scenarios you own <span class="tag tag-grey" id="scnBadge">18</span></button>
+        </div>
 
-            <div class="row between wrap gap-lg" id="aceStats">
-              <div class="kv"><span class="k">Sent · 30d</span><span class="h-md num-t">7,240</span><span class="t-xs ter">15% of all outbound</span></div>
-              <div class="kv"><span class="k">GMV</span><span class="h-md num-t">$47,300</span><span class="t-xs ter">$18,900 measured vs holdout</span></div>
-              <div class="kv"><span class="k">Conversion</span><span class="h-md num-t">7.6%</span><span class="t-xs ter">vs 3.4% on default flows</span></div>
-              <div class="kv"><span class="k">Opt-out</span><span class="h-md num-t">1.1%</span><span class="t-xs ter">under the 1.5% cap</span></div>
-              <button class="btn btn-secondary sm" data-goto="activity">Read what it sent</button>
+        <!-- ---------- TAB: ACE ---------- -->
+        <div class="zone top tabPanel" data-panel-for="ace">
+          <div class="banner banner-ai">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ai-gradient)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>
+            <div class="col gap-xxxs" style="flex:1">
+              <span class="t-md med">There is nothing to build here.</span>
+              <span class="t-sm sec">ACE finds the moment, decides who should hear from you, writes the message and sends it. You decide whether it's on, and which domains it may work in. That's the whole surface.</span>
             </div>
+            <button class="btn btn-secondary sm" data-goto="activity">Read what it sent</button>
           </div>
 
-          <!-- domains + education, collapsed by default -->
-          <details class="card" style="overflow:hidden">
-            <summary class="row between wrap gap-sm" style="cursor:pointer;padding:var(--md) var(--lg)">
-              <div class="col gap-xxxs">
-                <span class="t-md med">What ACE is allowed to work on</span>
-                <span class="t-sm sec">The only dial there is. Turn a domain off and it stops looking there entirely.</span>
+          <div class="grid g-stat" id="aceStats">
+            <div class="card pad-md"><div class="t-sm sec">Sent · 30d</div>
+              <div class="h-xxl num-t" style="margin-top:2px">7,240</div><div class="t-sm sec">15% of all outbound</div></div>
+            <div class="card pad-md"><div class="t-sm sec">GMV</div>
+              <div class="h-xxl num-t" style="margin-top:2px">$47,300</div>
+              <div class="t-sm" style="color:var(--content-success-default)">$18,900 measured vs holdout</div></div>
+            <div class="card pad-md"><div class="t-sm sec">Conversion rate</div>
+              <div class="h-xxl num-t" style="margin-top:2px">7.6%</div>
+              <div class="t-sm sec">vs 3.4% on default flows</div></div>
+            <div class="card pad-md"><div class="t-sm sec">Opt-out rate</div>
+              <div class="h-xxl num-t" style="margin-top:2px">1.1%</div><div class="t-sm sec">under the 1.5% cap</div></div>
+          </div>
+
+          <div class="card" style="overflow:hidden">
+            <div class="col gap-xxxs" style="padding:var(--md) var(--lg)">
+              <div class="row between wrap gap-sm">
+                <h2 class="h-md">What it's allowed to work on</h2>
+                <span class="tag tag-grey" id="aceDomCount">6 of 8 allowed</span>
               </div>
-              <span class="tag tag-grey" id="aceDomCount">6 of 8 allowed</span>
-            </summary>
+              <p class="t-sm sec">The only dial there is. Turn a domain off and ACE stops looking there entirely — it won't propose it, won't send it, won't count it.</p>
+            </div>
             <table id="aceDomainTable">
               <thead><tr><th style="width:38%">Domain</th><th>Sent · 30d</th><th>CVR</th>
                 <th>GMV</th><th style="width:110px">Allowed</th></tr></thead>
               <tbody></tbody>
             </table>
-            <div class="sepH"></div>
-            <div class="col gap-sm" style="padding:var(--md) var(--lg) var(--lg)">
+          </div>
+
+          <details class="card" style="overflow:hidden">
+            <summary class="row between wrap gap-sm" style="cursor:pointer;padding:var(--md) var(--lg)">
               <div class="col gap-xxxs">
                 <span class="t-md med">What happens behind the switch</span>
                 <span class="t-sm sec">Not one model — a handful of agents, each with one job, handing off to the next.</span>
               </div>
+              <span class="tag tag-grey">6 steps</span>
+            </summary>
+            <div class="col gap-sm" style="padding:0 var(--lg) var(--lg)">
               <div class="col gap-xs" id="aceChain"></div>
             </div>
           </details>
+        </div>
 
-          <!-- ============ THE SCENARIOS YOU OWN ============ -->
-          <div class="sepH"></div>
-          <div class="row between wrap gap-sm">
-            <div class="col gap-xxxs">
-              <h2 class="h-lg">Scenarios you own</h2>
-              <p class="t-sm sec">Pre-built ones, and the ones you described yourself. Same list, same controls — the only difference is who wrote them.</p>
-            </div>
-          </div>
-
+        <!-- ---------- TAB: SCENARIOS ---------- -->
+        <div class="zone top tabPanel hidden" data-panel-for="scenarios">
           <div class="row between wrap gap-sm">
             <div class="chips" id="srcFilter">
               <button class="chip on" data-f="all">All <span class="ter" id="fcAll"></span></button>
@@ -544,6 +564,8 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
               <tbody></tbody>
             </table>
           </div>
+
+          <p class="t-sm ter">Pre-built ones and the ones you described yourself sit in the same list — the only difference is who wrote them. Each carries one instruction.</p>
         </div>
       </section>
 
@@ -605,13 +627,13 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
                 <p class="t-sm sec">Build it with rules, or just describe it.</p>
               </div>
               <div class="seg" id="audMode">
-                <button class="on" data-m="rules">Rules</button>
-                <button data-m="nl">Describe it</button>
+                <button class="on" data-m="nl">Describe it</button>
+                <button data-m="rules">Rules</button>
               </div>
             </div>
 
             <!-- rules mode -->
-            <div id="audRules">
+            <div id="audRules" class="hidden">
               <div class="col gap-xs" id="ruleList"></div>
               <div class="row gap-xs" style="margin-top:var(--sm)">
                 <button class="btn btn-secondary sm" id="addRule">Add condition</button>
@@ -620,7 +642,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             </div>
 
             <!-- nl mode -->
-            <div id="audNl" class="hidden">
+            <div id="audNl">
               <textarea class="textarea" id="audNlInput">Customers who bought a hardshell last winter, still active, who have never bought a mid-layer — skip anyone who returned something in the last month.</textarea>
               <div class="row between wrap gap-sm" style="margin-top:var(--sm)">
                 <div class="chips">
@@ -683,7 +705,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 
             <div class="grid g-3" id="variantGrid"></div>
             <div class="row gap-xs" style="margin-top:var(--md)">
-              <button class="btn btn-secondary sm">Add a variant</button>
+              <button class="btn btn-secondary sm" data-addvar>Add a variant</button>
               <button class="btn btn-secondary sm" data-act="test-campaign">Preview all three on one shopper</button>
             </div>
           </div>
@@ -1106,32 +1128,40 @@ const OBJECTIVES=[
   "Re-engage before they go quiet",
   "Win back, or stop spending on them"
 ];
-const TONES=["Helpful, no selling","Warm and direct","Familiar, like a regular","Deferential, they've earned it","Honest and low-pressure"];
+const CAP_UNITS=["messages per week","messages per month","messages per quarter","message, ever"];
+const TONE_TEXT={
+  "Visitor":"Helpful, never selling. We have no permission yet, so earn it: answer what they came for and mention the list only if it genuinely helps them.",
+  "Lead":"They know us but haven't bought. Warm and direct. Answer the objection first — sizing, fit, shipping — and only then point at a product.",
+  "First-time buyer":"Talk like someone who remembers the order. Name the exact product they bought, never the category. The goal is a second order, not the biggest one.",
+  "Repeat":"Familiar, like a regular. Talk about restocking, fit and what's working for them — not new arrivals. Short messages; they don't need convincing.",
+  "VIP":"They've earned deference. Early access and first looks over money. Never treat them like a cold lead, and never explain the brand back to them.",
+  "At risk":"Honest and low-pressure. Ask an open question before offering anything. If we've let them down, say so plainly and fix it before selling.",
+  "Dormant":"One honest attempt. Acknowledge the gap without guilt-tripping, make it easy to come back or to leave, and then stop."};
 const DISCOUNTS=["No discount, ever","Free shipping only","Loyalty points instead of money","Up to 10% with approval","Up to 20%, at-risk only"];
 const LEVERS=["Answer the objection","Early access","Points boost","Free shipping","Tier fast-track","Discount"];
 
 const STAGES=[
   {n:"Visitor",rule:["Sessions ≥ 1","Opt-in = no"],pop:"18,400",days:"—",col:"var(--grey-300)",
-    obj:0,tone:0,disc:0,lever:[0],cap:"1 / week",src:["Default"],
+    obj:0,tone:0,disc:0,lever:[0],capN:1,capU:0,src:["Default"],
     note:"Nothing can send here without consent — suppression does most of the work."},
   {n:"Lead",rule:["Opt-in = yes","Orders = 0"],pop:"6,120",days:"22 d",col:"var(--blue-200)",
-    obj:1,tone:0,disc:1,lever:[0,3],cap:"2 / week",src:["Default","Custom"],
+    obj:1,tone:0,disc:1,lever:[0,3],capN:2,capU:0,src:["Default","Custom"],
     note:"ACE stays out: too little signal on a shopper who has never bought."},
   {n:"First-time buyer",rule:["Orders = 1"],pop:"9,840",days:"62 d",col:"var(--teal-200)",
-    obj:2,tone:1,disc:1,lever:[0,3],cap:"3 / week",src:["Default","Custom","ACE"],
+    obj:2,tone:1,disc:1,lever:[0,3],capN:3,capU:0,src:["Default","Custom","ACE"],
     note:"Median time to a second order is 62 days; win-back only starts at 120. This is the gap ACE fills."},
   {n:"Repeat",rule:["Orders 2–4"],pop:"4,270",days:"148 d",col:"var(--green-300)",
-    obj:3,tone:2,disc:2,lever:[0,2],cap:"2 / week",src:["Default","Custom","ACE"],
+    obj:3,tone:2,disc:2,lever:[0,2],capN:2,capU:0,src:["Default","Custom","ACE"],
     note:"Reorder rhythm is learned per shopper here, not from the store average.",
     replen:[["Care products","38 days","34–44 days"],["Nutrition","27 days","24–31 days"],["Base layers","186 days","seasonal"]]},
   {n:"VIP",rule:["Orders ≥ 5","or LTV in top 10%"],pop:"1,180",days:"—",col:"var(--purple-300)",
-    obj:4,tone:3,disc:2,lever:[1,2,4],cap:"2 / week",src:["Custom","ACE"],
+    obj:4,tone:3,disc:2,lever:[1,2,4],capN:2,capU:0,src:["Custom","ACE"],
     note:"Mapped to the Gold and Summit loyalty tiers, so VIP means one thing everywhere."},
   {n:"At risk",rule:["1.5× past their own rhythm"],pop:"2,910",days:"41 d",col:"var(--orange-300)",
-    obj:5,tone:4,disc:3,lever:[0,3,5],cap:"2 / week",src:["Default","Custom","ACE"],
+    obj:5,tone:4,disc:3,lever:[0,3,5],capN:2,capU:0,src:["Default","Custom","ACE"],
     note:"Free shipping beat 10% off on every at-risk cohort tested — cheaper, and it won."},
   {n:"Dormant",rule:["No order in 180 days"],pop:"7,650",days:"—",col:"var(--coral-400)",
-    obj:6,tone:4,disc:4,lever:[5],cap:"1 / month",src:["Default","ACE"],
+    obj:6,tone:4,disc:4,lever:[5],capN:1,capU:1,src:["Default","ACE"],
     note:"One honest attempt, then stop. Most suppressed messages come from here."}
 ];
 
@@ -1361,13 +1391,14 @@ function renderCampaigns(){
 let aceState="on";
 function renderAce(){
   const on=aceState!=="off";
-  const T={on:["ACE is on","It's reaching out on its own, inside your guardrails, on the domains you allow below. Every single decision is in the Activity log.","On","tag-purple"],
-    dry:["ACE is in dry run","It's still finding moments and deciding who to reach — it just doesn't send. Everything it would have sent shows up in Activity, so you can read it before you commit.","Dry run","tag-blue"],
-    off:["ACE is off","It has stopped looking. Your Default and Custom engagements carry on as normal.","Off","tag-grey"]}[aceState];
-  $("#aceHeroTitle").textContent=T[0];
-  $("#aceHeroNote").textContent=T[1];
-  $("#aceStateTag").textContent=T[2];
-  $("#aceStateTag").className="tag "+T[3];
+  const T={on:["ACE is on","Finding, deciding and sending on its own, inside your guardrails.","On","tag-purple"],
+    dry:["ACE is in dry run","Still finding and deciding — it just doesn't send. Read it all in Activity before you commit.","Dry run","tag-blue"],
+    off:["ACE is off","It has stopped looking. Your own scenarios carry on as normal.","Off","tag-grey"]}[aceState];
+  $("#aceStripTitle").textContent=T[0];
+  $("#aceStripNote").textContent=T[1];
+  $("#aceStripStats").textContent = on ? "7,240 sent · $47,300 GMV" : "nothing running";
+  $("#aceStrip").classList.toggle("off",!on);
+  const badge=$("#aceTabBadge"); badge.textContent=T[2]; badge.className="tag "+T[3];
   $("#aceDomCount").textContent=ACE_DOMAINS.filter(d=>d.on).length+" of "+ACE_DOMAINS.length+" allowed";
   $("#aceStats").style.opacity=on?1:.45;
 
@@ -1458,6 +1489,7 @@ function renderEng(){
   });
   $("#fcAll").textContent=ENG.length;
   ["Default","Custom"].forEach(s=>{const n=$("#fc"+s);if(n)n.textContent=ENG.filter(r=>r.s===s).length});
+  $("#scnBadge").textContent=ENG.length;
   $("#navEngCount").textContent=ENG.filter(r=>r.st==="on").length;
 }
 
@@ -1575,12 +1607,15 @@ function renderRules(){
 }
 function renderVariants(){
   const g=$("#variantGrid"); g.innerHTML="";
-  VARIANTS.forEach(v=>{
+  VARIANTS.forEach((v,i)=>{
     const c=el("div","variant"+(v.win?" win":""));
     c.innerHTML=`
       <div class="row between">
         <div class="row gap-xs"><span class="tag tag-grey">${v.k}</span><span class="h-sm">${v.n}</span></div>
-        ${v.win?`<span class="tag tag-green">Leading</span>`:""}
+        <div class="row gap-xxs">
+          ${v.win?`<span class="tag tag-green">Leading</span>`:""}
+          ${VARIANTS.length>1?`<button class="btn btn-tertiary sm ter" data-delvar="${i}" title="Remove this variant">✕</button>`:""}
+        </div>
       </div>
       <span class="tag ${v.off==="No offer"?"tag-grey":v.off==="Free shipping"?"tag-blue":"tag-orange"}" style="width:fit-content">${v.off}</span>
       <textarea class="textarea" style="min-height:104px">${v.ins}</textarea>
@@ -1655,12 +1690,17 @@ function renderLifecycle(){
       <div class="grid g-2">
         <div class="field"><span class="label">What we're trying to make happen</span>
           <select class="selectEl">${opt(OBJECTIVES,s.obj)}</select></div>
-        <div class="field"><span class="label">How we speak to them</span>
-          <select class="selectEl">${opt(TONES,s.tone)}</select></div>
         <div class="field"><span class="label">What we're willing to give</span>
           <select class="selectEl">${opt(DISCOUNTS,s.disc)}</select></div>
         <div class="field"><span class="label">Messages allowed in this stage</span>
-          <input class="input" value="${s.cap}"></div>
+          <div class="row gap-xs">
+            <input class="input num" value="${s.capN}">
+            <select class="selectEl" style="flex:1">${opt(CAP_UNITS,s.capU)}</select>
+          </div></div>
+      </div>
+      <div class="field" style="margin-top:var(--md)">
+        <span class="label">How we speak to them <span class="ter">— prefilled from what works on this stage, edit it freely</span></span>
+        <textarea class="textarea">${TONE_TEXT[s.n]}</textarea>
       </div>
       <div class="sepH" style="margin:var(--md) 0"></div>
       <div class="grid g-2">
@@ -1808,6 +1848,18 @@ function goto(page){
 }
 $$(".navItem").forEach(n=>n.addEventListener("click",()=>goto(n.dataset.page)));
 
+/* tabs (Engagements: ACE | Scenarios) */
+function selectTab(tab){
+  $$(".tabItem").forEach(t=>t.classList.toggle("on",t.dataset.tab===tab));
+  $$(".tabPanel").forEach(p=>p.classList.toggle("hidden",p.dataset.panelFor!==tab));
+}
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-tab]"); if(!t) return;
+  selectTab(t.dataset.tab);
+  if(!$("#page-engagements").classList.contains("hidden")) return;
+  goto("engagements"); selectTab(t.dataset.tab);
+});
+
 const TEST_BODY=`
   <div class="banner banner-info"><div class="col gap-xxxs">
     <span class="t-md med">Pick a real shopper and see exactly what they'd get.</span>
@@ -1842,6 +1894,14 @@ document.addEventListener("click",e=>{
 
   const dm=e.target.closest("[data-dom]");
   if(dm){const i=+dm.dataset.dom;ACE_DOMAINS[i].on=!ACE_DOMAINS[i].on;renderAce();return}
+
+  const dv=e.target.closest("[data-delvar]");
+  if(dv){VARIANTS.splice(+dv.dataset.delvar,1);renderVariants();return}
+  if(e.target.closest("[data-addvar]")){
+    const k=String.fromCharCode(65+VARIANTS.length);
+    VARIANTS.push({k,n:"New approach",ins:"",off:"No offer",sent:0,rep:"—",cvr:"—",rev:"$0.00",marg:"full margin",win:false});
+    renderVariants(); return;
+  }
 
   const tst=e.target.closest("[data-test]")||e.target.closest('[data-act^="test"]');
   if(tst){openPanel("Test run","No message leaves the building",TEST_BODY,
