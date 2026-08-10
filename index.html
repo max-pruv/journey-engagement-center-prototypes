@@ -1,0 +1,1925 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journey Engagement Center — Axiom prototype</title>
+<style>
+/* ============================================================
+   AXIOM TOKENS (light) — @gorgias/axiom color-tokens.json
+   ============================================================ */
+:root{
+  --white:#ffffff; --black:#1e242e;
+  --grey-50:#fafafa; --grey-100:#ebecef; --grey-200:#d5d7dd; --grey-300:#c7cad1;
+  --grey-400:#b3b8c1; --grey-500:#6e7686; --grey-600:#5c6370; --grey-700:#4c525d; --grey-900:#22252a;
+  --coral-50:#fef4f3; --coral-100:#ffeae6; --coral-400:#f7ad9e; --coral-500:#ff9780; --coral-700:#c35e4a; --coral-800:#984939;
+  --green-50:#e9fbf5; --green-100:#bbf2e1; --green-300:#74dcba; --green-500:#32c898; --green-800:#147656;
+  --red-50:#ffecef; --red-100:#ffc4cd; --red-500:#ff425d; --red-700:#d90b28;
+  --orange-50:#fff5ee; --orange-100:#ffe0cb; --orange-300:#ffbb8e; --orange-500:#ff9a57; --orange-800:#a94f13;
+  --purple-50:#f1ecff; --purple-100:#dad0ff; --purple-200:#c4b7ff; --purple-300:#b7a7ff;
+  --purple-500:#7e55f6; --purple-600:#754dec; --purple-700:#683fcf; --purple-800:#4c3c9d;
+  --blue-50:#f5f9ff; --blue-100:#d8e9fd; --blue-200:#b0d1ff; --blue-600:#0d6cf2; --blue-900:#073c85;
+  --teal-50:#e8f5f8; --teal-200:#93d1de; --teal-800:#0b5665;
+  --fuchsia-50:#fee1f9; --fuchsia-800:#92247f;
+  --yellow-50:#fef8e7; --yellow-800:#887334;
+
+  --content-neutral-default:var(--black);
+  --content-neutral-secondary:var(--grey-600);
+  --content-neutral-tertiary:var(--grey-500);
+  --content-accent-default:var(--purple-700);
+  --content-success-default:var(--green-800);
+  --content-error-default:var(--red-700);
+  --content-warning-default:var(--orange-800);
+  --border-neutral-default:rgba(0,0,0,.08);
+  --elevation-neutral-bg:var(--grey-50);
+  --elevation-neutral-default:var(--white);
+  --surface-neutral-secondary:var(--grey-100);
+  --surface-accent-default:var(--purple-50);
+  --states-hover-default:rgba(27,35,50,.03);
+  --ai-gradient:#7d19f0;
+
+  /* dataviz — categorical, validated (lightness band, chroma, CVD ΔE, contrast) */
+  --dv-default:#0d6cf2;
+  --dv-custom:#c35e4a;
+  --dv-ace:#7e55f6;
+  --dv-grid:rgba(0,0,0,.06);
+  --dv-axis:var(--grey-500);
+
+  --xxxxs:2px; --xxxs:4px; --xxs:6px; --xs:8px; --sm:12px; --md:16px; --lg:24px; --xl:32px; --xxl:48px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:14px;line-height:1.45;color:var(--content-neutral-default);
+  background:var(--elevation-neutral-bg);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,textarea,select{font:inherit;color:inherit}
+
+.h-xxl{font-size:24px;font-weight:600;letter-spacing:-.01em}
+.h-xl{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.h-lg{font-size:18px;font-weight:600}
+.h-md{font-size:16px;font-weight:600}
+.h-sm{font-size:14px;font-weight:600}
+.t-md{font-size:14px}.t-sm{font-size:12px}.t-xs{font-size:10px}
+.med{font-weight:500}.bold{font-weight:600}
+.sec{color:var(--content-neutral-secondary)}
+.ter{color:var(--content-neutral-tertiary)}
+.acc{color:var(--content-accent-default)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.num-t{font-variant-numeric:tabular-nums}
+
+/* shell */
+.app{display:flex;height:100vh;padding:var(--xs)}
+.rail{width:56px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:var(--xxs);padding:var(--xs) 0}
+.railBtn{width:36px;height:36px;border-radius:var(--xs);display:grid;place-items:center;color:var(--content-neutral-secondary)}
+.railBtn:hover{background:var(--surface-neutral-secondary)}
+.railBtn.on{background:var(--black);color:var(--white)}
+.logo{width:32px;height:32px;border-radius:var(--xs);background:var(--black);color:var(--coral-500);
+  display:grid;place-items:center;font-weight:700;font-size:15px;margin-bottom:var(--xxs)}
+
+.sidebar{width:232px;flex-shrink:0;display:flex;flex-direction:column;gap:var(--xxxxs);
+  padding:var(--xs) var(--xs) var(--xs) 0;overflow-y:auto}
+.acct{display:flex;align-items:center;gap:var(--xs);padding:var(--xs);border-radius:var(--xs);cursor:pointer}
+.acct:hover{background:var(--surface-neutral-secondary)}
+.acctAv{width:26px;height:26px;border-radius:var(--xxs);background:var(--purple-100);color:var(--purple-800);
+  display:grid;place-items:center;font-weight:600;font-size:11px;flex-shrink:0}
+.navGroup{margin-top:var(--sm);padding:0 var(--xs) var(--xxs);font-size:10px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--content-neutral-tertiary)}
+.navItem{display:flex;align-items:center;gap:var(--xs);padding:7px var(--xs);border-radius:var(--xs);width:100%;text-align:left}
+.navItem:hover{background:var(--surface-neutral-secondary)}
+.navItem.on{background:var(--surface-accent-default);color:var(--content-accent-default);font-weight:500}
+.navItem svg{flex-shrink:0}
+.navItem .count{margin-left:auto;font-size:11px;color:var(--content-neutral-tertiary)}
+.navItem.on .count{color:var(--content-accent-default)}
+
+.content{flex:1;min-width:0;background:var(--elevation-neutral-default);
+  border:1px solid var(--border-neutral-default);border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
+.scroller{flex:1;overflow-y:auto}
+.pageHeader{position:sticky;top:0;z-index:5;background:var(--elevation-neutral-default);
+  padding:var(--lg);display:flex;align-items:flex-start;gap:var(--md);
+  border-bottom:1px solid transparent;transition:border-color .15s}
+.pageHeader.scrolled{border-bottom-color:var(--border-neutral-default)}
+.pageHeader .ttl{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--xxxs)}
+.pageActions{display:flex;align-items:center;gap:var(--xs);flex-shrink:0}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:var(--xxs);height:36px;padding:0 var(--sm);
+  border-radius:var(--xs);font-size:14px;font-weight:500;white-space:nowrap;transition:.12s}
+.btn.sm{height:28px;padding:0 var(--xs);font-size:12px;border-radius:var(--xxs)}
+.btn-primary{background:var(--black);color:var(--white)}
+.btn-primary:hover{background:var(--grey-900)}
+.btn-secondary{background:var(--white);border:1px solid var(--border-neutral-default);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.btn-secondary:hover{background:var(--states-hover-default)}
+.btn-tertiary:hover{background:var(--surface-neutral-secondary)}
+.btn-ai{background:linear-gradient(96deg,var(--ai-gradient),var(--purple-500));color:var(--white)}
+.btn-ai:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+
+/* tags */
+.tag{display:inline-flex;align-items:center;gap:var(--xxxs);height:20px;padding:0 var(--xxs);
+  border-radius:var(--xxs);font-size:11px;font-weight:500;white-space:nowrap}
+.tag-grey{background:var(--surface-neutral-secondary);color:var(--content-neutral-secondary)}
+.tag-purple{background:var(--purple-50);color:var(--purple-800)}
+.tag-green{background:var(--green-50);color:var(--green-800)}
+.tag-red{background:var(--red-50);color:var(--red-700)}
+.tag-orange{background:var(--orange-50);color:var(--orange-800)}
+.tag-blue{background:var(--blue-100);color:var(--blue-900)}
+.tag-teal{background:var(--teal-50);color:var(--teal-800)}
+.tag-coral{background:var(--coral-100);color:var(--coral-800)}
+.tag-yellow{background:var(--yellow-50);color:var(--yellow-800)}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.srcSwatch{display:inline-block;width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* layout */
+.zone{display:flex;flex-direction:column;gap:var(--lg);padding:0 var(--lg) var(--lg)}
+.card{background:var(--white);border:1px solid var(--border-neutral-default);border-radius:12px;
+  box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.card.pad{padding:var(--lg)}
+.card.pad-md{padding:var(--md)}
+.grid{display:grid;gap:var(--md)}
+.g-stat{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.g-2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.g-3{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.row{display:flex;align-items:center;gap:var(--xs)}
+.row.between{justify-content:space-between}
+.col{display:flex;flex-direction:column}
+.gap-xxxs{gap:var(--xxxs)}.gap-xxs{gap:var(--xxs)}.gap-xs{gap:var(--xs)}
+.gap-sm{gap:var(--sm)}.gap-md{gap:var(--md)}.gap-lg{gap:var(--lg)}
+.wrap{flex-wrap:wrap}
+.sepH{height:1px;background:var(--border-neutral-default)}
+.hidden{display:none !important}
+.trunc{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* toggle */
+.toggle{display:inline-block;width:36px;height:20px;border-radius:999px;background:var(--grey-300);
+  position:relative;flex-shrink:0;transition:.15s;cursor:pointer;vertical-align:middle}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;
+  background:var(--white);transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.toggle.on{background:var(--purple-500)}
+.toggle.on::after{transform:translateX(16px)}
+
+/* inputs */
+.field{display:flex;flex-direction:column;gap:var(--xxs)}
+.label{font-size:12px;font-weight:500;color:var(--content-neutral-secondary)}
+.input,.textarea,.selectEl{width:100%;background:var(--white);border:1px solid var(--border-neutral-default);
+  border-radius:var(--xs);padding:8px 10px;font-size:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.input:focus,.textarea:focus,.selectEl:focus{outline:2px solid var(--purple-200);border-color:var(--purple-500)}
+.textarea{min-height:72px;resize:vertical;line-height:1.5}
+.num{width:78px;text-align:center}
+.selectEl.auto{width:auto;height:34px;padding:5px 8px}
+.chipInput{display:flex;flex-wrap:wrap;gap:var(--xxs);border:1px solid var(--border-neutral-default);
+  border-radius:var(--xs);padding:var(--xs);background:var(--white);min-height:38px;align-items:center}
+
+/* table */
+table{width:100%;border-collapse:collapse}
+thead th{text-align:left;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--content-neutral-tertiary);padding:var(--xs) var(--sm);
+  border-bottom:1px solid var(--border-neutral-default);background:var(--white)}
+tbody td{padding:var(--sm);border-bottom:1px solid var(--border-neutral-default);vertical-align:middle}
+tbody tr:hover{background:var(--states-hover-default)}
+tbody tr:last-child td{border-bottom:0}
+th:first-child,td:first-child{padding-left:var(--lg)}
+th:last-child,td:last-child{padding-right:var(--lg);text-align:right}
+table.inner th:first-child,table.inner td:first-child{padding-left:var(--md)}
+table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
+.rowLink{cursor:pointer}
+
+/* banners */
+.banner{display:flex;gap:var(--sm);padding:var(--sm) var(--md);border-radius:10px;align-items:flex-start}
+.banner-info{background:var(--blue-50);border:1px solid var(--blue-100)}
+.banner-ai{background:linear-gradient(96deg,rgba(125,25,240,.06),rgba(126,85,246,.04));border:1px solid var(--purple-100)}
+.banner-warn{background:var(--orange-50);border:1px solid var(--orange-100)}
+.banner-ok{background:var(--green-50);border:1px solid var(--green-100)}
+
+/* segmented */
+.seg{display:inline-flex;background:var(--surface-neutral-secondary);border-radius:var(--xs);padding:2px}
+.seg button{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:500;color:var(--content-neutral-secondary)}
+.seg button.on{background:var(--white);color:var(--content-neutral-default);box-shadow:0 1px 2px rgba(16,24,40,.1)}
+.chips{display:flex;gap:var(--xxs);flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:var(--xxs);padding:5px 10px;border-radius:999px;
+  font-size:12px;font-weight:500;border:1px solid var(--border-neutral-default);background:var(--white);color:var(--content-neutral-secondary)}
+.chip:hover{background:var(--states-hover-default)}
+.chip.on{background:var(--black);color:var(--white);border-color:var(--black)}
+.pill{display:inline-flex;align-items:center;gap:var(--xxxs);padding:3px var(--xs);border-radius:999px;
+  font-size:11px;font-weight:500;background:var(--surface-neutral-secondary);color:var(--content-neutral-secondary)}
+
+.kv{display:flex;flex-direction:column;gap:2px}
+.kv .k{font-size:11px;color:var(--content-neutral-tertiary);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+
+/* charts */
+.chartCard{padding:var(--md) var(--md) var(--sm)}
+.chartHead{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sm);margin-bottom:var(--xs)}
+.legend{display:flex;gap:var(--sm);flex-wrap:wrap;align-items:center}
+.legendItem{display:inline-flex;align-items:center;gap:var(--xxs);font-size:12px;color:var(--content-neutral-secondary)}
+svg.chart{display:block;width:100%;overflow:visible}
+svg.chart text{font-family:inherit;fill:var(--dv-axis);font-size:11px}
+svg.chart .gridline{stroke:var(--dv-grid);stroke-width:1}
+svg.chart .hit{fill:transparent}
+svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;opacity:0}
+.tip{position:fixed;z-index:80;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--black);color:var(--white);border-radius:var(--xs);padding:var(--xs) 10px;
+  font-size:12px;line-height:1.5;box-shadow:0 8px 24px rgba(16,24,40,.24);max-width:240px}
+.tip b{font-weight:600}
+.tip .tRow{display:flex;align-items:center;gap:var(--xxs);justify-content:space-between}
+.tip .tRow span:last-child{font-variant-numeric:tabular-nums;margin-left:var(--sm)}
+
+/* bullet bars */
+.bullet{display:grid;grid-template-columns:1fr 68px;gap:var(--sm);align-items:center}
+.bulletTrack{position:relative;height:22px;border-radius:var(--xxs);background:var(--grey-100);overflow:visible}
+.bulletFill{position:absolute;top:4px;bottom:4px;left:0;border-radius:3px}
+.bulletTick{position:absolute;top:0;bottom:0;width:2px;background:var(--grey-600)}
+.bulletTick.top{background:var(--black)}
+
+/* panel */
+.overlay{position:fixed;inset:0;background:rgba(30,36,46,.35);opacity:0;pointer-events:none;transition:.18s;z-index:40}
+.overlay.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:var(--xs);right:var(--xs);bottom:var(--xs);width:min(600px,94vw);
+  background:var(--white);border:1px solid var(--border-neutral-default);border-radius:16px;
+  box-shadow:0 24px 48px rgba(16,24,40,.18);z-index:50;display:flex;flex-direction:column;
+  transform:translateX(calc(100% + 16px));transition:transform .22s cubic-bezier(.32,.72,0,1)}
+.panel.on{transform:none}
+.panelHead{padding:var(--md) var(--lg);display:flex;align-items:flex-start;gap:var(--sm);
+  border-bottom:1px solid var(--border-neutral-default)}
+.panelBody{flex:1;overflow-y:auto;padding:var(--lg);display:flex;flex-direction:column;gap:var(--lg)}
+.panelFoot{padding:var(--md) var(--lg);border-top:1px solid var(--border-neutral-default);
+  display:flex;justify-content:flex-end;gap:var(--xs)}
+
+/* conversation */
+.phone{background:var(--grey-50);border:1px solid var(--border-neutral-default);border-radius:12px;
+  padding:var(--md);display:flex;flex-direction:column;gap:var(--xs)}
+.bubble{max-width:88%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.45}
+.bubble.out{background:var(--purple-500);color:var(--white);border-bottom-right-radius:4px;align-self:flex-end}
+.bubble.in{background:var(--white);border:1px solid var(--border-neutral-default);border-bottom-left-radius:4px;align-self:flex-start}
+.bTime{font-size:10px;color:var(--content-neutral-tertiary);align-self:center}
+
+/* rule builder */
+.ruleRow{display:grid;grid-template-columns:56px 1.4fr 1fr 1.2fr 28px;gap:var(--xs);align-items:center}
+.ruleRow .selectEl,.ruleRow .input{height:34px;padding:5px 8px}
+.joinBadge{font-size:11px;font-weight:600;color:var(--content-neutral-tertiary);text-align:center}
+
+/* variant cards */
+.variant{border:1px solid var(--border-neutral-default);border-radius:10px;padding:var(--md);
+  display:flex;flex-direction:column;gap:var(--xs);background:var(--white)}
+.variant.win{border-color:var(--green-300);background:var(--green-50)}
+.meter{height:4px;border-radius:2px;background:var(--surface-neutral-secondary);overflow:hidden;display:block}
+.meter > span{display:block;height:100%;border-radius:2px;background:var(--purple-500)}
+
+/* stage master/detail */
+.lcWrap{display:grid;grid-template-columns:236px 1fr;gap:var(--lg);align-items:start}
+.lcList{display:flex;flex-direction:column;gap:var(--xxxs)}
+.lcItem{display:flex;align-items:center;gap:var(--xs);padding:10px var(--sm);border-radius:var(--xs);
+  border:1px solid transparent;text-align:left;width:100%}
+.lcItem:hover{background:var(--states-hover-default)}
+.lcItem.on{background:var(--surface-accent-default);border-color:var(--purple-200)}
+.lcItem .bar{width:3px;align-self:stretch;border-radius:2px;flex-shrink:0}
+
+/* loyalty tier ramp */
+.tierBar{display:flex;height:26px;border-radius:var(--xxs);overflow:hidden;gap:2px;background:transparent}
+.tierBar > span{display:block}
+</style>
+</head>
+<body data-palette="#0d6cf2,#c35e4a,#7e55f6">
+
+<div class="app">
+  <!-- ============ RAIL ============ -->
+  <nav class="rail">
+    <div class="logo">G</div>
+    <button class="railBtn" title="Tickets"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4-.9L3 21l1.9-4.9A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg></button>
+    <button class="railBtn" title="Statistics"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></button>
+    <button class="railBtn on" title="Engagement Center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/></svg></button>
+    <button class="railBtn" title="Contacts"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M17 11.2a3 3 0 0 0 0-6M18 20a5.6 5.6 0 0 0-2-4.3"/></svg></button>
+    <button class="railBtn" title="Settings" style="margin-top:auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.5 19l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 13.6a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1.3z"/></svg></button>
+  </nav>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="acct">
+      <div class="acctAv">AS</div>
+      <div class="col" style="min-width:0;flex:1">
+        <div class="t-md med trunc">Alpine Supply Co.</div>
+        <div class="t-xs ter trunc">Demo account · dummy data</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ter"><path d="m7 9 5-5 5 5M7 15l5 5 5-5"/></svg>
+    </div>
+
+    <div class="navGroup">Engagement Center</div>
+    <button class="navItem on" data-page="overview">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Overview</button>
+    <button class="navItem" data-page="engagements">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12l1-8.5z"/></svg>
+      Engagements <span class="count" id="navEngCount">—</span></button>
+    <button class="navItem" data-page="campaigns">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 20 4l-2.5 16L3 13.5z"/><path d="M8 12v6l3.5-2"/></svg>
+      Campaigns <span class="count" id="navCamp">6</span></button>
+    <button class="navItem" data-page="guardrails">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4.5 6v5.7c0 4.5 3.1 8.7 7.5 9.8 4.4-1.1 7.5-5.3 7.5-9.8V6L12 3z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>
+      Guardrails</button>
+    <button class="navItem" data-page="lifecycle">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 1 1-3.3-7"/><path d="M21 4v5h-5"/><circle cx="12" cy="12" r="2.4"/></svg>
+      Lifecycle <span class="count">6</span></button>
+
+    <div class="navGroup">Operate</div>
+    <button class="navItem" data-page="activity">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l2.5-6 3 12 2.5-6h6"/></svg>
+      Activity <span class="count" id="navPending">12</span></button>
+    <button class="navItem" data-page="loyalty">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>
+      Loyalty <span class="count">4</span></button>
+    <button class="navItem" data-page="soon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+      Performance</button>
+    <button class="navItem" data-page="soon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+      Brand profile</button>
+  </aside>
+
+  <!-- ============ CONTENT ============ -->
+  <main class="content">
+    <div class="scroller" id="scroller">
+
+      <!-- ======== OVERVIEW ======== -->
+      <section class="page" id="page-overview">
+        <header class="pageHeader">
+          <div class="ttl">
+            <div class="row gap-xs"><h1 class="h-xxl">Overview</h1>
+              <span class="tag tag-green"><span class="dot" style="background:var(--green-500)"></span>Live</span></div>
+            <p class="t-md sec">How your outbound engagement is performing, and where the volume is coming from.</p>
+          </div>
+          <div class="pageActions">
+            <select class="selectEl auto"><option>Last 12 weeks</option><option>Last 30 days</option><option>Quarter to date</option></select>
+            <button class="btn btn-secondary">Export</button>
+          </div>
+        </header>
+
+        <div class="zone">
+          <div class="grid g-stat">
+            <div class="card pad-md"><div class="t-sm sec">Interactions</div>
+              <div class="h-xxl num-t" style="margin-top:2px">48,210</div>
+              <div class="t-sm" style="color:var(--content-success-default)">+18.4% vs previous period</div></div>
+            <div class="card pad-md"><div class="t-sm sec">Measured revenue vs holdout</div>
+              <div class="h-xxl num-t" style="margin-top:2px">$41,280</div>
+              <div class="t-sm sec">on $312k attributed</div></div>
+            <div class="card pad-md"><div class="t-sm sec">Conversion rate</div>
+              <div class="h-xxl num-t" style="margin-top:2px">4.3%</div>
+              <div class="t-sm" style="color:var(--content-success-default)">+0.6 pt</div></div>
+            <div class="card pad-md"><div class="t-sm sec">Opt-out rate</div>
+              <div class="h-xxl num-t" style="margin-top:2px">0.9%</div>
+              <div class="t-sm" style="color:var(--content-success-default)">under the 1.5% cap</div></div>
+          </div>
+
+          <div class="grid g-2">
+            <!-- CHART 1 -->
+            <div class="card chartCard">
+              <div class="chartHead">
+                <div class="col gap-xxxs">
+                  <h2 class="h-md">Interactions by source</h2>
+                  <p class="t-sm sec">Weekly volume. ACE is net-new reach, not a reallocation of your flows.</p>
+                </div>
+                <div class="seg" data-view="vol"><button class="on" data-v="chart">Chart</button><button data-v="table">Table</button></div>
+              </div>
+              <div class="legend" id="legVol"></div>
+              <div id="chartVol" style="margin-top:var(--xs)"></div>
+              <div id="tableVol" class="hidden" style="margin-top:var(--xs);max-height:280px;overflow:auto"></div>
+            </div>
+
+            <!-- CHART 2 -->
+            <div class="card chartCard">
+              <div class="chartHead">
+                <div class="col gap-xxxs">
+                  <h2 class="h-md">Conversion rate by source</h2>
+                  <p class="t-sm sec">Share of interactions that led to an order within 7 days.</p>
+                </div>
+                <div class="seg" data-view="cvr"><button class="on" data-v="chart">Chart</button><button data-v="table">Table</button></div>
+              </div>
+              <div class="legend" id="legCvr"></div>
+              <div id="chartCvr" style="margin-top:var(--xs)"></div>
+              <div id="tableCvr" class="hidden" style="margin-top:var(--xs);max-height:280px;overflow:auto"></div>
+            </div>
+          </div>
+
+          <!-- REVENUE -->
+          <div class="card" style="overflow:hidden">
+            <div class="row between wrap gap-sm" style="padding:var(--md) var(--lg)">
+              <div class="col gap-xxxs">
+                <h2 class="h-md">Revenue by source</h2>
+                <p class="t-sm sec">Last 12 weeks. Measured lift is treated minus holdout, not modelled attribution.</p>
+              </div>
+              <div class="row gap-xs">
+                <span class="t-sm sec">Total GMV</span>
+                <span class="h-md num-t">$648,220</span>
+              </div>
+            </div>
+            <table id="revTable">
+              <thead><tr><th>Source</th><th>Interactions</th><th>Orders</th><th>CVR</th>
+                <th>AOV</th><th>GMV</th><th>GMV / 1k sent</th><th>Measured lift</th><th>Cost</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <!-- BENCHMARK -->
+          <div class="card pad">
+            <div class="row between" style="margin-bottom:var(--md)">
+              <div class="col gap-xxxs">
+                <h2 class="h-md">How you compare</h2>
+                <p class="t-sm sec">Against outdoor &amp; sports merchants of similar size on Gorgias.</p>
+              </div>
+              <div class="legend">
+                <span class="legendItem"><span style="display:inline-block;width:2px;height:12px;background:var(--grey-600)"></span>Category median</span>
+                <span class="legendItem"><span style="display:inline-block;width:2px;height:12px;background:var(--black)"></span>Top quartile</span>
+              </div>
+            </div>
+            <div class="col gap-md" id="benchWrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== ENGAGEMENTS (ACE lives here too) ======== -->
+      <section class="page hidden" id="page-engagements">
+        <header class="pageHeader">
+          <div class="ttl">
+            <h1 class="h-xxl">Engagements</h1>
+            <p class="t-md sec">Everything that reaches out to a shopper. ACE is the part that decides for itself; below it, the scenarios you own.</p>
+          </div>
+          <div class="pageActions">
+            <button class="btn btn-secondary" data-goto="activity">Activity log</button>
+            <button class="btn btn-primary" data-panel="new">New engagement</button>
+          </div>
+        </header>
+
+        <div class="zone">
+          <!-- ============ ACE : ONE SWITCH ============ -->
+          <div class="card pad" id="aceHero" style="border-color:var(--purple-200);
+               background:linear-gradient(112deg,rgba(125,25,240,.06),rgba(126,85,246,.03) 55%,transparent)">
+            <div class="row between wrap gap-lg">
+              <div class="row gap-md" style="min-width:300px;flex:1">
+                <div style="width:44px;height:44px;border-radius:12px;flex-shrink:0;display:grid;place-items:center;
+                     background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500))">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>
+                </div>
+                <div class="col gap-xxxs">
+                  <div class="row gap-xs">
+                    <span class="h-lg" id="aceHeroTitle">ACE is on</span>
+                    <span class="tag tag-purple" id="aceStateTag">On</span>
+                  </div>
+                  <span class="t-md sec" style="max-width:56ch" id="aceHeroNote">It finds the moment, decides who should hear from you, writes the message and sends it — inside your guardrails. There is nothing to configure.</span>
+                </div>
+              </div>
+              <div class="col gap-xs" style="align-items:flex-end">
+                <div class="seg" id="aceMode">
+                  <button data-a="off">Off</button>
+                  <button data-a="dry">Dry run</button>
+                  <button class="on" data-a="on">On</button>
+                </div>
+                <span class="t-xs ter">Takes effect immediately</span>
+              </div>
+            </div>
+
+            <div class="sepH" style="margin:var(--md) 0"></div>
+
+            <div class="row between wrap gap-lg" id="aceStats">
+              <div class="kv"><span class="k">Sent · 30d</span><span class="h-md num-t">7,240</span><span class="t-xs ter">15% of all outbound</span></div>
+              <div class="kv"><span class="k">GMV</span><span class="h-md num-t">$47,300</span><span class="t-xs ter">$18,900 measured vs holdout</span></div>
+              <div class="kv"><span class="k">Conversion</span><span class="h-md num-t">7.6%</span><span class="t-xs ter">vs 3.4% on default flows</span></div>
+              <div class="kv"><span class="k">Opt-out</span><span class="h-md num-t">1.1%</span><span class="t-xs ter">under the 1.5% cap</span></div>
+              <button class="btn btn-secondary sm" data-goto="activity">Read what it sent</button>
+            </div>
+          </div>
+
+          <!-- domains + education, collapsed by default -->
+          <details class="card" style="overflow:hidden">
+            <summary class="row between wrap gap-sm" style="cursor:pointer;padding:var(--md) var(--lg)">
+              <div class="col gap-xxxs">
+                <span class="t-md med">What ACE is allowed to work on</span>
+                <span class="t-sm sec">The only dial there is. Turn a domain off and it stops looking there entirely.</span>
+              </div>
+              <span class="tag tag-grey" id="aceDomCount">6 of 8 allowed</span>
+            </summary>
+            <table id="aceDomainTable">
+              <thead><tr><th style="width:38%">Domain</th><th>Sent · 30d</th><th>CVR</th>
+                <th>GMV</th><th style="width:110px">Allowed</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="sepH"></div>
+            <div class="col gap-sm" style="padding:var(--md) var(--lg) var(--lg)">
+              <div class="col gap-xxxs">
+                <span class="t-md med">What happens behind the switch</span>
+                <span class="t-sm sec">Not one model — a handful of agents, each with one job, handing off to the next.</span>
+              </div>
+              <div class="col gap-xs" id="aceChain"></div>
+            </div>
+          </details>
+
+          <!-- ============ THE SCENARIOS YOU OWN ============ -->
+          <div class="sepH"></div>
+          <div class="row between wrap gap-sm">
+            <div class="col gap-xxxs">
+              <h2 class="h-lg">Scenarios you own</h2>
+              <p class="t-sm sec">Pre-built ones, and the ones you described yourself. Same list, same controls — the only difference is who wrote them.</p>
+            </div>
+          </div>
+
+          <div class="row between wrap gap-sm">
+            <div class="chips" id="srcFilter">
+              <button class="chip on" data-f="all">All <span class="ter" id="fcAll"></span></button>
+              <button class="chip" data-f="Default"><span class="srcSwatch" style="background:var(--dv-default)"></span>Default <span class="ter" id="fcDefault"></span></button>
+              <button class="chip" data-f="Custom"><span class="srcSwatch" style="background:var(--dv-custom)"></span>Custom <span class="ter" id="fcCustom"></span></button>
+            </div>
+            <div class="row gap-xs">
+              <select class="selectEl auto" id="statusFilter">
+                <option value="all">Any status</option><option value="on">On</option>
+                <option value="off">Off</option><option value="setup">Needs setup</option>
+              </select>
+              <select class="selectEl auto"><option>Sort: volume</option><option>Sort: conversion</option><option>Sort: name</option></select>
+            </div>
+          </div>
+
+          <div class="card" style="overflow:hidden">
+            <table id="engTable">
+              <thead><tr>
+                <th style="width:30%">Engagement</th><th>Source</th><th>Trigger</th>
+                <th>Instruction</th><th>Sent · 30d</th><th>CVR</th><th style="width:150px">Status</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== CAMPAIGNS · LIST ======== -->
+      <section class="page hidden" id="page-campaigns">
+        <header class="pageHeader">
+          <div class="ttl">
+            <h1 class="h-xxl">Campaigns</h1>
+            <p class="t-md sec">One-off pushes to an audience you choose. Everything recurring belongs in Engagements.</p>
+          </div>
+          <div class="pageActions">
+            <button class="btn btn-primary" data-goto="campaign-new">Create a campaign</button>
+          </div>
+        </header>
+
+        <div class="zone">
+          <div class="row between wrap gap-sm">
+            <div class="chips" id="campFilter">
+              <button class="chip on" data-f="all">All</button>
+              <button class="chip" data-f="Measuring">Measuring</button>
+              <button class="chip" data-f="Sent">Sent</button>
+              <button class="chip" data-f="Draft">Draft</button>
+            </div>
+            <select class="selectEl auto"><option>Last 90 days</option><option>This quarter</option><option>All time</option></select>
+          </div>
+          <div class="card" style="overflow:hidden">
+            <table id="campTable">
+              <thead><tr><th style="width:28%">Campaign</th><th>Audience</th><th>Sent</th>
+                <th>CVR</th><th>GMV</th><th>Winning instruction</th><th style="width:110px">Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== CAMPAIGNS · NEW ======== -->
+      <section class="page hidden" id="page-campaign-new">
+        <header class="pageHeader">
+          <div class="ttl">
+            <div class="row gap-xs">
+              <button class="btn btn-tertiary sm ter" data-goto="campaigns">← Campaigns</button>
+            </div>
+            <h1 class="h-xxl">New campaign</h1>
+            <p class="t-md sec">Pick who it goes to, then let three instructions compete for the send.</p>
+          </div>
+          <div class="pageActions">
+            <button class="btn btn-secondary" data-act="test-campaign">Test</button>
+            <button class="btn btn-secondary">Save draft</button>
+            <button class="btn btn-primary">Launch test wave</button>
+          </div>
+        </header>
+
+        <div class="zone">
+          <!-- AUDIENCE -->
+          <div class="card pad">
+            <div class="row between wrap gap-sm" style="margin-bottom:var(--md)">
+              <div class="col gap-xxxs">
+                <h2 class="h-lg">1 · Audience</h2>
+                <p class="t-sm sec">Build it with rules, or just describe it.</p>
+              </div>
+              <div class="seg" id="audMode">
+                <button class="on" data-m="rules">Rules</button>
+                <button data-m="nl">Describe it</button>
+              </div>
+            </div>
+
+            <!-- rules mode -->
+            <div id="audRules">
+              <div class="col gap-xs" id="ruleList"></div>
+              <div class="row gap-xs" style="margin-top:var(--sm)">
+                <button class="btn btn-secondary sm" id="addRule">Add condition</button>
+                <button class="btn btn-tertiary sm ter">Add a group</button>
+              </div>
+            </div>
+
+            <!-- nl mode -->
+            <div id="audNl" class="hidden">
+              <textarea class="textarea" id="audNlInput">Customers who bought a hardshell last winter, still active, who have never bought a mid-layer — skip anyone who returned something in the last month.</textarea>
+              <div class="row between wrap gap-sm" style="margin-top:var(--sm)">
+                <div class="chips">
+                  <button class="chip audSample">Lapsed subscribers who paused after a delivery issue</button>
+                  <button class="chip audSample">VIPs who haven't bought the new season yet</button>
+                </div>
+                <button class="btn btn-ai" id="audEstimate">Estimate audience</button>
+              </div>
+              <div id="audNlResult" class="hidden" style="margin-top:var(--md)">
+                <div class="sepH" style="margin-bottom:var(--md)"></div>
+                <div class="t-sm bold" style="margin-bottom:var(--xs)">Read back as rules — edit anything that's off</div>
+                <div class="chips" style="margin-bottom:var(--md)">
+                  <span class="tag tag-blue">bought in <b style="margin-left:3px">Hardshells</b></span>
+                  <span class="tag tag-blue">order date <b style="margin-left:3px">Oct–Feb</b></span>
+                  <span class="tag tag-blue">lifetime <b style="margin-left:3px">Mid-layers</b> = 0</span>
+                  <span class="tag tag-grey">stage in <b style="margin-left:3px">Repeat, VIP</b></span>
+                  <span class="tag tag-red">exclude: return in last 30 d</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sepH" style="margin:var(--md) 0"></div>
+            <div class="row wrap gap-lg" id="audEstimateRow">
+              <div class="kv"><span class="k">Matching shoppers</span><span class="h-lg num-t" id="estTotal">4,120</span></div>
+              <div class="kv"><span class="k">Reachable now</span><span class="h-lg num-t" id="estReach">3,180</span>
+                <span class="t-xs ter">consent + frequency headroom</span></div>
+              <div class="kv"><span class="k">Held out for measurement</span><span class="h-lg num-t">318</span>
+                <span class="t-xs ter">10% never messaged</span></div>
+              <div class="kv" style="min-width:220px"><span class="k">By lifecycle stage</span>
+                <div class="row gap-xxs wrap" style="margin-top:4px">
+                  <span class="tag tag-grey">First-time 1,240</span><span class="tag tag-grey">Repeat 1,610</span>
+                  <span class="tag tag-grey">VIP 220</span><span class="tag tag-grey">At risk 110</span>
+                </div></div>
+            </div>
+          </div>
+
+          <!-- INSTRUCTION A/B -->
+          <div class="card pad">
+            <div class="row between wrap gap-sm" style="margin-bottom:var(--sm)">
+              <div class="col gap-xxxs">
+                <h2 class="h-lg">2 · Instructions, tested against each other</h2>
+                <p class="t-sm sec">Three approaches. A slice of the audience decides which one the rest gets.</p>
+              </div>
+              <div class="row gap-xs">
+                <span class="t-sm sec">Pick the winner on</span>
+                <select class="selectEl auto"><option>Revenue per recipient</option><option>Conversion rate</option><option>Reply rate</option><option>Margin per recipient</option></select>
+              </div>
+            </div>
+
+            <div class="banner banner-info" style="margin-bottom:var(--md)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-900)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.5"/></svg>
+              <div class="row wrap gap-xs" style="flex:1;align-items:center">
+                <span class="t-md">Send to</span><input class="input num" value="10%" style="height:30px">
+                <span class="t-md">of the audience, wait</span><input class="input num" value="1h" style="height:30px">
+                <span class="t-md">, then send the winner to the remaining</span><span class="t-md med">90%</span>
+                <span class="t-md">— unless no variant is ahead by more than</span><input class="input num" value="5%" style="height:30px">
+                <span class="t-md">, in which case hold and tell me.</span>
+              </div>
+            </div>
+
+            <div class="grid g-3" id="variantGrid"></div>
+            <div class="row gap-xs" style="margin-top:var(--md)">
+              <button class="btn btn-secondary sm">Add a variant</button>
+              <button class="btn btn-secondary sm" data-act="test-campaign">Preview all three on one shopper</button>
+            </div>
+          </div>
+
+          <!-- LIVE RESULT -->
+          <div class="card" style="overflow:hidden">
+            <div class="row between" style="padding:var(--md) var(--lg)">
+              <div class="col gap-xxxs">
+                <h2 class="h-md">Test wave · sent 58 minutes ago</h2>
+                <p class="t-sm sec">412 recipients, evenly split. Winner call in 2 minutes.</p>
+              </div>
+              <span class="tag tag-orange"><span class="dot" style="background:var(--orange-500)"></span>Measuring</span>
+            </div>
+            <table id="waveTable">
+              <thead><tr><th>Variant</th><th>Sent</th><th>Replies</th><th>CVR</th>
+                <th>Revenue / recipient</th><th>Margin impact</th><th style="width:110px">Call</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== GUARDRAILS ======== -->
+      <section class="page hidden" id="page-guardrails">
+        <header class="pageHeader">
+          <div class="ttl">
+            <h1 class="h-xxl">Guardrails</h1>
+            <p class="t-md sec">The hard limits every engagement obeys. An instruction can ask; a guardrail decides.</p>
+          </div>
+          <div class="pageActions">
+            <button class="btn btn-secondary" data-goto="activity">What was suppressed</button>
+            <button class="btn btn-primary">Save guardrails</button>
+          </div>
+        </header>
+
+        <div class="zone">
+          <div class="banner banner-ok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green-800)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><path d="M12 3 4.5 6v5.7c0 4.5 3.1 8.7 7.5 9.8 4.4-1.1 7.5-5.3 7.5-9.8V6L12 3z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>
+            <div class="col gap-xxxs" style="flex:1">
+              <span class="t-md med">0 breaches in the last 30 days across 48,210 sends.</span>
+              <span class="t-sm sec">1,842 messages were stopped before sending — mostly frequency caps and open support tickets.</span>
+            </div>
+          </div>
+
+          <div class="grid g-2">
+            <div class="card pad">
+              <h2 class="h-md">How often a shopper can hear from you</h2>
+              <p class="t-sm sec" style="margin-bottom:var(--md)">Counted across all sources together — ACE cannot borrow budget from your default flows.</p>
+              <div class="col gap-sm">
+                <div class="row between"><span class="t-md">Max messages per shopper, per week</span><input class="input num" value="3"></div>
+                <div class="row between"><span class="t-md">Max per shopper, per month</span><input class="input num" value="8"></div>
+                <div class="row between"><span class="t-md">Minimum gap between two messages</span><input class="input num" value="48h"></div>
+                <div class="row between"><span class="t-md">Collision window — no two engagements within</span><input class="input num" value="24h"></div>
+                <div class="sepH"></div>
+                <div class="row between">
+                  <div class="col gap-xxxs" style="max-width:74%">
+                    <span class="t-md med">When two engagements collide</span>
+                    <span class="t-sm sec">The loser is deferred, never dropped.</span></div>
+                  <select class="selectEl auto"><option selected>Highest expected value wins</option><option>Default flows win</option><option>ACE wins</option></select>
+                </div>
+              </div>
+            </div>
+
+            <div class="card pad">
+              <h2 class="h-md">When you're allowed to send</h2>
+              <p class="t-sm sec" style="margin-bottom:var(--md)">Always in the shopper's timezone, never yours.</p>
+              <div class="col gap-sm">
+                <div class="row between"><span class="t-md">Quiet hours</span>
+                  <div class="row gap-xxs"><input class="input num" value="21:00"><span class="sec">→</span><input class="input num" value="09:00"></div></div>
+                <div class="row between"><span class="t-md">Weekend window</span>
+                  <div class="row gap-xxs"><input class="input num" value="10:00"><span class="sec">→</span><input class="input num" value="18:00"></div></div>
+                <div class="row between"><span class="t-md med">Use the shopper's local timezone</span><span class="toggle on" data-toggle></span></div>
+                <div class="row between"><span class="t-md med">Pause on public holidays</span><span class="toggle on" data-toggle></span></div>
+                <div class="sepH"></div>
+                <div class="row between">
+                  <div class="col gap-xxxs" style="max-width:74%">
+                    <span class="t-md med">Let the engine pick the exact hour</span>
+                    <span class="t-sm sec">Inside your window, from when this shopper usually replies.</span></div>
+                  <span class="toggle on" data-toggle></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card pad">
+              <h2 class="h-md">Who never gets messaged</h2>
+              <p class="t-sm sec" style="margin-bottom:var(--md)">Checked before any decision. The locked ones can't be turned off.</p>
+              <div class="col gap-sm" id="suppressionList"></div>
+            </div>
+
+            <div class="card pad">
+              <h2 class="h-md">What the AI may offer</h2>
+              <p class="t-sm sec" style="margin-bottom:var(--md)">Discount is the last lever, not the first — Loyalty gives it cheaper ones.</p>
+              <div class="col gap-sm">
+                <div class="field">
+                  <span class="label">Order of preference</span>
+                  <div class="chipInput">
+                    <span class="tag tag-grey">1 · Answer the objection</span>
+                    <span class="tag tag-purple">2 · Early access</span>
+                    <span class="tag tag-purple">3 · Points boost</span>
+                    <span class="tag tag-blue">4 · Free shipping</span>
+                    <span class="tag tag-orange">5 · Discount</span>
+                  </div>
+                </div>
+                <div class="row between"><span class="t-md">Max discount the AI can give alone</span><input class="input num" value="10%"></div>
+                <div class="row between"><span class="t-md">Needs approval up to</span><input class="input num" value="20%"></div>
+                <div class="row between"><span class="t-md">No discount within X days of a full-price order</span><input class="input num" value="14"></div>
+                <div class="row between"><span class="t-md med">Unique code per shopper</span><span class="toggle on" data-toggle></span></div>
+              </div>
+            </div>
+
+            <div class="card pad">
+              <h2 class="h-md">What the AI may say</h2>
+              <p class="t-sm sec" style="margin-bottom:var(--md)">Content rails sit above every instruction — no instruction can unlock them.</p>
+              <div class="col gap-sm">
+                <div class="field"><span class="label">Never say</span>
+                  <div class="chipInput">
+                    <span class="tag tag-red">guaranteed delivery date</span><span class="tag tag-red">medical claims</span>
+                    <span class="tag tag-red">"limited stock" unless true</span><span class="tag tag-red">competitor names</span>
+                    <span class="t-sm ter">+ add</span></div></div>
+                <div class="row between"><span class="t-md med">Always include an opt-out line</span><span class="toggle on" style="opacity:.55;pointer-events:none"></span></div>
+                <div class="row between"><span class="t-md med">Only link to your own domain</span><span class="toggle on" data-toggle></span></div>
+                <div class="row between"><span class="t-md med">Emoji allowed</span><span class="toggle" data-toggle></span></div>
+                <div class="row between"><span class="t-md">Max characters per message</span><input class="input num" value="320"></div>
+              </div>
+            </div>
+
+            <div class="card pad">
+              <h2 class="h-md">Volume, cost and proof</h2>
+              <p class="t-sm sec" style="margin-bottom:var(--md)">The rails that stop an autonomous system surprising you at month end.</p>
+              <div class="col gap-sm">
+                <div class="row between"><span class="t-md">Max AI-found sends per day</span><input class="input num" value="1,500"></div>
+                <div class="row between"><span class="t-md">Monthly spend cap</span><input class="input num" value="$4,000"></div>
+                <div class="row between"><span class="t-md">Pause everything if opt-out exceeds</span><input class="input num" value="1.5%"></div>
+                <div class="sepH"></div>
+                <div class="row between">
+                  <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">Global holdout</span>
+                    <span class="t-sm sec">Never messaged, so lift is measured rather than modelled.</span></div>
+                  <input class="input num" value="10%"></div>
+                <div class="row between">
+                  <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">Kill switch</span>
+                    <span class="t-sm sec">Stops every outbound message immediately.</span></div>
+                  <button class="btn btn-secondary sm" style="color:var(--content-error-default);border-color:var(--red-100)">Pause all outbound</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== LIFECYCLE ======== -->
+      <section class="page hidden" id="page-lifecycle">
+        <header class="pageHeader">
+          <div class="ttl">
+            <h1 class="h-xxl">Lifecycle</h1>
+            <p class="t-md sec">What counts as a lead, a VIP, a shopper at risk — and how each one gets treated.</p>
+          </div>
+          <div class="pageActions">
+            <button class="btn btn-secondary">Recompute from my data</button>
+            <button class="btn btn-primary">Save</button>
+          </div>
+        </header>
+
+        <div class="zone">
+          <div class="lcWrap">
+            <div class="lcList" id="lcList"></div>
+            <div class="col gap-md" id="lcDetail"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== ACTIVITY ======== -->
+      <section class="page hidden" id="page-activity">
+        <header class="pageHeader">
+          <div class="ttl">
+            <h1 class="h-xxl">Activity</h1>
+            <p class="t-md sec">Every decision the engine made, per shopper, with the reason. One row is one person.</p>
+          </div>
+          <div class="pageActions">
+            <button class="btn btn-secondary">Export</button>
+            <button class="btn btn-primary" id="approveAll">Approve 12 pending</button>
+          </div>
+        </header>
+
+        <div class="zone">
+          <div class="row between wrap gap-sm">
+            <div class="chips" id="actFilter">
+              <button class="chip on" data-f="all">All</button>
+              <button class="chip" data-f="pending">Pending approval <span class="ter">12</span></button>
+              <button class="chip" data-f="sent">Sent <span class="ter">1,204</span></button>
+              <button class="chip" data-f="dry">Would have sent <span class="ter">86</span></button>
+              <button class="chip" data-f="suppressed">Suppressed <span class="ter">1,842</span></button>
+            </div>
+            <div class="row gap-xs">
+              <select class="selectEl auto" id="actSrc"><option value="all">Any source</option><option>Default</option><option>Custom</option><option>ACE</option></select>
+              <select class="selectEl auto"><option>Last 7 days</option><option>Last 24 hours</option><option>Last 30 days</option></select>
+            </div>
+          </div>
+
+          <div class="card" style="overflow:hidden">
+            <table id="actTable">
+              <thead><tr><th style="width:20%">Shopper</th><th>Stage</th><th>Engagement</th>
+                <th style="width:28%">Why this shopper, now</th><th>Decided</th><th style="width:130px">Outcome</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <details class="card pad-md">
+            <summary class="row gap-xs" style="cursor:pointer">
+              <span class="t-md med">Patterns worth knowing</span>
+              <span class="tag tag-grey">3 observations · last 30 days</span>
+            </summary>
+            <div class="col gap-sm" style="margin-top:var(--md)">
+              <div class="row gap-xs" style="align-items:flex-start">
+                <span class="dot" style="background:var(--purple-500);margin-top:7px"></span>
+                <span class="t-md sec" style="flex:1">Messages that name the product bought convert 2.3× better than ones that name a category. Applied to 4 engagements so far.</span>
+              </div>
+              <div class="row gap-xs" style="align-items:flex-start">
+                <span class="dot" style="background:var(--purple-500);margin-top:7px"></span>
+                <span class="t-md sec" style="flex:1">Nothing sent between 12:00 and 14:00 local converts — the engine has stopped choosing that slot on its own.</span>
+              </div>
+              <div class="row gap-xs" style="align-items:flex-start">
+                <span class="dot" style="background:var(--purple-500);margin-top:7px"></span>
+                <span class="t-md sec" style="flex:1">Free shipping beat 10% off on every at-risk cohort tested. Cheaper for you, and it won.</span>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ======== LOYALTY ======== -->
+      <section class="page hidden" id="page-loyalty">
+        <header class="pageHeader">
+          <div class="ttl">
+            <div class="row gap-xs"><h1 class="h-xxl">Loyalty</h1><span class="tag tag-green">Active</span></div>
+            <p class="t-md sec">Tiers, points and rewards — the levers the engine reaches for before it ever reaches for margin.</p>
+          </div>
+          <div class="pageActions">
+            <button class="btn btn-secondary" data-act="test-loyalty">Test</button>
+            <button class="btn btn-primary">Save program</button>
+          </div>
+        </header>
+
+        <div class="zone">
+          <div class="banner banner-ai">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ai-gradient)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>
+            <div class="col gap-xxxs" style="flex:1">
+              <span class="t-md med">Why Loyalty sits inside the Engagement Center.</span>
+              <span class="t-sm sec">A discount costs you margin every time. Points, early access and a tier bump cost far less and, on your at-risk cohort, they converted better. Loyalty is what lets the engine be generous without being expensive.</span>
+            </div>
+          </div>
+
+          <div class="grid g-stat">
+            <div class="card pad-md"><div class="t-sm sec">Members</div><div class="h-xxl num-t" style="margin-top:2px">18,940</div><div class="t-sm sec">61% of buyers</div></div>
+            <div class="card pad-md"><div class="t-sm sec">Points outstanding</div><div class="h-xxl num-t" style="margin-top:2px">4.2M</div><div class="t-sm sec">≈ $42k liability</div></div>
+            <div class="card pad-md"><div class="t-sm sec">Redemption rate</div><div class="h-xxl num-t" style="margin-top:2px">31%</div><div class="t-sm" style="color:var(--content-success-default)">+4 pt</div></div>
+            <div class="card pad-md"><div class="t-sm sec">Member vs non-member LTV</div><div class="h-xxl num-t" style="margin-top:2px">2.4×</div><div class="t-sm sec">$412 vs $172</div></div>
+          </div>
+
+          <!-- tiers -->
+          <div class="card" style="overflow:hidden">
+            <div class="col gap-xs" style="padding:var(--md) var(--lg)">
+              <h2 class="h-md">Tiers</h2>
+              <p class="t-sm sec">Each tier maps to a lifecycle stage, so "VIP" means one thing across the whole product.</p>
+              <div class="tierBar" id="tierBar" style="margin-top:var(--xs)"></div>
+              <div class="legend" id="tierLegend"></div>
+            </div>
+            <table id="tierTable">
+              <thead><tr><th>Tier</th><th>Enters at</th><th>Members</th><th>Maps to stage</th>
+                <th style="width:30%">Perks</th><th style="width:110px">AI may offer</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="grid g-2">
+            <!-- earn rules -->
+            <div class="card pad">
+              <h2 class="h-md">How members earn</h2>
+              <p class="t-sm sec" style="margin-bottom:var(--md)">The engine can trigger any of these as a reward inside a conversation.</p>
+              <div class="col gap-sm" id="earnList"></div>
+            </div>
+
+            <!-- reward catalog -->
+            <div class="card" style="overflow:hidden">
+              <div class="col gap-xxxs" style="padding:var(--md) var(--md) var(--sm)">
+                <h2 class="h-md">Reward catalogue</h2>
+                <p class="t-sm sec">Turn off anything you don't want the AI offering unprompted.</p>
+              </div>
+              <table class="inner" id="rewardTable">
+                <thead><tr><th>Reward</th><th>Cost</th><th>Your cost</th><th>Redeemed 30d</th><th style="width:90px">AI</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== PLACEHOLDER ======== -->
+      <section class="page hidden" id="page-soon">
+        <header class="pageHeader"><div class="ttl">
+          <h1 class="h-xxl">Not in this prototype</h1>
+          <p class="t-md sec">This mockup covers Overview, Engagements, Campaigns, Guardrails, Lifecycle, Activity and Loyalty.</p></div></header>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="panel" id="panel">
+  <div class="panelHead">
+    <div class="col gap-xxxs" style="flex:1;min-width:0">
+      <h2 class="h-lg" id="panelTitle">Panel</h2>
+      <p class="t-sm sec" id="panelSub"></p>
+    </div>
+    <button class="btn btn-tertiary sm" id="panelClose">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div class="panelBody" id="panelBody"></div>
+  <div class="panelFoot" id="panelFoot"></div>
+</aside>
+<div class="tip" id="tip"></div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!=null)n.innerHTML=h;return n};
+const SRC={Default:{c:"var(--dv-default)",tag:"tag-blue"},Custom:{c:"var(--dv-custom)",tag:"tag-coral"},ACE:{c:"var(--dv-ace)",tag:"tag-purple"}};
+
+/* =======================================================================
+   DATA
+   ======================================================================= */
+const WEEKS=["Jun 2","Jun 9","Jun 16","Jun 23","Jun 30","Jul 7","Jul 14","Jul 21","Jul 28","Aug 4","Aug 11","Aug 18"];
+const VOL={Default:[7480,7610,7390,7720,7840,7660,7910,7780,8020,7950,8110,8040],
+           Custom :[ 380, 420, 510, 640, 720, 810, 980,1120,1240,1380,1490,1620],
+           ACE    :[   0,   0, 240, 620,1080,1520,1980,2340,2610,2880,3140,3420]};
+const CVR ={Default:[3.0,3.1,3.0,3.2,3.1,3.3,3.2,3.4,3.3,3.4,3.3,3.4],
+            Custom :[6.8,7.0,7.4,7.1,7.6,7.9,7.7,8.0,8.2,7.9,8.1,8.2],
+            ACE    :[null,null,5.2,5.6,5.9,6.3,6.6,6.9,7.1,7.3,7.4,7.6]};
+const REV=[
+  {s:"Default",int:93510,ord:2992,cvr:"3.2%",aov:"$118",gmv:353060,per:"$3,775",lift:"+$21,400",liftPct:"+6%",cost:"$8,420"},
+  {s:"Custom", int:11310,ord: 871,cvr:"7.7%",aov:"$142",gmv:123680,per:"$10,936",lift:"+$38,900",liftPct:"+31%",cost:"$1,020"},
+  {s:"ACE",    int:19830,ord:1309,cvr:"6.6%",aov:"$131",gmv:171480,per:"$8,647",lift:"+$74,300",liftPct:"+43%",cost:"$2,180"}
+];
+const CAMPAIGNS=[
+  {n:"Mid-layer season opener",aud:"Hardshell owners, no mid-layer",sent:"3,802",cvr:"6.8%",gmv:"$62,410",win:"Answer the objection",st:"Measuring"},
+  {n:"Summit tier early access",aud:"Summit + Gold loyalty tiers",sent:"1,180",cvr:"11.4%",gmv:"$41,900",win:"Early access, no discount",st:"Sent"},
+  {n:"Care-kit refill push",aud:"Bought the kit ≥ 60 days ago",sent:"2,640",cvr:"9.1%",gmv:"$28,300",win:"Points boost",st:"Sent"},
+  {n:"Return-and-never-return recovery",aud:"Fit returns, no repurchase",sent:"640",cvr:"7.9%",gmv:"$11,200",win:"Free shipping",st:"Sent"},
+  {n:"B2B spring reorder",aud:"Wholesale accounts past cadence",sent:"84",cvr:"26.2%",gmv:"$38,700",win:"Answer the objection",st:"Sent"},
+  {n:"Black Friday warm-up",aud:"Not yet defined",sent:"—",cvr:"—",gmv:"—",win:"—",st:"Draft"}
+];
+const CAMP_ST={Measuring:"tag-orange",Sent:"tag-green",Draft:"tag-grey"};
+
+const BENCH=[
+  {n:"Reply rate",v:3.4,med:1.9,top:4.1,max:5,unit:"%",good:"high"},
+  {n:"CSAT after an engagement",v:4.6,med:4.2,top:4.7,max:5,unit:"/5",good:"high"},
+  {n:"Revenue per 1k interactions",v:6480,med:4100,top:7200,max:9000,unit:"$",good:"high"},
+  {n:"Opt-out rate",v:0.9,med:1.6,top:0.7,max:3,unit:"%",good:"low"}
+];
+
+const ENG=[
+  {n:"Cart abandonment",d:"Checkout started, no order",s:"Default",trg:"Shopify · +45 min, +20h",ins:"Customized",sent:9420,cvr:"4.1%",st:"on"},
+  {n:"Welcome",d:"Opt-in confirmed",s:"Default",trg:"Consent · immediate",ins:"Default",sent:2860,cvr:"6.7%",st:"on"},
+  {n:"Post-purchase welcome",d:"First order placed",s:"Default",trg:"Shopify · +1 day",ins:"Customized",sent:3240,cvr:"2.2%",st:"on"},
+  {n:"Browse abandonment",d:"Repeat product views, no cart",s:"Default",trg:"On-site · +3h",ins:"Default",sent:4110,cvr:"1.8%",st:"on"},
+  {n:"Subscription renewal reminder",d:"Next charge approaching",s:"Default",trg:"Shopify · −3 days",ins:"Customized",sent:5180,cvr:"—",st:"on"},
+  {n:"Subscription card expiring",d:"Payment method expires soon",s:"Default",trg:"Billing · −7 days",ins:"Default",sent:640,cvr:"38.2%",st:"on"},
+  {n:"Subscription payment failed",d:"Dunning retry needed",s:"Default",trg:"Billing · +2h, +48h",ins:"Default",sent:310,cvr:"41.6%",st:"on"},
+  {n:"Replenishment due",d:"Past their own reorder rhythm",s:"Default",trg:"Timer · per category",ins:"Customized",sent:6730,cvr:"5.4%",st:"on"},
+  {n:"Win-back",d:"No order in 120 days",s:"Default",trg:"Timer · 120 / 180 days",ins:"Customized",sent:7900,cvr:"1.4%",st:"on"},
+  {n:"Post-resolution follow-up",d:"Support ticket resolved",s:"Default",trg:"Gorgias · +2 days",ins:"Default",sent:1480,cvr:"2.9%",st:"on"},
+  {n:"Back in stock",d:"Viewed or waitlisted item restocked",s:"Default",trg:"Shopify · immediate",ins:"Default",sent:0,cvr:"—",st:"setup",note:"Needs the restock webhook"},
+  {n:"Delivery exception",d:"Delayed, lost or held in customs",s:"Default",trg:"3PL · immediate",ins:"Default",sent:0,cvr:"—",st:"setup",note:"No carrier integration yet"},
+  {n:"Subscription paused or cancelled",d:"Save-the-subscription play",s:"Default",trg:"Shopify · +1 day",ins:"Default",sent:0,cvr:"—",st:"off"},
+
+  {n:"Helmet cross-sell",d:"Bike buyers who never bought a helmet",s:"Custom",trg:"Order fulfilled · +5 days",ins:"Customized",sent:420,cvr:"7.8%",st:"on"},
+  {n:"Fit-return recovery",d:"Returned for size, never came back",s:"Custom",trg:"Return processed",ins:"Customized",sent:180,cvr:"11.2%",st:"on"},
+  {n:"Leaky cart · $200+",d:"High-value carts that stalled at checkout",s:"Custom",trg:"Checkout abandoned",ins:"Customized",sent:250,cvr:"9.4%",st:"on"},
+  {n:"B2B reorder nudge",d:"Wholesale accounts past their cadence",s:"Custom",trg:"Timer · per account",ins:"Customized",sent:70,cvr:"22.9%",st:"on"},
+  {n:"Cold-snap cooling range",d:"Browsers during the temperature spike",s:"Custom",trg:"Weather + browse",ins:"Customized",sent:0,cvr:"—",st:"off"}
+];
+
+/* ACE is one switch, not a list of scenarios. Domains are the only dial:
+   they bound what the agent chain is allowed to work on. */
+const ACE_DOMAINS=[
+  {n:"Replenishment & reorder",d:"Someone is due, or overdue, for something they already buy.",on:true,sent:2410,cvr:"8.1%",rev:"$14,900"},
+  {n:"Retention & win-back",d:"Going quiet, or already gone, and worth one honest attempt.",on:true,sent:1980,cvr:"4.4%",rev:"$9,100"},
+  {n:"Cross-sell & complements",d:"They own the thing; the companion piece is the obvious next step.",on:true,sent:1640,cvr:"6.9%",rev:"$11,300"},
+  {n:"Service recovery",d:"Something went wrong and the relationship is worth repairing.",on:true,sent:520,cvr:"3.2%",rev:"$2,400"},
+  {n:"Subscriptions",d:"Renewals, failed payments, pauses worth saving.",on:true,sent:410,cvr:"12.6%",rev:"$5,800"},
+  {n:"Consideration & browse",d:"Looking, hesitating, not yet a customer.",on:false,sent:0,cvr:"—",rev:"—",note:"Off — you asked it to leave pre-purchase to your own flows"},
+  {n:"Loyalty moments",d:"A tier within reach, points about to expire, an anniversary.",on:true,sent:280,cvr:"9.8%",rev:"$3,800"},
+  {n:"Seasonal & inventory",d:"A restock, a weather swing, a range that suddenly matters.",on:false,sent:0,cvr:"—",rev:"—",note:"Off — you run these as campaigns"}
+];
+const ACE_CHAIN=[
+  ["Watch","Orders, tickets, sessions, consent and catalog, continuously."],
+  ["Find","An agent looks for a moment worth acting on, inside the domains you allow."],
+  ["Decide","A second agent decides whether this specific person should hear from you, and when."],
+  ["Write","A third writes the message from what it knows about them — not from a template."],
+  ["Check","Guardrails run last. They can stop anything the agents decided."],
+  ["Learn","What happened feeds back, so the next decision is sharper."]
+];
+
+const SUPPRESSION=[
+  {n:"Opted out (STOP)",d:"Legal requirement.",on:true,locked:true},
+  {n:"No valid consent on file",d:"Legal requirement.",on:true,locked:true},
+  {n:"Already in a live conversation",d:"Never talk over an open thread.",on:true,locked:true},
+  {n:"Open support ticket",d:"Don't sell to someone waiting on a problem.",on:true},
+  {n:"Refund or complaint in the last 14 days",d:"Give the relationship time to recover.",on:true},
+  {n:"Order flagged as a gift",d:"The buyer isn't the wearer.",on:true},
+  {n:"Wholesale and B2B accounts",d:"Handled by the B2B engagements only.",on:false},
+  {n:"In the measurement holdout",d:"Protects the lift number.",on:true,locked:true}
+];
+
+const OBJECTIVES=[
+  "Get consent so we can talk at all",
+  "Get to a first order",
+  "Get to a second order",
+  "Turn occasional buying into a rhythm",
+  "Protect the relationship and grow basket size",
+  "Re-engage before they go quiet",
+  "Win back, or stop spending on them"
+];
+const TONES=["Helpful, no selling","Warm and direct","Familiar, like a regular","Deferential, they've earned it","Honest and low-pressure"];
+const DISCOUNTS=["No discount, ever","Free shipping only","Loyalty points instead of money","Up to 10% with approval","Up to 20%, at-risk only"];
+const LEVERS=["Answer the objection","Early access","Points boost","Free shipping","Tier fast-track","Discount"];
+
+const STAGES=[
+  {n:"Visitor",rule:["Sessions ≥ 1","Opt-in = no"],pop:"18,400",days:"—",col:"var(--grey-300)",
+    obj:0,tone:0,disc:0,lever:[0],cap:"1 / week",src:["Default"],
+    note:"Nothing can send here without consent — suppression does most of the work."},
+  {n:"Lead",rule:["Opt-in = yes","Orders = 0"],pop:"6,120",days:"22 d",col:"var(--blue-200)",
+    obj:1,tone:0,disc:1,lever:[0,3],cap:"2 / week",src:["Default","Custom"],
+    note:"ACE stays out: too little signal on a shopper who has never bought."},
+  {n:"First-time buyer",rule:["Orders = 1"],pop:"9,840",days:"62 d",col:"var(--teal-200)",
+    obj:2,tone:1,disc:1,lever:[0,3],cap:"3 / week",src:["Default","Custom","ACE"],
+    note:"Median time to a second order is 62 days; win-back only starts at 120. This is the gap ACE fills."},
+  {n:"Repeat",rule:["Orders 2–4"],pop:"4,270",days:"148 d",col:"var(--green-300)",
+    obj:3,tone:2,disc:2,lever:[0,2],cap:"2 / week",src:["Default","Custom","ACE"],
+    note:"Reorder rhythm is learned per shopper here, not from the store average.",
+    replen:[["Care products","38 days","34–44 days"],["Nutrition","27 days","24–31 days"],["Base layers","186 days","seasonal"]]},
+  {n:"VIP",rule:["Orders ≥ 5","or LTV in top 10%"],pop:"1,180",days:"—",col:"var(--purple-300)",
+    obj:4,tone:3,disc:2,lever:[1,2,4],cap:"2 / week",src:["Custom","ACE"],
+    note:"Mapped to the Gold and Summit loyalty tiers, so VIP means one thing everywhere."},
+  {n:"At risk",rule:["1.5× past their own rhythm"],pop:"2,910",days:"41 d",col:"var(--orange-300)",
+    obj:5,tone:4,disc:3,lever:[0,3,5],cap:"2 / week",src:["Default","Custom","ACE"],
+    note:"Free shipping beat 10% off on every at-risk cohort tested — cheaper, and it won."},
+  {n:"Dormant",rule:["No order in 180 days"],pop:"7,650",days:"—",col:"var(--coral-400)",
+    obj:6,tone:4,disc:4,lever:[5],cap:"1 / month",src:["Default","ACE"],
+    note:"One honest attempt, then stop. Most suppressed messages come from here."}
+];
+
+const ACTIVITY=[
+  {who:"Ana R.",id:"+1 415 ••• 2140",stage:"First-time buyer",eng:"Cross-sell & complements",s:"ACE",
+   why:"Day 51 of a 62-day second-order window; bought Winter Tights, never a base layer.",when:"12 min ago",st:"pending",
+   conv:[["out","Hey Ana — how are the Winter Tights holding up? Most people pair them with the Merino base layer once it drops below 5°. Want me to show you the two that fit your size?"]]},
+  {who:"Marc D.",id:"+33 6 •• •• 71",stage:"VIP",eng:"Replenishment & reorder",s:"ACE",
+   why:"2.1× past his own 38-day reorder gap. No open ticket, no recent return.",when:"18 min ago",st:"pending",
+   conv:[["out","Marc — it's been a while. You usually restock the care kit around now. Anything changed, or should I set one aside before Friday?"]]},
+  {who:"Sam K.",id:"+44 7•• ••• 903",stage:"At risk",eng:"Fit-return recovery",s:"Custom",
+   why:"Returned for fit last spring; the dial was redesigned in March.",when:"41 min ago",st:"sent",
+   conv:[["out","Hi Sam — you sent back the shorts last spring because the length ran short. We changed the dial and the cut in March. Want me to work out your size properly this time?"],
+         ["in","oh really? yeah I'd give it another go"],
+         ["out","Great. What's your usual waist and inseam? I'll pick the exact size and returns are free if it's still off."]]},
+  {who:"Lena P.",id:"+49 15• ••• 22",stage:"Repeat",eng:"Replenishment due",s:"Default",
+   why:"Day 40 on a 38-day median cadence for care products.",when:"1 h ago",st:"sent",
+   conv:[["out","Lena, you're about due for the care kit refill — want the same one, or the new concentrate?"],["in","same one please"],["out","Done — here's the link, it's in your basket ready to go."]]},
+  {who:"Tom W.",id:"+1 206 ••• 8871",stage:"First-time buyer",eng:"Second-order window",s:"ACE",
+   why:"Day 49 of the window, but he has an open ticket about a delayed parcel.",when:"1 h ago",st:"suppressed",
+   sup:"Open support ticket — the engine will retry once it's resolved.",conv:[]},
+  {who:"Priya S.",id:"+1 646 ••• 3390",stage:"VIP",eng:"Post-ticket sizing upsell",s:"ACE",
+   why:"Asked about sizing in chat yesterday, left without ordering.",when:"2 h ago",st:"dry",
+   conv:[["out","Priya — you asked about the 38 in the shell yesterday. It runs true to size with a mid-layer underneath. Want me to hold one?"]]},
+  {who:"Jonas M.",id:"+46 7• ••• 12",stage:"Dormant",eng:"Win-back",s:"Default",
+   why:"210 days since last order, still opted in.",when:"3 h ago",st:"suppressed",
+   sup:"Frequency cap — already had 3 messages this week.",conv:[]},
+  {who:"Chloé B.",id:"+33 7 •• •• 08",stage:"Repeat",eng:"Helmet cross-sell",s:"Custom",
+   why:"Bought a frame 5 days ago, zero helmets in her lifetime orders.",when:"4 h ago",st:"sent",
+   conv:[["out","Chloé — nice frame. One thing you'll want before the first proper ride: a helmet that actually fits the way you ride. Want me to narrow it to two?"],["in","sure"],["out","Here they are — both size S, both in stock. Free returns if the fit's off."]]}
+];
+const ACT_ST={pending:["Pending approval","tag-orange"],sent:["Sent","tag-green"],
+  dry:["Would have sent","tag-blue"],suppressed:["Suppressed","tag-grey"]};
+
+const VARIANTS=[
+  {k:"A",n:"Answer the objection",ins:"Lead with why the mid-layer matters below 5°. No offer at all in the first message. If they ask about price, answer plainly and stop.",
+   off:"No offer",sent:137,rep:"11.7%",cvr:"6.6%",rev:"$4.82",marg:"full margin",win:true},
+  {k:"B",n:"Free shipping",ins:"Same opening, then offer free shipping on the mid-layer if they order this week. Never mention a percentage.",
+   off:"Free shipping",sent:138,rep:"9.4%",cvr:"6.2%",rev:"$4.31",marg:"−$6.40 / order",win:false},
+  {k:"C",n:"10% off",ins:"Open with the seasonal reason, then offer 10% off with a unique code. Mention the code expires in 5 days.",
+   off:"10% discount",sent:137,rep:"8.1%",cvr:"7.1%",rev:"$4.44",marg:"−$11.90 / order",win:false}
+];
+
+const RULES=[
+  {j:"IF",f:"Purchased category",o:"is",v:"Hardshells"},
+  {j:"AND",f:"Order date",o:"between",v:"Oct 1 – Feb 28"},
+  {j:"AND",f:"Lifetime items in category",o:"= 0",v:"Mid-layers"},
+  {j:"AND",f:"Lifecycle stage",o:"is any of",v:"Repeat, VIP"},
+  {j:"NOT",f:"Return processed",o:"within",v:"last 30 days"}
+];
+
+const TIERS=[
+  {n:"Member",at:"Sign-up",m:9420,stage:"Lead · First-time buyer",perks:"1 pt per $1, birthday reward",ai:true,c:"var(--purple-100)"},
+  {n:"Silver",at:"$250 spent / year",m:5610,stage:"Repeat",perks:"1.25 pts per $1, free returns",ai:true,c:"var(--purple-200)"},
+  {n:"Gold",at:"$750 spent / year",m:2730,stage:"VIP",perks:"1.5 pts per $1, early access, free shipping",ai:true,c:"var(--purple-400)"},
+  {n:"Summit",at:"$2,000 spent / year",m:1180,stage:"VIP",perks:"2 pts per $1, concierge sizing, first drops",ai:false,c:"var(--purple-700)"}
+];
+const EARN=[
+  {n:"Every dollar spent",d:"1 to 2 points depending on tier",on:true},
+  {n:"Writing a review",d:"150 points, once per product",on:true},
+  {n:"Referring a friend",d:"500 points once the friend orders",on:true},
+  {n:"Completing the fit profile",d:"200 points — feeds sizing accuracy",on:true},
+  {n:"Birthday",d:"250 points, automatic",on:true},
+  {n:"Recovering a lapsed subscription",d:"300 points — the engine may offer this",on:false}
+];
+const REWARDS=[
+  {n:"Free shipping on the next order",p:"400 pts",cost:"$6.40",r:1840,ai:true},
+  {n:"Early access to a drop, 48h",p:"600 pts",cost:"$0",r:920,ai:true},
+  {n:"Double points for a week",p:"Free",cost:"≈$2.10",r:1420,ai:true},
+  {n:"$15 off $100",p:"1,500 pts",cost:"$15.00",r:610,ai:true},
+  {n:"Tier fast-track, one level for 60 days",p:"2,000 pts",cost:"varies",r:180,ai:false},
+  {n:"Concierge sizing session",p:"800 pts",cost:"$4.00",r:240,ai:true}
+];
+
+/* =======================================================================
+   CHART PRIMITIVES
+   ======================================================================= */
+const tip=$("#tip");
+function showTip(html,x,y){tip.innerHTML=html;tip.style.opacity=1;
+  const r=tip.getBoundingClientRect();
+  tip.style.left=Math.min(window.innerWidth-r.width-10,Math.max(10,x-r.width/2))+"px";
+  tip.style.top=Math.max(10,y-r.height-12)+"px";}
+function hideTip(){tip.style.opacity=0}
+const fmt=n=>n.toLocaleString("en-US");
+const SERIES=["Default","Custom","ACE"];
+
+function legend(node,extra){
+  node.innerHTML=SERIES.map(s=>`<span class="legendItem"><span class="srcSwatch" style="background:${SRC[s].c}"></span>${s}</span>`).join("")
+    + (extra||"");
+}
+
+/* stacked bars — 2px surface gap BETWEEN segments, bottom anchored, 4px rounded top end */
+function stackedBars(host,data){
+  const W=Math.max(320,host.clientWidth||520), H=212, PL=44,PR=8,PT=10,PB=26, GAP=2;
+  const iw=W-PL-PR, ih=H-PT-PB;
+  const totals=WEEKS.map((_,i)=>SERIES.reduce((a,s)=>a+data[s][i],0));
+  const max=Math.ceil(Math.max(...totals)/2000)*2000;
+  const slot=iw/WEEKS.length;
+  const bw=Math.max(8,Math.min(26,slot-10));
+  const x=i=>PL+(i+.5)*slot-bw/2;
+  const y=v=>PT+ih-(v/max)*ih;
+  let g="";
+  for(let t=0;t<=max;t+=max/4){
+    g+=`<line class="gridline" x1="${PL}" x2="${W-PR}" y1="${y(t)}" y2="${y(t)}"/>`;
+    g+=`<text x="${PL-8}" y="${y(t)+4}" text-anchor="end">${t>=1000?(t/1000)+"k":t}</text>`;
+  }
+  WEEKS.forEach((w,i)=>{
+    if(i%2===0) g+=`<text x="${x(i)+bw/2}" y="${H-8}" text-anchor="middle">${w}</text>`;
+    let acc=0;
+    const topIdx=SERIES.reduce((m,s,si)=>data[s][i]>0?si:m,-1);
+    SERIES.forEach((s,si)=>{
+      const v=data[s][i]; if(!v){return}
+      const isTop = si===topIdx;
+      const yBottom=y(acc);
+      const yTop=y(acc+v) + (isTop?0:GAP);
+      const h=Math.max(1,yBottom-yTop);
+      g+=`<path d="${roundedTop(x(i),yTop,bw,h,isTop?4:0)}" fill="${SRC[s].c}"/>`;
+      acc+=v;
+    });
+    g+=`<rect class="hit" x="${x(i)-5}" y="${PT}" width="${bw+10}" height="${ih}" data-i="${i}"/>`;
+  });
+  host.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly interactions by source">${g}</svg>`;
+  const svg=host.querySelector("svg");
+  svg.addEventListener("mousemove",e=>{
+    const h=e.target.closest(".hit"); if(!h) return hideTip();
+    const i=+h.dataset.i, b=h.getBoundingClientRect();
+    showTip(`<b>Week of ${WEEKS[i]}</b>`+SERIES.map(s=>
+      `<div class="tRow"><span><span class="srcSwatch" style="background:${SRC[s].c}"></span> ${s}</span><span>${fmt(data[s][i])}</span></div>`).join("")
+      +`<div class="tRow" style="border-top:1px solid rgba(255,255,255,.2);margin-top:4px;padding-top:4px"><span>Total</span><span>${fmt(totals[i])}</span></div>`,
+      b.left+b.width/2,b.top);
+  });
+  svg.addEventListener("mouseleave",hideTip);
+}
+function roundedTop(x,y,w,h,r){
+  if(!r) return `M${x} ${y}h${w}v${h}h${-w}z`;
+  return `M${x} ${y+r}a${r} ${r} 0 0 1 ${r} ${-r}h${w-2*r}a${r} ${r} 0 0 1 ${r} ${r}v${h-r}h${-w}z`;
+}
+
+/* multi-line — 2px strokes, crosshair tooltip */
+function lines(host,data){
+  const W=Math.max(320,host.clientWidth||520), H=212, PL=38,PR=86,PT=10,PB=26;
+  const iw=W-PL-PR, ih=H-PT-PB;
+  const max=10, step=iw/(WEEKS.length-1);
+  const x=i=>PL+i*step, y=v=>PT+ih-(v/max)*ih;
+  let g="";
+  for(let t=0;t<=max;t+=2.5){
+    g+=`<line class="gridline" x1="${PL}" x2="${PL+iw}" y1="${y(t)}" y2="${y(t)}"/>`;
+    g+=`<text x="${PL-8}" y="${y(t)+4}" text-anchor="end">${t}%</text>`;
+  }
+  WEEKS.forEach((w,i)=>{if(i%2===0)g+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${w}</text>`});
+  g+=`<line class="crosshair" id="ch" y1="${PT}" y2="${PT+ih}"/>`;
+  SERIES.forEach(s=>{
+    const pts=data[s].map((v,i)=>v==null?null:[x(i),y(v)]).filter(Boolean);
+    g+=`<path d="${pts.map((p,i)=>(i?"L":"M")+p[0]+" "+p[1]).join("")}" fill="none" stroke="${SRC[s].c}" stroke-width="2" stroke-linecap="round"/>`;
+    const last=pts[pts.length-1], lv=data[s][WEEKS.length-1];
+    g+=`<circle cx="${last[0]}" cy="${last[1]}" r="4" fill="${SRC[s].c}" stroke="var(--white)" stroke-width="2"/>`;
+    g+=`<text x="${last[0]+9}" y="${last[1]+4}" style="font-weight:600">${s} ${lv}%</text>`;
+  });
+  WEEKS.forEach((w,i)=>{g+=`<rect class="hit" x="${x(i)-step/2}" y="${PT}" width="${step}" height="${ih}" data-i="${i}"/>`});
+  host.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly conversion rate by source">${g}</svg>`;
+  const svg=host.querySelector("svg"), ch=svg.querySelector("#ch");
+  svg.addEventListener("mousemove",e=>{
+    const h=e.target.closest(".hit"); if(!h) return;
+    const i=+h.dataset.i, b=svg.getBoundingClientRect();
+    ch.setAttribute("x1",x(i)); ch.setAttribute("x2",x(i)); ch.style.opacity=1;
+    showTip(`<b>Week of ${WEEKS[i]}</b>`+SERIES.map(s=>data[s][i]==null?"":
+      `<div class="tRow"><span><span class="srcSwatch" style="background:${SRC[s].c}"></span> ${s}</span><span>${data[s][i]}%</span></div>`).join(""),
+      b.left+(x(i)/W)*b.width, b.top+40);
+  });
+  svg.addEventListener("mouseleave",()=>{ch.style.opacity=0;hideTip()});
+}
+
+function dataTable(host,data,unit){
+  let h=`<table class="inner"><thead><tr><th>Week</th>${SERIES.map(s=>`<th>${s}</th>`).join("")}</tr></thead><tbody>`;
+  WEEKS.forEach((w,i)=>{h+=`<tr><td class="t-md med">${w}</td>${SERIES.map(s=>
+    `<td class="t-md num-t">${data[s][i]==null?"—":(unit==="%"?data[s][i]+"%":fmt(data[s][i]))}</td>`).join("")}</tr>`});
+  host.innerHTML=h+"</tbody></table>";
+}
+
+function renderRev(){
+  const tb=$("#revTable tbody"); tb.innerHTML="";
+  const T={int:0,ord:0,gmv:0};
+  REV.forEach(r=>{T.int+=r.int;T.ord+=r.ord;T.gmv+=r.gmv;
+    const tr=el("tr");
+    tr.innerHTML=`
+      <td><span class="tag ${SRC[r.s].tag}"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span></td>
+      <td class="t-md num-t">${fmt(r.int)}</td>
+      <td class="t-md num-t">${fmt(r.ord)}</td>
+      <td class="t-md num-t">${r.cvr}</td>
+      <td class="t-md num-t">${r.aov}</td>
+      <td class="t-md num-t bold">$${fmt(r.gmv)}</td>
+      <td class="t-md num-t">${r.per}</td>
+      <td><div class="col gap-xxxs" style="align-items:flex-start">
+        <span class="t-md num-t med" style="color:var(--content-success-default)">${r.lift}</span>
+        <span class="t-xs ter">${r.liftPct} vs holdout</span></div></td>
+      <td class="t-md num-t sec">${r.cost}</td>`;
+    tb.appendChild(tr);
+  });
+  const tr=el("tr");
+  tr.style.background="var(--grey-50)";
+  tr.innerHTML=`<td class="t-md bold">Total</td>
+    <td class="t-md num-t bold">${fmt(T.int)}</td><td class="t-md num-t bold">${fmt(T.ord)}</td>
+    <td class="t-md num-t bold">4.1%</td><td class="t-md num-t bold">$125</td>
+    <td class="t-md num-t bold">$${fmt(T.gmv)}</td><td class="t-md num-t bold">$5,200</td>
+    <td class="t-md num-t bold" style="color:var(--content-success-default)">+$134,600</td>
+    <td class="t-md num-t bold sec">$11,620</td>`;
+  tb.appendChild(tr);
+}
+
+function renderCampaigns(){
+  $("#navCamp").textContent=CAMPAIGNS.length;
+  const f=$$("#campFilter .chip").find(c=>c.classList.contains("on")).dataset.f;
+  const tb=$("#campTable tbody"); tb.innerHTML="";
+  CAMPAIGNS.filter(c=>f==="all"||c.st===f).forEach(c=>{
+    const tr=el("tr","rowLink");
+    tr.innerHTML=`<td><span class="t-md med">${c.n}</span></td>
+      <td class="t-sm sec">${c.aud}</td><td class="t-md num-t">${c.sent}</td>
+      <td class="t-md num-t">${c.cvr}</td><td class="t-md num-t bold">${c.gmv}</td>
+      <td class="t-sm sec">${c.win}</td>
+      <td><span class="tag ${CAMP_ST[c.st]}">${c.st}</span></td>`;
+    tr.addEventListener("click",()=>goto("campaign-new"));
+    tb.appendChild(tr);
+  });
+}
+
+/* ACE — one switch, domains as the only dial */
+let aceState="on";
+function renderAce(){
+  const on=aceState!=="off";
+  const T={on:["ACE is on","It's reaching out on its own, inside your guardrails, on the domains you allow below. Every single decision is in the Activity log.","On","tag-purple"],
+    dry:["ACE is in dry run","It's still finding moments and deciding who to reach — it just doesn't send. Everything it would have sent shows up in Activity, so you can read it before you commit.","Dry run","tag-blue"],
+    off:["ACE is off","It has stopped looking. Your Default and Custom engagements carry on as normal.","Off","tag-grey"]}[aceState];
+  $("#aceHeroTitle").textContent=T[0];
+  $("#aceHeroNote").textContent=T[1];
+  $("#aceStateTag").textContent=T[2];
+  $("#aceStateTag").className="tag "+T[3];
+  $("#aceDomCount").textContent=ACE_DOMAINS.filter(d=>d.on).length+" of "+ACE_DOMAINS.length+" allowed";
+  $("#aceStats").style.opacity=on?1:.45;
+
+  const tb=$("#aceDomainTable tbody"); tb.innerHTML="";
+  ACE_DOMAINS.forEach((d,i)=>{
+    const live=d.on&&on;
+    const tr=el("tr");
+    tr.style.opacity=on?1:.5;
+    tr.innerHTML=`
+      <td><div class="col gap-xxxs">
+        <span class="t-md med">${d.n}</span><span class="t-sm sec">${d.d}</span>
+        ${d.note?`<span class="tag tag-grey" style="margin-top:4px;width:fit-content">${d.note}</span>`:""}
+      </div></td>
+      <td class="t-md num-t ${live&&d.sent?"":"ter"}">${live&&d.sent?fmt(d.sent):"—"}</td>
+      <td class="t-md num-t ${live&&d.sent?"":"ter"}">${live&&d.sent?d.cvr:"—"}</td>
+      <td class="t-md num-t ${live&&d.sent?"bold":"ter"}">${live&&d.sent?d.rev:"—"}</td>
+      <td><span class="toggle ${d.on?"on":""}" data-dom="${i}" ${on?"":'style="opacity:.5;pointer-events:none"'}></span></td>`;
+    tb.appendChild(tr);
+  });
+
+  $("#aceChain").innerHTML=ACE_CHAIN.map((c,i)=>`
+    <div class="row gap-sm" style="align-items:flex-start">
+      <span style="width:22px;height:22px;border-radius:var(--xxs);flex-shrink:0;display:grid;place-items:center;
+        font-size:11px;font-weight:600;background:var(--purple-50);color:var(--purple-800)">${i+1}</span>
+      <div class="col gap-xxxs" style="flex:1">
+        <span class="t-md med">${c[0]}</span><span class="t-sm sec">${c[1]}</span>
+      </div>
+    </div>`).join("");
+
+}
+
+function renderBench(){
+  const w=$("#benchWrap"); w.innerHTML="";
+  BENCH.forEach(b=>{
+    const better = b.good==="high" ? b.v>=b.med : b.v<=b.med;
+    const fill = better?"var(--green-500)":"var(--orange-500)";
+    const pv=v=>(v/b.max)*100;
+    const val = b.unit==="$" ? "$"+fmt(b.v) : b.v+b.unit;
+    const row=el("div","col gap-xxs");
+    row.innerHTML=`
+      <div class="row between">
+        <span class="t-md med">${b.n}</span>
+        <span class="t-sm ${better?'':'sec'}" ${better?'style="color:var(--content-success-default)"':''}>
+          ${better?"ahead of":"behind"} the median · median ${b.unit==="$"?"$"+fmt(b.med):b.med+b.unit}</span>
+      </div>
+      <div class="bullet">
+        <div class="bulletTrack">
+          <span class="bulletFill" style="width:${pv(b.v)}%;background:${fill}"></span>
+          <span class="bulletTick" style="left:${pv(b.med)}%"></span>
+          <span class="bulletTick top" style="left:${pv(b.top)}%"></span>
+        </div>
+        <span class="t-md bold num-t" style="text-align:right">${val}</span>
+      </div>`;
+    w.appendChild(row);
+  });
+}
+
+/* =======================================================================
+   ENGAGEMENTS
+   ======================================================================= */
+let engFilter="all";
+function renderEng(){
+  const st=$("#statusFilter").value;
+  const rows=ENG.filter(r=>(engFilter==="all"||r.s===engFilter)&&(st==="all"||r.st===st));
+  const tb=$("#engTable tbody"); tb.innerHTML="";
+  rows.forEach(r=>{
+    const i=ENG.indexOf(r);
+    const tr=el("tr","rowLink");
+    tr.innerHTML=`
+      <td><div class="col gap-xxxs">
+        <span class="t-md med">${r.n}</span><span class="t-sm sec">${r.d}</span>
+        ${r.note?`<span class="tag tag-orange" style="margin-top:4px;width:fit-content">${r.note}</span>`:""}
+      </div></td>
+      <td><span class="tag ${SRC[r.s].tag}"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span></td>
+      <td class="t-sm sec">${r.trg}</td>
+      <td><span class="tag ${r.ins==="Customized"?"tag-purple":"tag-grey"}">${r.ins}</span></td>
+      <td class="t-md num-t ${r.sent?"":"ter"}">${r.sent?fmt(r.sent):"—"}</td>
+      <td class="t-md num-t ${r.cvr==="—"?"ter":""}">${r.cvr}</td>
+      <td><div class="row gap-xs" style="justify-content:flex-end">
+        <button class="btn btn-secondary sm" data-test="${i}">Test</button>
+        <span class="toggle ${r.st==="on"?"on":""}" data-eng="${i}"></span>
+      </div></td>`;
+    tr.addEventListener("click",e=>{
+      if(e.target.closest("[data-test]")||e.target.closest("[data-eng]")) return;
+      openEngagement(i);
+    });
+    tb.appendChild(tr);
+  });
+  $("#fcAll").textContent=ENG.length;
+  ["Default","Custom"].forEach(s=>{const n=$("#fc"+s);if(n)n.textContent=ENG.filter(r=>r.s===s).length});
+  $("#navEngCount").textContent=ENG.filter(r=>r.st==="on").length;
+}
+
+function insBody(r){
+  const custom = r.ins==="Customized";
+  return `
+  <div class="row between wrap gap-sm">
+    <div class="row gap-xs wrap">
+      <span class="tag ${SRC[r.s].tag}"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span>
+      <span class="tag tag-grey">${r.trg}</span>
+      ${r.sent?`<span class="tag tag-grey">${fmt(r.sent)} sent · 30d</span>`:""}
+      ${r.cvr!=="—"?`<span class="tag tag-green">${r.cvr} CVR</span>`:""}
+    </div>
+    <div class="row gap-xs"><span class="t-sm sec">Status</span><span class="toggle ${r.st==="on"?"on":""}" data-toggle></span></div>
+  </div>
+
+  <div class="col gap-xs">
+    <div class="row between">
+      <div class="row gap-xs">
+        <h3 class="h-md">Instruction</h3>
+        <span class="tag ${custom?"tag-purple":"tag-grey"}">${custom?"Customized":"Default"}</span>
+      </div>
+      ${custom?`<button class="btn btn-tertiary sm ter">Reset to default</button>`:""}
+    </div>
+    <p class="t-sm sec">One instruction per engagement. It's a skill the agent loads when this engagement fires — nothing else stacks on top of it.</p>
+    <div class="card pad-md" style="background:var(--grey-50)">
+      <div class="row between" style="margin-bottom:var(--xs)">
+        <span class="mono ter">skill · ${r.n.toLowerCase().replace(/[^a-z0-9]+/g,"-")}</span>
+        <span class="t-xs ter">v4 · edited 3 days ago by Maria</span>
+      </div>
+      <textarea class="textarea" style="min-height:150px;background:var(--white)">${instructionText(r)}</textarea>
+    </div>
+    <div class="row gap-xs">
+      <span class="t-xs ter">Guardrails apply on top and can't be overridden here:</span>
+      <span class="tag tag-grey">≤3 msg / week</span><span class="tag tag-grey">quiet 21:00–09:00</span><span class="tag tag-grey">discount ≤10%</span>
+    </div>
+  </div>
+
+  <div class="col gap-xs">
+    <h3 class="h-md">What it produced last time</h3>
+    <div class="phone">
+      <div class="bubble out">${samplePreview(r)}</div>
+      <div class="bubble in">yes please, I'm a medium</div>
+      <div class="bubble out">Perfect — medium it is. Here are the two that work with what you already have: [link]. Free returns if the fit's off.</div>
+    </div>
+  </div>`;
+}
+function instructionText(r){
+  if(r.s==="ACE") return "State the reason we're reaching out in the first line. Name the exact product they bought, never the category. Suggest the companion item, not a bigger version of the same thing. No offer in the first message — if they hesitate, use the loyalty levers before any discount. Keep it to two sentences.";
+  if(r.s==="Custom") return "Lead with fit and safety, never price. Do not discount in the first message. If the shopper asks a sizing question, answer it properly and offer to hold the item. Stop selling the moment they raise a problem with an existing order.";
+  return "Remind them what's in the cart by name. Offer sizing help before any incentive. Never promise a delivery date. If they reply with a support question, answer it and hand off rather than continuing to sell.";
+}
+function samplePreview(r){
+  if(r.s==="ACE") return "Hey Ana — how are the Winter Tights holding up? Most people pair them with the Merino base layer once it drops below 5°. Want me to show you the two that fit your size?";
+  if(r.s==="Custom") return "Nice frame. One thing you'll want before the first proper ride: a helmet that actually fits the way you ride. Want me to narrow it to two?";
+  return "You left the Merino base layer in your basket — still deciding on the size? I can tell you which one fits with the tights you already have.";
+}
+function openEngagement(i){
+  const r=ENG[i];
+  openPanel(r.n, r.d, insBody(r),
+    `<button class="btn btn-secondary" data-test="${i}">Test</button>
+     <button class="btn btn-secondary">Duplicate</button>
+     <button class="btn btn-primary">Save</button>`);
+}
+
+const NEW_BODY=`
+  <div class="banner banner-ai">
+    <div class="col gap-xxxs">
+      <span class="t-md med">Describe the moment you want to catch.</span>
+      <span class="t-sm sec">This is the only thing that's different about a custom engagement. Once it exists, it sits in the same list and behaves like everything else.</span>
+    </div>
+  </div>
+  <textarea class="textarea" id="newNl" style="min-height:96px">When someone buys a bike and has never bought a helmet, wait 5 days after delivery and suggest a helmet that matches their frame size.</textarea>
+  <div class="row between wrap gap-sm">
+    <div class="chips">
+      <button class="chip nlSample">High-value carts over $200 that stalled</button>
+      <button class="chip nlSample">Returned for size, never came back</button>
+    </div>
+    <button class="btn btn-ai" id="newInterpret">Interpret</button>
+  </div>
+  <div id="newResult" class="hidden">
+    <div class="sepH" style="margin-bottom:var(--md)"></div>
+    <div class="row between" style="margin-bottom:var(--sm)">
+      <span class="h-md">Read back — edit anything that's off</span><span class="tag tag-purple">Draft</span>
+    </div>
+    <div class="grid g-3" style="margin-bottom:var(--md)">
+      <div class="card pad-md"><div class="kv"><span class="k">Trigger</span><span class="t-md med">Order fulfilled</span></div>
+        <div class="t-sm sec" style="margin-top:4px">Shopify · order contains <b>Bikes</b></div></div>
+      <div class="card pad-md"><div class="kv"><span class="k">Audience</span><span class="t-md med">No helmet, ever</span></div>
+        <div class="t-sm sec" style="margin-top:4px">≈ 1,860 shoppers / quarter</div></div>
+      <div class="card pad-md"><div class="kv"><span class="k">Timing</span><span class="t-md med">Delivery + 5 days</span></div>
+        <div class="t-sm sec" style="margin-top:4px">Falls back to fulfilment + 8 d</div></div>
+    </div>
+    <div class="field">
+      <span class="label">Instruction <span class="ter">— one per engagement, starts from the default and becomes “Customized” once you edit it</span></span>
+      <textarea class="textarea" style="min-height:110px">Lead with fit and safety, never price. No discount in the first message. If they ask about sizing, answer it and offer to hold the item.</textarea>
+    </div>
+  </div>`;
+
+/* =======================================================================
+   CAMPAIGNS
+   ======================================================================= */
+function renderRules(){
+  const l=$("#ruleList"); l.innerHTML="";
+  RULES.forEach((r,i)=>{
+    const row=el("div","ruleRow");
+    row.innerHTML=`
+      <span class="joinBadge">${r.j}</span>
+      <select class="selectEl"><option selected>${r.f}</option><option>Lifetime spend</option><option>Last order date</option><option>Loyalty tier</option><option>Ticket topic</option></select>
+      <select class="selectEl"><option selected>${r.o}</option><option>is not</option><option>greater than</option><option>less than</option></select>
+      <input class="input" value="${r.v}">
+      <button class="btn btn-tertiary sm ter" title="Remove">✕</button>`;
+    l.appendChild(row);
+  });
+}
+function renderVariants(){
+  const g=$("#variantGrid"); g.innerHTML="";
+  VARIANTS.forEach(v=>{
+    const c=el("div","variant"+(v.win?" win":""));
+    c.innerHTML=`
+      <div class="row between">
+        <div class="row gap-xs"><span class="tag tag-grey">${v.k}</span><span class="h-sm">${v.n}</span></div>
+        ${v.win?`<span class="tag tag-green">Leading</span>`:""}
+      </div>
+      <span class="tag ${v.off==="No offer"?"tag-grey":v.off==="Free shipping"?"tag-blue":"tag-orange"}" style="width:fit-content">${v.off}</span>
+      <textarea class="textarea" style="min-height:104px">${v.ins}</textarea>
+      <div class="row between"><span class="t-sm sec">Revenue / recipient</span><span class="t-md bold num-t">${v.rev}</span></div>
+      <span class="meter"><span style="width:${v.win?100:Math.round(parseFloat(v.rev.slice(1))/4.82*100)}%"></span></span>
+      <button class="btn btn-secondary sm" data-act="test-campaign" style="margin-top:var(--xxs)">Test this one</button>`;
+    g.appendChild(c);
+  });
+  const tb=$("#waveTable tbody"); tb.innerHTML="";
+  VARIANTS.forEach(v=>{
+    const tr=el("tr");
+    tr.innerHTML=`<td><div class="row gap-xs"><span class="tag tag-grey">${v.k}</span><span class="t-md med">${v.n}</span></div></td>
+      <td class="t-md num-t">${v.sent}</td><td class="t-md num-t">${v.rep}</td><td class="t-md num-t">${v.cvr}</td>
+      <td class="t-md num-t bold">${v.rev}</td><td class="t-sm sec">${v.marg}</td>
+      <td>${v.win?`<span class="tag tag-green">Winner</span>`:`<span class="t-sm ter">—</span>`}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+/* =======================================================================
+   GUARDRAILS
+   ======================================================================= */
+function renderGuardrails(){
+  const l=$("#suppressionList"); l.innerHTML="";
+  SUPPRESSION.forEach(s=>{
+    const r=el("div","row between");
+    r.innerHTML=`<div class="col gap-xxxs" style="max-width:76%">
+        <div class="row gap-xxs"><span class="t-md med">${s.n}</span>${s.locked?`<span class="tag tag-grey">Locked</span>`:""}</div>
+        <span class="t-sm sec">${s.d}</span></div>
+      <span class="toggle ${s.on?"on":""}" ${s.locked?'style="opacity:.55;pointer-events:none"':'data-toggle'}></span>`;
+    l.appendChild(r);
+  });
+}
+
+/* =======================================================================
+   LIFECYCLE
+   ======================================================================= */
+let stg=2;
+function renderLifecycle(){
+  const l=$("#lcList"); l.innerHTML="";
+  STAGES.forEach((s,i)=>{
+    const b=el("button","lcItem"+(i===stg?" on":""));
+    b.innerHTML=`<span class="bar" style="background:${s.col}"></span>
+      <div class="col gap-xxxs" style="flex:1;min-width:0">
+        <span class="t-md med">${s.n}</span><span class="t-xs ter">${s.pop} shoppers</span></div>`;
+    b.addEventListener("click",()=>{stg=i;renderLifecycle()});
+    l.appendChild(b);
+  });
+  const s=STAGES[stg];
+  const opt=(arr,sel)=>arr.map((o,i)=>`<option ${i===sel?"selected":""}>${o}</option>`).join("");
+  $("#lcDetail").innerHTML=`
+    <div class="row between wrap gap-sm">
+      <div class="row gap-xs">
+        <span class="dot" style="background:${s.col};width:10px;height:10px"></span>
+        <h2 class="h-lg">${s.n}</h2>
+        <span class="tag tag-grey">${s.pop} shoppers</span>
+        ${s.days!=="—"?`<span class="tag tag-grey">avg ${s.days} in stage</span>`:""}
+      </div>
+      <button class="btn btn-secondary sm">See the shoppers</button>
+    </div>
+
+    <div class="card pad">
+      <h3 class="h-md">What puts someone here</h3>
+      <p class="t-sm sec" style="margin-bottom:var(--sm)">Recomputed nightly from orders, sessions and tickets.</p>
+      <div class="chips">${s.rule.map(r=>`<span class="tag tag-blue">${r}</span>`).join("")}
+        <button class="chip">+ condition</button></div>
+    </div>
+
+    <div class="card pad">
+      <h3 class="h-md">How we treat them</h3>
+      <p class="t-sm sec" style="margin-bottom:var(--md)">Pick from what we've seen work. Anything here binds every engagement that touches this stage.</p>
+      <div class="grid g-2">
+        <div class="field"><span class="label">What we're trying to make happen</span>
+          <select class="selectEl">${opt(OBJECTIVES,s.obj)}</select></div>
+        <div class="field"><span class="label">How we speak to them</span>
+          <select class="selectEl">${opt(TONES,s.tone)}</select></div>
+        <div class="field"><span class="label">What we're willing to give</span>
+          <select class="selectEl">${opt(DISCOUNTS,s.disc)}</select></div>
+        <div class="field"><span class="label">Messages allowed in this stage</span>
+          <input class="input" value="${s.cap}"></div>
+      </div>
+      <div class="sepH" style="margin:var(--md) 0"></div>
+      <div class="grid g-2">
+        <div class="field"><span class="label">Levers, in the order we'd use them</span>
+          <div class="chipInput">${s.lever.map(i=>`<span class="tag ${i===5?"tag-orange":i===0?"tag-grey":"tag-purple"}">${LEVERS[i]}</span>`).join("")}
+            <span class="t-sm ter">+ add</span></div></div>
+        <div class="field"><span class="label">Sources allowed to touch this stage</span>
+          <div class="chipInput">${["Default","Custom","ACE"].map(x=>{const on=s.src.includes(x);
+            return `<span class="tag ${on?SRC[x].tag:"tag-grey"}" style="${on?"":"opacity:.4;text-decoration:line-through"}">${x}</span>`}).join("")}</div></div>
+      </div>
+      <div class="banner banner-info" style="margin-top:var(--md)">
+        <div class="col gap-xxxs"><span class="t-sm med">Why this matters here</span>
+          <span class="t-sm sec">${s.note}</span></div>
+      </div>
+      ${s.replen?`<div class="col gap-xs" style="margin-top:var(--md)">
+        <span class="t-sm med">Reorder rhythm learned for this stage</span>
+        <div class="card" style="overflow:hidden"><table class="inner">
+          <thead><tr><th>Category</th><th>Median</th><th>Window used</th></tr></thead>
+          <tbody>${s.replen.map(r=>`<tr><td class="t-md med">${r[0]}</td><td class="t-md num-t">${r[1]}</td><td class="t-sm sec">${r[2]}</td></tr>`).join("")}</tbody>
+        </table></div></div>`:""}
+      <div class="row gap-xs" style="margin-top:var(--md)">
+        <button class="btn btn-secondary sm" data-act="test-stage">Test on a shopper in this stage</button>
+      </div>
+    </div>`;
+}
+
+/* =======================================================================
+   ACTIVITY
+   ======================================================================= */
+let actFilter="all";
+function renderActivity(){
+  const src=$("#actSrc").value;
+  const rows=ACTIVITY.filter(r=>(actFilter==="all"||r.st===actFilter)&&(src==="all"||r.s===src));
+  const tb=$("#actTable tbody"); tb.innerHTML="";
+  if(!rows.length){
+    tb.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:var(--xxl)">
+      <div class="col gap-xxs" style="align-items:center"><span class="t-md sec">Nothing here right now</span>
+      <span class="t-sm ter">Try another filter.</span></div></td></tr>`;
+    return;
+  }
+  rows.forEach(r=>{
+    const i=ACTIVITY.indexOf(r), st=ACT_ST[r.st];
+    const tr=el("tr","rowLink");
+    tr.innerHTML=`
+      <td><div class="col gap-xxxs"><span class="t-md med">${r.who}</span><span class="t-xs ter mono">${r.id}</span></div></td>
+      <td><span class="tag tag-grey">${r.stage}</span></td>
+      <td><div class="col gap-xxxs"><span class="t-md">${r.eng}</span>
+        <span class="tag ${SRC[r.s].tag}" style="width:fit-content"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span></div></td>
+      <td class="t-sm sec">${r.why}</td>
+      <td class="t-sm sec">${r.when}</td>
+      <td><span class="tag ${st[1]}">${st[0]}</span></td>`;
+    tr.addEventListener("click",()=>openActivity(i));
+    tb.appendChild(tr);
+  });
+}
+function openActivity(i){
+  const r=ACTIVITY[i], st=ACT_ST[r.st];
+  const body=`
+    <div class="row gap-xs wrap">
+      <span class="tag ${st[1]}">${st[0]}</span>
+      <span class="tag ${SRC[r.s].tag}"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span>
+      <span class="tag tag-grey">${r.stage}</span><span class="tag tag-grey">${r.when}</span>
+    </div>
+    <div class="col gap-xs">
+      <h3 class="h-md">Why this shopper, now</h3>
+      <div class="card pad-md"><span class="t-md sec">${r.why}</span></div>
+      <div class="col gap-xs" style="margin-top:var(--xs)">
+        ${[["Lifecycle stage",r.stage],["Engagement",r.eng+" · "+r.s],["Instruction","Loaded as a skill, v4"],
+           ["Frequency headroom","1 of 3 used this week"],["Timing chosen","09:40 local, when they usually reply"],
+           ["Offer used","None — objection answered instead"]]
+          .map(x=>`<div class="row between"><span class="t-sm sec">${x[0]}</span><span class="t-sm med">${x[1]}</span></div>`).join("")}
+      </div>
+    </div>
+    ${r.sup?`<div class="banner banner-warn"><div class="col gap-xxxs">
+        <span class="t-md med">Not sent</span><span class="t-sm sec">${r.sup}</span></div></div>`:""}
+    ${r.conv.length?`<div class="col gap-xs">
+      <h3 class="h-md">${r.st==="dry"?"What would have been sent":"The conversation"}</h3>
+      <div class="phone">${r.conv.map(c=>`<div class="bubble ${c[0]}">${c[1]}</div>`).join("")}
+        ${r.st==="dry"?`<span class="bTime">Dry run — nothing left the building</span>`:""}</div>
+    </div>`:""}`;
+  const foot = r.st==="pending"
+    ? `<button class="btn btn-secondary">Reject</button><button class="btn btn-secondary">Edit and send</button><button class="btn btn-primary">Approve</button>`
+    : `<button class="btn btn-secondary">Open in Tickets</button><button class="btn btn-primary">Close</button>`;
+  openPanel(r.who, r.eng, body, foot);
+}
+
+/* =======================================================================
+   LOYALTY
+   ======================================================================= */
+function renderLoyalty(){
+  const tot=TIERS.reduce((a,t)=>a+t.m,0);
+  $("#tierBar").innerHTML=TIERS.map(t=>
+    `<span style="width:${(t.m/tot*100)}%;background:${t.c}" title="${t.n}"></span>`).join("");
+  $("#tierLegend").innerHTML=TIERS.map(t=>
+    `<span class="legendItem"><span class="srcSwatch" style="background:${t.c}"></span>${t.n} ${fmt(t.m)}</span>`).join("");
+  const tb=$("#tierTable tbody"); tb.innerHTML="";
+  TIERS.forEach(t=>{
+    const tr=el("tr");
+    tr.innerHTML=`<td><div class="row gap-xs"><span class="srcSwatch" style="background:${t.c};width:10px;height:10px"></span>
+        <span class="t-md med">${t.n}</span></div></td>
+      <td class="t-sm sec">${t.at}</td><td class="t-md num-t">${fmt(t.m)}</td>
+      <td><span class="tag tag-grey">${t.stage}</span></td>
+      <td class="t-sm sec">${t.perks}</td>
+      <td><span class="toggle ${t.ai?"on":""}" data-toggle></span></td>`;
+    tb.appendChild(tr);
+  });
+  const e=$("#earnList"); e.innerHTML="";
+  EARN.forEach(x=>{
+    const r=el("div","row between");
+    r.innerHTML=`<div class="col gap-xxxs" style="max-width:74%"><span class="t-md med">${x.n}</span>
+      <span class="t-sm sec">${x.d}</span></div><span class="toggle ${x.on?"on":""}" data-toggle></span>`;
+    e.appendChild(r);
+  });
+  const rt=$("#rewardTable tbody"); rt.innerHTML="";
+  REWARDS.forEach(x=>{
+    const tr=el("tr");
+    tr.innerHTML=`<td class="t-md med">${x.n}</td><td class="t-sm sec">${x.p}</td>
+      <td class="t-sm ${x.cost==="$0"?"":"sec"}" ${x.cost==="$0"?'style="color:var(--content-success-default)"':''}>${x.cost}</td>
+      <td class="t-md num-t">${fmt(x.r)}</td><td><span class="toggle ${x.ai?"on":""}" data-toggle></span></td>`;
+    rt.appendChild(tr);
+  });
+}
+
+/* =======================================================================
+   PANEL + NAV + GLOBAL
+   ======================================================================= */
+const panel=$("#panel"), overlay=$("#overlay");
+function openPanel(t,s,b,f){
+  $("#panelTitle").textContent=t; $("#panelSub").textContent=s;
+  $("#panelBody").innerHTML=b; $("#panelFoot").innerHTML=f;
+  panel.classList.add("on"); overlay.classList.add("on");
+}
+function closePanel(){panel.classList.remove("on");overlay.classList.remove("on")}
+$("#panelClose").addEventListener("click",closePanel);
+overlay.addEventListener("click",closePanel);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
+
+const NAV_OF={"campaign-new":"campaigns"};
+function goto(page){
+  $$(".page").forEach(p=>p.classList.add("hidden"));
+  ($("#page-"+page)||$("#page-soon")).classList.remove("hidden");
+  const navPage=NAV_OF[page]||page;
+  $$(".navItem").forEach(n=>n.classList.toggle("on",n.dataset.page===navPage));
+  $("#scroller").scrollTop=0; closePanel();
+}
+$$(".navItem").forEach(n=>n.addEventListener("click",()=>goto(n.dataset.page)));
+
+const TEST_BODY=`
+  <div class="banner banner-info"><div class="col gap-xxxs">
+    <span class="t-md med">Pick a real shopper and see exactly what they'd get.</span>
+    <span class="t-sm sec">Nothing is sent. The engine runs the full decision — stage, instruction, guardrails, timing — and shows you the result.</span>
+  </div></div>
+  <div class="field"><span class="label">Shopper</span>
+    <select class="selectEl"><option>Ana R. · First-time buyer · day 51</option><option>Marc D. · VIP · quiet 2.1×</option>
+      <option>Sam K. · At risk · returned for fit</option><option>Random shopper in this audience</option></select></div>
+  <div class="col gap-xs">
+    <h3 class="h-md">Decision</h3>
+    <div class="col gap-xs">
+      ${[["Would we message them?","Yes","tag-green"],["When","Tomorrow 09:40 local","tag-grey"],
+         ["Lever chosen","Answer the objection — no offer","tag-grey"],["Guardrails","All pass · 1 of 3 messages used","tag-green"]]
+        .map(x=>`<div class="row between"><span class="t-sm sec">${x[0]}</span><span class="tag ${x[2]}">${x[1]}</span></div>`).join("")}
+    </div>
+  </div>
+  <div class="col gap-xs">
+    <h3 class="h-md">The message</h3>
+    <div class="phone"><div class="bubble out">Hey Ana — how are the Winter Tights holding up? Most people pair them with the Merino base layer once it drops below 5°. Want me to show you the two that fit your size?</div>
+      <span class="bTime">Test run — nothing sent</span></div>
+  </div>`;
+
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-goto]");
+  if(g){goto(g.dataset.goto);return}
+
+  const t=e.target.closest("[data-toggle]");
+  if(t){t.classList.toggle("on")}
+
+  const en=e.target.closest("[data-eng]");
+  if(en){const i=+en.dataset.eng;ENG[i].st=ENG[i].st==="on"?"off":"on";renderEng();return}
+
+  const dm=e.target.closest("[data-dom]");
+  if(dm){const i=+dm.dataset.dom;ACE_DOMAINS[i].on=!ACE_DOMAINS[i].on;renderAce();return}
+
+  const tst=e.target.closest("[data-test]")||e.target.closest('[data-act^="test"]');
+  if(tst){openPanel("Test run","No message leaves the building",TEST_BODY,
+    `<button class="btn btn-secondary">Try another shopper</button><button class="btn btn-primary">Looks right</button>`);return}
+
+  const p=e.target.closest("[data-panel]");
+  if(p&&p.dataset.panel==="new"){
+    openPanel("New engagement","Describe it, we turn it into a trigger",NEW_BODY,
+      `<button class="btn btn-secondary">Test</button><button class="btn btn-primary">Save as draft</button>`);
+    $("#newInterpret").addEventListener("click",()=>{
+      const b=$("#newInterpret");b.textContent="Reading your data…";b.disabled=true;
+      setTimeout(()=>{$("#newResult").classList.remove("hidden");b.textContent="Interpret";b.disabled=false},600);
+    });
+    $$(".nlSample").forEach(s=>s.addEventListener("click",()=>{$("#newNl").value=s.textContent.trim()}));
+  }
+});
+
+$("#scroller").addEventListener("scroll",e=>{
+  $$(".pageHeader").forEach(h=>h.classList.toggle("scrolled",e.target.scrollTop>0));
+});
+
+/* filters */
+$$("#srcFilter .chip").forEach(c=>c.addEventListener("click",()=>{
+  $$("#srcFilter .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
+  engFilter=c.dataset.f; renderEng();
+}));
+$("#statusFilter").addEventListener("change",renderEng);
+$$("#actFilter .chip").forEach(c=>c.addEventListener("click",()=>{
+  $$("#actFilter .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
+  actFilter=c.dataset.f; renderActivity();
+}));
+$("#actSrc").addEventListener("change",renderActivity);
+
+/* ACE — the switch, and the domain dial */
+$$("#aceMode button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#aceMode button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  aceState=b.dataset.a; renderAce();
+}));
+$$("#campFilter .chip").forEach(c=>c.addEventListener("click",()=>{
+  $$("#campFilter .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
+  renderCampaigns();
+}));
+
+/* audience mode */
+$$("#audMode button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#audMode button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  const nl=b.dataset.m==="nl";
+  $("#audNl").classList.toggle("hidden",!nl);
+  $("#audRules").classList.toggle("hidden",nl);
+}));
+$("#audEstimate").addEventListener("click",()=>{
+  const b=$("#audEstimate");b.textContent="Counting…";b.disabled=true;
+  setTimeout(()=>{$("#audNlResult").classList.remove("hidden");
+    $("#estTotal").textContent="2,840";$("#estReach").textContent="2,190";
+    b.textContent="Estimate audience";b.disabled=false},600);
+});
+$$(".audSample").forEach(s=>s.addEventListener("click",()=>{$("#audNlInput").value=s.textContent.trim()}));
+
+/* chart / table views */
+$$("[data-view]").forEach(seg=>seg.addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  $$("button",seg).forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  const which=seg.dataset.view, table=b.dataset.v==="table";
+  if(which==="vol"){$("#chartVol").classList.toggle("hidden",table);$("#tableVol").classList.toggle("hidden",!table)}
+  else{$("#chartCvr").classList.toggle("hidden",table);$("#tableCvr").classList.toggle("hidden",!table)}
+}));
+
+/* boot */
+legend($("#legVol"));
+legend($("#legCvr"),`<span class="legendItem ter" style="margin-left:auto">ACE started week 3</span>`);
+function drawCharts(){stackedBars($("#chartVol"),VOL);lines($("#chartCvr"),CVR)}
+drawCharts();
+let rz; addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(drawCharts,120)});
+dataTable($("#tableVol"),VOL);
+dataTable($("#tableCvr"),CVR,"%");
+renderBench(); renderRev();
+renderEng(); renderAce(); renderCampaigns(); renderRules(); renderVariants();
+renderGuardrails(); renderLifecycle(); renderActivity(); renderLoyalty();
+</script>
+</body>
+</html>
