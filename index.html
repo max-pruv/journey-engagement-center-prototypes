@@ -1029,8 +1029,8 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
               <div class="legend" id="tierLegend"></div>
             </div>
             <table id="tierTable">
-              <thead><tr><th>Tier</th><th>Enters when</th><th>Members</th><th>Maps to stage</th>
-                <th style="width:24%">Perks</th><th style="width:150px">AI may offer</th></tr></thead>
+              <thead><tr><th>Tier</th><th>Enters when</th><th>Members</th><th>AOV</th><th>LTV</th>
+                <th>Repeat rate</th><th>Maps to stage</th><th style="width:150px">AI may offer</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
@@ -1290,10 +1290,22 @@ const RULES=[
 ];
 
 const TIERS=[
-  {n:"Member",at:"Sign-up",m:9420,stage:"Lead · First-time buyer",perks:"1 pt per $1, birthday reward",ai:true,c:"var(--purple-100)"},
-  {n:"Silver",at:"$250 spent / year",m:5610,stage:"Repeat",perks:"1.25 pts per $1, free returns",ai:true,c:"var(--purple-200)"},
-  {n:"Gold",at:"$750 spent / year",m:2730,stage:"VIP",perks:"1.5 pts per $1, early access, free shipping",ai:true,c:"var(--purple-400)"},
-  {n:"Summit",at:"$2,000 spent / year",m:1180,stage:"VIP",perks:"2 pts per $1, concierge sizing, first drops",ai:false,c:"var(--purple-700)"}
+  {n:"Member",at:"Sign-up",m:9420,stage:"Lead · First-time buyer",
+   perks:"1 pt per $1, birthday reward",ai:true,c:"var(--purple-100)",
+   cond:[["Loyalty sign-up","=","yes"]],
+   earn:"1 point per $1", aov:"$78", ltv:"$118", ret:"18%", pts:"1.1M"},
+  {n:"Silver",at:"$250 spent in 12 months",m:5610,stage:"Repeat",
+   perks:"1.25 pts per $1, free returns",ai:true,c:"var(--purple-200)",
+   cond:[["Spend in the last 12 months","≥","$250"],["Orders in the last 12 months","≥","2"]],
+   earn:"1.25 points per $1", aov:"$96", ltv:"$264", ret:"41%", pts:"1.6M"},
+  {n:"Gold",at:"$750 spent in 12 months",m:2730,stage:"VIP",
+   perks:"1.5 pts per $1, early access, free shipping",ai:true,c:"var(--purple-400)",
+   cond:[["Spend in the last 12 months","≥","$750"],["Orders in the last 12 months","≥","4"]],
+   earn:"1.5 points per $1", aov:"$124", ltv:"$512", ret:"63%", pts:"1.0M"},
+  {n:"Summit",at:"$2,000 spent in 12 months",m:1180,stage:"VIP",
+   perks:"2 pts per $1, concierge sizing, first drops",ai:false,c:"var(--purple-700)",
+   cond:[["Spend in the last 12 months","≥","$2,000"],["Orders in the last 12 months","≥","6"],["Returns rate","<","20%"]],
+   earn:"2 points per $1", aov:"$186", ltv:"$1,940", ret:"81%", pts:"0.5M"}
 ];
 const EARN=[
   {n:"Every dollar spent",d:"1 to 2 points depending on tier",on:true},
@@ -2025,8 +2037,9 @@ function renderLoyalty(){
     tr.innerHTML=`<td><div class="row gap-xs"><span class="srcSwatch" style="background:${t.c};width:10px;height:10px"></span>
         <span class="t-md med">${t.n}</span></div></td>
       <td class="t-sm sec">${t.at}</td><td class="t-md num-t">${fmt(t.m)}</td>
+      <td class="t-md num-t">${t.aov}</td><td class="t-md num-t bold">${t.ltv}</td>
+      <td class="t-md num-t">${t.ret}</td>
       <td><span class="tag tag-grey">${t.stage}</span></td>
-      <td class="t-sm sec">${t.perks}</td>
       <td><div class="row gap-xs" style="justify-content:flex-end">
         <button class="btn btn-secondary sm" data-tier="${TIERS.indexOf(t)}">Edit</button>
         <span class="toggle ${t.ai?"on":""}" data-toggle></span></div></td>`;
@@ -2390,7 +2403,8 @@ function wizSend(n){
 
 /* ===================== LOYALTY TIER EDITOR ===================== */
 function openTier(i){
-  const t=i==null?{n:"New tier",cond:[["Orders in the last 12 months","≥","6"]],perks:"",stage:"VIP",ai:true,m:0}:TIERS[i];
+  const t=i==null?{n:"New tier",cond:[["Spend in the last 12 months","≥","$1,200"],["Orders in the last 12 months","≥","5"]],
+    perks:"",stage:"VIP",ai:true,m:0,earn:"1.5 points per $1"}:TIERS[i];
   const body=`
     <div class="field"><span class="label">Tier name</span><input class="input" value="${t.n}"></div>
     <div class="col gap-xs">
@@ -2413,7 +2427,8 @@ function openTier(i){
       <div class="field"><span class="label">Maps to lifecycle stage</span>
         <select class="selectEl">${STAGES.map(s=>`<option ${s.n===t.stage?"selected":""}>${s.n}</option>`).join("")}</select></div>
       <div class="field"><span class="label">Earn rate</span>
-        <select class="selectEl"><option>1 point per $1</option><option selected>1.5 points per $1</option><option>2 points per $1</option></select></div>
+        <select class="selectEl">${["1 point per $1","1.25 points per $1","1.5 points per $1","2 points per $1"]
+          .map(o=>`<option ${o===t.earn?"selected":""}>${o}</option>`).join("")}</select></div>
     </div>
     <div class="field"><span class="label">Perks</span>
       <textarea class="textarea">${t.perks}</textarea></div>
@@ -2424,7 +2439,16 @@ function openTier(i){
       </div>
       <span class="toggle ${t.ai?"on":""}" data-toggle></span>
     </div>
-    ${t.m?`<div class="row between"><span class="t-sm sec">Members today</span><span class="t-md med num-t">${fmt(t.m)}</span></div>`:""}`;
+    ${t.m?`<div class="col gap-xs">
+      <span class="t-sm bold">This tier today</span>
+      <div class="grid g-3">
+        <div class="card pad-md"><div class="kv"><span class="k">Members</span><span class="h-md num-t">${fmt(t.m)}</span></div></div>
+        <div class="card pad-md"><div class="kv"><span class="k">Average order</span><span class="h-md num-t">${t.aov}</span></div></div>
+        <div class="card pad-md"><div class="kv"><span class="k">Lifetime value</span><span class="h-md num-t">${t.ltv}</span></div></div>
+        <div class="card pad-md"><div class="kv"><span class="k">Repeat rate</span><span class="h-md num-t">${t.ret}</span></div></div>
+        <div class="card pad-md"><div class="kv"><span class="k">Points outstanding</span><span class="h-md num-t">${t.pts}</span></div></div>
+        <div class="card pad-md"><div class="kv"><span class="k">Earn rate</span><span class="h-md">${t.earn}</span></div></div>
+      </div></div>`:""}`;
   openPanel(i==null?"New tier":t.n, i==null?"Define the conditions that get someone in":"Edit the conditions, perks and mapping",
     body, `${i==null?"":`<button class="btn btn-secondary" style="color:var(--content-error-default)">Delete tier</button>`}
     <button class="btn btn-secondary">Preview who qualifies</button>
