@@ -307,8 +307,12 @@ tr.playRow>td:first-child{padding-left:0}
 .ta:focus{outline:2px solid var(--purple-200);border-color:var(--purple-500)}
 
 /* inbox */
-.inbox{display:grid;grid-template-columns:344px 1fr;flex:1;min-height:0;border-top:1px solid var(--border-neutral-default)}
-.inboxList{border-right:1px solid var(--border-neutral-default);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.inbox{display:grid;grid-template-columns:var(--convListW,344px) 6px 1fr;flex:1;min-height:0;
+  border-top:1px solid var(--border-neutral-default)}
+.inboxList{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.inboxResize{cursor:col-resize;position:relative;touch-action:none}
+.inboxResize::after{content:"";position:absolute;top:0;bottom:0;left:2px;width:2px;background:var(--border-neutral-default)}
+.inboxResize:hover::after,.inboxResize.dragging::after{background:var(--purple-400)}
 .convItems{flex:1;overflow-y:auto}
 .convItem{width:100%;text-align:left;padding:var(--sm) var(--md);border-bottom:1px solid var(--border-neutral-default);
   display:flex;flex-direction:column;gap:var(--xxxs)}
@@ -942,6 +946,9 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <div class="sepH"></div>
             <div class="convItems" id="convItems"></div>
           </div>
+
+          <div class="inboxResize" id="convResize" role="separator" aria-orientation="vertical"
+            aria-label="Resize the conversation list" title="Drag to resize, double-click to reset"></div>
 
           <!-- thread -->
           <div class="inboxThread" id="convThread"></div>
@@ -3234,6 +3241,27 @@ $$("#convFilter .chip").forEach(c=>c.addEventListener("click",()=>{
 }));
 $("#convSrc").addEventListener("change",renderConv);
 $("#convSearch").addEventListener("input",e=>{convQ=e.target.value.toLowerCase();renderConv()});
+
+/* the conversation list is resizeable — drag the handle between it and the
+   thread. Width lives on --convListW on .inbox, so a re-render (which only
+   touches #convItems/#convThread innerHTML) never resets it. */
+(()=>{
+  const inbox=$(".inbox"), handle=$("#convResize"); if(!inbox||!handle) return;
+  const MIN=240, MAX=560;
+  let startX=0, startW=0;
+  handle.addEventListener("pointerdown",e=>{
+    startX=e.clientX; startW=$(".inboxList").getBoundingClientRect().width;
+    handle.classList.add("dragging"); handle.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  handle.addEventListener("pointermove",e=>{
+    if(!handle.classList.contains("dragging")) return;
+    const w=Math.min(MAX,Math.max(MIN,startW+(e.clientX-startX)));
+    inbox.style.setProperty("--convListW",w+"px");
+  });
+  ["pointerup","pointercancel"].forEach(ev=>handle.addEventListener(ev,()=>handle.classList.remove("dragging")));
+  handle.addEventListener("dblclick",()=>inbox.style.removeProperty("--convListW"));
+})();
 
 /* ACE — the switch, and the domain dial */
 document.addEventListener("click",e=>{

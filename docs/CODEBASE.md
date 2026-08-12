@@ -189,6 +189,17 @@ the reply; `drawStudio()` repaints.
 To add a behaviour to the simulation, add a branch to `simReply`. Keep the `note` honest about which
 rule produced the answer — that note is the whole point of the feature.
 
+## The resizeable conversation list
+
+`.inbox` is a three-track grid: the list, a 6px `#convResize` handle, then the thread. The list's
+width lives on `--convListW`, a CSS custom property on `.inbox` with `344px` as the CSS-side
+default — so as long as nothing ever sets the property, the layout is exactly what it was before
+this existed. Dragging updates `--convListW` directly via `inbox.style.setProperty`, clamped to
+240–560px; double-click calls `removeProperty` to fall back to the CSS default. Because the width
+lives on the grid container rather than in any state `renderConv()` touches, a re-render (new
+filter, new search term) can never reset it — `renderConv()` only ever replaces
+`#convItems`/`#convThread` innerHTML, not `.inbox` itself.
+
 ## Charts
 
 Hand-rolled inline SVG, no library. The main time-series view always uses `lines`, regardless of

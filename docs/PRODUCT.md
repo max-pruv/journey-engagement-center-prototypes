@@ -259,6 +259,11 @@ with:
 
 Approvals live here. There is no separate approval queue; "Waiting for you" is a filter.
 
+**The list is resizeable.** Drag the handle between the list and the thread; double-click it to
+reset. A fixed-width list is a good default but not a good ceiling — a long shopper name or a
+reasoning-heavy thread deserves more room sometimes, and the merchant should get to decide that,
+not the prototype.
+
 **Why loyalty appears in the reasoning.** It is the cheapest lever and the least obvious one. Seeing
 *"Member · 900 points, enough for free shipping → points before discount, costs you $6.40 instead
 of $12"* is what makes the loyalty integration legible.
