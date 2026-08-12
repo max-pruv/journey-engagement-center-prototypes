@@ -26,7 +26,7 @@ Each is a `<section class="page">`; `goto(page)` unhides one and hides the rest.
 | `page-overview` | Reporting | `renderReport` → `renderTiles`, `renderRevTable`, `stackedBars`/`lines`/`hBars`; plus `renderBench` |
 | `page-engagements` | Engagements | `renderAce` (AI tab), `renderEng` (Custom tab) |
 | `page-campaigns` | Campaigns | `renderCampaigns` |
-| `page-campaign-new` | (via Create) | `renderWiz`, `renderRules`, `renderVariants` |
+| `page-campaign-new` | (via Create) | `resetWizard` → `askTurn`/`campAnswer` drive a linear script (`WIZARD`), rendering `renderRules`/`renderVariants` inline as cards |
 | `page-guardrails` | Guardrails | `renderGuardrails` (master/detail over `GR_CATS`) → `renderSuppression`, `renderExclusions` |
 | `page-lifecycle` | Lifecycle | `renderLifecycle` |
 | `page-conversations` | Conversations | `renderConv`, `renderThread` |
@@ -150,13 +150,28 @@ stays anchored to the baseline. Only the topmost segment gets the 4px rounded en
 table view is not a nicety: the dataviz rules require a table alternative wherever colour carries
 meaning.
 
-## The campaign preview
+## The campaign wizard
 
-`genPreview(n)` builds n plausible conversations from word pools, splitting the variants the way the
-wave would and marking roughly one in nine as deferred by a collision. It is index-driven, so the
-same n always produces the same set. `openPreviewConv(i)` opens one as a full thread with the
-instruction that produced it. Nothing about it is a simulation of the model — it exists so a
-merchant can see the shape and tone of what a campaign would send before committing.
+`page-campaign-new` is a single scrolling conversation, not three static panels. `WIZARD` is a
+linear script of turns; each has an `ask`, `hint`, `chips`, an `ack` (string or a function of the
+answer), and an optional `card` (function returning HTML shown after the ack). `askTurn()` renders
+the next question; `campAnswer()` echoes what the merchant typed, shows a typing indicator, then the
+ack and card, then advances. The Who/What/How stepper at the top is a **passive status bar** — it is
+not clickable and does not drive the flow; `wizIdx` (position in `WIZARD`) is the only source of
+truth, and `wizStep` is derived from it for display.
+
+`resetWizard()` runs on every `goto("campaign-new")`, clearing the thread and restoring `VARIANTS`
+to its starting three — so opening a new campaign is always a fresh conversation, and demoing it
+twice doesn't accumulate a stale variant list from the last run.
+
+**The preview is a question, not a default block.** The wizard's last turn asks whether the
+merchant wants to see what would actually send; only a "yes" answer calls `genPreview(n)` and opens
+a scrollable side panel (`openPreviewPanel`) of n generated conversations. `genPreview(n)` builds
+plausible conversations from word pools, splitting the variants the way the wave would and marking
+roughly one in nine as deferred by a collision — it is index-driven, so the same n always produces
+the same set. `openPreviewConv(i)` opens one as a full thread with the instruction that produced
+it, with a "Back to the list" action. Nothing about it simulates the model; it exists so a merchant
+can see the shape and tone of a send before committing.
 
 ## Known dead ends
 

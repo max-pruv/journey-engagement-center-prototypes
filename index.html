@@ -259,6 +259,21 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
   border-bottom-right-radius:4px;padding:var(--sm) var(--md)}
 .convoInput{display:flex;gap:var(--xs);align-items:flex-end;max-width:760px}
 .convoInput .textarea{min-height:60px}
+.turn{display:flex;gap:var(--sm);align-items:flex-start;max-width:720px;
+  animation:rise .32s cubic-bezier(.32,.72,0,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.said{align-self:flex-end;max-width:78%;background:var(--surface-neutral-secondary);border-radius:14px;
+  border-bottom-right-radius:4px;padding:var(--sm) var(--md);animation:rise .28s cubic-bezier(.32,.72,0,1) both}
+.typing{display:inline-flex;gap:4px;padding:4px 0}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--grey-300);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+.compose{border-top:1px solid var(--border-neutral-default);padding:var(--md) var(--lg);
+  display:flex;flex-direction:column;gap:var(--sm);background:var(--white);flex-shrink:0}
+.inputRow{display:flex;gap:var(--xs);align-items:flex-end}
+.ta{flex:1;border:1px solid var(--border-neutral-default);border-radius:var(--xs);padding:10px 12px;
+  font-size:14px;min-height:44px;max-height:140px;resize:none;line-height:1.5;background:var(--white)}
+.ta:focus{outline:2px solid var(--purple-200);border-color:var(--purple-500)}
 
 /* inbox */
 .inbox{display:grid;grid-template-columns:344px 1fr;flex:1;min-height:0;border-top:1px solid var(--border-neutral-default)}
@@ -547,7 +562,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           <!-- ===== MODE: three cards, properly sized, with the education in them ===== -->
           <div class="col gap-xs">
             <div class="row between wrap gap-sm">
-              <h2 class="h-lg">How much rope does ACE get?</h2>
+              <h2 class="h-lg">Level of autonomy</h2>
               <div class="row gap-xs">
                 <button class="btn btn-secondary sm" id="acePendingBtn" data-goto="conversations" style="display:none">Review 4 waiting</button>
                 <span class="t-sm ter">You can change this at any time. Nothing in flight is lost.</span>
@@ -645,13 +660,13 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </div>
       </section>
 
-      <!-- ======== CAMPAIGNS · NEW (3-step conversational wizard) ======== -->
+      <!-- ======== CAMPAIGNS · NEW (fully conversational) ======== -->
       <section class="page hidden" id="page-campaign-new">
         <header class="pageHeader">
           <div class="ttl">
             <button class="btn btn-tertiary sm ter" data-goto="campaigns" style="margin-left:-8px;width:fit-content">← Campaigns</button>
             <h1 class="h-xxl">New campaign</h1>
-            <p class="t-md sec">Three questions. Answer them the way you'd answer a colleague.</p>
+            <p class="t-md sec">Answer in your own words — I'll turn it into an audience, a message and a rollout.</p>
           </div>
           <div class="pageActions">
             <button class="btn btn-secondary">Save draft</button>
@@ -659,131 +674,23 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </header>
 
         <div class="stepper" id="wizSteps">
-          <button class="step on" data-step="1"><span class="dotN">1</span> Who<span class="stepSub">the audience</span></button>
-          <button class="step" data-step="2"><span class="dotN">2</span> What<span class="stepSub">the message</span></button>
-          <button class="step" data-step="3"><span class="dotN">3</span> How<span class="stepSub">the rollout</span></button>
+          <div class="step" data-step="1"><span class="dotN">1</span> Who<span class="stepSub">the audience</span></div>
+          <div class="step" data-step="2"><span class="dotN">2</span> What<span class="stepSub">the message</span></div>
+          <div class="step" data-step="3"><span class="dotN">3</span> How<span class="stepSub">the rollout</span></div>
         </div>
 
-        <div class="zone top">
-          <!-- ---------- STEP 1 ---------- -->
-          <div class="wizStep" data-wiz="1">
-            <div class="convo" id="convo1"></div>
-            <div class="card pad" id="w1Result" style="display:none">
-              <div class="row between wrap gap-sm" style="margin-bottom:var(--md)">
-                <div class="col gap-xxxs">
-                  <h2 class="h-md">Your audience</h2>
-                  <p class="t-sm sec">Read it back and change anything that's off. You can switch to rules if you'd rather be exact.</p>
-                </div>
-                <div class="seg" id="audMode">
-                  <button class="on" data-m="nl">As I described it</button>
-                  <button data-m="rules">As rules</button>
-                </div>
-              </div>
-
-              <div id="audNl">
-                <div class="chips">
-                  <span class="tag tag-blue">bought in <b style="margin-left:3px">Hardshells</b></span>
-                  <span class="tag tag-blue">order date <b style="margin-left:3px">Oct–Feb</b></span>
-                  <span class="tag tag-blue">lifetime <b style="margin-left:3px">Mid-layers</b> = 0</span>
-                  <span class="tag tag-grey">stage in <b style="margin-left:3px">Repeat, VIP</b></span>
-                  <span class="tag tag-red">exclude: return in last 30 d</span>
-                  <button class="chip">+ condition</button>
-                </div>
-              </div>
-
-              <div id="audRules" class="hidden">
-                <div class="col gap-xs" id="ruleList"></div>
-                <div class="row gap-xs" style="margin-top:var(--sm)">
-                  <button class="btn btn-secondary sm" id="addRule">Add condition</button>
-                </div>
-              </div>
-
-              <div class="sepH" style="margin:var(--md) 0"></div>
-              <div class="row wrap gap-lg">
-                <div class="kv"><span class="k">Matching shoppers</span><span class="h-lg num-t" id="estTotal">2,840</span></div>
-                <div class="kv"><span class="k">Reachable now</span><span class="h-lg num-t" id="estReach">2,190</span>
-                  <span class="t-xs ter">consent + frequency headroom</span></div>
-                <div class="kv"><span class="k">Held out</span><span class="h-lg num-t">219</span>
-                  <span class="t-xs ter">10% never messaged, so lift is measured</span></div>
-                <div class="kv"><span class="k">Excluded by guardrails</span><span class="h-lg num-t">431</span>
-                  <span class="t-xs ter">bad review, open ticket, frequency</span></div>
-                <div class="kv" style="min-width:200px"><span class="k">By lifecycle stage</span>
-                  <div class="row gap-xxs wrap" style="margin-top:4px">
-                    <span class="tag tag-grey">Repeat 1,610</span><span class="tag tag-grey">VIP 220</span>
-                    <span class="tag tag-grey">At risk 360</span></div></div>
-              </div>
-              <div class="row" style="justify-content:flex-end;margin-top:var(--md)">
-                <button class="btn btn-primary" data-wizgo="2">Next — what should we say?</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- ---------- STEP 2 ---------- -->
-          <div class="wizStep hidden" data-wiz="2">
-            <div class="convo" id="convo2"></div>
-            <div class="card pad" id="w2Result" style="display:none">
-              <div class="row between wrap gap-sm" style="margin-bottom:var(--sm)">
-                <div class="col gap-xxxs">
-                  <h2 class="h-md">Three approaches to test</h2>
-                  <p class="t-sm sec">Each one is a full instruction. Remove any you don't want tested.</p>
-                </div>
-                <div class="row gap-xs">
-                  <span class="t-sm sec">Pick the winner on</span>
-                  <select class="selectEl auto"><option>Revenue per recipient</option><option>Margin per recipient</option><option>Conversion rate</option><option>Reply rate</option></select>
-                </div>
-              </div>
-              <div class="grid g-3" id="variantGrid"></div>
-              <div class="row between" style="margin-top:var(--md)">
-                <button class="btn btn-secondary sm" data-addvar>Add a variant</button>
-                <button class="btn btn-primary" data-wizgo="3">Next — how should it roll out?</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- ---------- STEP 3 ---------- -->
-          <div class="wizStep hidden" data-wiz="3">
-            <div class="convo" id="convo3"></div>
-            <div class="card pad" id="w3Result" style="display:none">
-              <h2 class="h-md">Rollout</h2>
-              <p class="t-sm sec" style="margin-bottom:var(--md)">A slice decides for the rest.</p>
-              <div class="banner banner-info">
-                <div class="row wrap gap-xs" style="flex:1;align-items:center">
-                  <span class="t-md">Send to</span><input class="input num" value="10%" style="height:30px">
-                  <span class="t-md">of the audience, wait</span><input class="input num" value="1h" style="height:30px">
-                  <span class="t-md">, then send the winner to the rest — unless nothing leads by more than</span>
-                  <input class="input num" value="5%" style="height:30px">
-                  <span class="t-md">, in which case hold and tell me.</span>
-                </div>
-              </div>
-              <div class="sepH" style="margin:var(--md) 0"></div>
-              <h3 class="h-sm" style="margin-bottom:var(--xs)">Before it goes out</h3>
-              <div class="col gap-xs" id="wizChecks"></div>
-            </div>
-
-            <div class="card pad" id="w3Preview" style="display:none">
-              <div class="row between wrap gap-sm" style="margin-bottom:var(--sm)">
-                <div class="col gap-xxxs">
-                  <h2 class="h-md">See what it would actually send</h2>
-                  <p class="t-sm sec">Generated against real shoppers in this audience, with the variants split the way the wave would split them. Nothing leaves.</p>
-                </div>
-                <div class="row gap-xs">
-                  <div class="seg" id="prevVol">
-                    <button class="on" data-n="10">10</button><button data-n="20">20</button>
-                    <button data-n="30">30</button><button data-n="40">40</button>
-                  </div>
-                  <button class="btn btn-ai" id="prevGo">Generate</button>
-                </div>
-              </div>
-              <div id="prevSummary" class="row wrap gap-lg hidden" style="margin-bottom:var(--md)"></div>
-              <div class="grid g-3" id="prevGrid"></div>
-              <div class="row between" style="margin-top:var(--md)">
-                <button class="btn btn-secondary" data-act="test-campaign">Preview on one shopper</button>
-                <button class="btn btn-primary">Launch the test wave</button>
-              </div>
+        <div class="zone top" style="flex:1;min-height:0;display:flex;flex-direction:column;padding-bottom:0">
+          <div class="convo" id="campThread" style="flex:1;overflow-y:auto;padding-bottom:var(--md);max-width:none"></div>
+          <div class="compose" id="campCompose">
+            <div class="chips" id="campChips"></div>
+            <div class="inputRow">
+              <textarea class="ta" id="campSay" rows="1" placeholder="Type your answer…"></textarea>
+              <button class="btn btn-ai" id="campSend">Send</button>
             </div>
           </div>
         </div>
       </section>
+
 
       <!-- ======== GUARDRAILS · master / detail ======== -->
       <section class="page hidden" id="page-guardrails">
@@ -1789,7 +1696,8 @@ const NEW_BODY=`
    CAMPAIGNS
    ======================================================================= */
 function renderRules(){
-  const l=$("#ruleList"); l.innerHTML="";
+  const l=$("#ruleList")||$("#wizRuleList"); if(!l) return;
+  l.innerHTML="";
   RULES.forEach((r,i)=>{
     const row=el("div","ruleRow");
     row.innerHTML=`
@@ -1802,7 +1710,8 @@ function renderRules(){
   });
 }
 function renderVariants(){
-  const g=$("#variantGrid"); g.innerHTML="";
+  const g=$("#variantGrid")||$("#wizVariantGrid"); if(!g) return;
+  g.innerHTML="";
   VARIANTS.forEach((v,i)=>{
     const c=el("div","variant"+(v.win?" win":""));
     c.innerHTML=`
@@ -2301,8 +2210,9 @@ function openPreviewConv(i){
       <span class="t-sm bold">The instruction behind it</span>
       <div class="card pad-md" style="background:var(--grey-50)"><span class="t-sm sec">${c.v.ins}</span></div>
     </div>`,
-    `<button class="btn btn-secondary">Show me another</button>
-     <button class="btn btn-primary">Looks right</button>`);
+    `<button class="btn btn-secondary" id="prevBack">← Back to the list</button>
+     <button class="btn btn-primary" data-closepanel>Looks right</button>`);
+  const back=$("#prevBack"); if(back) back.addEventListener("click",openPreviewPanel);
 }
 
 /* ===================== LOYALTY (overview + configuration) ===================== */
@@ -2505,6 +2415,25 @@ function goto(page){
   const navPage=NAV_OF[page]||page;
   $$(".navItem").forEach(n=>n.classList.toggle("on",n.dataset.page===navPage));
   $("#scroller").scrollTop=0; closePanel();
+  if(page==="campaign-new") resetWizard();
+}
+/* fresh conversation every time "Create a campaign" is opened */
+function resetWizard(){
+  wizIdx=0; wizStep=1;
+  $("#campThread").innerHTML=""; delete $("#campThread").dataset.started;
+  $("#campCompose").style.display="";
+  $("#campSend").disabled=false;
+  VARIANTS.length=0;
+  VARIANTS.push(
+    {k:"A",n:"Answer the objection",ins:"Lead with why the mid-layer matters below 5°. No offer at all in the first message. If they ask about price, answer plainly and stop.",
+     off:"No offer",sent:137,rep:"11.7%",cvr:"6.6%",rev:"$4.82",marg:"full margin",win:true},
+    {k:"B",n:"Free shipping",ins:"Same opening, then offer free shipping on the mid-layer if they order this week. Never mention a percentage.",
+     off:"Free shipping",sent:138,rep:"9.4%",cvr:"6.2%",rev:"$4.31",marg:"−$6.40 / order",win:false},
+    {k:"C",n:"10% off",ins:"Open with the seasonal reason, then offer 10% off with a unique code. Mention the code expires in 5 days.",
+     off:"10% discount",sent:137,rep:"8.1%",cvr:"7.1%",rev:"$4.44",marg:"−$11.90 / order",win:false}
+  );
+  renderWizSteps();
+  askTurn();
 }
 $$(".navItem").forEach(n=>n.addEventListener("click",()=>goto(n.dataset.page)));
 
@@ -2513,11 +2442,15 @@ function selectTab(tab){
   $$(".tabItem").forEach(t=>t.classList.toggle("on",t.dataset.tab===tab));
   $$(".tabPanel").forEach(p=>p.classList.toggle("hidden",p.dataset.panelFor!==tab));
 }
+const ENGAGEMENT_TABS=["ace","scenarios"];
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-tab]"); if(!t) return;
   selectTab(t.dataset.tab);
-  if(!$("#page-engagements").classList.contains("hidden")) return;
-  goto("engagements"); selectTab(t.dataset.tab);
+  /* only the Engagements tabs (ACE / Custom) ever need a cross-page jump —
+     Loyalty's own tabs must never trigger it */
+  if(ENGAGEMENT_TABS.includes(t.dataset.tab) && $("#page-engagements").classList.contains("hidden")){
+    goto("engagements"); selectTab(t.dataset.tab);
+  }
 });
 
 const TEST_BODY=`
@@ -2568,13 +2501,6 @@ document.addEventListener("click",e=>{
 
   const pv=e.target.closest("[data-prev]");
   if(pv){openPreviewConv(+pv.dataset.prev);return}
-
-  const ws=e.target.closest("[data-wizsend]");
-  if(ws){wizSend(+ws.dataset.wizsend);return}
-  const wg=e.target.closest("[data-wizgo]");
-  if(wg){wizStep=+wg.dataset.wizgo;renderWiz();$("#scroller").scrollTop=0;return}
-  const wsp=e.target.closest("#wizSteps .step");
-  if(wsp){wizStep=+wsp.dataset.step;renderWiz();return}
 
   const tn=e.target.closest("[data-tier]");
   if(tn){
@@ -2648,7 +2574,19 @@ $$("#campFilter .chip").forEach(c=>c.addEventListener("click",()=>{
   renderCampaigns();
 }));
 
-/* audience mode */
+/* campaign wizard compose */
+if($("#campSend")){
+  $("#campSend").addEventListener("click",campAnswer);
+  $("#campSay").addEventListener("keydown",e=>{
+    if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();campAnswer()}
+  });
+  $("#campSay").addEventListener("input",e=>{
+    e.target.style.height="auto"; e.target.style.height=Math.min(140,e.target.scrollHeight)+"px";
+  });
+}
+
+/* audience mode (legacy — unused now that campaigns are conversational, kept
+   for the audMode/audNl/audRules ids if a future step reintroduces rules) */
 $$("#audMode button").forEach(b=>b.addEventListener("click",()=>{
   $$("#audMode button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
   const nl=b.dataset.m==="nl";
@@ -2761,20 +2699,117 @@ function openShopper(s){
 }
 
 /* ===================== CAMPAIGN WIZARD ===================== */
-const WIZ=[
-  {ask:"Who do you want to reach?",
-   hint:"Describe them however you'd say it out loud. I'll turn it into an audience and tell you how many there are.",
-   answer:"Customers who bought a hardshell last winter, still active, who have never bought a mid-layer — skip anyone who returned something in the last month.",
-   ack:"Got it. That's 2,840 shoppers, 2,190 of them reachable right now. 431 are excluded by your guardrails — mostly bad reviews and open tickets. I've held back 10% so we can measure this properly."},
-  {ask:"What do you want to say to them?",
-   hint:"Tell me the point you want to land. I'll write three ways of making it and we'll let a slice of the audience decide.",
-   answer:"The mid-layer is the piece that makes the hardshell work below 5 degrees. Don't discount unless we have to — margin matters more than volume on this one.",
-   ack:"Here are three approaches. One answers the objection with no offer at all, one uses free shipping, one uses 10% off. Margin is protected in that order, so if the first one wins you keep the most."},
-  {ask:"How should it go out?",
-   hint:"I'd send a slice first and let it pick the winner. You can change any of it.",
-   answer:"Send 10% first, wait an hour, then send the best one to the rest.",
-   ack:"That's set. I'll check the guardrails before anything leaves and tell you if a variant is too close to call."}
+/* ===================== CAMPAIGN WIZARD — fully conversational =====================
+   A linear script of turns. Each turn is either the assistant asking something
+   (with optional chips) or a card shown after an answer. `next` on an answer
+   turn points at the turn to run once the user replies. Nothing below the
+   thread is persistent UI — everything the merchant sees is something the
+   assistant showed them in response to a question. */
+const WIZARD=[
+  {step:1, ask:"Who do you want to reach?",
+   hint:"Describe them however you'd say it out loud.",
+   chips:["Hardshell buyers with no mid-layer","Lapsed subscribers, delivery issue","VIPs who haven't seen the new season"],
+   sample:"Customers who bought a hardshell last winter, still active, who have never bought a mid-layer — skip anyone who returned something in the last month.",
+   ack:"Got it — here's what that turns into.",
+   card:()=>audienceCard()},
+  {step:1, ask:"Does that look right, or should I build it as exact rules instead?",
+   hint:"Rules are precise; this reading is usually close enough.",
+   chips:["This is right, continue","Show me as rules"],
+   ack:(a)=>/rule/i.test(a) ? "Here's the same audience as rules — edit anything that's off." : "Good — that's the audience settled.",
+   card:(a)=>/rule/i.test(a) ? rulesCard() : null},
+  {step:2, ask:"What's the point you want to land?",
+   hint:"Tell me the outcome you want, not the exact wording — I'll write the copy.",
+   chips:["Mid-layer is what makes it work below 5°","Come back, we fixed the fit issue","Early access before the drop"],
+   sample:"The mid-layer is the piece that makes the hardshell work below 5 degrees. Don't discount unless we have to — margin matters more than volume on this one.",
+   ack:"Here are three approaches, ordered so the cheapest one is tried first.",
+   card:()=>variantCard()},
+  {step:2, ask:"Keep all three, or change something?",
+   hint:"You can remove a variant, add one, or edit any of the instructions above.",
+   chips:["Keep all three","Remove the discount one","Add a fourth"],
+   ack:(a)=>{
+     if(/remove/i.test(a)){const d=VARIANTS.findIndex(v=>v.off!=="No offer"&&v.off!=="Free shipping");
+       if(d>=0)VARIANTS.splice(VARIANTS.length-1,1); return "Dropped the weakest one — down to "+VARIANTS.length+"."}
+     if(/add|fourth/i.test(a)){VARIANTS.push({k:String.fromCharCode(65+VARIANTS.length),n:"New approach",
+       ins:"",off:"No offer",sent:0,rep:"—",cvr:"—",rev:"$0.00",marg:"full margin",win:false});
+       return "Added a fourth slot — write its instruction whenever you're ready."}
+     return "Good, all "+VARIANTS.length+" stay in."},
+   card:()=>variantCard()},
+  {step:3, ask:"How should it roll out?",
+   hint:"I'd test a slice and send the winner to the rest.",
+   chips:["Test 10%, send winner after an hour","Send to everyone at once","Let me set the split"],
+   ack:"Set. Here's what I checked before anything is allowed to leave.",
+   card:()=>checksCard()},
+  {step:3, ask:"Want to see what it would actually send, before you launch?",
+   hint:"I can generate real-looking conversations against this exact audience and these exact variants.",
+   chips:["Yes, show me 10","Yes, show me 20","Yes, show me 40","No, let's launch"],
+   ack:(a)=>{
+     const m=a.match(/\d+/);
+     if(m){ prevN=+m[0]; prevList=genPreview(prevN);
+       return "Here's "+prevN+" of them, split the way the real send would split them. Nothing was sent." }
+     return "Understood — nothing left to check.";
+   },
+   card:(a)=>/\d/.test(a) ? previewCard() : null,
+   after:(a)=>{ if(/\d/.test(a)) setTimeout(()=>openPreviewPanel(),650) }},
 ];
+
+function audienceCard(){
+  return `<div class="card pad-md" style="max-width:640px">
+    <div class="row between wrap gap-xs" style="margin-bottom:var(--sm)">
+      <span class="h-sm">Audience</span><span class="tag tag-purple">Draft</span>
+    </div>
+    <div class="chips" style="margin-bottom:var(--sm)">
+      <span class="tag tag-blue">bought in <b style="margin-left:3px">Hardshells</b></span>
+      <span class="tag tag-blue">order date <b style="margin-left:3px">Oct–Feb</b></span>
+      <span class="tag tag-blue">lifetime <b style="margin-left:3px">Mid-layers</b> = 0</span>
+      <span class="tag tag-grey">stage in <b style="margin-left:3px">Repeat, VIP</b></span>
+      <span class="tag tag-red">exclude: return in last 30 d</span>
+    </div>
+    <div class="row wrap gap-lg">
+      <div class="kv"><span class="k">Matching</span><span class="h-md num-t">2,840</span></div>
+      <div class="kv"><span class="k">Reachable now</span><span class="h-md num-t">2,190</span></div>
+      <div class="kv"><span class="k">Held out</span><span class="h-md num-t">219</span>
+        <span class="t-xs ter">10%, so lift is measured</span></div>
+      <div class="kv"><span class="k">Excluded</span><span class="h-md num-t">431</span>
+        <span class="t-xs ter">bad reviews, open tickets</span></div>
+    </div>
+  </div>`;
+}
+function rulesCard(){
+  return `<div class="card pad-md" style="max-width:640px">
+    <span class="h-sm" style="display:block;margin-bottom:var(--sm)">As rules</span>
+    <div class="col gap-xs" id="wizRuleList"></div>
+  </div>`;
+}
+function variantCard(){
+  return `<div class="card pad-md" style="max-width:680px">
+    <div class="row between wrap gap-xs" style="margin-bottom:var(--sm)">
+      <span class="h-sm">Approaches to test</span>
+      <span class="t-sm sec">Winner decided on revenue per recipient</span>
+    </div>
+    <div class="grid g-3" id="wizVariantGrid"></div>
+  </div>`;
+}
+function checksCard(){
+  return `<div class="card pad-md" style="max-width:640px">
+    <span class="h-sm" style="display:block;margin-bottom:var(--sm)">Before anything sends</span>
+    <div class="col gap-xs">${WIZ_CHECKS.map(c=>`<div class="row between">
+      <div class="col gap-xxxs"><span class="t-sm med">${c[0]}</span><span class="t-sm sec">${c[1]}</span></div>
+      <span class="tag ${c[2]}">${c[2]==="tag-green"?"Pass":"Deferred"}</span></div>`).join("")}</div>
+    <div class="row gap-xs" style="margin-top:var(--md);justify-content:flex-end">
+      <button class="btn btn-primary" id="wizLaunch">Launch the test wave</button>
+    </div>
+  </div>`;
+}
+function previewCard(){
+  return `<div class="card pad-md" style="max-width:640px">
+    <div class="row between wrap gap-xs">
+      <div class="col gap-xxxs"><span class="h-sm">${prevN} sample conversations</span>
+        <span class="t-sm sec">Opened in a panel so you can scroll through them.</span></div>
+      <button class="btn btn-secondary sm" id="wizOpenPreview">Open the ${prevN}</button>
+    </div>
+  </div>`;
+}
+
 const WIZ_CHECKS=[
   ["Frequency","2,190 of 2,840 have headroom this week","tag-green"],
   ["Quiet hours","Spread across each shopper's local morning","tag-green"],
@@ -2783,53 +2818,96 @@ const WIZ_CHECKS=[
   ["Collisions","64 shoppers already queued for Replenishment — they'll be deferred","tag-orange"],
   ["Holdout","219 never messaged, so the lift is measured not modelled","tag-green"]
 ];
-let wizStep=1;
-function renderWiz(){
+
+let wizIdx=0, wizStep=1;
+const SPARK_SVG=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>`;
+
+function campScroll(){const t=$("#campThread"); if(t) t.scrollTop=t.scrollHeight}
+function campAddAsk(html){
+  const t=el("div","convoRow turn");
+  t.innerHTML=`<span class="convoAv">${SPARK_SVG}</span><div class="convoAsk">${html}</div>`;
+  $("#campThread").appendChild(t); campScroll(); return t;
+}
+function campAddSaid(text){
+  const t=el("div","said",text.replace(/</g,"&lt;"));
+  $("#campThread").appendChild(t); campScroll(); return t;
+}
+function campAddTyping(){
+  const t=el("div","convoRow turn");
+  t.innerHTML=`<span class="convoAv">${SPARK_SVG}</span><div class="convoAsk"><span class="typing"><i></i><i></i><i></i></span></div>`;
+  $("#campThread").appendChild(t); campScroll(); return t;
+}
+function campAddCard(html){
+  const t=el("div","turn");
+  t.innerHTML=`<span class="convoAv" style="opacity:0"></span><div style="flex:1">${html}</div>`;
+  $("#campThread").appendChild(t); campScroll();
+  return t;
+}
+
+/* boot-time no-op: the conversation actually starts from resetWizard(), fired
+   when the page is opened via goto("campaign-new") — never at page load,
+   so the thread is always fresh when a merchant starts a new campaign */
+function renderWiz(){ renderWizSteps(); }
+function askTurn(){
+  if(wizIdx>=WIZARD.length) return;
+  const w=WIZARD[wizIdx];
+  wizStep=w.step; renderWizSteps();
+  campAddAsk(`<div class="col gap-xxxs"><span class="t-md med">${w.ask}</span>
+    <span class="t-sm sec">${w.hint}</span></div>`);
+  $("#campChips").innerHTML=(w.chips||[]).map(c=>`<button class="chip">${c}</button>`).join("");
+  $$("#campChips .chip").forEach(b=>b.addEventListener("click",()=>{
+    $("#campSay").value = b.textContent===w.chips[0]&&w.sample ? w.sample : b.textContent;
+    campAnswer();
+  }));
+  $("#campSay").value=""; $("#campSay").focus();
+}
+function renderWizSteps(){
   $$("#wizSteps .step").forEach(b=>{
     const n=+b.dataset.step;
     b.classList.toggle("on",n===wizStep);
     b.classList.toggle("done",n<wizStep);
   });
-  $$(".wizStep").forEach(p=>p.classList.toggle("hidden",+p.dataset.wiz!==wizStep));
-  [1,2,3].forEach(n=>{
-    const host=$("#convo"+n); if(!host||host.dataset.built) return;
-    const w=WIZ[n-1];
-    host.dataset.built="1";
-    host.innerHTML=`
-      <div class="convoRow">
-        <span class="convoAv"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg></span>
-        <div class="convoAsk"><div class="col gap-xxxs">
-          <span class="t-md med">${w.ask}</span><span class="t-sm sec">${w.hint}</span></div></div>
-      </div>
-      <div class="convoAns"><span class="t-md" id="wizAns${n}">${w.answer}</span></div>
-      <div class="convoInput" id="wizInput${n}">
-        <textarea class="textarea" id="wizTa${n}">${w.answer}</textarea>
-        <button class="btn btn-ai" data-wizsend="${n}">Send</button>
-      </div>
-      <div class="convoRow hidden" id="wizAck${n}">
-        <span class="convoAv"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg></span>
-        <div class="convoAsk"><span class="t-md sec">${w.ack}</span></div>
-      </div>`;
-    $("#wizAns"+n).parentElement.classList.add("hidden");
-  });
-  if($("#wizChecks")&&!$("#wizChecks").dataset.built){
-    $("#wizChecks").dataset.built="1";
-    $("#wizChecks").innerHTML=WIZ_CHECKS.map(c=>`<div class="row between">
-      <div class="col gap-xxxs"><span class="t-md med">${c[0]}</span><span class="t-sm sec">${c[1]}</span></div>
-      <span class="tag ${c[2]}">${c[2]==="tag-green"?"Pass":"Deferred"}</span></div>`).join("");
-  }
 }
-function wizSend(n){
-  const ta=$("#wizTa"+n), val=ta.value;
-  $("#wizAns"+n).textContent=val;
-  $("#wizAns"+n).parentElement.classList.remove("hidden");
-  $("#wizInput"+n).classList.add("hidden");
-  const btn=$(`[data-wizsend="${n}"]`); if(btn) btn.disabled=true;
+function campAnswer(){
+  const v=$("#campSay").value.trim(); if(!v) return;
+  const w=WIZARD[wizIdx];
+  campAddSaid(v);
+  $("#campSay").value=""; $("#campChips").innerHTML=""; $("#campSend").disabled=true;
+  const typing=campAddTyping();
   setTimeout(()=>{
-    $("#wizAck"+n).classList.remove("hidden");
-    const res=$("#w"+n+"Result"); if(res) res.style.display="";
-    if(n===3){const p=$("#w3Preview"); if(p) p.style.display=""}
-  },500);
+    typing.remove();
+    const ackText=typeof w.ack==="function"?w.ack(v):w.ack;
+    campAddAsk(`<span class="t-md sec">${ackText}</span>`);
+    const cardHtml=typeof w.card==="function"?w.card(v):w.card;
+    if(cardHtml){ campAddCard(cardHtml); afterCardMount(w); }
+    if(w.after) w.after(v);
+    wizIdx++; $("#campSend").disabled=false;
+    setTimeout(()=>{
+      if(wizIdx<WIZARD.length) askTurn();
+      else finishWizard();
+    },500);
+  },700);
+}
+function afterCardMount(w){
+  if($("#wizRuleList")) renderRules();
+  if($("#wizVariantGrid")) renderVariants();
+  if($("#wizLaunch")) $("#wizLaunch").addEventListener("click",()=>{
+    $("#wizLaunch").textContent="Launched"; $("#wizLaunch").disabled=true;
+  });
+  if($("#wizOpenPreview")) $("#wizOpenPreview").addEventListener("click",openPreviewPanel);
+}
+function finishWizard(){
+  $("#campCompose").style.display="none";
+  campAddAsk(`<span class="t-md med">That's everything set. Launch whenever you're ready — nothing has gone out yet.</span>`);
+}
+function openPreviewPanel(){
+  renderPreview();
+  openPanel(prevN+" sample conversations", "Generated against this audience and these variants · nothing was sent",
+    `<div class="grid g-3" id="prevGrid" style="grid-template-columns:1fr"></div>`,
+    `<button class="btn btn-secondary" id="prevRegen">Generate a different set</button>
+     <button class="btn btn-primary" data-closepanel>Done</button>`);
+  renderPreview();
+  const rg=$("#prevRegen"); if(rg) rg.addEventListener("click",()=>{prevList=genPreview(prevN);renderPreview()});
 }
 
 /* ===================== LOYALTY TIER EDITOR ===================== */
@@ -3048,15 +3126,6 @@ function studioForDomain(i){
       ? "On replenishment, name the exact product and the interval we learned for this shopper, never a store average. Offer the loyalty reward before any discount. If they've changed cadence, ask rather than assume."
       : "ACE writes this domain from your brand profile and the shopper's own history. Add an instruction here only if this domain needs something the rest of your account doesn't."});
 }
-
-$$("#prevVol button").forEach(b=>b.addEventListener("click",()=>{
-  $$("#prevVol button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
-  prevN=+b.dataset.n; if(prevList.length){prevList=genPreview(prevN);renderPreview()}
-}));
-$("#prevGo").addEventListener("click",()=>{
-  const b=$("#prevGo"); b.textContent="Generating…"; b.disabled=true;
-  setTimeout(()=>{prevList=genPreview(prevN);renderPreview();b.textContent="Regenerate";b.disabled=false},650);
-});
 
 /* boot */
 $("#repMetric").innerHTML=Object.entries(METRICS).map(([k,m])=>

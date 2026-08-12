@@ -47,7 +47,7 @@ the data and render functions.
 | --- | --- |
 | **Reporting** | Read-only KPI cards, then a report you drive: any metric × any dimension × over-time / ranked / table |
 | **Engagements** | Two tabs. **AI engagement** — ACE: one mode switch plus domains. **Custom engagement** — the scenarios the merchant defines, pre-built or self-written |
-| **Campaigns** | Past campaigns, then a three-step conversational wizard: who / what / how — ending in a generated preview of 10–40 real-looking conversations before anything launches |
+| **Campaigns** | Past campaigns, then a fully conversational build — Who / What / How as a status bar, everything else is question and answer. Previewing 10–40 real-looking conversations is something you ask for, not a default block |
 | **Guardrails** | Seven categories in a master/detail list: frequency, timing, suppression, exclusions, offers, content, volume & proof |
 | **Lifecycle** | What defines each stage, and how each stage is treated — objective, tone, what we're willing to give, configurable levers |
 | **Conversations** | A marketing inbox. One row is one person: why it started, what the engine reasoned from, what was sent |
