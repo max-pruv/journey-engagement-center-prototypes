@@ -55,9 +55,9 @@ trigger.
 - **Reject** in Conversations does not mutate state yet. Approve & send now moves the message to Live and updates the pending counts.
 - **Dark mode.** Tokens exist for it in Axiom; the prototype only implements light.
 - **Save is decorative everywhere except the custom-engagement studio.** That one does write back:
-  editing a trigger or instruction and pressing Save updates `ENG[i]` and re-renders the table, and
+  editing a trigger or skill and pressing Save updates `ENG[i]` and re-renders the table, and
   "New engagement" appends a real row. A theme's and a play's on/off switches do persist for the
-  session, the same as any other toggle in the prototype — it's specifically the *instruction text*
+  session, the same as any other toggle in the prototype — it's specifically the *skill text*
   in a theme's or play's studio that doesn't write back, and neither does anything in Guardrails,
   Lifecycle or Loyalty.
 - **`TEST_BODY`** is the last panel that predates the studio, now reached only from the Lifecycle
@@ -68,22 +68,22 @@ trigger.
 These are places where the prototype had to invent a shape to be clickable, and the real answer
 belongs to engineering:
 
-- An instruction is versioned (`v4 · edited 3 days ago`) and resettable to default. That implies a
+- A skill is versioned (`v4 · edited 3 days ago`) and resettable to default. That implies a
   default that's owned centrally and can change under a merchant who hasn't customized.
-- A theme carries an optional instruction. That makes the theme a first-class configurable object,
+- A theme carries an optional skill. That makes the theme a first-class configurable object,
   not just a filter on the agent's remit.
 - Exclusions are evaluated as *audience* membership, separately from suppression as *timing*. Those
   are two different joins and probably two different services.
-- A play carries its own instruction *and* sits under a theme that carries one. The UI says the play
-  instruction is the specific one and the theme instruction covers everything underneath, but it
+- A play carries its own skill *and* sits under a theme that carries one. The UI says the play
+  skill is the specific one and the theme skill covers everything underneath, but it
   never shows them resolved together — which is deliberate (PRODUCT.md §4 killed the "resolved
   instruction set" preview), and also means the precedence is asserted rather than demonstrated. The
   same question now applies one level down: a play's own switch and its theme's switch are ANDed
-  together (`playLive`) rather than shown as a single resolved on/off, on the same "instructions ask,
+  together (`playLive`) rather than shown as a single resolved on/off, on the same "skills ask,
   guardrails decide"-style reasoning — worth revisiting if a merchant is ever confused about why a
   play they turned on still isn't running.
 - A play is identified by its position (`themeIndex.playIndex` in `data-playinstr` and `data-play`).
-  Real plays need stable ids, because a merchant's customized instruction or on/off state has to
+  Real plays need stable ids, because a merchant's customized skill or on/off state has to
   survive Gorgias reordering or inserting plays in a theme.
 - Reporting's `source` dimension now reads ACE / Custom / Campaign, with ACE carrying the volume the
   standard engagements used to report under `Default`. That is the right model — those sends *are*

@@ -161,7 +161,7 @@ done
 2. Force-reload from disk
 3. The isolation probe — all `ok`, all counts non-zero
 4. Sweep the reporting surface (above)
-5. Click the thing you changed, plus all three studio shapes (a theme instruction, a play, a custom
+5. Click the thing you changed, plus all three studio shapes (a theme skill, a play, a custom
    engagement — they render different When blocks; the custom-engagement one also has the
    sentence/rules toggle), a theme row's click-to-expand and a play's own switch, the Guardrails
    category list and the Lifecycle stage detail

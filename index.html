@@ -706,11 +706,11 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
                   <button class="btn btn-tertiary sm" id="aceExpandAll">Collapse all</button>
                 </div>
               </div>
-              <p class="t-sm sec">Two layers. A <b>theme</b> is what ACE is allowed to work on — the control that matters if you need to bound an autonomous system. Under each one sit the <b>plays</b> it runs: the standard engagements, now owned by the engine. Each play can be switched off on its own without pulling the whole theme, and still carries exactly one instruction. Turn a theme off and every play under it stops regardless of its own switch: it won't propose them, won't send them, won't count them. We keep sizing the opportunity anyway, so you can see what you're declining. Click a row to expand it.</p>
+              <p class="t-sm sec">Two layers. A <b>theme</b> is what ACE is allowed to work on — the control that matters if you need to bound an autonomous system. Under each one sit the <b>plays</b> it runs: the standard engagements, now owned by the engine. Each play can be switched off on its own without pulling the whole theme, and still carries exactly one skill. Turn a theme off and every play under it stops regardless of its own switch: it won't propose them, won't send them, won't count them. We keep sizing the opportunity anyway, so you can see what you're declining. Click a row to expand it.</p>
             </div>
             <table id="aceDomainTable">
               <thead><tr><th style="width:34%">Theme and plays</th><th>Shoppers reached</th><th>GMV</th>
-                <th>Conversion</th><th>Opt-out</th><th>Instruction</th><th style="width:130px">Activated</th></tr></thead>
+                <th>Conversion</th><th>Opt-out</th><th>Skill</th><th style="width:130px">Activated</th></tr></thead>
               <tbody></tbody>
             </table>
             <div class="sepH"></div>
@@ -750,7 +750,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <table id="engTable">
               <thead><tr>
                 <th style="width:28%">Custom engagement</th><th style="width:26%">When — the trigger</th>
-                <th>What — the instruction</th><th>Sent · 30d</th><th>CVR</th><th style="width:150px">Status</th>
+                <th>What — the skill</th><th>Sent · 30d</th><th>CVR</th><th style="width:150px">Status</th>
               </tr></thead>
               <tbody></tbody>
             </table>
@@ -865,7 +865,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         <header class="pageHeader">
           <div class="ttl">
             <h1 class="h-xxl">Guardrails</h1>
-            <p class="t-md sec">The hard limits every engagement obeys. An instruction can ask; a guardrail decides.</p>
+            <p class="t-md sec">The hard limits every engagement obeys. A skill can ask; a guardrail decides.</p>
           </div>
           <div class="pageActions">
             <button class="btn btn-secondary" data-goto="conversations">What was stopped</button>
@@ -1073,7 +1073,7 @@ const CAMP_METRICS=[
   {k:"reply",label:"Reply rate",kind:"number"},{k:"click",label:"Click rate",kind:"number"},{k:"cvr",label:"Conversion rate",kind:"number"},
   {k:"orders",label:"Orders",kind:"number"},{k:"aov",label:"Average order value",kind:"number"},{k:"gmv",label:"GMV",kind:"number"},
   {k:"roi",label:"ROI",kind:"number"},{k:"opt",label:"Opt-out rate",kind:"number"},{k:"cost",label:"Campaign cost",kind:"number"},
-  {k:"rpk",label:"GMV / 1k sent",kind:"number"},{k:"win",label:"Winning instruction",kind:"text"},{k:"st",label:"Status",kind:"status"}
+  {k:"rpk",label:"GMV / 1k sent",kind:"number"},{k:"win",label:"Winning skill",kind:"text"},{k:"st",label:"Status",kind:"status"}
 ];
 let campColumns=["aud","sent","reach","cvr","gmv","roi","opt","win","st"];
 
@@ -1085,7 +1085,7 @@ const BENCH=[
 ];
 
 /* A custom engagement is the only thing a merchant hand-builds now. Two parts:
-   WHEN it fires (the trigger) and WHAT it says (the instruction). */
+   WHEN it fires (the trigger) and WHAT it says (the skill). */
 const WHEN_EVENTS=["Checkout abandoned","Session ends without a cart","Order placed","Order fulfilled",
   "Delivery confirmed","Return processed","Support ticket resolved","Product back in stock",
   "Subscription renewal due","Loyalty threshold crossed","On the shopper's own rhythm","Weather change where they live"];
@@ -1107,7 +1107,7 @@ const ENG=[
 
 /* ACE is one switch, not a list of scenarios — but a theme is not a black box
    either. Two layers: the THEME is the dial you turn, and under it sit the
-   PLAYS it runs. Each play is readable, carries its own instruction, and now
+   PLAYS it runs. Each play is readable, carries its own skill, and now
    its own on/off — but a play can never fire while its theme is off, so
    bounding the machine still starts one level up.
    Every theme figure is derived from its plays — see domTotals(). */
@@ -2066,8 +2066,8 @@ function renderAce(){
       ${cell(rate(t?t.cvr:0),"≈"+rate(p.cvr))}
       ${cell(rate(t?t.opt:0),"≈"+rate(p.opt))}
       <td><button class="btn btn-secondary sm" data-dominstr="${i}">
-        ${d.ins==="Customized"?`<span class="dot" style="background:var(--purple-500)"></span>Instruction`
-          :`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Add instruction`}
+        ${d.ins==="Customized"?`<span class="dot" style="background:var(--purple-500)"></span>Skill`
+          :`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Add skill`}
       </button></td>
       <td><div class="row gap-xs" style="justify-content:flex-end">
         <span class="t-sm ${d.on?"med":"ter"}" style="min-width:24px;text-align:right">${d.on?"Yes":"No"}</span>
@@ -2099,8 +2099,8 @@ function renderAce(){
         ${pc(rate(v.cvr),"≈"+rate(v.cvr))}
         ${pc(rate(v.opt),"≈"+rate(v.opt))}
         <td><button class="btn btn-tertiary sm" data-playinstr="${i}.${j}">
-          ${pl.ins==="Customized"?`<span class="dot" style="background:var(--purple-500)"></span>Instruction`
-            :`<span class="ter">Default instruction</span>`}
+          ${pl.ins==="Customized"?`<span class="dot" style="background:var(--purple-500)"></span>Skill`
+            :`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Add skill`}
         </button></td>
         <td><div class="row gap-xs" style="justify-content:flex-end">
           <span class="t-xs ter" style="text-align:right">${pStatus}</span>
@@ -2260,7 +2260,7 @@ const GR_CATS=[
            ["No discount within X days of a full-price order","14"],["Minimum order for free shipping","$65"]],
    toggles:[["Unique discount code per shopper","So nothing leaks to coupon sites.",true]]},
   {k:"content",n:"Content",d:"What the AI may say",c:"var(--green-300)",
-   sum:"Content rails sit above every instruction — no instruction can unlock them.",
+   sum:"Content rails sit above every skill — no skill can unlock them.",
    banned:true,
    fields:[["Max characters per message","320"]],
    toggles:[["Always include an opt-out line","Legal requirement.",true,true],
@@ -2736,7 +2736,7 @@ function openPreviewConv(i){
       <p class="t-md sec" style="margin-top:var(--xxxs)">Bought ${c.item} last winter, still active, and has never bought a mid-layer.</p>
     </div>
     <div class="col gap-xs">
-      <span class="t-sm bold">What the instruction produced</span>
+      <span class="t-sm bold">What the skill produced</span>
       <div class="phone">${thread.map(m=>`<div class="bubble ${m[0]}">${m[1]}</div>`).join("")}
         <span class="bTime">Preview — nothing sent</span></div>
     </div>
@@ -2744,7 +2744,7 @@ function openPreviewConv(i){
       <span class="t-md med">This one would wait</span>
       <span class="t-sm sec">${c.hold}. It goes out once the collision window clears.</span></div></div>`:""}
     <div class="col gap-xs">
-      <span class="t-sm bold">The instruction behind it</span>
+      <span class="t-sm bold">The skill behind it</span>
       <div class="card pad-md" style="background:var(--grey-50)"><span class="t-sm sec">${c.v.ins}</span></div>
     </div>`,
     `<button class="btn btn-secondary" id="prevBack">← Back to the list</button>
@@ -3068,7 +3068,7 @@ document.addEventListener("click",e=>{
 const TEST_BODY=`
   <div class="banner banner-info"><div class="col gap-xxxs">
     <span class="t-md med">Pick a real shopper and see exactly what they'd get.</span>
-    <span class="t-sm sec">Nothing is sent. The engine runs the full decision — stage, instruction, guardrails, timing — and shows you the result.</span>
+    <span class="t-sm sec">Nothing is sent. The engine runs the full decision — stage, skill, guardrails, timing — and shows you the result.</span>
   </div></div>
   <div class="field"><span class="label">Shopper</span>
     <select class="selectEl"><option>Ana R. · First-time buyer · day 51</option><option>Marc D. · VIP · quiet 2.1×</option>
@@ -3402,20 +3402,20 @@ const WIZARD=[
    ack:(a)=>/rule/i.test(a) ? "Here's the same audience as rules — edit anything that's off." : "Good — that's the audience settled.",
    card:(a)=>/rule/i.test(a) ? rulesCard() : null},
   {step:2, ask:"What story do you want to tell this audience?",
-   hint:"Start with the campaign moment. I'll ask for the product and turn your answer into a complete instruction.",
+   hint:"Start with the campaign moment. I'll ask for the product and turn your answer into a complete skill.",
    chips:["New product launch","A product is back in stock","A seasonal story","We fixed a product problem"],
    sample:"New product launch: introduce the Cirrus insulated jacket to hardshell owners who need a warmer layer. Explain what is genuinely new, why it works with what they own, and lead with product education rather than a discount.",
-   ack:"I used the audience and the Cirrus product data to build a detailed instruction. Here are three approaches to test.",
+   ack:"I used the audience and the Cirrus product data to build a detailed skill. Here are three approaches to test.",
    card:()=>variantCard()},
   {step:2, ask:"Keep all three, or change something?",
-   hint:"You can remove a variant, add one, or edit any of the instructions above.",
+   hint:"You can remove a variant, add one, or edit any of the skills above.",
    chips:["Keep all three","Remove the discount one","Add a fourth"],
    ack:(a)=>{
      if(/remove/i.test(a)){const d=VARIANTS.findIndex(v=>v.off!=="No offer"&&v.off!=="Free shipping");
        if(d>=0)VARIANTS.splice(VARIANTS.length-1,1); return "Dropped the weakest one — down to "+VARIANTS.length+"."}
      if(/add|fourth/i.test(a)){VARIANTS.push({k:String.fromCharCode(65+VARIANTS.length),n:"New approach",
        ins:"",off:"No offer",sent:0,rep:"—",cvr:"—",rev:"$0.00",marg:"full margin",win:false});
-       return "Added a fourth slot — write its instruction whenever you're ready."}
+       return "Added a fourth slot — write its skill whenever you're ready."}
      return "Good, all "+VARIANTS.length+" stay in."},
    card:()=>variantCard()},
   {step:3, ask:"How should it roll out?",
@@ -3575,13 +3575,13 @@ function afterCardMount(w){
   if($("#wizOpenPreview")) $("#wizOpenPreview").addEventListener("click",openPreviewPanel);
 }
 function launchCampaign(){
-  CAMPAIGNS.unshift({n:"Cirrus jacket launch",aud:"Active hardshell owners, no insulated layer",sent:"286 / 2,190",reach:"89.7%",reply:"—",click:"—",cvr:"—",orders:"—",aov:"—",gmv:"$0",roi:"—",opt:"0.1%",cost:"$184",rpk:"$0",win:"Testing 3 instructions",st:"Launching",prog:13});
+  CAMPAIGNS.unshift({n:"Cirrus jacket launch",aud:"Active hardshell owners, no insulated layer",sent:"286 / 2,190",reach:"89.7%",reply:"—",click:"—",cvr:"—",orders:"—",aov:"—",gmv:"$0",roi:"—",opt:"0.1%",cost:"$184",rpk:"$0",win:"Testing 3 skills",st:"Launching",prog:13});
   renderCampaigns();
   goto("campaigns");
 }
 function finishWizard(){
   $("#campCompose").style.display="none";
-  campAddAsk(`<div class="col gap-sm"><span class="t-md med">That's everything set. The audience, story, instructions and first 30 messages are ready — nothing has gone out yet.</span>
+  campAddAsk(`<div class="col gap-sm"><span class="t-md med">That's everything set. The audience, story, skills and first 30 messages are ready — nothing has gone out yet.</span>
     <button class="btn btn-primary" id="wizLaunch" style="width:fit-content">Launch campaign</button></div>`);
   $("#wizLaunch").addEventListener("click",launchCampaign);
 }
@@ -3804,11 +3804,11 @@ function openStudio(ctx){
         ${whenBlock(ctx)}
         <div class="sepH"></div>
         <div class="row between wrap gap-xs">
-          <div class="row gap-xs"><span class="t-sm bold">What — the instruction</span>
+          <div class="row gap-xs"><span class="t-sm bold">What — the skill</span>
             <span class="tag ${ctx.ins==="Customized"?"tag-purple":"tag-grey"}">${ctx.ins}</span></div>
           ${ctx.ins==="Customized"?`<button class="btn btn-tertiary sm ter">Reset to default</button>`:""}
         </div>
-        <span class="t-sm sec">One instruction. It's a skill the agent loads when this fires — nothing stacks on top of it.</span>
+        <span class="t-sm sec">One skill. The agent loads it when this fires — nothing stacks on top of it.</span>
         <div class="card pad-md" style="background:var(--grey-50);flex:1;display:flex;flex-direction:column;gap:var(--xs)">
           <div class="row between">
             <span class="mono ter">skill · ${ctx.slug}</span>
@@ -3839,14 +3839,14 @@ function openStudio(ctx){
           <input class="input" id="studioSay" placeholder="Reply as the shopper…">
           <button class="btn btn-secondary" id="studioSend">Send</button>
         </div>
-        <span class="t-xs ter" id="studioNote">Press Run to see what this instruction produces for the shopper above.</span>
+        <span class="t-xs ter" id="studioNote">Press Run to see what this skill produces for the shopper above.</span>
       </div>
     </div>`,
     `<button class="btn btn-secondary" id="studioRun">Run test</button>
-     <button class="btn btn-primary" id="studioSave">${ctx.nl?"Create the engagement":ctx.when&&ctx.when.mode==="edit"?"Save the engagement":"Save instruction"}</button>`);
+     <button class="btn btn-primary" id="studioSave">${ctx.nl?"Create the engagement":ctx.when&&ctx.when.mode==="edit"?"Save the engagement":"Save skill"}</button>`);
   drawStudio();
-  /* Only the custom-engagement studio writes back — a play's instruction and a
-     domain's are still decorative, same as every other Save in the prototype. */
+  /* Only the custom-engagement studio writes back — a play's skill and a
+     theme's are still decorative, same as every other Save in the prototype. */
   $("#studioSave").addEventListener("click",()=>{
     if(!ctx.when||ctx.when.mode!=="edit") return closePanel();
     const w={ev:+$("#whenEv").value,delay:+$("#whenDelay").value,cond:$("#whenCond").value.trim()};
@@ -3892,13 +3892,13 @@ function openStudio(ctx){
     studio.shopper=+$("#studioWho").value; studio.thread=[];
     const sh=SIM_SHOPPERS[studio.shopper];
     studio.thread.push(["out",simOpener(studio.ctx,sh)]);
-    $("#studioNote").textContent="Generated from the instruction on the left, for "+sh.n+". Nothing left the building.";
+    $("#studioNote").textContent="Generated from the skill on the left, for "+sh.n+". Nothing left the building.";
     drawStudio();
   });
   $("#studioSend").addEventListener("click",studioSay);
   $("#studioSay").addEventListener("keydown",e=>{if(e.key==="Enter")studioSay()});
   $("#studioWho").addEventListener("change",()=>{studio.thread=[];drawStudio();
-    $("#studioNote").textContent="Press Run to see what this instruction produces for this shopper."});
+    $("#studioNote").textContent="Press Run to see what this skill produces for this shopper."});
 }
 function studioSay(){
   const inp=$("#studioSay"), v=inp.value.trim();
@@ -3939,14 +3939,14 @@ function studioForNew(){
     slug:"new-engagement",
     text:"Say why we're reaching out in the first line. Answer the obvious objection before naming a product. No offer in the first message — if they hesitate, use the loyalty levers before any discount. Two sentences."});
 }
-/* a theme instruction: no When at all, because the engine owns the timing */
+/* a theme skill: no When at all, because the engine owns the timing */
 function studioForDomain(i){
   const d=ACE_DOMAINS[i];
-  openStudio({title:d.n,sub:"ACE theme · one instruction for every play underneath it",ins:d.ins,kind:"ACE",
+  openStudio({title:d.n,sub:"ACE theme · one skill for every play underneath it",ins:d.ins,kind:"ACE",
     slug:"ace-"+slugify(d.n),
     text:d.ins==="Customized"
       ? "On replenishment, name the exact product and the interval we learned for this shopper, never a store average. Offer the loyalty reward before any discount. If they've changed cadence, ask rather than assume."
-      : "ACE writes this theme from your brand profile and the shopper's own history. Add an instruction here only if this theme needs something the rest of your account doesn't."});
+      : "ACE writes this theme from your brand profile and the shopper's own history. Add a skill here only if this theme needs something the rest of your account doesn't."});
 }
 /* a play: the When is stated so you can read it, but it isn't yours to change.
    It does have its own on/off, set from the table rather than in here. */
@@ -3957,7 +3957,7 @@ function studioForPlay(i,j){
     slug:"ace-"+slugify(d.n)+"/"+slugify(p.n),
     text:p.ins==="Customized"
       ? "State the reason we're reaching out in the first line, and name the exact product rather than the category. Answer the obvious objection before selling anything. No offer in the first message — if they hesitate, use the loyalty levers before any discount. Two sentences."
-      : "ACE writes this play from your brand profile and the shopper's own history, inside the theme instruction above it. Edit here only if this one play needs something the rest of the theme doesn't."});
+      : "ACE writes this play from your brand profile and the shopper's own history, inside the theme skill above it. Edit here only if this one play needs something the rest of the theme doesn't."});
 }
 
 /* boot */

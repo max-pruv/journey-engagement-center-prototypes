@@ -256,11 +256,11 @@ function aceEducation(){
 const STEPS=[
   {k:"voice", label:"Brand voice",
    ask:"I've analysed 12,400 support conversations and drafted the voice below. The strongest pattern is warm, direct expertise: your best agents solve the problem before they sell.<br><br>Which direction should I use as the starting point?",
-   hint:"Recommended from your highest-CSAT conversations. This becomes the instruction underneath every message.",
+   hint:"Recommended from your highest-CSAT conversations. This becomes the skill underneath every message.",
    chips:["Use the detected voice","Make it more expert and precise","Make it more playful and informal"],recommended:0,
    answer:"Warm and direct, never pushy. We use \"we\", British spelling, and we never oversell. If someone has a problem, we fix it before we sell anything.",
    ack:"I'll use the detected voice. If a shopper raises a problem mid-conversation, the agent stops selling and hands off — that behaviour came through consistently in your best conversations.",
-   card:()=>`<div class="card"><span class="h-md">Brand instruction</span>
+   card:()=>`<div class="card"><span class="h-md">Brand skill</span>
      <p class="t-sm sec" style="margin:var(--xxs) 0 var(--sm)">Applied to every message, from every source.</p>
      <div class="col gap-xxs">
        ${[["Tone","Warm and direct, never pushy"],["Voice","First person plural, British spelling"],
@@ -290,7 +290,7 @@ const STEPS=[
    sum:["Lifecycle","7 stages · VIP at 5+ orders"]},
 
   {k:"guardrails", label:"Guardrails",
-   ask:"Now the limits. These are hard — no instruction can talk its way past them. Three questions:<br><br>How often is too often, when should we stay quiet, and how much are you willing to discount?",
+   ask:"Now the limits. These are hard — no skill can talk its way past them. Three questions:<br><br>How often is too often, when should we stay quiet, and how much are you willing to discount?",
    hint:"Recommended from your current opt-out rate, order cadence and the safest peer benchmark.",
    chips:["Use the recommended limits","Tighter — 2 a week","No discounts at all"],recommended:0,
    answer:"Those defaults are fine, but cap the discount at 10% and never within two weeks of a full-price order.",
@@ -421,7 +421,7 @@ const ACE_TOUR_COPY=[
   "ACE continuously reads the signals already in your stack.",
   "It looks for a useful customer moment — not a reason to send more.",
   "It decides whether this shopper should hear from you, and when.",
-  "It writes a one-to-one conversation from your instructions and context.",
+  "It writes a one-to-one conversation from your skills and context.",
   "Consent, exclusions, timing, frequency and offers are checked every time.",
   "The message sends automatically or waits for approval — you choose."
 ];

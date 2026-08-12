@@ -63,8 +63,8 @@ informed one.
 **Metrics on every theme row:** shoppers reached, GMV, conversion rate, opt-out rate. Those four,
 because they are the four a merchant actually argues about.
 
-**Per-theme instruction.** A theme can carry its own optional instruction, for merchants who need
-personalisation on one theme without touching the rest of the account. Same one-instruction rule
+**Per-theme skill.** A theme can carry its own optional skill, for merchants who need
+personalisation on one theme without touching the rest of the account. Same one-skill rule
 as everywhere else.
 
 **Renamed from Domain.** "Domain" tested as a technical word — merchants read it as data
@@ -77,7 +77,7 @@ merchant already uses to talk about a campaign idea.
 *Consideration & browse* holds Cart abandonment, Session abandonment, Browse abandonment and
 Welcome; *Subscriptions* holds renewal, card expiring, payment failed and the pause-save. Every
 play shows its own reach, GMV, conversion and opt-out, the trigger the engine uses, its own
-instruction badged `Default` or `Customized`, and its own on/off switch.
+skill badged `Default` or `Customized`, and its own on/off switch.
 
 **What it replaced.** A flat list of pre-built "standard" engagements sitting in the second tab
 next to the merchant's own, each with its own on/off switch. That list was the scenario library
@@ -109,19 +109,22 @@ the rates from the reach they were measured on, filtering out any play that's of
 its theme's, or ACE's. No hand-written totals, the same rule Reporting follows — so a theme row and
 the rows underneath it can never disagree.
 
-## 4. One instruction per unit, and it is a skill
+## 4. One skill per unit
 
-**Decision.** Every engagement, every theme and every play carries exactly **one** instruction. It is a skill
-the agent loads when that thing fires. It has a badge: `Default` or `Customized`, and a
+**Decision.** Every engagement, every theme and every play carries exactly **one** skill — the
+agent loads it when that thing fires. It has a badge: `Default` or `Customized`, and a
 "Reset to default" when it has been edited.
 
 **What it replaced.** A four-layer stack (brand → centre → mode → trigger) with a "resolved
 instruction set" preview. Conceptually tidy, practically wrong: it invented a hierarchy the system
 doesn't have, and it made every instruction feel like a negotiation with three invisible parents.
+The word itself changed later too — "Instruction" tested as something you type into a form;
+"Skill" says what it actually is, a thing the agent loads and runs, and matches how the studio
+already labelled the technical identifier underneath it (`skill · cart-abandonment`).
 
-**The line that survived, and matters:** *instructions ask; guardrails decide.* An instruction can
-request anything; the guardrails run last and can refuse it. That distinction is what makes the
-model defensible in a demo, and it is shown literally in the live test (§6).
+**The line that survived, and matters:** *skills ask; guardrails decide.* A skill can request
+anything; the guardrails run last and can refuse it. That distinction is what makes the model
+defensible in a demo, and it is shown literally in the live test (§6).
 
 ## 5. Naming: AI engagement / Custom engagement
 
@@ -132,14 +135,14 @@ The second tab is now *only* what the merchant wrote — five things, not eighte
 of this; they own all of it. Then a mixed list with a **Built by** column reading `Default` or
 `Custom`. That column was the tell: if a table needs a column to say who authored each row, the
 table is holding two different kinds of object. The pre-built ones went where they belonged —
-inside a domain, as plays (§3b) — and the column disappeared with them.
+inside a theme, as plays (§3b) — and the column disappeared with them.
 
 **Consequence.** The tab has one nature again: things you wrote, that you can retime and switch
 off. Nothing in it is "yours by default".
 
 ## 6. Opening an engagement opens a studio, not a summary
 
-**Decision.** Clicking an engagement (or its Edit button, or a theme or play instruction) opens a
+**Decision.** Clicking an engagement (or its Edit button, or a theme or play skill) opens a
 wide two-column panel: on the left **when it fires** then **what it says**, on the right a **live
 testable conversation**. You pick a shopper, run it, then reply *as the shopper* and watch what
 comes back — with the reasoning shown under the thread.
@@ -152,7 +155,7 @@ thing in English and reminds you the timing guardrails still sit on top; "Edit a
 instead" swaps to the raw fields for a merchant who wants to be precise rather than descriptive. For
 a **play**, the same block is present but stated rather than editable — *Set by the engine* — with a
 line pointing at the play's own switch, or the theme's, if you don't want it running. For a
-**theme instruction**, there is no trigger at all: "There's nothing to set. ACE watches for the
+**theme skill**, there is no trigger at all: "There's nothing to set. ACE watches for the
 moment across this whole theme and picks the hour per shopper."
 
 Three variants of one panel, and reading them in sequence is the fastest way to understand who owns
@@ -193,7 +196,7 @@ in the strip and is readable from either tab.
 
 **Decision.** Who → What → How, as a stepper. Each step opens with a question the agent asks, you
 answer in plain language, and the answer expands into a structured result you can edit. Audience
-can be re-read **as rules** if you'd rather be exact. Instructions are A/B tested: three approaches,
+can be re-read **as rules** if you'd rather be exact. Skills are A/B tested: three approaches,
 removable and addable, and a rollout rule — send 10%, wait an hour, send the winner to the rest,
 unless nothing leads by more than 5%, in which case hold and say so.
 
@@ -292,9 +295,9 @@ Use these consistently; several of them were chosen against a worse alternative.
 | **Custom engagement** | The engagements the merchant writes, and the only ones with a trigger they own | "scenarios you own", "standard engagement" |
 | **Theme** | The bound on what ACE may work on — the only account-wide dial | "domain", "category", "use case" |
 | **Play** | One thing ACE does inside a theme. Readable, instructable, has its own switch — but never overrides its theme's | "standard engagement", "sub-domain", "scenario" |
-| **When / What** | The two halves of an engagement: the trigger, then the instruction | "conditions and content" |
-| **Instruction** | The single skill attached to a unit | "prompt", "instruction stack" |
-| **Guardrail** | A hard limit no instruction can unlock | "setting" |
+| **When / What** | The two halves of an engagement: the trigger, then the skill | "conditions and content" |
+| **Skill** | The single thing attached to a unit that the agent loads and runs | "instruction", "prompt", "instruction stack" |
+| **Guardrail** | A hard limit no skill can unlock | "setting" |
 | **Suppression** | Don't message them *now* | exclusion |
 | **Exclusion** | Never contact them at all | suppression |
 | **Lever** | A configured thing the engine may offer | "incentive" |

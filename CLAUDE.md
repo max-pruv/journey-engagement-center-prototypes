@@ -60,11 +60,11 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
   can only narrow *within* an allowed theme; the theme's own switch still overrides every play under
   it. Theme figures are folded from the plays, never hand-written. Click anywhere on a theme's row to
   expand or collapse the plays under it.
-- **A custom engagement is When + What** — the trigger you own, then the instruction. The trigger is
+- **A custom engagement is When + What** — the trigger you own, then the skill. The trigger is
   a sentence first ("when someone buys a bike…"), same as campaign audience; exact rules are the
   fallback. Tab two is custom-only; nothing pre-built lives there any more.
-- **One instruction per unit**, and it's a skill. Badged `Default` or `Customized`.
-- **Instructions ask; guardrails decide.** Guardrails run last and can refuse anything.
+- **One skill per unit.** Badged `Default` or `Customized`.
+- **Skills ask; guardrails decide.** Guardrails run last and can refuse anything.
 - **Suppression is timing; exclusion is people.** Two different blocks, deliberately.
 - **Loyalty is the lever that's cheaper than margin** — which is why it lives inside the Engagement
   Center.

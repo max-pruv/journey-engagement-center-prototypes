@@ -101,7 +101,7 @@ engagements that are on. It is called by `renderAce` and `renderEng`, so either 
 
 ## The studio's When block
 
-`openStudio(ctx)` renders `whenBlock(ctx)` above the instruction. Three shapes, driven by `ctx.when`:
+`openStudio(ctx)` renders `whenBlock(ctx)` above the skill. Three shapes, driven by `ctx.when`:
 
 | `ctx.when` | Shape | Used by |
 | --- | --- | --- |
@@ -234,7 +234,7 @@ merchant wants to see what would actually send; only a "yes" answer calls `genPr
 a scrollable side panel (`openPreviewPanel`) of n generated conversations. `genPreview(n)` builds
 plausible conversations from word pools, splitting the variants the way the wave would and marking
 roughly one in nine as deferred by a collision — it is index-driven, so the same n always produces
-the same set. `openPreviewConv(i)` opens one as a full thread with the instruction that produced
+the same set. `openPreviewConv(i)` opens one as a full thread with the skill that produced
 it, with a "Back to the list" action. Nothing about it simulates the model; it exists so a merchant
 can see the shape and tone of a send before committing.
 
