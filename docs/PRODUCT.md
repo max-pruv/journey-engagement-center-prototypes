@@ -220,6 +220,35 @@ unless nothing leads by more than 5%, in which case hold and say so.
 
 Three suppression rules and two exclusion rules are locked and cannot be turned off.
 
+## 9b. Channels join Guardrails, not a new page
+
+**Decision.** SMS, RCS and Email get a category in the same master/detail list as Frequency and
+Timing, rather than a settings screen of their own. Four things live there:
+
+- **Enablement**, one switch per channel. SMS is locked on — it is what RCS and Email fall back to
+  when they can't be used, so turning it off isn't a real choice.
+- **A fallback order** (`RCS → SMS → Email` by default) — the engine tries the richest channel a
+  shopper can actually receive and only steps down the list on failure, the same "try the best,
+  fail down" idea Timing already applies to the hour it sends.
+- **One channel-specific override of another category:** Email is exempt from Timing's quiet hours
+  by default, off. An inbox doesn't interrupt the way a text does, so holding Email to the same
+  21:00–09:00 window as SMS/RCS is a stricter rule than the medium calls for — but it stays a
+  merchant's call, not an assumption baked into the engine.
+- **Sender identity**, read-only: what a shopper actually sees a message arrive as (short code,
+  verified RCS agent name, from-address) and whether it's verified — the same "Needs setup" honesty
+  Engagements uses for a play with no integration behind it (§3b), applied to a channel with no
+  verified sender.
+
+**Why a category, not a page.** Every other constraint on what ACE and custom engagements may do
+already lives in Guardrails — frequency, timing, offers, content. Which channel a message can use,
+and what it's allowed to do there, is the same kind of constraint. A new nav item for three toggles
+and a sender table would be the single-purpose-screen mistake §1 and §7 both argue against; this
+fits the master/detail Guardrails already has, with zero new plumbing.
+
+**What it deliberately doesn't do.** It doesn't re-litigate consent — "no valid consent on file" is
+already a locked Suppression rule, and it applies the same way regardless of channel. Channels
+governs the medium and the identity behind it, not who's allowed to be contacted at all.
+
 ## 10. Levers are configured objects, not labels
 
 **Decision.** Each lifecycle stage carries an ordered list of levers, and each lever is an object

@@ -2255,6 +2255,19 @@ const GR_CATS=[
            ["Weekend window start","10:00"],["Weekend window end","18:00"]],
    toggles:[["Use the shopper's local timezone","",true],["Pause on public holidays","",true],
             ["Let the engine pick the exact hour","Inside your window, from when this shopper usually replies.",true]]},
+  {k:"channels",n:"Channels",d:"Where a message goes, and what it's allowed to do there",c:"var(--blue-100)",
+   sum:"RCS is richer but not everyone can receive it, so the engine falls back automatically. Email doesn't interrupt the way a text does, and it plays by its own rules below.",
+   toggles:[
+     ["SMS","Text-only. Works everywhere and is the fallback for both other channels.",true,true],
+     ["RCS","Rich media, buttons and read receipts, where the carrier and device support it.",true],
+     ["Email","Best for longer or receipt-style sends — a different medium, not a shorter SMS.",true],
+     ["Exempt Email from quiet hours","An inbox doesn't buzz in someone's pocket the way a text does — let Email send on the engine's normal schedule instead of waiting for the SMS/RCS window above.",false],
+     ["Always include an unsubscribe link in Email","Legal requirement, separate from the SMS/RCS opt-out line in Content.",true,true]],
+   select:["Fallback order when a shopper can receive more than one","Tries the first channel; only moves down the list if it can't be delivered.",
+           ["RCS → SMS → Email","SMS → RCS → Email","Email → SMS → RCS"]],
+   senders:[["SMS","AlpineSupply · short code 78-2001","Verified","tag-green"],
+            ["RCS","Alpine Supply Co. · verified brand agent","Verified","tag-green"],
+            ["Email","hello@alpinesupply.example.com","Domain verification pending","tag-orange"]]},
   {k:"suppression",n:"Suppression",d:"Don't message them right now",c:"var(--orange-300)",
    sum:"About timing, not about people. Checked before any decision — the locked ones can't be turned off.",
    list:"suppression"},
@@ -2350,6 +2363,14 @@ function renderGuardrails(){
       <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">${c.select[0]}</span>
         <span class="t-sm sec">${c.select[1]}</span></div>
       <select class="selectEl auto">${c.select[2].map(o=>`<option>${o}</option>`).join("")}</select></div>`;
+
+  if(c.senders) body+=`<div class="sepH"></div>
+    <div class="field"><span class="label">Sender identity</span></div>
+    <div class="card" style="overflow:hidden"><table class="inner">
+      <thead><tr><th>Channel</th><th>Sends as</th><th style="width:180px">Status</th></tr></thead>
+      <tbody>${c.senders.map(s=>`<tr><td class="t-md med">${s[0]}</td><td class="t-sm sec">${s[1]}</td>
+        <td><span class="tag ${s[3]}">${s[2]}</span></td></tr>`).join("")}</tbody>
+    </table></div>`;
 
   if(c.list==="suppression") body+=`<div class="col gap-sm" id="suppressionList"></div>`;
   if(c.list==="exclusions") body+=`
