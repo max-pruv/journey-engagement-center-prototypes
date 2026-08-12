@@ -67,6 +67,34 @@ because they are the four a merchant actually argues about.
 personalisation on one domain without touching the rest of the account. Same one-instruction rule
 as everywhere else.
 
+## 3b. Two layers: a domain, and the plays underneath it
+
+**Decision.** A domain is not a black box. Expand one and you see the **plays** it runs —
+*Consideration & browse* holds Cart abandonment, Session abandonment, Browse abandonment and
+Welcome; *Subscriptions* holds renewal, card expiring, payment failed and the pause-save. Every
+play shows its own reach, GMV, conversion and opt-out, the trigger the engine uses, and its own
+instruction badged `Default` or `Customized`.
+
+**What it replaced.** A flat list of pre-built "standard" engagements sitting in the second tab
+next to the merchant's own, each with its own on/off switch. That list was the scenario library
+§1 says ACE isn't — it just wasn't labelled as one. A merchant switching *Cart abandonment* on and
+*Browse abandonment* off was picking use cases by hand, which is exactly the thing the switch was
+supposed to end.
+
+**The rule that makes the two layers hold: a play has no switch of its own.** It is readable,
+inspectable and individually instructable, but the only dial is still the domain above it. That is
+the whole difference between showing your work and handing back the configuration burden.
+
+**Why show them at all, then.** Because "trust the machine" is not a demo. A merchant asked to turn
+on an autonomous system wants to know what it will actually *do*, and eight one-line domain
+descriptions don't answer that. The plays are the answer, and they're also the honest place to
+report a blocked integration: *Delivery exception* sits under Service recovery with a **Needs
+setup** tag and a modelled figure, so the missing carrier feed has a price on it.
+
+**Every domain number is derived from its plays.** `domTotals()` sums reach and GMV and re-derives
+the rates from the reach they were measured on. No hand-written totals, the same rule Reporting
+follows — so a domain row and the rows underneath it can never disagree.
+
 ## 4. One instruction per unit, and it is a skill
 
 **Decision.** Every engagement and every domain carries exactly **one** instruction. It is a skill
@@ -83,19 +111,35 @@ model defensible in a demo, and it is shown literally in the live test (§6).
 
 ## 5. Naming: AI engagement / Custom engagement
 
-**Decision.** The two tabs inside Engagements are **AI engagement** and **Custom engagement**. The
-column that says who built a scenario is **Built by**, with values `Default` (pre-built) and
-`Custom` (written by the merchant).
+**Decision.** The two tabs inside Engagements are **AI engagement** and **Custom engagement**.
+The second tab is now *only* what the merchant wrote — five things, not eighteen.
 
-**What it replaced.** "Scenarios you own", which implied the merchant owns only half of this. They
-own all of it. The name made the AI half feel like someone else's.
+**What it replaced.** Twice. First "Scenarios you own", which implied the merchant owns only half
+of this; they own all of it. Then a mixed list with a **Built by** column reading `Default` or
+`Custom`. That column was the tell: if a table needs a column to say who authored each row, the
+table is holding two different kinds of object. The pre-built ones went where they belonged —
+inside a domain, as plays (§3b) — and the column disappeared with them.
+
+**Consequence.** The tab has one nature again: things you wrote, that you can retime and switch
+off. Nothing in it is "yours by default".
 
 ## 6. Opening an engagement opens a studio, not a summary
 
-**Decision.** Clicking an engagement (or its Test button, or a domain's instruction) opens a wide
-two-column panel: the skill on the left, a **live testable conversation** on the right. You pick a
-shopper, run it, then reply *as the shopper* and watch what comes back — with the reasoning shown
-under the thread.
+**Decision.** Clicking an engagement (or its Edit button, or a domain or play instruction) opens a
+wide two-column panel: on the left **when it fires** then **what it says**, on the right a **live
+testable conversation**. You pick a shopper, run it, then reply *as the shopper* and watch what
+comes back — with the reasoning shown under the thread.
+
+**When and What, in that order, and the When half is the tell.** For a custom engagement you set
+the trigger: the event, the wait, and an "only if" condition, with a read-back sentence underneath
+that says the whole thing in English and reminds you the timing guardrails still sit on top. For a
+**play**, the same block is present but stated rather than editable — *Set by the engine* — with a
+line saying to turn the domain off if you don't want it running. For a **domain instruction**,
+there is no trigger at all: "There's nothing to set. ACE watches for the moment across this whole
+domain and picks the hour per shopper."
+
+Three variants of one panel, and reading them in sequence is the fastest way to understand who owns
+timing at each level. That is why the When block exists even where it has nothing to edit.
 
 **What it replaced.** "What it produced last time" — a static transcript. It told you nothing you
 could act on and couldn't be interrogated.
@@ -121,7 +165,9 @@ arbitrary buckets. That's a filter wearing a tab's clothing — and it's why Cus
 different from Default for no reason.
 
 **Why two are right.** They separate two natures of work: a switch you trust, and a list you
-maintain. That is a real boundary.
+maintain. That is a real boundary — and it only became a clean one once the pre-built engagements
+moved out of the list and into the switch (§3b). Before that, the "list you maintain" contained
+thirteen things nobody had written and four they had.
 
 **The condition.** A mode this important cannot be hidden behind tab selection, so its state lives
 in the strip and is readable from either tab.
@@ -216,8 +262,10 @@ Use these consistently; several of them were chosen against a worse alternative.
 | --- | --- | --- |
 | **Engagement** | Anything that reaches out to a shopper | "flow", "journey" |
 | **AI engagement / ACE** | The autonomous mode | "AI-found engagements", a list of scenarios |
-| **Custom engagement** | The scenarios the merchant defines | "scenarios you own" |
-| **Domain** | The bound on what ACE may work on | "category", "use case" |
+| **Custom engagement** | The engagements the merchant writes, and the only ones with a trigger they own | "scenarios you own", "standard engagement" |
+| **Domain** | The bound on what ACE may work on — the only dial | "category", "use case" |
+| **Play** | One thing ACE does inside a domain. Readable, instructable, **not** switchable | "standard engagement", "sub-domain", "scenario" |
+| **When / What** | The two halves of an engagement: the trigger, then the instruction | "conditions and content" |
 | **Instruction** | The single skill attached to a unit | "prompt", "instruction stack" |
 | **Guardrail** | A hard limit no instruction can unlock | "setting" |
 | **Suppression** | Don't message them *now* | exclusion |

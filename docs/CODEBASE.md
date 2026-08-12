@@ -25,7 +25,7 @@ Each is a `<section class="page">`; `goto(page)` unhides one and hides the rest.
 | --- | --- | --- |
 | `page-overview` | Reporting | `renderReport` → `renderTiles`, `renderRevTable`, `stackedBars`/`lines`/`hBars`; plus `renderBench` |
 | `page-opportunities` | Opportunities | `renderOpportunities` → `renderOpportunityDetail`; actions route into campaigns, guardrails, ACE domains, lifecycle and loyalty |
-| `page-engagements` | Engagements | `renderAce` (AI tab), `renderEng` (Custom tab) |
+| `page-engagements` | Engagements | `renderAce` (AI tab — domains **and** their plays), `renderEng` (Custom tab) |
 | `page-campaigns` | Campaigns | `renderCampaigns` |
 | `page-campaign-new` | (via Create) | `resetWizard` → `askTurn`/`campAnswer` drive a linear script (`WIZARD`), rendering `renderRules`/`renderVariants` inline as cards |
 | `page-guardrails` | Guardrails | `renderGuardrails` (master/detail over `GR_CATS`) → `renderSuppression`, `renderExclusions` |
@@ -43,8 +43,10 @@ Change these, not the markup, when you want different content.
 
 | Const | Drives |
 | --- | --- |
-| `ENG` | The Custom engagement table. `s` is `Default` or `Custom`, `ins` is `Default` or `Customized`, `st` is `on`/`off`/`setup` |
-| `ACE_DOMAINS` | The domain table. Real metrics (`reach`, `gmv`, `cvr`, `opt`) **and** the modelled ones used when the domain is off (`potReach`, `potGmv`, `potCvr`, `potOpt`) |
+| `ENG` | The Custom engagement table — **merchant-written only**. `when` is `{ev, delay, cond}` (indexes into `WHEN_EVENTS` / `WHEN_DELAYS`, plus a free-text condition), `ins` is `Default` or `Customized`, `st` is `on`/`off` |
+| `WHEN_EVENTS` / `WHEN_DELAYS` | The trigger vocabulary the When block edits |
+| `ACE_DOMAINS` | The two-layer domain table. A domain carries `on`, `ins` and a `plays` array; **it carries no metrics of its own** — see below |
+| `ACE_DOMAINS[i].plays[j]` | One play. Real metrics (`reach`, `gmv`, `cvr`, `opt`) and/or the modelled ones (`potReach`, `potGmv`, `potCvr`, `potOpt`); `trg` is the trigger phrase, `ins` the badge, `st:"setup"` + `note` marks one blocked on an integration |
 | `ACE_MODES` | The three mode cards. `sum` is the headline, `brief` the one-liner on the card, `det`/`see`/`who` fill the Learn more panel |
 | `ACE_CHAIN` | The six agent steps, shown inside Learn more |
 | `CONV` | The conversations inbox. `why` is the plain-language reason, `reason` the key/value reasoning rows, `thread` the messages, `stop` the guardrail that blocked it |
@@ -56,13 +58,51 @@ Change these, not the markup, when you want different content.
 | `TIERS`, `EARN`, `REWARDS` | Loyalty. Tiers carry structured `cond` rows so the editor opens populated |
 | `PRODUCT_OPPORTUNITIES` | Horizontal, account-pattern recommendations for Guardrails, Lifecycle and Loyalty; each opens an evidence and action panel |
 | `OPPORTUNITIES` | The cross-product conversational opportunity inbox, including evidence, impact, proposal fields and action routing |
-| `DIMS` | The reporting dimensions. Each member carries a weekly base, a growth rate and **its own rates** — every number on the page is derived from those, so no two figures can disagree |
+| `DIMS` | The reporting dimensions. Each member carries a weekly base, a growth rate and **its own rates** — every number on the page is derived from those, so no two figures can disagree. `source` is ACE / Custom / Campaign; ACE absorbed the old `Default` volume when the standard engagements became plays |
 | `METRICS` | The ten outbound metrics, each with a kind (`count` / `money` / `rate`) and a direction |
 | `GR_CATS` | The seven guardrail categories driving the master/detail |
 | `WEEKS`, `BENCH` | The 12-week axis and the benchmark rows |
 | `CAMPAIGNS`, `CAMP_METRICS`, `VARIANTS`, `RULES`, `WIZ`, `WIZ_CHECKS` | Campaigns list, selectable performance columns and the wizard |
 | `SIM_SHOPPERS` | The shoppers you can run a live test against |
 | `PREV_*` | Word pools for `genPreview(n)`, the pre-launch campaign preview |
+
+## The two-layer domain table
+
+`ACE_DOMAINS` holds no metrics. Every figure on a domain row is folded from its plays, so the row
+and the rows under it cannot drift apart:
+
+- `playReal(p)` / `playPot(p)` — one play's measured and modelled numbers. `playPot` falls back to
+  the real ones, so an active play only needs `potX` fields where they differ.
+- `playLive(d,p,aceOn)` — is this play actually running? False if ACE is off, the domain is off, or
+  the play is `st:"setup"`.
+- `fold(rows)` — sums reach and GMV and **re-derives** cvr and opt from the reach they were measured
+  on. Never an average of averages.
+- `domTotals(d,aceOn)` — the live fold, or `null` when nothing under the domain is running.
+- `domPotential(d)` — the fold of every play's modelled numbers, including the blocked ones. This is
+  what the italics show, and what the "GMV left on the table" tag sums.
+
+`aceOpen` is a `Set` of expanded domain indexes; it starts full, because the two layers are the
+point of the screen. `data-domopen` toggles one, `#aceExpandAll` toggles all.
+
+**A play deliberately has no toggle.** If you are tempted to add one, read §3b of PRODUCT.md first —
+that switch is the thing the restructure removed.
+
+`updateNavCount()` sets the Engagements nav badge from *both* layers: live plays plus custom
+engagements that are on. It is called by `renderAce` and `renderEng`, so either one keeps it honest.
+
+## The studio's When block
+
+`openStudio(ctx)` renders `whenBlock(ctx)` above the instruction. Three shapes, driven by `ctx.when`:
+
+| `ctx.when` | Shape | Used by |
+| --- | --- | --- |
+| absent | "There's nothing to set" — the engine owns timing | `studioForDomain` |
+| `{mode:"read", line, domain}` | The trigger, stated, tagged *Set by the engine* | `studioForPlay` |
+| `{mode:"edit", ev, delay, cond}` | Two selects and a condition, with a live read-back | `studioForEng`, `studioForNew` |
+
+`whenReadback()` rebuilds the English sentence on every change; it is wired in `openStudio` only when
+the block is editable. `ctx.nl` adds the describe-and-interpret box on top, which is the old
+`NEW_BODY` panel folded into the studio — the dead end CODEBASE.md used to warn about is gone.
 
 ## The reporting engine
 
@@ -179,6 +219,7 @@ can see the shape and tone of a send before committing.
 
 ## Known dead ends
 
-`NEW_BODY` and `TEST_BODY` are template strings for the "New engagement" panel and the page-level
-Test buttons. They predate the studio and overlap with it. If you touch that area, consider folding
-the New engagement flow into a studio variant rather than keeping two shapes.
+`TEST_BODY` is a template string for the page-level Test buttons (`data-act^="test"`, currently only
+the Lifecycle stage tester). It predates the studio and overlaps with it. `NEW_BODY` was the other
+half of that pair and is gone — "New engagement" now opens `studioForNew()`, so creating and editing
+a custom engagement are the same panel. `TEST_BODY` could go the same way.

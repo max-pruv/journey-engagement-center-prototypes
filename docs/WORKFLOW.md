@@ -27,13 +27,16 @@ render function in isolation and reports which one breaks:
 const n=s=>document.querySelectorAll(s).length;
 out._dom={tiles:n('#repTiles .tile'),chart:n('#repChart svg'),rev:n('#revTable tbody tr'),
  grList:n('#grList .lcItem'),grDetail:n('#grDetail .card'),lc:n('#lcList .lcItem'),
- levers:n('#lcDetail .lever'),modes:n('.modeBig'),dom:n('#aceDomainTable tbody tr'),
+ levers:n('#lcDetail .lever'),modes:n('.modeBig'),
+ domRows:n('#aceDomainTable tbody tr.domRow'),playRows:n('#aceDomainTable tbody tr.playRow'),
  conv:n('#convItems .convItem'),tiers:n('#tierTable tbody tr'),eng:n('#engTable tbody tr')};
 return JSON.stringify(out)})()
 ```
 
 Every key must be `ok` and every `_dom` count must be greater than zero. Anything else means a
-screen is blank.
+screen is blank. `playRows` at zero while `domRows` is 8 is the specific failure of a collapsed
+`aceOpen` — the probe runs against a fresh load, where every domain starts expanded, so it should
+read 8 and 26.
 
 ## Check the JS parses before you look at anything
 
@@ -97,6 +100,21 @@ return JSON.stringify({errors:errs.length, first:errs[0]||null, totalsAgree:Math
 revenue table are still two projections of the same primitives rather than two hand-maintained
 datasets that have drifted apart.
 
+## Checking the two layers still agree
+
+`ACE_DOMAINS` carries no metrics — every domain figure is folded from its plays. If you edit a play's
+numbers, nothing else needs editing, but it is worth confirming the fold still behaves:
+
+```js
+(()=>ACE_DOMAINS.map(d=>{const t=domTotals(d,true),p=domPotential(d);
+  const sum=d.plays.filter(x=>x.st!=="setup").reduce((a,x)=>a+(x.reach||0),0);
+  return {n:d.n, foldedReach:t?Math.round(t.reach):null, handSum:d.on?sum:null,
+          agree:!d.on||Math.round(t.reach)===sum, pot:Math.round(p.gmv)}}))()
+```
+
+`agree` must be true on every row. A play with `st:"setup"` is excluded from the live fold but stays
+in the potential — that is deliberate, it is how a blocked integration gets a price tag.
+
 ## Changing a chart colour
 
 Re-run the dataviz validator; the current four-colour set passes all six checks on all pairs and
@@ -140,8 +158,9 @@ done
 2. Force-reload from disk
 3. The isolation probe — all `ok`, all counts non-zero
 4. Sweep the reporting surface (above)
-5. Click the thing you changed, plus the studio, the Guardrails category list and the Lifecycle
-   stage detail — the four most fragile
+5. Click the thing you changed, plus all three studio shapes (a domain instruction, a play, a custom
+   engagement — they render different When blocks), the Guardrails category list and the Lifecycle
+   stage detail
 6. Push, then confirm live == local
 
 ## A note on scope

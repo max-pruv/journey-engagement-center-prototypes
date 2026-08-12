@@ -9,10 +9,17 @@ by how much they'd change if answered differently.
 land on Custom you never discover the domains or the mode education. For daily operation the Custom
 tab is the one you'd want. One-line change in `selectTab`'s default.
 
-**Does "Custom engagement" as a tab name collide with "Custom" as a Built-by value?** It does,
-slightly: a tab called Custom engagement contains rows built by `Default`. The alternative is
-renaming the badge values to `Gorgias` / `You`, which reads better but abandons the vocabulary in the
-strategy docs. Left as-is deliberately; it's two string replacements either way.
+**Should a play be individually switchable after all?** The prototype says no, hard: the dial is the
+domain, and a play with its own toggle is the scenario library coming back through the side door. But
+a merchant who wants *Cart abandonment* and not *Welcome* now has to decline the whole
+Consideration & browse domain. The honest answers are either "that's the trade, bound it at the
+domain" or "domains are too coarse and there should be more of them". Adding per-play toggles is the
+answer that feels helpful and quietly undoes the restructure — see PRODUCT.md §3b before reaching for
+it.
+
+**Are eight domains the right granularity now that the plays are visible?** Consideration & browse
+carries four quite different plays; Loyalty moments carries three near-identical ones. Splitting or
+merging domains is cheap in the data and is probably the real answer to the question above.
 
 **Is "What we're willing to give" right as a dropdown?** The tone field became a prefilled textarea;
 this one stayed a closed list, because it's the field the guardrails have to be able to bound. If it
@@ -52,8 +59,12 @@ trigger.
   so rather than faking it.
 - **Reject** in Conversations does not mutate state yet. Approve & send now moves the message to Live and updates the pending counts.
 - **Dark mode.** Tokens exist for it in Axiom; the prototype only implements light.
-- The `NEW_BODY` "New engagement" flow and the studio are two shapes for overlapping jobs. Folding
-  the former into a studio variant would remove a concept.
+- **Save is decorative everywhere except the custom-engagement studio.** That one does write back:
+  editing a trigger or instruction and pressing Save updates `ENG[i]` and re-renders the table, and
+  "New engagement" appends a real row. A play's instruction and a domain's do not persist, and
+  neither does anything in Guardrails, Lifecycle or Loyalty.
+- **`TEST_BODY`** is the last panel that predates the studio, now reached only from the Lifecycle
+  stage tester. `NEW_BODY` was folded into `studioForNew()`; this one could go the same way.
 
 ## Data-model questions the UI is quietly asserting
 
@@ -66,6 +77,14 @@ belongs to engineering:
   not just a filter on the agent's remit.
 - Exclusions are evaluated as *audience* membership, separately from suppression as *timing*. Those
   are two different joins and probably two different services.
-- The `Built by` distinction (`Default` / `Custom`) survives after a merchant edits a pre-built
-  engagement's instruction — you can be `Default`-built with a `Customized` instruction. That's the
-  right model but it's two independent flags, not one.
+- A play carries its own instruction *and* sits under a domain that carries one. The UI says the play
+  instruction is the specific one and the domain instruction covers everything underneath, but it
+  never shows them resolved together — which is deliberate (PRODUCT.md §4 killed the "resolved
+  instruction set" preview), and also means the precedence is asserted rather than demonstrated.
+- A play is identified by its position (`domainIndex.playIndex` in `data-playinstr`). Real plays need
+  stable ids, because a merchant's customized instruction has to survive Gorgias reordering or
+  inserting plays in a domain.
+- Reporting's `source` dimension now reads ACE / Custom / Campaign, with ACE carrying the volume the
+  standard engagements used to report under `Default`. That is the right model — those sends *are*
+  ACE now — but it means historical reporting spans a definition change, which someone has to decide
+  how to present.
