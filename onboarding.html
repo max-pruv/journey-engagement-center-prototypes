@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Set up your Engagement Center — AI Journey</title>
+<title>Set up your Engagement Center — Engage</title>
 <style>
 :root{
   --white:#ffffff; --black:#1e242e;
@@ -84,7 +84,14 @@ a{color:var(--content-accent-default)}
   color:var(--content-neutral-secondary)}
 .chip:hover{background:var(--surface-accent-default);border-color:var(--purple-200);color:var(--content-accent-default)}
 .chip.on{background:var(--black);color:var(--white);border-color:var(--black)}
+.chip.recommended{border-color:var(--purple-200);background:var(--surface-accent-default);color:var(--content-accent-default)}
+.chip.recommended:hover{border-color:var(--purple-500)}
+.recMark{display:inline-flex;align-items:center;gap:var(--xxxs);font-size:11px;font-weight:600;color:var(--purple-800)}
+.inferred{border-color:var(--purple-200);background:linear-gradient(140deg,var(--purple-50),var(--white) 72%)}
 .inputRow{display:flex;gap:var(--xs);align-items:flex-end}
+.voiceBtn{width:40px;height:40px;border:1px solid var(--border-neutral-default);border-radius:var(--xs);
+  background:var(--white);display:grid;place-items:center;flex-shrink:0;color:var(--content-neutral-secondary)}
+.voiceBtn:hover,.voiceBtn.listening{background:var(--surface-accent-default);color:var(--content-accent-default);border-color:var(--purple-200)}
 .ta{flex:1;border:1px solid var(--border-neutral-default);border-radius:var(--xs);padding:10px 12px;
   font-size:14px;min-height:44px;max-height:140px;resize:none;line-height:1.5;background:var(--white)}
 .ta:focus{outline:2px solid var(--purple-200);border-color:var(--purple-500)}
@@ -117,6 +124,30 @@ a{color:var(--content-accent-default)}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--xs)}
 .kv{display:flex;flex-direction:column;gap:1px}
 .kv .k{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--content-neutral-tertiary)}
+
+/* ACE education */
+.aceLesson{padding:0;overflow:hidden;border-color:var(--purple-200)}
+.aceLessonHead{padding:var(--md);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sm)}
+.videoStage{background:var(--black);color:var(--white);padding:var(--md);min-height:230px;display:flex;flex-direction:column;gap:var(--md)}
+.videoScene{display:flex;flex-direction:column;gap:var(--sm);flex:1}
+.videoKicker{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--purple-200)}
+.aceChain{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--xs)}
+.aceNode{min-width:0;padding:var(--xs);border:1px solid var(--grey-600);border-radius:var(--xs);opacity:.5;
+  display:flex;align-items:center;gap:var(--xxs);transition:transform .25s cubic-bezier(.9,0,0,1),opacity .25s cubic-bezier(.9,0,0,1),border-color .25s cubic-bezier(.9,0,0,1)}
+.aceNode.active{opacity:1;border-color:var(--purple-300);transform:translateY(-2px);background:var(--purple-800)}
+.aceNode.done{opacity:1;border-color:var(--green-500)}
+.aceNodeN{width:20px;height:20px;border-radius:50%;background:var(--grey-600);display:grid;place-items:center;flex-shrink:0;font-size:11px;font-weight:600}
+.aceNode.active .aceNodeN{background:var(--purple-500)}.aceNode.done .aceNodeN{background:var(--green-500)}
+.videoControls{display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:var(--xs)}
+.videoPlay{width:32px;height:32px;border-radius:50%;background:var(--white);color:var(--black);display:grid;place-items:center}
+.videoProgress{height:4px;background:var(--grey-600);border-radius:2px;overflow:hidden}
+.videoProgress span{display:block;width:0;height:100%;background:var(--purple-300);transition:width .25s linear}
+.videoTime{font-size:11px;color:var(--grey-300);font-variant-numeric:tabular-nums}
+.modeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--xs);padding:var(--md)}
+.modeCard{padding:var(--sm);border:1px solid var(--border-neutral-default);border-radius:var(--xs);display:flex;flex-direction:column;gap:var(--xxxs)}
+.modeCard.recommended{border-color:var(--purple-200);background:var(--surface-accent-default)}
+@media(max-width:720px){.aceChain,.modeGrid{grid-template-columns:1fr}.videoStage{min-height:0}}
+@media(prefers-reduced-motion:reduce){.aceNode,.videoProgress span{transition:none}}
 </style>
 </head>
 <body>
@@ -126,7 +157,7 @@ a{color:var(--content-accent-default)}
       <div class="logo">G</div>
       <div class="col gap-xxxs" style="flex:1;min-width:0">
         <span class="med">Set up your Engagement Center</span>
-        <span class="t-xs ter" id="stepLabel">Step 1 of 7 · Your store</span>
+        <span class="t-xs ter" id="stepLabel">Reading your connected store…</span>
       </div>
       <div class="progress"><span id="bar" style="width:7%"></span></div>
       <button class="btn btn-secondary sm" id="skip">Skip setup</button>
@@ -137,7 +168,10 @@ a{color:var(--content-accent-default)}
     <div class="compose" id="compose">
       <div class="chips" id="chips"></div>
       <div class="inputRow">
-        <textarea class="ta" id="say" rows="1" placeholder="Type your answer…"></textarea>
+        <textarea class="ta" id="say" rows="1" placeholder="Type or speak your answer…"></textarea>
+        <button class="voiceBtn" id="voice" title="Answer by voice" aria-label="Answer by voice">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="3" width="8" height="12" rx="4"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg>
+        </button>
         <button class="btn btn-ai" id="send">Send</button>
       </div>
       <span class="t-xs ter" id="hint"></span>
@@ -158,34 +192,74 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.quer
 const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!=null)n.innerHTML=h;return n};
 const SPARK=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>`;
 
+const STORE_PROFILE={label:"Store profile",sum:"Technical outdoor apparel · seasonal, fit-sensitive"};
+function storeProfileCard(){return `<div class="card inferred">
+  <div class="row between wrap gap-xs" style="margin-bottom:var(--xs)">
+    <div class="col gap-xxxs"><span class="h-md">What I already understand</span>
+      <span class="t-sm sec">Inferred from your catalogue, orders and support conversations.</span></div>
+    <span class="tag tag-purple">AI inferred</span>
+  </div>
+  <div class="grid2">
+    ${[["Business","Technical outdoor apparel"],["Core products","Hardshells, mid-layers, tights"],
+       ["Buying pattern","Considered purchases for a specific trip"],["Seasonality","Cold-weather peaks and seasonal returns"],
+       ["Main friction","Fit, sizing and product compatibility"],["Best first lever","Expert help before discounts"]]
+      .map(x=>`<div class="kv"><span class="k">${x[0]}</span><span class="t-sm med">${x[1]}</span></div>`).join("")}
+  </div>
+  <div class="row gap-xs wrap" style="margin-top:var(--sm)">
+    <span class="tag tag-green"><span class="dot" style="background:var(--green-500)"></span>Shopify connected</span>
+    <span class="tag tag-green"><span class="dot" style="background:var(--green-500)"></span>Gorgias connected</span>
+    <span class="tag tag-grey">18 months analysed</span>
+  </div>
+  <p class="t-sm ter" style="margin-top:var(--xs)">You can correct any of this later. I won't ask you to repeat information your systems already contain.</p>
+</div>`}
+
+function aceEducation(){
+  const chain=[["Observe","Orders, tickets, catalogue"],["Find the moment","A useful reason to talk"],
+    ["Decide","Who, when and why"],["Write","One-to-one conversation"],
+    ["Check","Consent and guardrails"],["Send or wait","Based on your mode"]];
+  return `<div class="card aceLesson" id="aceLesson">
+    <div class="aceLessonHead">
+      <div class="col gap-xxxs"><span class="h-md">How ACE works</span>
+        <span class="t-sm sec">A decision engine, not a campaign generator.</span></div>
+      <span class="tag tag-purple">1:12 overview</span>
+    </div>
+    <div class="videoStage">
+      <div class="videoScene">
+        <span class="videoKicker">A real decision, end to end</span>
+        <span class="h-md" id="aceVideoTitle">See how ACE turns a signal into a safe conversation.</span>
+        <div class="aceChain">
+          ${chain.map((x,i)=>`<div class="aceNode" data-ace-node="${i}"><span class="aceNodeN">${i+1}</span>
+            <div class="col gap-xxxs" style="min-width:0"><span class="t-sm med">${x[0]}</span><span class="t-xs" style="color:var(--grey-300)">${x[1]}</span></div></div>`).join("")}
+        </div>
+      </div>
+      <div class="videoControls">
+        <button class="videoPlay" data-ace-video aria-label="Play ACE overview" title="Play ACE overview">
+          <svg data-ace-video-icon width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2.2v11.6L13 8z"/></svg>
+        </button>
+        <div class="videoProgress" aria-hidden="true"><span id="aceVideoProgress"></span></div>
+        <span class="videoTime" id="aceVideoTime">0:00 / 1:12</span>
+      </div>
+    </div>
+    <div class="modeGrid">
+      <div class="modeCard recommended"><div class="row between gap-xxs"><span class="t-sm bold">Manual</span><span class="tag tag-purple">Recommended</span></div>
+        <span class="t-xs sec">ACE does all six steps, then the message waits in Conversations for approval.</span></div>
+      <div class="modeCard"><span class="t-sm bold">Automatic</span>
+        <span class="t-xs sec">ACE sends after every guardrail passes. The reasoning remains visible and auditable.</span></div>
+      <div class="modeCard"><span class="t-sm bold">Off</span>
+        <span class="t-xs sec">ACE does not look for opportunities or prepare conversations.</span></div>
+    </div>
+  </div>`;
+}
+
 /* Each step asks one thing. `card` is what the assistant shows after you answer —
    the read-back that makes the answer concrete. */
 const STEPS=[
-  {k:"store", label:"Your store",
-   ask:"Let's set this up together. I've already connected to your Shopify and your Gorgias inbox — that's 18 months of orders, 41,000 shoppers and 12,400 support conversations to work from.<br><br>Before anything else: what do you actually sell, in your words?",
-   hint:"One sentence is plenty. It shapes how every message reads.",
-   chips:["Technical outdoor apparel","Skincare and supplements","Home and furniture","Bikes and accessories"],
-   answer:"Technical outdoor apparel — hardshells, mid-layers, tights. People buy for a specific trip and come back seasonally.",
-   ack:"That helps. Seasonal, considered purchases with a real fit question attached — so sizing help is going to be worth more than discounts here.",
-   card:()=>`<div class="card"><div class="row between wrap gap-xs" style="margin-bottom:var(--xs)">
-       <span class="h-md">Connected</span><span class="tag tag-green"><span class="dot" style="background:var(--green-500)"></span>Live</span></div>
-     <div class="grid2">
-       ${[["Shopify","Orders, carts, subscriptions"],["Gorgias","Tickets, CSAT, returns"],
-          ["Consent","Opt-in and opt-out state"],["Timers","Derived lifecycle events"]]
-         .map(x=>`<div class="kv"><span class="k">${x[0]}</span><span class="t-sm sec">${x[1]}</span></div>`).join("")}
-     </div>
-     <div class="row gap-xs wrap" style="margin-top:var(--sm)">
-       <span class="tag tag-grey">3PL — not connected</span><span class="tag tag-grey">Ads — not connected</span>
-     </div>
-     <p class="t-sm ter" style="margin-top:var(--xs)">Those two are gaps, not errors. Delivery events are the highest-value one to add later.</p></div>`,
-   sum:["Store","Technical outdoor apparel · seasonal, fit-sensitive"]},
-
   {k:"voice", label:"Brand voice",
-   ask:"How should we sound when we message a shopper? Write it the way you'd brief a new hire on their first day.",
-   hint:"This becomes the brand instruction underneath every message.",
-   chips:["Warm and direct, never pushy","Expert and precise","Playful and informal"],
+   ask:"I've analysed 12,400 support conversations and drafted the voice below. The strongest pattern is warm, direct expertise: your best agents solve the problem before they sell.<br><br>Which direction should I use as the starting point?",
+   hint:"Recommended from your highest-CSAT conversations. This becomes the instruction underneath every message.",
+   chips:["Use the detected voice","Make it more expert and precise","Make it more playful and informal"],recommended:0,
    answer:"Warm and direct, never pushy. We use \"we\", British spelling, and we never oversell. If someone has a problem, we fix it before we sell anything.",
-   ack:"Noted. I'll also hold you to the last part — if a shopper raises a problem mid-conversation, the agent stops selling and hands off.",
+   ack:"I'll use the detected voice. If a shopper raises a problem mid-conversation, the agent stops selling and hands off — that behaviour came through consistently in your best conversations.",
    card:()=>`<div class="card"><span class="h-md">Brand instruction</span>
      <p class="t-sm sec" style="margin:var(--xxs) 0 var(--sm)">Applied to every message, from every source.</p>
      <div class="col gap-xxs">
@@ -197,8 +271,8 @@ const STEPS=[
 
   {k:"lifecycle", label:"Lifecycle",
    ask:"I've read your order history and worked out what your customer journey actually looks like. Have a look — does this match how you think about your customers?",
-   hint:"You can rename a stage or change a threshold at any time.",
-   chips:["That's right","Merge Repeat and VIP","Our VIP bar is higher"],
+   hint:"Recommended because these seven stages explain 94% of the repeat-purchase patterns in your data.",
+   chips:["Use the computed lifecycle","Merge Repeat and VIP","Our VIP bar is higher"],recommended:0,
    answer:"That's right — though our VIP bar feels a bit low. Make it 5 orders, not 4.",
    ack:"Done, VIP starts at 5 orders. One thing worth knowing: your median time to a second order is 62 days, and nothing you run today touches days 48 to 58. That's the biggest gap in your lifecycle.",
    card:()=>`<div class="card"><span class="h-md">Your lifecycle, computed</span>
@@ -217,8 +291,8 @@ const STEPS=[
 
   {k:"guardrails", label:"Guardrails",
    ask:"Now the limits. These are hard — no instruction can talk its way past them. Three questions:<br><br>How often is too often, when should we stay quiet, and how much are you willing to discount?",
-   hint:"I've pre-filled what works for most merchants your size.",
-   chips:["Those defaults are fine","Tighter — 2 a week","No discounts at all"],
+   hint:"Recommended from your current opt-out rate, order cadence and the safest peer benchmark.",
+   chips:["Use the recommended limits","Tighter — 2 a week","No discounts at all"],recommended:0,
    answer:"Those defaults are fine, but cap the discount at 10% and never within two weeks of a full-price order.",
    ack:"Set. And because discount is expensive, I'll reach for cheaper levers first — answering the objection, then early access, then points, then free shipping. Discount is last.",
    card:()=>`<div class="card"><span class="h-md">Guardrails</span>
@@ -238,8 +312,8 @@ const STEPS=[
 
   {k:"exclusions", label:"Who to leave alone",
    ask:"Separately from timing: is there anyone we should never contact at all?<br><br>I'd suggest anyone who left you a poor review, anyone who rated a support conversation badly, and anyone in an open dispute. Selling to those people costs you more than it earns.",
-   hint:"You can add your own list later, or upload one.",
-   chips:["All three, yes","Add: heavy returners","Just disputes"],
+   hint:"Recommended because these groups have negative expected value and high complaint risk.",
+   chips:["Use all detected exclusions","Add: heavy returners","Just disputes"],recommended:0,
    answer:"All three, yes. And add anyone who's returned more than half of what they bought — that's a fit problem, not a demand problem.",
    ack:"Agreed, and that's a good instinct. That's 4,180 shoppers out of every audience from now on.",
    card:()=>`<div class="card"><span class="h-md">Never contacted</span>
@@ -254,9 +328,9 @@ const STEPS=[
    sum:["Exclusions","4,180 shoppers · bad reviews, low CSAT, disputes"]},
 
   {k:"loyalty", label:"Loyalty",
-   ask:"Do you run a loyalty programme? If you do, I can use points and early access instead of discounts — same generosity, a fraction of the margin.",
-   hint:"If you don't have one, we can skip it and come back.",
-   chips:["Yes, four tiers","Yes, points only","Not yet"],
+   ask:"I found your four-tier loyalty programme — Member, Silver, Gold and Summit — and mapped it to the lifecycle above. Points and early access are cheaper than discounts, and your own results show they work better for at-risk shoppers.<br><br>Should I use loyalty as the first offer lever?",
+   hint:"Recommended because free shipping from points converted better than 10% off last quarter and cost $5.60 less per order.",
+   chips:["Use loyalty before discounts","Use points only","Don't use loyalty yet"],recommended:0,
    answer:"Yes, four tiers — Member, Silver, Gold, Summit.",
    ack:"Good. I've mapped Gold and Summit onto your VIP stage so \"VIP\" means one thing everywhere. On your at-risk shoppers, free shipping from points beat a 10% discount last quarter — cheaper for you and it converted better.",
    card:()=>`<div class="card"><span class="h-md">Loyalty, mapped</span>
@@ -271,9 +345,10 @@ const STEPS=[
    sum:["Loyalty","4 tiers · Gold and Summit map to VIP"]},
 
   {k:"ace", label:"Autonomy",
-   ask:"Last one, and it's the real decision.<br><br>ACE watches your data, finds the moment, decides who should hear from you and writes the message. Everything above bounds it. The only question left is whether it sends on its own, or waits for you.",
-   hint:"Most merchants start on Manual acceptance and move to Automatic within a month.",
-   chips:["Manual acceptance to start","Automatic, I trust it","Off for now"],
+   before:aceEducation,
+   ask:"Now that you've seen the full decision path, choose where ACE should stop.<br><br>In Manual, it still detects, decides, writes and checks everything — it simply waits for you before sending. In Automatic, a message sends as soon as every guardrail passes.",
+   hint:"Recommended for a new setup: inspect the first few dozen decisions, then move to Automatic.",
+   chips:["Manual acceptance to start","Automatic, I trust it","Off for now"],recommended:0,
    answer:"Manual acceptance to start. I want to read a few dozen before I let it send.",
    ack:"Sensible. Everything it prepares lands in Conversations with the full reasoning attached, and nothing goes out until you approve it. Switch to Automatic whenever you've seen enough.",
    card:()=>`<div class="card"><div class="row between wrap gap-xs" style="margin-bottom:var(--xs)">
@@ -296,13 +371,20 @@ function scroll(){thread.scrollTop=thread.scrollHeight}
 function addAsk(html){const t=el("div","turn");
   t.innerHTML=`<span class="av">${SPARK}</span><div class="ask">${html}</div>`;
   thread.appendChild(t);scroll();return t}
+function addAssistantCard(html,wide=false){const t=el("div","turn");
+  t.innerHTML=`<span class="av" style="opacity:0"></span><div style="flex:1;max-width:${wide?"680px":"520px"}">${html}</div>`;
+  thread.appendChild(t);scroll();return t}
 function addSaid(text){const t=el("div","said",text);thread.appendChild(t);scroll();return t}
 function addTyping(){const t=el("div","turn");
   t.innerHTML=`<span class="av">${SPARK}</span><div class="ask"><span class="typing"><i></i><i></i><i></i></span></div>`;
   thread.appendChild(t);scroll();return t}
 
 function renderSummary(){
-  $("#summary").innerHTML=STEPS.map((s,i)=>{
+  $("#summary").innerHTML=`<div class="sum done">
+      <span class="k">${STORE_PROFILE.label}</span>
+      <span class="t-sm med">${STORE_PROFILE.sum}</span>
+      <span class="t-xs" style="color:var(--content-success-default)">Inferred from connected data</span></div>`
+    +STEPS.map((s,i)=>{
     const state=i<step?"done":i===step?"now":"";
     const val=said[s.k]?said[s.k]:(i===step?"Answering now…":"Not set yet");
     return `<div class="sum ${state}">
@@ -313,16 +395,66 @@ function renderSummary(){
 function renderStep(){
   const s=STEPS[step];
   $("#stepLabel").textContent=`Step ${step+1} of ${STEPS.length} · ${s.label}`;
-  $("#bar").style.width=((step)/STEPS.length*100+7)+"%";
-  chips.innerHTML=s.chips.map(c=>`<button class="chip">${c}</button>`).join("");
+  $("#bar").style.width=((step+1)/STEPS.length*100)+"%";
+  chips.innerHTML=s.chips.map((c,i)=>`<button class="chip ${i===s.recommended?"recommended":""}" data-choice="${i}"
+      aria-label="${c}${i===s.recommended?", recommended":""}">
+      ${i===s.recommended?`<span class="recMark" aria-hidden="true">★ Recommended</span>`:""}<span>${c}</span></button>`).join("");
   $$(".chip",chips).forEach(b=>b.addEventListener("click",()=>{
-    $("#say").value = b.textContent===s.chips[0] ? s.answer : b.textContent;
+    const i=+b.dataset.choice;
+    $("#say").value = i===s.recommended ? s.answer : s.chips[i];
     $("#say").focus();
   }));
   $("#hint").textContent=s.hint;
   $("#say").value="";
+  let educationTurn=null;
+  if(s.before){
+    addAsk("Before you choose a level of autonomy, here's the whole ACE decision in 72 seconds.");
+    educationTurn=addAssistantCard(s.before(),true);
+  }
   addAsk(s.ask);
+  if(educationTurn) setTimeout(()=>educationTurn.scrollIntoView({behavior:"smooth",block:"start"}),80);
   renderSummary();
+}
+
+const ACE_TOUR_COPY=[
+  "ACE continuously reads the signals already in your stack.",
+  "It looks for a useful customer moment — not a reason to send more.",
+  "It decides whether this shopper should hear from you, and when.",
+  "It writes a one-to-one conversation from your instructions and context.",
+  "Consent, exclusions, timing, frequency and offers are checked every time.",
+  "The message sends automatically or waits for approval — you choose."
+];
+let aceTourTimer=null,aceTourIndex=-1;
+function aceTourIcon(kind){return kind==="pause"
+  ?`<svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2h4v12H3zM9 2h4v12H9z"/></svg>`
+  :`<svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2.2v11.6L13 8z"/></svg>`}
+function toggleAceTour(btn){
+  if(aceTourTimer){
+    clearInterval(aceTourTimer);aceTourTimer=null;btn.innerHTML=aceTourIcon("play");
+    btn.setAttribute("aria-label","Resume ACE overview");btn.title="Resume ACE overview";return;
+  }
+  if(aceTourIndex>=ACE_TOUR_COPY.length-1){
+    aceTourIndex=-1;
+    $$("[data-ace-node]").forEach(n=>n.classList.remove("active","done"));
+    $("#aceVideoProgress").style.width="0";$("#aceVideoTime").textContent="0:00 / 1:12";
+  }
+  btn.innerHTML=aceTourIcon("pause");btn.setAttribute("aria-label","Pause ACE overview");btn.title="Pause ACE overview";
+  const advance=()=>{
+    aceTourIndex++;
+    const nodes=$$("[data-ace-node]");
+    nodes.forEach((n,i)=>{n.classList.toggle("done",i<aceTourIndex);n.classList.toggle("active",i===aceTourIndex)});
+    $("#aceVideoTitle").textContent=ACE_TOUR_COPY[aceTourIndex];
+    $("#aceVideoProgress").style.width=((aceTourIndex+1)/ACE_TOUR_COPY.length*100)+"%";
+    const seconds=(aceTourIndex+1)*12;
+    $("#aceVideoTime").textContent=`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,"0")} / 1:12`;
+    if(aceTourIndex===ACE_TOUR_COPY.length-1){
+      clearInterval(aceTourTimer);aceTourTimer=null;
+      nodes.forEach(n=>{n.classList.remove("active");n.classList.add("done")});
+      btn.innerHTML=aceTourIcon("play");btn.setAttribute("aria-label","Replay ACE overview");btn.title="Replay ACE overview";
+    }
+  };
+  advance();
+  if(aceTourIndex<ACE_TOUR_COPY.length-1) aceTourTimer=setInterval(advance,800);
 }
 function answer(){
   const v=$("#say").value.trim(); if(!v) return;
@@ -334,9 +466,7 @@ function answer(){
   setTimeout(()=>{
     typing.remove();
     addAsk(s.ack);
-    const card=el("div","turn");
-    card.innerHTML=`<span class="av" style="opacity:0"></span><div style="flex:1;max-width:520px">${s.card()}</div>`;
-    thread.appendChild(card); scroll();
+    addAssistantCard(s.card());
     step++; $("#send").disabled=false;
     renderSummary();
     if(step<STEPS.length) setTimeout(()=>{renderStep();scroll()},550);
@@ -356,6 +486,8 @@ function finish(){
         <span class="h-md">Ready to go</span>
         <p class="t-sm sec" style="margin:var(--xxs) 0 var(--sm)">Nothing has been sent. Everything below is editable.</p>
         <div class="col gap-xxs">
+          <div class="row between"><span class="t-sm sec">${STORE_PROFILE.label}</span>
+            <span class="t-sm med" style="text-align:right;max-width:60%">${STORE_PROFILE.sum}</span></div>
           ${STEPS.map(s=>`<div class="row between"><span class="t-sm sec">${s.label}</span>
             <span class="t-sm med" style="text-align:right;max-width:60%">${s.sum[1]}</span></div>`).join("")}
         </div>
@@ -369,6 +501,15 @@ function finish(){
 }
 
 $("#send").addEventListener("click",answer);
+document.addEventListener("click",e=>{
+  const play=e.target.closest("[data-ace-video]");
+  if(play) toggleAceTour(play);
+});
+$("#voice").addEventListener("click",()=>{
+  const b=$("#voice"), input=$("#say"), s=STEPS[step];
+  b.classList.add("listening");b.title="Listening…";input.placeholder="Listening…";
+  setTimeout(()=>{input.value=s.answer;b.classList.remove("listening");b.title="Answer by voice";input.placeholder="Type or speak your answer…";input.focus()},900);
+});
 $("#say").addEventListener("keydown",e=>{
   if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();answer()}
 });
@@ -378,8 +519,9 @@ $("#say").addEventListener("input",e=>{
 $("#skip").addEventListener("click",()=>location.href="index.html");
 
 addAsk(`Hello — I'm the agent that's going to be talking to your shoppers.<br><br>
-  Before I say a word to anyone, I want to understand your business, agree the limits I work inside, and let you decide my level of autonomy. Seven questions, about four minutes.`);
-setTimeout(renderStep,700);
+  I've already read your Shopify catalogue, 18 months of orders and 12,400 Gorgias conversations. I won't ask you to repeat what your systems already know. I'll show you what I inferred, then ask only for the six decisions that need your judgement — under three minutes.`);
+addAssistantCard(storeProfileCard());
+setTimeout(renderStep,900);
 </script>
 </body>
 </html>

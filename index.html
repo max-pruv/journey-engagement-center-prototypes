@@ -77,16 +77,16 @@ input,textarea,select{font:inherit;color:inherit}
 
 /* shell */
 .app{display:flex;height:100vh;padding:var(--xs)}
-.rail{width:56px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:var(--xxs);padding:var(--xs) 0}
-.railBtn{width:36px;height:36px;border-radius:var(--xs);display:grid;place-items:center;color:var(--content-neutral-secondary)}
-.railBtn:hover{background:var(--surface-neutral-secondary)}
-.railBtn.on{background:var(--black);color:var(--white)}
-.logo{width:32px;height:32px;border-radius:var(--xs);background:var(--black);color:var(--coral-500);
-  display:grid;place-items:center;font-weight:700;font-size:15px;margin-bottom:var(--xxs)}
-
-.sidebar{width:232px;flex-shrink:0;display:flex;flex-direction:column;gap:var(--xxxxs);
-  padding:var(--xs) var(--xs) var(--xs) 0;overflow-y:auto}
-.acct{display:flex;align-items:center;gap:var(--xs);padding:var(--xs);border-radius:var(--xs);cursor:pointer}
+.sidebar{width:272px;flex-shrink:0;display:flex;flex-direction:column;gap:var(--xxxxs);
+  padding:var(--xs) var(--sm) var(--xs) var(--xs);overflow-y:auto}
+.productHead{display:flex;align-items:center;gap:var(--xs);padding:var(--xxxs) var(--xs) var(--sm)}
+.productMark{width:40px;height:40px;border-radius:var(--sm);display:grid;place-items:center;
+  background:var(--purple-500);color:var(--white);flex-shrink:0}
+.productHead .actions{margin-left:auto;display:flex;align-items:center;gap:var(--xxxs)}
+.iconBtn{width:32px;height:32px;border-radius:var(--xs);display:grid;place-items:center;color:var(--content-neutral-default)}
+.iconBtn:hover{background:var(--surface-neutral-secondary)}
+.acct{display:flex;align-items:center;gap:var(--xs);padding:var(--sm);border:1px solid var(--border-neutral-default);
+  border-radius:var(--sm);cursor:pointer;background:var(--elevation-neutral-default);margin-bottom:var(--xxxs)}
 .acct:hover{background:var(--surface-neutral-secondary)}
 .acctAv{width:26px;height:26px;border-radius:var(--xxs);background:var(--purple-100);color:var(--purple-800);
   display:grid;place-items:center;font-weight:600;font-size:11px;flex-shrink:0}
@@ -190,6 +190,21 @@ th:last-child,td:last-child{padding-right:var(--lg);text-align:right}
 table.inner th:first-child,table.inner td:first-child{padding-left:var(--md)}
 table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .rowLink{cursor:pointer}
+.campaignTableWrap{overflow:auto;max-width:100%}
+#campTable{min-width:max-content}
+#campTable th,#campTable td{white-space:nowrap;min-width:112px}
+#campTable th:first-child,#campTable td:first-child{position:sticky;left:0;z-index:2;min-width:240px;
+  background:var(--white);box-shadow:1px 0 0 var(--border-neutral-default)}
+#campTable th:first-child{z-index:3;background:var(--grey-50)}
+#campTable tbody tr:hover td:first-child{background:var(--grey-50)}
+.metricPickerRow{display:grid;grid-template-columns:28px 1fr auto;gap:var(--sm);align-items:center;
+  padding:var(--sm) var(--md);border-bottom:1px solid var(--border-neutral-default)}
+.metricPickerRow:last-child{border-bottom:0}
+.metricGrip{color:var(--content-neutral-tertiary);letter-spacing:1px;cursor:grab}
+.metricPickerRow.dragging{opacity:.45}
+.switch{width:36px;height:20px;border-radius:10px;background:var(--grey-200);padding:2px;display:flex;transition:.15s}
+.switch::after{content:"";width:16px;height:16px;border-radius:50%;background:var(--white);box-shadow:0 1px 2px rgba(0,0,0,.12);transition:.15s}
+.switch.on{background:var(--purple-500);justify-content:flex-end}
 
 /* banners */
 .banner{display:flex;gap:var(--sm);padding:var(--sm) var(--md);border-radius:10px;align-items:flex-start}
@@ -209,7 +224,7 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
   overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
 .tileIcon{color:var(--grey-400);flex-shrink:0;display:grid;place-items:center}
 .tileIcon:hover{color:var(--content-neutral-secondary)}
-.tileValue{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.1;
+.tileValue{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.15;
   font-variant-numeric:tabular-nums}
 .tileDelta{display:inline-flex;align-items:center;gap:var(--xxxs);font-size:15px;font-weight:600;
   color:var(--content-neutral-default);font-variant-numeric:tabular-nums}
@@ -230,7 +245,7 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .shopRow:hover{background:var(--states-hover-default);border-color:var(--border-neutral-default)}
 
 /* the conversations inbox needs its own height */
-#page-conversations{display:flex;flex-direction:column;height:100%}
+#page-conversations,#page-opportunities{display:flex;flex-direction:column;height:100%}
 .inbox{min-height:520px}
 
 /* wizard stepper */
@@ -271,6 +286,9 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .compose{border-top:1px solid var(--border-neutral-default);padding:var(--md) var(--lg);
   display:flex;flex-direction:column;gap:var(--sm);background:var(--white);flex-shrink:0}
 .inputRow{display:flex;gap:var(--xs);align-items:flex-end}
+.voiceBtn{width:40px;height:40px;border:1px solid var(--border-neutral-default);border-radius:var(--xs);
+  background:var(--white);display:grid;place-items:center;flex-shrink:0;color:var(--content-neutral-secondary)}
+.voiceBtn:hover,.voiceBtn.listening{background:var(--surface-accent-default);color:var(--content-accent-default);border-color:var(--purple-200)}
 .ta{flex:1;border:1px solid var(--border-neutral-default);border-radius:var(--xs);padding:10px 12px;
   font-size:14px;min-height:44px;max-height:140px;resize:none;line-height:1.5;background:var(--white)}
 .ta:focus{outline:2px solid var(--purple-200);border-color:var(--purple-500)}
@@ -289,6 +307,31 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
   border-radius:var(--xs);padding:0 var(--xs);background:var(--white);height:34px}
 .searchInput{border:0;outline:0;background:none;flex:1;font-size:13px;height:100%}
 
+/* opportunities inbox */
+.oppWorkspace{display:grid;grid-template-columns:350px minmax(0,1fr);height:100%;min-height:620px}
+.oppMaster{border-right:1px solid var(--border-neutral-default);display:flex;flex-direction:column;min-height:0;background:var(--white)}
+.oppMasterHead{padding:var(--lg) var(--md) var(--md);display:flex;flex-direction:column;gap:var(--md);border-bottom:1px solid var(--border-neutral-default)}
+.oppFilters{display:flex;gap:var(--xxs)}
+.oppFilters .selectEl{height:32px;padding:4px var(--xs);min-width:0;flex:1}
+.oppItems{flex:1;overflow-y:auto}
+.oppItem{width:100%;text-align:left;padding:var(--md);border-bottom:1px solid var(--border-neutral-default);display:flex;flex-direction:column;gap:var(--xxxs)}
+.oppItem:hover{background:var(--states-hover-default)}
+.oppItem.on{background:var(--surface-accent-default);box-shadow:inset 3px 0 var(--purple-500)}
+.oppDetail{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--white)}
+.oppDetailHead{padding:var(--lg);border-bottom:1px solid var(--border-neutral-default);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--md)}
+.oppConversation{flex:1;overflow-y:auto;padding:var(--xl) var(--lg);display:flex;flex-direction:column;gap:var(--lg)}
+.oppConversationInner{width:min(760px,100%);margin:0 auto;display:flex;flex-direction:column;gap:var(--lg)}
+.oppAssistant{display:flex;align-items:flex-start;gap:var(--sm)}
+.oppAssistantBody{display:flex;flex-direction:column;gap:var(--sm);flex:1;min-width:0}
+.oppGaia{width:28px;height:28px;border-radius:50%;background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500));color:var(--white);display:grid;place-items:center;flex-shrink:0}
+.oppUser{align-self:flex-end;background:var(--surface-neutral-secondary);padding:var(--sm) var(--md);border-radius:14px;border-bottom-right-radius:4px;max-width:76%}
+.oppProposal{border:1px solid var(--border-neutral-default);border-radius:12px;padding:var(--md);display:flex;flex-direction:column;gap:var(--md);background:var(--white)}
+.oppProposalGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--xs)}
+.oppProposalCell{padding:var(--xs);border-radius:var(--xs);background:var(--grey-50);display:flex;flex-direction:column;gap:var(--xxxs)}
+.oppComposer{border-top:1px solid var(--border-neutral-default);padding:var(--md) var(--lg);background:var(--white)}
+.oppComposerInner{width:min(760px,100%);margin:0 auto;display:flex;align-items:flex-end;gap:var(--xs)}
+@media(max-width:920px){.oppWorkspace{grid-template-columns:300px minmax(0,1fr)}}
+
 /* lever object rows */
 .lever{border:1px solid var(--border-neutral-default);border-radius:10px;background:var(--white)}
 .leverHead{display:flex;align-items:center;gap:var(--xs);padding:var(--xs) var(--sm)}
@@ -302,6 +345,15 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .tabItem:hover{color:var(--content-neutral-default)}
 .tabItem.on{color:var(--content-neutral-default);border-bottom-color:var(--black)}
 .zone.top{padding-top:var(--lg)}
+
+/* detected opportunities */
+.opportunitySection{padding:0 var(--lg) var(--lg);display:flex;flex-direction:column;gap:var(--xs)}
+.opportunityHead{display:flex;align-items:center;justify-content:space-between;gap:var(--sm)}
+.opportunityRail{display:flex;gap:var(--sm);overflow-x:auto;padding-bottom:var(--xxxs);scroll-snap-type:x proximity}
+.opportunityCard{flex:1 0 300px;min-width:300px;max-width:370px;padding:var(--md);border:1px solid var(--border-neutral-default);
+  border-radius:10px;background:var(--white);text-align:left;display:flex;flex-direction:column;gap:var(--xs);scroll-snap-align:start}
+.opportunityCard:hover{background:var(--states-hover-default);border-color:var(--purple-200)}
+.opportunityCard .oppImpact{align-self:flex-start}
 
 
 /* segmented */
@@ -329,6 +381,12 @@ svg.chart text{font-family:inherit;fill:var(--dv-axis);font-size:11px}
 svg.chart .gridline{stroke:var(--dv-grid);stroke-width:1}
 svg.chart .hit{fill:transparent}
 svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;opacity:0}
+.reportLineChart .gridline{stroke-dasharray:2 6}
+.reportLineChart .seriesLine{stroke-dasharray:1;stroke-dashoffset:1;animation:drawSeries .65s cubic-bezier(.9,0,0,1) forwards}
+.reportLineChart .hoverPoint{opacity:0;transition:opacity .12s}
+.reportLineChart.isHovering .hoverPoint{opacity:1}
+@keyframes drawSeries{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.reportLineChart .seriesLine{animation:none;stroke-dashoffset:0}}
 .tip{position:fixed;z-index:80;pointer-events:none;opacity:0;transition:opacity .1s;
   background:var(--black);color:var(--white);border-radius:var(--xs);padding:var(--xs) 10px;
   font-size:12px;line-height:1.5;box-shadow:0 8px 24px rgba(16,24,40,.24);max-width:240px}
@@ -363,8 +421,11 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
   display:flex;justify-content:flex-end;gap:var(--xs)}
 
 /* conversation */
-.phone{background:var(--grey-50);border:1px solid var(--border-neutral-default);border-radius:12px;
+.phone{background:var(--white);border:1px solid var(--border-neutral-default);border-radius:12px;
   padding:var(--md);display:flex;flex-direction:column;gap:var(--xs)}
+.messageReady{border:1px solid var(--purple-200);border-radius:12px;background:var(--white);overflow:hidden}
+.messageReadyHead{padding:var(--xs) var(--md);background:var(--surface-accent-default);border-bottom:1px solid var(--purple-100)}
+.messageReadyBody{padding:var(--lg);font-size:16px;line-height:1.55;color:var(--content-neutral-default)}
 .bubble{max-width:88%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.45}
 .bubble.out{background:var(--purple-500);color:var(--white);border-bottom-right-radius:4px;align-self:flex-end}
 .bubble.in{background:var(--white);border:1px solid var(--border-neutral-default);border-bottom-left-radius:4px;align-self:flex-start}
@@ -399,18 +460,21 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 <body data-palette="#7e55f6,#c35e4a,#149db8,#0e4ea7">
 
 <div class="app">
-  <!-- ============ RAIL ============ -->
-  <nav class="rail">
-    <div class="logo">G</div>
-    <button class="railBtn" title="Tickets"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4-.9L3 21l1.9-4.9A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg></button>
-    <button class="railBtn" title="Statistics"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></button>
-    <button class="railBtn on" title="Engagement Center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/></svg></button>
-    <button class="railBtn" title="Contacts"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M17 11.2a3 3 0 0 0 0-6M18 20a5.6 5.6 0 0 0-2-4.3"/></svg></button>
-    <button class="railBtn" title="Settings" style="margin-top:auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.5 19l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 13.6a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1.3z"/></svg></button>
-  </nav>
-
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar">
+    <div class="productHead">
+      <div class="productMark" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <circle cx="12" cy="4.5" r="2.5"/><circle cx="19.5" cy="12" r="2.5"/><circle cx="12" cy="19.5" r="2.5"/><circle cx="4.5" cy="12" r="2.5"/>
+          <path d="M10.2 6.3 6.3 10.2M13.8 6.3l3.9 3.9M17.7 13.8l-3.9 3.9M10.2 17.7l-3.9-3.9"/>
+        </svg>
+      </div>
+      <span class="h-lg">Engage</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      <div class="actions">
+        <button class="iconBtn" title="Search" aria-label="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
+      </div>
+    </div>
     <div class="acct">
       <div class="acctAv">AS</div>
       <div class="col" style="min-width:0;flex:1">
@@ -424,6 +488,9 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
     <button class="navItem on" data-page="overview">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
       Overview</button>
+    <button class="navItem" data-page="opportunities">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><path d="m5.6 5.6 2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3"/></svg>
+      Opportunities <span class="count" id="navOppCount">7</span></button>
     <button class="navItem" data-page="engagements">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12l1-8.5z"/></svg>
       Engagements <span class="count" id="navEngCount">—</span></button>
@@ -485,7 +552,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
               </div>
               <div class="row gap-xs" style="align-self:flex-end">
                 <div class="seg" id="repView">
-                  <button class="on" data-v="time">Over time</button>
+                  <button class="on" data-v="time">Time series</button>
                   <button data-v="rank">Ranked</button>
                   <button data-v="table">Table</button>
                 </div>
@@ -536,6 +603,50 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             </div>
             <div class="col gap-md" id="benchWrap"></div>
           </div>
+        </div>
+      </section>
+
+      <!-- ======== OPPORTUNITIES · conversational action inbox ======== -->
+      <section class="page hidden" id="page-opportunities">
+        <div class="oppWorkspace">
+          <aside class="oppMaster">
+            <div class="oppMasterHead">
+              <div class="row between gap-sm">
+                <div class="col gap-xxxs"><h1 class="h-xxl">Opportunities</h1>
+                  <span class="t-sm sec">Detected across your account</span></div>
+                <button class="iconBtn" title="Opportunity history" aria-label="Opportunity history">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg>
+                </button>
+              </div>
+              <div class="oppFilters">
+                <select class="selectEl" id="oppType" aria-label="Filter opportunities by type"><option value="all">All types</option><option>Campaign</option><option>Configuration</option><option>Mode</option><option>Lifecycle</option><option>Loyalty</option></select>
+                <select class="selectEl" id="oppStatus" aria-label="Filter opportunities by status"><option value="all">All statuses</option><option value="review">Ready to review</option><option value="pending">Pending</option><option value="applied">Applied</option></select>
+                <select class="selectEl" id="oppSort" aria-label="Sort opportunities"><option value="impact">Impact</option><option value="newest">Newest</option></select>
+              </div>
+            </div>
+            <div class="oppItems" id="oppItems"></div>
+          </aside>
+
+          <section class="oppDetail">
+            <header class="oppDetailHead">
+              <div class="col gap-xxxs"><h2 class="h-xl" id="oppTitle">Opportunity</h2><span class="t-sm sec" id="oppTitleMeta"></span></div>
+              <div class="row gap-xs">
+                <button class="iconBtn" id="oppPrev" aria-label="Previous opportunity">‹</button>
+                <span class="t-sm sec num-t" id="oppPosition">1 of 7</span>
+                <button class="iconBtn" id="oppNext" aria-label="Next opportunity">›</button>
+              </div>
+            </header>
+            <div class="oppConversation" id="oppConversation"></div>
+            <div class="oppComposer">
+              <div class="oppComposerInner">
+                <textarea class="ta" id="oppSay" rows="1" placeholder="Ask a question or request a change…"></textarea>
+                <button class="voiceBtn" id="oppVoice" title="Speak your request" aria-label="Speak your request">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="3" width="8" height="12" rx="4"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg>
+                </button>
+                <button class="btn btn-primary" id="oppSend">Send</button>
+              </div>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -641,6 +752,33 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </header>
 
         <div class="zone">
+          <div class="col gap-xs">
+            <div class="row between wrap gap-xs">
+              <div class="col gap-xxxs"><h2 class="h-lg">AI opportunities</h2>
+                <p class="t-sm sec">Engage found timely stories in your catalogue and customer data.</p></div>
+              <span class="tag tag-purple">3 new</span>
+            </div>
+            <div class="grid g-3">
+              <button class="card pad-md rowLink" data-opportunity="launch" style="text-align:left">
+                <div class="row between gap-xs"><span class="tag tag-purple">New product</span><span class="t-xs ter">Today</span></div>
+                <h3 class="h-sm" style="margin-top:var(--xs)">Cirrus insulated jacket launched</h3>
+                <p class="t-sm sec" style="margin-top:var(--xxxs)">4,820 active shell owners have no insulated layer. The first cold-weather window starts next week.</p>
+                <span class="t-sm acc med" style="display:block;margin-top:var(--sm)">Build this campaign →</span>
+              </button>
+              <button class="card pad-md rowLink" data-opportunity="restock" style="text-align:left">
+                <div class="row between gap-xs"><span class="tag tag-blue">Restock</span><span class="t-xs ter">2 days ago</span></div>
+                <h3 class="h-sm" style="margin-top:var(--xs)">Summit shell is back in core sizes</h3>
+                <p class="t-sm sec" style="margin-top:var(--xxxs)">1,360 opted-in shoppers viewed an unavailable size in the last 45 days.</p>
+                <span class="t-sm acc med" style="display:block;margin-top:var(--sm)">Build this campaign →</span>
+              </button>
+              <button class="card pad-md rowLink" data-opportunity="weather" style="text-align:left">
+                <div class="row between gap-xs"><span class="tag tag-grey">Seasonal</span><span class="t-xs ter">This week</span></div>
+                <h3 class="h-sm" style="margin-top:var(--xs)">First sub-zero forecast</h3>
+                <p class="t-sm sec" style="margin-top:var(--xxxs)">A useful moment to explain layering to recent hardshell buyers before the temperature drops.</p>
+                <span class="t-sm acc med" style="display:block;margin-top:var(--sm)">Build this campaign →</span>
+              </button>
+            </div>
+          </div>
           <div class="row between wrap gap-sm">
             <div class="chips" id="campFilter">
               <button class="chip on" data-f="all">All</button>
@@ -648,12 +786,18 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
               <button class="chip" data-f="Sent">Sent</button>
               <button class="chip" data-f="Draft">Draft</button>
             </div>
-            <select class="selectEl auto"><option>Last 90 days</option><option>This quarter</option><option>All time</option></select>
+            <div class="row gap-xs">
+              <span class="t-sm sec" id="campMetricCount"></span>
+              <button class="btn btn-secondary" id="editCampMetrics">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M15 4v16"/></svg>
+                Edit metrics
+              </button>
+              <select class="selectEl auto"><option>Last 90 days</option><option>This quarter</option><option>All time</option></select>
+            </div>
           </div>
-          <div class="card" style="overflow:hidden">
+          <div class="card campaignTableWrap">
             <table id="campTable">
-              <thead><tr><th style="width:28%">Campaign</th><th>Audience</th><th>Sent</th>
-                <th>CVR</th><th>GMV</th><th>Winning instruction</th><th style="width:110px">Status</th></tr></thead>
+              <thead><tr></tr></thead>
               <tbody></tbody>
             </table>
           </div>
@@ -684,7 +828,10 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           <div class="compose" id="campCompose">
             <div class="chips" id="campChips"></div>
             <div class="inputRow">
-              <textarea class="ta" id="campSay" rows="1" placeholder="Type your answer…"></textarea>
+              <textarea class="ta" id="campSay" rows="1" placeholder="Type or speak your answer…"></textarea>
+              <button class="voiceBtn" id="campVoice" title="Answer by voice" aria-label="Answer by voice">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="3" width="8" height="12" rx="4"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg>
+              </button>
               <button class="btn btn-ai" id="campSend">Send</button>
             </div>
           </div>
@@ -704,6 +851,8 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <button class="btn btn-primary">Save guardrails</button>
           </div>
         </header>
+
+        <div class="opportunitySection" id="guardrailOpportunities"></div>
 
         <div class="zone top">
           <div class="lcWrap">
@@ -725,6 +874,8 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <button class="btn btn-primary">Save</button>
           </div>
         </header>
+
+        <div class="opportunitySection" id="lifecycleOpportunities"></div>
 
         <div class="zone">
           <div class="lcWrap">
@@ -757,8 +908,8 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
               </div>
               <div class="chips" id="convFilter">
                 <button class="chip on" data-f="all">All</button>
-                <button class="chip" data-f="pending">Waiting for you <span class="ter">4</span></button>
-                <button class="chip" data-f="live">Live <span class="ter">2</span></button>
+                <button class="chip" data-f="pending">Waiting for you <span class="ter" id="convPendingCount">4</span></button>
+                <button class="chip" data-f="live">Live <span class="ter" id="convLiveCount">2</span></button>
                 <button class="chip" data-f="closed">Closed</button>
                 <button class="chip" data-f="stopped">Stopped</button>
               </div>
@@ -787,6 +938,8 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <button class="btn btn-primary">Save program</button>
           </div>
         </header>
+
+        <div class="opportunitySection" id="loyaltyOpportunities"></div>
 
         <div class="tabList">
           <button class="tabItem on" data-tab="loy-home">Overview</button>
@@ -885,14 +1038,22 @@ const SRC={Default:{c:"var(--dv-default)",tag:"tag-blue"},Custom:{c:"var(--dv-cu
    ======================================================================= */
 const WEEKS=["Jun 2","Jun 9","Jun 16","Jun 23","Jun 30","Jul 7","Jul 14","Jul 21","Jul 28","Aug 4","Aug 11","Aug 18"];
 const CAMPAIGNS=[
-  {n:"Mid-layer season opener",aud:"Hardshell owners, no mid-layer",sent:"3,802",cvr:"6.8%",gmv:"$62,410",win:"Answer the objection",st:"Measuring"},
-  {n:"Summit tier early access",aud:"Summit + Gold loyalty tiers",sent:"1,180",cvr:"11.4%",gmv:"$41,900",win:"Early access, no discount",st:"Sent"},
-  {n:"Care-kit refill push",aud:"Bought the kit ≥ 60 days ago",sent:"2,640",cvr:"9.1%",gmv:"$28,300",win:"Points boost",st:"Sent"},
-  {n:"Return-and-never-return recovery",aud:"Fit returns, no repurchase",sent:"640",cvr:"7.9%",gmv:"$11,200",win:"Free shipping",st:"Sent"},
-  {n:"B2B spring reorder",aud:"Wholesale accounts past cadence",sent:"84",cvr:"26.2%",gmv:"$38,700",win:"Answer the objection",st:"Sent"},
-  {n:"Black Friday warm-up",aud:"Not yet defined",sent:"—",cvr:"—",gmv:"—",win:"—",st:"Draft"}
+  {n:"Mid-layer season opener",aud:"Hardshell owners, no mid-layer",sent:"3,802",reach:"91.4%",reply:"11.2%",click:"8.6%",cvr:"6.8%",orders:"259",aov:"$241",gmv:"$62,410",roi:"5.4×",opt:"0.7%",cost:"$11,560",rpk:"$16,415",win:"Answer the objection",st:"Measuring"},
+  {n:"Summit tier early access",aud:"Summit + Gold loyalty tiers",sent:"1,180",reach:"96.8%",reply:"14.6%",click:"12.9%",cvr:"11.4%",orders:"135",aov:"$310",gmv:"$41,900",roi:"8.1×",opt:"0.2%",cost:"$5,170",rpk:"$35,508",win:"Early access, no discount",st:"Sent"},
+  {n:"Care-kit refill push",aud:"Bought the kit ≥ 60 days ago",sent:"2,640",reach:"93.1%",reply:"8.4%",click:"10.2%",cvr:"9.1%",orders:"240",aov:"$118",gmv:"$28,300",roi:"6.7×",opt:"0.5%",cost:"$4,220",rpk:"$10,720",win:"Points boost",st:"Sent"},
+  {n:"Return-and-never-return recovery",aud:"Fit returns, no repurchase",sent:"640",reach:"87.5%",reply:"12.8%",click:"9.4%",cvr:"7.9%",orders:"51",aov:"$220",gmv:"$11,200",roi:"4.2×",opt:"1.1%",cost:"$2,670",rpk:"$17,500",win:"Free shipping",st:"Sent"},
+  {n:"B2B spring reorder",aud:"Wholesale accounts past cadence",sent:"84",reach:"98.8%",reply:"31.0%",click:"28.6%",cvr:"26.2%",orders:"22",aov:"$1,759",gmv:"$38,700",roi:"14.3×",opt:"0.0%",cost:"$2,710",rpk:"$460,714",win:"Answer the objection",st:"Sent"},
+  {n:"Black Friday warm-up",aud:"Not yet defined",sent:"—",reach:"—",reply:"—",click:"—",cvr:"—",orders:"—",aov:"—",gmv:"—",roi:"—",opt:"—",cost:"—",rpk:"—",win:"—",st:"Draft"}
 ];
-const CAMP_ST={Measuring:"tag-orange",Sent:"tag-green",Draft:"tag-grey"};
+const CAMP_ST={Launching:"tag-purple",Measuring:"tag-orange",Sent:"tag-green",Draft:"tag-grey"};
+const CAMP_METRICS=[
+  {k:"aud",label:"Audience",kind:"text"},{k:"sent",label:"Sent",kind:"number"},{k:"reach",label:"Reach rate",kind:"number"},
+  {k:"reply",label:"Reply rate",kind:"number"},{k:"click",label:"Click rate",kind:"number"},{k:"cvr",label:"Conversion rate",kind:"number"},
+  {k:"orders",label:"Orders",kind:"number"},{k:"aov",label:"Average order value",kind:"number"},{k:"gmv",label:"GMV",kind:"number"},
+  {k:"roi",label:"ROI",kind:"number"},{k:"opt",label:"Opt-out rate",kind:"number"},{k:"cost",label:"Campaign cost",kind:"number"},
+  {k:"rpk",label:"GMV / 1k sent",kind:"number"},{k:"win",label:"Winning instruction",kind:"text"},{k:"st",label:"Status",kind:"status"}
+];
+let campColumns=["aud","sent","reach","cvr","gmv","roi","opt","win","st"];
 
 const BENCH=[
   {n:"Reply rate",v:3.4,med:1.9,top:4.1,max:5,unit:"%",good:"high"},
@@ -995,6 +1156,96 @@ const LEVER_CFG={
      ["Minimum order","",["none","$50","$100"],1]]
 };
 
+const PRODUCT_OPPORTUNITIES={
+  guardrails:[
+    {k:"gr-frequency",tag:"Frequency",title:"Limit monthly outreach to 5 messages",
+     desc:"Shoppers receiving 6 or more messages opt out more often than similar shoppers with a lower cadence.",
+     impact:"≈ 2% fewer opt-outs",pattern:"Opt-out rises from 1.1% to 1.8% after the sixth outbound message in a rolling month.",
+     change:"Change the monthly frequency cap from 8 to 5 messages.",action:"Apply recommendation"},
+    {k:"gr-timing",tag:"Timing",title:"Move VIP sends into the evening",
+     desc:"VIP shoppers are most likely to reply between 18:00 and 20:00 in their local time.",
+     impact:"+11% reply rate",pattern:"Across the last 90 days, evening VIP sends produced 11% more replies than morning sends.",
+     change:"Review the allowed sending window and let the engine choose the exact hour.",action:"Review timing"},
+    {k:"gr-offers",tag:"Offers",title:"Prefer free shipping before discounts",
+     desc:"Free shipping beat 10% off for at-risk shoppers while preserving more margin per order.",
+     impact:"+$8.4k margin",pattern:"Free shipping converted 0.4 points better than 10% off across three comparable cohorts.",
+     change:"Review the offer order so free shipping stays ahead of percentage discounts.",action:"Review offers"}
+  ],
+  lifecycle:[
+    {k:"lc-second",tag:"First-time buyer",title:"Close the second-order gap sooner",
+     desc:"1,240 shoppers sit between day 48 and 62 without a relevant follow-up.",
+     impact:"+23% conversion potential",pattern:"Second orders cluster around day 54, while the current stage treatment waits for the 62-day median.",
+     change:"Review the First-time buyer treatment and start the second-order story earlier.",action:"Review stage"},
+    {k:"lc-risk",tag:"At risk",title:"Intervene 12 days earlier",
+     desc:"The current threshold catches repeat shoppers after their usual reorder window has already passed.",
+     impact:"610 shoppers recoverable",pattern:"For replenishable products, reply rate falls sharply after 1.35× the shopper's personal rhythm.",
+     change:"Review the At risk definition before changing its threshold from 1.5× to 1.35×.",action:"Review stage"},
+    {k:"lc-vip",tag:"VIP",title:"Give top VIPs a distinct treatment",
+     desc:"Gold and Summit members share one lifecycle treatment despite very different value and intent.",
+     impact:"184 members affected",pattern:"The top VIP cohort has 3.2× the LTV of Gold members and responds better to access than offers.",
+     change:"Review VIP tone and levers, then create a dedicated loyalty tier if the distinction holds.",action:"Review VIP"}
+  ],
+  loyalty:[
+    {k:"loy-platinum",tag:"Tier design",title:"Create a Platinum tier with extra perks",
+     desc:"184 members spend above $4,000 a year but receive the same treatment as the rest of Summit.",
+     impact:"184 high-value members",pattern:"This cohort has an 89% repeat rate and prefers access, concierge help and experiences over discounts.",
+     change:"Create a Platinum tier with 3 points per $1, private drops and priority concierge sizing.",action:"Create Platinum tier"},
+    {k:"loy-expiry",tag:"Points",title:"Recover points before they expire",
+     desc:"1,420 members have meaningful balances expiring in the next 30 days.",
+     impact:"$18.6k value at risk",pattern:"Members reminded 14–21 days before expiry redeem 28% more often without increasing discount use.",
+     change:"Review the reward catalogue before creating a points-expiry engagement.",action:"Review rewards"},
+    {k:"loy-concierge",tag:"Perks",title:"Open concierge sizing to Gold",
+     desc:"Concierge sizing is underused and strongly correlated with fewer fit-related returns.",
+     impact:"−9% fit returns",pattern:"Members who use concierge sizing return fit-sensitive products 9% less often.",
+     change:"Review Gold perks and test concierge sizing with its highest-LTV members.",action:"Review Gold tier"}
+  ]
+};
+
+const OPPORTUNITIES=[
+  {id:"cirrus-launch",type:"Campaign",status:"review",age:"Today",score:98,
+   title:"Cirrus launch is ready for a story",issue:"New product opportunity",volume:"4,820 shoppers · $42k potential GMV",impact:"+$42k potential GMV",
+   intro:["The Cirrus insulated jacket went live this morning. I found 4,820 opted-in shoppers who own an Alpine hardshell but no insulated mid-layer.",
+     "The first cold-weather window starts next week. A product story — without leading on a discount — should land better than a generic launch blast."],
+   user:"Show me the campaign you would create.",
+   proposal:{title:"Cirrus launch · compatible shell owners",caption:"A controlled first wave, ready for review",rows:[["Audience","4,820 shell owners"],["Story","The missing warm layer"],["First wave","600 shoppers"],["Holdout","10%"],["Offer","None in message one"],["Expected GMV","$42,000"]],chips:["3 message variants","Guardrails pass","Preview 30 messages"],action:"Build campaign",act:"campaign-launch"}},
+  {id:"frequency-cap",type:"Configuration",status:"review",age:"Today",score:94,
+   title:"Your monthly frequency cap is too high",issue:"Guardrail opportunity",volume:"6+ messages · 1.8% opt-out",impact:"≈ 2% fewer opt-outs",
+   intro:["Opt-out rises from 1.1% to 1.8% after the sixth outbound message in a rolling month.",
+     "Your current monthly cap is 8. Based on comparable shoppers in this account, lowering it to 5 should reduce opt-outs without materially changing reach."],
+   user:"Draft the safer configuration.",
+   proposal:{title:"Frequency guardrail",caption:"One account-wide change",rows:[["Current cap","8 / month"],["Recommended cap","5 / month"],["Weekly cap","Keep at 3"],["Minimum gap","Keep at 48h"]],chips:["All sources combined","Reversible"],action:"Apply limit of 5",act:"guardrail-frequency"}},
+  {id:"seasonal-mode",type:"Mode",status:"pending",age:"Yesterday",score:90,
+   title:"Seasonal & inventory mode could be active",issue:"ACE mode opportunity",volume:"3 moments missed · $18.4k modelled",impact:"$18.4k modelled GMV",
+   intro:["ACE detected three useful seasonal or inventory moments in the last 30 days, but this domain is off, so none became conversations.",
+     "Turning it on would let ACE detect restocks, weather shifts and stock pressure. It would still obey your current Manual acceptance setting."],
+   user:"What exactly would change?",
+   proposal:{title:"Seasonal & inventory",caption:"Activate one ACE domain",rows:[["Detection","Restocks, weather, inventory"],["Autonomy","Manual acceptance"],["Daily cap","Inside existing limit"],["Estimated reach","2,360 / month"]],chips:["No automatic sends","Full reasoning attached"],action:"Activate mode",act:"mode-seasonal"}},
+  {id:"platinum-tier",type:"Loyalty",status:"pending",age:"2 days ago",score:86,
+   title:"184 members have outgrown Summit",issue:"Loyalty opportunity",volume:"Top cohort · 89% repeat rate",impact:"184 high-value members",
+   intro:["I found 184 members spending above $4,000 a year. They currently receive the same Summit treatment as shoppers just above $2,000.",
+     "This group responds to access, concierge help and experiences more than discounts. A Platinum tier would give ACE better levers for them."],
+   user:"Create the tier you recommend.",
+   proposal:{title:"Platinum tier",caption:"A new tier above Summit",rows:[["Entry","$4,000 / 12 months"],["Members today","184"],["Earn rate","3 points / $1"],["Maps to","VIP"]],chips:["Private drops","Priority concierge","No default discount"],action:"Create Platinum",act:"loyalty-platinum"}},
+  {id:"second-order-gap",type:"Lifecycle",status:"pending",age:"3 days ago",score:82,
+   title:"The second-order journey starts too late",issue:"Lifecycle opportunity",volume:"1,240 shoppers in the gap",impact:"+23% conversion potential",
+   intro:["Second orders cluster around day 54, but your current treatment waits for the 62-day median.",
+     "There are 1,240 first-time buyers between day 48 and 62 with no relevant follow-up today."],
+   user:"Show me where to adjust it.",
+   proposal:{title:"First-time buyer stage",caption:"Review before changing the threshold",rows:[["Current timing","Day 62"],["Observed cluster","Day 54"],["Suggested window","Day 48–58"],["Shoppers now","1,240"]],chips:["Computed from orders","No change applied yet"],action:"Review lifecycle stage",act:"lifecycle-gap"}},
+  {id:"cold-weather",type:"Campaign",status:"pending",age:"This week",score:77,
+   title:"First sub-zero forecast next week",issue:"Seasonal campaign opportunity",volume:"2,140 recent shell buyers",impact:"$16.8k potential GMV",
+   intro:["Temperatures are forecast to fall below zero across three of your largest customer regions next week.",
+     "2,140 recent hardshell buyers have never bought a base layer. This is a useful education moment, not a reason to lead with an offer."],
+   user:"Prepare a layering story.",
+   proposal:{title:"Cold-weather layering guide",caption:"Educational campaign draft",rows:[["Audience","2,140 shoppers"],["Story","How to layer below 0°C"],["Products","Base + mid-layers"],["Offer","None"]],chips:["Weather-timed","Regional send windows"],action:"Build campaign",act:"campaign-weather"}},
+  {id:"shipping-first",type:"Configuration",status:"pending",age:"Last week",score:72,
+   title:"Free shipping is beating 10% off",issue:"Offer configuration",volume:"3 comparable cohorts",impact:"+$8.4k protected margin",
+   intro:["Across three comparable at-risk cohorts, free shipping converted 0.4 points better than 10% off.",
+     "It also protected an average of $5.50 more margin per order. Your offer order should keep free shipping ahead of percentage discounts."],
+   user:"Take me to the offer order.",
+   proposal:{title:"Offer preference",caption:"Review the account-wide lever order",rows:[["Before discount","Answer, access, points"],["Recommended #4","Free shipping"],["Recommended #5","Percentage discount"],["Margin protected","$8,400"]],chips:["Evidence: 3 cohorts","No change applied yet"],action:"Review offers",act:"offers-shipping"}}
+];
+
 const STAGES=[
   {n:"Visitor",rule:["Sessions ≥ 1","Opt-in = no"],pop:"18,400",days:"—",col:"var(--grey-300)",
     obj:0,tone:0,disc:0,lever:[0],capN:1,capU:0,src:["Default"],
@@ -1021,11 +1272,11 @@ const STAGES=[
 ];
 
 const VARIANTS=[
-  {k:"A",n:"Answer the objection",ins:"Lead with why the mid-layer matters below 5°. No offer at all in the first message. If they ask about price, answer plainly and stop.",
+  {k:"A",n:"Product story",ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own an Alpine hardshell. Explain the new recycled insulation, the packable construction and how the two products work together below 5°C. Personalize the opening with the shell they own. Ask whether they want help choosing a size. Do not use an offer in the first message; if price comes up, answer plainly and stop selling.",
    off:"No offer",sent:137,rep:"11.7%",cvr:"6.6%",rev:"$4.82",marg:"full margin",win:true},
-  {k:"B",n:"Free shipping",ins:"Same opening, then offer free shipping on the mid-layer if they order this week. Never mention a percentage.",
+  {k:"B",n:"Product story + shipping",ins:"Tell the same Cirrus product story, personalized to the hardshell the shopper owns. After explaining the recycled insulation and packable construction, offer free shipping if they order this week. Make the offer secondary to the product reason. Ask if they want sizing help and never mention a percentage discount.",
    off:"Free shipping",sent:138,rep:"9.4%",cvr:"6.2%",rev:"$4.31",marg:"−$6.40 / order",win:false},
-  {k:"C",n:"10% off",ins:"Open with the seasonal reason, then offer 10% off with a unique code. Mention the code expires in 5 days.",
+  {k:"C",n:"Product story + 10%",ins:"Open with the cold-weather reason and introduce the Cirrus jacket as the compatible insulated layer for the hardshell they own. Explain one concrete product benefit before offering 10% off with a unique shopper code. State that the code expires in 5 days. Do not stack it with loyalty rewards.",
    off:"10% discount",sent:137,rep:"8.1%",cvr:"7.1%",rev:"$4.44",marg:"−$11.90 / order",win:false}
 ];
 
@@ -1226,12 +1477,11 @@ function fromTotals(key,t){
 
 function renderReport(){
   const M=METRICS[rep.metric], D=DIMS[rep.dim], series=repSeries();
-  const stacked = M.kind!=="rate";
   $("#repTitle").textContent=M.label+" by "+D.label.toLowerCase();
   $("#repSub").textContent = rep.view==="rank"
     ? "Ranked over the last 12 weeks."
-    : stacked ? "Weekly, stacked. Segments add up to the total."
-              : "Weekly. Rates are re-derived from totals, never averaged.";
+    : rep.view==="time" ? "Weekly trend. Hover anywhere on the chart to compare every series."
+    : "Weekly values by series.";
   $("#repNote").textContent = M.kind==="rate"
     ? "A rate over a period is computed from the period's totals, so a low-volume week can't distort it."
     : (series.some(s=>s.n.startsWith("Other")) ? "Series beyond the top four are folded into Other, so no colour is reused." : "");
@@ -1250,8 +1500,6 @@ function renderReport(){
     $("#repTable").innerHTML=h+"</tbody></table>";
   } else if(rep.view==="rank"){
     hBars($("#repChart"),series.map(s=>({n:s.n,v:s.total})),rep.metric);
-  } else if(stacked){
-    stackedBars($("#repChart"),series,rep.metric);
   } else {
     lines($("#repChart"),series,rep.metric);
   }
@@ -1431,42 +1679,58 @@ function axisLabel(key,v){
   return v>=1000?(v/1000).toFixed(v>=10000?0:1)+"k":Math.round(v);
 }
 
-/* multi-line — 2px strokes, crosshair, direct labels carrying the series name */
+/* production-style time series — smooth lines, soft area fills and a shared hover */
 function lines(host,series,metricKey){
-  const W=Math.max(320,host.clientWidth||520), H=250, PL=52,PR=132,PT=12,PB=28;
+  const W=Math.max(320,host.clientWidth||520), H=280, PL=56,PR=16,PT=18,PB=32;
   const iw=W-PL-PR, ih=H-PT-PB;
   const {max,step}=niceScale(Math.max(...series.flatMap(s=>s.vals))||1);
   const dx=iw/(WEEKS.length-1), x=i=>PL+i*dx, y=v=>PT+ih-(v/max)*ih;
-  let g="";
+  const smoothPath=pts=>{
+    let d=`M${pts[0][0]} ${pts[0][1]}`;
+    for(let i=0;i<pts.length-1;i++){
+      const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
+      const c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6];
+      const c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+      d+=`C${c1[0]} ${c1[1]},${c2[0]} ${c2[1]},${p2[0]} ${p2[1]}`;
+    }
+    return d;
+  };
+  let defs="",g="",areas="",strokes="",points="";
   for(let t=0;t<=max+1e-9;t+=step){
     g+=`<line class="gridline" x1="${PL}" x2="${PL+iw}" y1="${y(t)}" y2="${y(t)}"/>`;
     g+=`<text x="${PL-8}" y="${y(t)+4}" text-anchor="end">${axisLabel(metricKey,t)}</text>`;
   }
   WEEKS.forEach((w,i)=>{if(i%2===0)g+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${w}</text>`});
-  g+=`<line class="crosshair" id="ch" y1="${PT}" y2="${PT+ih}"/>`;
-  const ends=series.map((s,si)=>({si,y:y(s.vals[s.vals.length-1])})).sort((a,b)=>a.y-b.y);
-  const placed={}; let last=-99;
-  ends.forEach(e=>{const yy=Math.max(e.y,last+13); placed[e.si]=yy; last=yy});
   series.forEach((s,si)=>{
     const pts=s.vals.map((v,i)=>[x(i),y(v)]);
-    g+=`<path d="${pts.map((p,i)=>(i?"L":"M")+p[0]+" "+p[1]).join("")}" fill="none" stroke="${s.c}" stroke-width="2" stroke-linecap="round"/>`;
-    const l=pts[pts.length-1];
-    g+=`<circle cx="${l[0]}" cy="${l[1]}" r="4" fill="${s.c}" stroke="var(--white)" stroke-width="2"/>`;
-    g+=`<text x="${l[0]+9}" y="${placed[si]+4}" style="font-weight:600">${s.n} ${fmtM(metricKey,s.vals[s.vals.length-1])}</text>`;
+    const d=smoothPath(pts), grad=`reportArea${si}`;
+    defs+=`<linearGradient id="${grad}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${s.c}" stop-opacity=".16"/>
+      <stop offset="100%" stop-color="${s.c}" stop-opacity="0"/>
+    </linearGradient>`;
+    areas+=`<path d="${d}L${x(WEEKS.length-1)} ${PT+ih}L${x(0)} ${PT+ih}Z" fill="url(#${grad})"/>`;
+    strokes+=`<path class="seriesLine" pathLength="1" d="${d}" fill="none" stroke="${s.c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    points+=`<circle class="hoverPoint" data-hover-series="${si}" cx="${x(0)}" cy="${y(s.vals[0])}" r="5" fill="${s.c}" stroke="var(--white)" stroke-width="2.5"/>`;
   });
-  WEEKS.forEach((w,i)=>{g+=`<rect class="hit" x="${x(i)-dx/2}" y="${PT}" width="${dx}" height="${ih}" data-i="${i}"/>`});
-  host.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${METRICS[metricKey].label} over time">${g}</svg>`;
+  g+=areas+strokes+points;
+  g+=`<line class="crosshair" id="ch" y1="${PT}" y2="${PT+ih}"/>`;
+  WEEKS.forEach((w,i)=>{g+=`<rect class="hit" x="${i===0?PL:x(i)-dx/2}" y="${PT}" width="${i===0||i===WEEKS.length-1?dx/2:dx}" height="${ih}" data-i="${i}"/>`});
+  host.innerHTML=`<svg class="chart reportLineChart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${METRICS[metricKey].label} time series"><defs>${defs}</defs>${g}</svg>`;
   const svg=host.querySelector("svg"), ch=svg.querySelector("#ch");
   svg.addEventListener("mousemove",e=>{
     const h=e.target.closest(".hit"); if(!h) return;
     const i=+h.dataset.i, b=svg.getBoundingClientRect();
     ch.setAttribute("x1",x(i)); ch.setAttribute("x2",x(i)); ch.style.opacity=1;
+    svg.classList.add("isHovering");
+    svg.querySelectorAll("[data-hover-series]").forEach((p,si)=>{
+      p.setAttribute("cx",x(i));p.setAttribute("cy",y(series[si].vals[i]));
+    });
     showTip(`<b>Week of ${WEEKS[i]}</b>`+series.map(s=>
       `<div class="tRow"><span><span class="srcSwatch" style="background:${s.c}"></span> ${s.n}</span>
        <span>${fmtM(metricKey,s.vals[i])}</span></div>`).join(""),
       b.left+(x(i)/W)*b.width, b.top+40);
   });
-  svg.addEventListener("mouseleave",()=>{ch.style.opacity=0;hideTip()});
+  svg.addEventListener("mouseleave",()=>{ch.style.opacity=0;svg.classList.remove("isHovering");hideTip()});
 }
 
 /* ranked horizontal bars — one measure, so one hue */
@@ -1494,19 +1758,138 @@ function hBars(host,rows,metricKey){
   svg.addEventListener("mouseleave",hideTip);
 }
 
+/* ===================== OPPORTUNITIES (conversational action inbox) ===================== */
+let oppSel="cirrus-launch",oppFilterType="all",oppFilterStatus="all",oppSort="impact";
+const oppExchanges={};
+const oppStatusMeta={review:["Ready to review","tag-purple"],pending:["Pending","tag-orange"],applied:["Applied","tag-green"]};
+const safeText=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function visibleOpportunities(){
+  let rows=OPPORTUNITIES.filter(o=>(oppFilterType==="all"||o.type===oppFilterType)&&(oppFilterStatus==="all"||o.status===oppFilterStatus));
+  if(oppSort==="impact") rows=rows.slice().sort((a,b)=>b.score-a.score);
+  return rows;
+}
+function renderOpportunities(){
+  const rows=visibleOpportunities();
+  if(rows.length&&!rows.some(o=>o.id===oppSel)) oppSel=rows[0].id;
+  $("#navOppCount").textContent=OPPORTUNITIES.filter(o=>o.status!=="applied").length;
+  $("#oppItems").innerHTML=rows.length?rows.map(o=>{
+    const sm=oppStatusMeta[o.status];
+    return `<button class="oppItem ${o.id===oppSel?"on":""}" data-opp-select="${o.id}">
+      <div class="row between gap-xs"><span class="h-sm trunc">${o.title}</span><span class="t-xs ter">${o.age}</span></div>
+      <span class="t-sm bold sec">${o.issue}</span>
+      <span class="t-sm sec">${o.volume}</span>
+      <div class="row between gap-xs" style="margin-top:var(--xxxs)"><span class="tag ${sm[1]}"><span class="dot" style="background:currentColor"></span>${sm[0]}</span>
+        <span class="tag tag-green">${o.impact}</span></div>
+    </button>`}).join(""):`<div class="col gap-xs" style="padding:var(--lg);align-items:center"><span class="h-sm">No opportunities here</span><span class="t-sm sec">Try another filter.</span></div>`;
+  renderOpportunityDetail();
+}
+function renderOpportunityDetail(){
+  const rows=visibleOpportunities(),o=OPPORTUNITIES.find(x=>x.id===oppSel);
+  if(!o){$("#oppTitle").textContent="No opportunity selected";$("#oppConversation").innerHTML="";return}
+  const pos=Math.max(0,rows.findIndex(x=>x.id===o.id));
+  $("#oppTitle").textContent=o.title;
+  $("#oppTitleMeta").textContent=o.type+" · "+o.impact;
+  $("#oppPosition").textContent=(pos+1)+" of "+rows.length;
+  const p=o.proposal,sm=oppStatusMeta[o.status],extras=oppExchanges[o.id]||[];
+  $("#oppConversation").innerHTML=`<div class="oppConversationInner">
+    <div class="oppAssistant"><span class="oppGaia" aria-hidden="true">✦</span><div class="oppAssistantBody">
+      ${o.intro.map(x=>`<p class="t-md">${x}</p>`).join("")}
+      <div class="row gap-xs"><span class="tag tag-grey">${o.type}</span><span class="tag tag-green">${o.impact}</span></div>
+    </div></div>
+    <div class="oppUser">${o.user}</div>
+    <div class="oppAssistant"><span class="oppGaia" aria-hidden="true">✦</span><div class="oppAssistantBody">
+      <p class="t-md">Here is the recommendation I prepared. You can apply it, ask for a change, or leave it for later.</p>
+      <div class="oppProposal">
+        <div class="row between gap-sm"><div class="col gap-xxxs"><span class="h-md">${p.title}</span><span class="t-sm sec">${p.caption}</span></div><span class="tag ${sm[1]}">${sm[0]}</span></div>
+        <div class="oppProposalGrid">${p.rows.map(x=>`<div class="oppProposalCell"><span class="t-xs ter">${x[0]}</span><span class="t-sm med">${x[1]}</span></div>`).join("")}</div>
+        <div class="chips">${p.chips.map(x=>`<span class="tag tag-grey">${x}</span>`).join("")}</div>
+        <div class="row gap-xs"><button class="btn btn-primary" data-opp-action="${p.act}" ${o.status==="applied"?"disabled":""}>${o.status==="applied"?"Applied":p.action}</button>
+          <button class="btn btn-tertiary" data-opp-dismiss>Not now</button></div>
+      </div>
+    </div></div>
+    ${extras.map(x=>`<div class="oppUser">${safeText(x.user)}</div><div class="oppAssistant"><span class="oppGaia" aria-hidden="true">✦</span><div class="oppAssistantBody"><p class="t-md">${safeText(x.assistant)}</p></div></div>`).join("")}
+  </div>`;
+  $("#oppConversation").scrollTop=$("#oppConversation").scrollHeight;
+}
+function addOpportunityExchange(user,assistant){
+  (oppExchanges[oppSel]||(oppExchanges[oppSel]=[])).push({user,assistant});
+  renderOpportunityDetail();
+}
+function applyOpportunityAction(act){
+  const o=OPPORTUNITIES.find(x=>x.id===oppSel); if(!o) return;
+  if(act==="campaign-launch"||act==="campaign-weather"){
+    o.status="applied";renderOpportunities();goto("campaign-new");
+    $("#campSay").value=act==="campaign-launch"?"New product launch · Cirrus jacket":"First sub-zero forecast · educational layering story";
+    campAnswer();return;
+  }
+  if(act==="guardrail-frequency"){
+    GR_CATS[0].fields[1][1]="5";grSel=0;o.status="applied";renderGuardrails();
+    addOpportunityExchange("Apply the recommended limit.","Done. The monthly cap is now 5 messages per shopper across all sources. The weekly cap and 48-hour minimum gap are unchanged.");renderOpportunities();return;
+  }
+  if(act==="mode-seasonal"){
+    const d=ACE_DOMAINS.find(x=>x.n==="Seasonal & inventory");d.on=true;o.status="applied";renderAce();
+    addOpportunityExchange("Activate this mode.","Seasonal & inventory is now active in Manual acceptance. ACE can prepare opportunities, but nothing sends without your approval.");renderOpportunities();return;
+  }
+  if(act==="loyalty-platinum"){
+    if(!TIERS.some(t=>t.n==="Platinum"))TIERS.push({n:"Platinum",at:"$4,000 spent in 12 months",m:184,stage:"VIP",perks:"3 pts per $1, private drops, priority concierge sizing",ai:true,c:"var(--purple-700)",cond:[["Spend in the last 12 months","≥","$4,000"],["Orders in the last 12 months","≥","8"]],earn:"3 points per $1",aov:"$248",ltv:"$3,840",ret:"89%",pts:"0.2M"});
+    o.status="applied";renderLoyalty();addOpportunityExchange("Create the Platinum tier.","Created. 184 members now qualify for Platinum, mapped to VIP with private drops and priority concierge sizing.");renderOpportunities();return;
+  }
+  if(act==="lifecycle-gap"){stg=2;renderLifecycle();goto("lifecycle");return}
+  if(act==="offers-shipping"){grSel=4;renderGuardrails();goto("guardrails")}
+}
+function sendOpportunityMessage(){
+  const input=$("#oppSay"),text=input.value.trim();if(!text)return;
+  const o=OPPORTUNITIES.find(x=>x.id===oppSel);
+  const replies={Campaign:"I updated the campaign brief and kept the first wave in review. The audience, holdout and guardrails remain visible before anything launches.",Configuration:"I can make that adjustment in the proposal. Nothing changes account-wide until you use the apply button.",Mode:"I kept this in Manual acceptance, so activating the domain creates drafts rather than sending automatically.",Lifecycle:"I added your request to the stage review. The threshold remains unchanged until you save it.",Loyalty:"I updated the proposed tier logic and rechecked how many members would qualify."};
+  input.value="";addOpportunityExchange(text,replies[o.type]||"I updated the recommendation and kept it ready for your review.");
+}
+
 function renderCampaigns(){
   $("#navCamp").textContent=CAMPAIGNS.length;
+  $("#campMetricCount").textContent=campColumns.length+" metrics shown";
   const f=$$("#campFilter .chip").find(c=>c.classList.contains("on")).dataset.f;
+  $("#campTable thead tr").innerHTML=`<th>Campaign</th>`+campColumns.map(k=>{
+    const m=CAMP_METRICS.find(x=>x.k===k);
+    return `<th title="${m.label}">${m.label}</th>`;
+  }).join("");
   const tb=$("#campTable tbody"); tb.innerHTML="";
   CAMPAIGNS.filter(c=>f==="all"||c.st===f).forEach(c=>{
     const tr=el("tr","rowLink");
-    tr.innerHTML=`<td><span class="t-md med">${c.n}</span></td>
-      <td class="t-sm sec">${c.aud}</td><td class="t-md num-t">${c.sent}</td>
-      <td class="t-md num-t">${c.cvr}</td><td class="t-md num-t bold">${c.gmv}</td>
-      <td class="t-sm sec">${c.win}</td>
-      <td><span class="tag ${CAMP_ST[c.st]}">${c.st}</span></td>`;
+    tr.innerHTML=`<td><div class="col gap-xxxs"><span class="t-md med">${c.n}</span>${c.prog?`<span class="t-xs acc">Sending now · ${c.prog}% complete</span>`:""}</div></td>`+
+      campColumns.map(k=>{
+        const m=CAMP_METRICS.find(x=>x.k===k), v=c[k]??"—";
+        if(m.kind==="status")return `<td><span class="tag ${CAMP_ST[v]}">${v}</span></td>`;
+        return `<td class="${m.kind==="number"?"t-md num-t":"t-sm sec"} ${k==="gmv"||k==="roi"?"bold":""}">${v}</td>`;
+      }).join("");
     tr.addEventListener("click",()=>goto("campaign-new"));
     tb.appendChild(tr);
+  });
+}
+
+function openCampaignMetrics(){
+  openPanel("Table settings","Choose the campaign metrics to show. Campaign stays pinned as the first column.",
+    `<div class="card" style="overflow:hidden">
+      <div class="metricPickerRow"><span class="ter">↕</span><span class="t-sm bold">Column name</span><span class="t-sm bold">Show</span></div>
+      ${CAMP_METRICS.map(m=>`<button class="metricPickerRow" data-campmetric="${m.k}" draggable="true" style="width:100%;text-align:left">
+        <span class="metricGrip">⠿</span><span class="t-md">${m.label}</span><span class="switch ${campColumns.includes(m.k)?"on":""}" role="switch" aria-checked="${campColumns.includes(m.k)}"></span>
+      </button>`).join("")}
+    </div>`,
+    `<button class="btn btn-secondary" data-closepanel>Cancel</button><button class="btn btn-primary" id="saveCampMetrics">Save</button>`);
+  $$("[data-campmetric]",$("#panelBody")).forEach(row=>row.addEventListener("click",()=>{
+    const sw=row.querySelector(".switch");sw.classList.toggle("on");sw.setAttribute("aria-checked",sw.classList.contains("on"));
+  }));
+  let draggedMetric=null;
+  $$("[data-campmetric]",$("#panelBody")).forEach(row=>{
+    row.addEventListener("dragstart",e=>{draggedMetric=row;row.classList.add("dragging");e.dataTransfer.effectAllowed="move"});
+    row.addEventListener("dragend",()=>{row.classList.remove("dragging");draggedMetric=null});
+    row.addEventListener("dragover",e=>{e.preventDefault();e.dataTransfer.dropEffect="move"});
+    row.addEventListener("drop",e=>{e.preventDefault();if(!draggedMetric||draggedMetric===row)return;
+      const box=row.getBoundingClientRect();row.parentNode.insertBefore(draggedMetric,e.clientY>box.top+box.height/2?row.nextSibling:row)});
+  });
+  $("#saveCampMetrics").addEventListener("click",()=>{
+    const next=$$("[data-campmetric]",$("#panelBody")).filter(r=>r.querySelector(".switch").classList.contains("on")).map(r=>r.dataset.campmetric);
+    campColumns=next.length?next:["st"];
+    renderCampaigns();closePanel();
   });
 }
 
@@ -1726,7 +2109,7 @@ function renderVariants(){
       <textarea class="textarea" style="min-height:104px">${v.ins}</textarea>
       <div class="row between"><span class="t-sm sec">Revenue / recipient</span><span class="t-md bold num-t">${v.rev}</span></div>
       <span class="meter"><span style="width:${v.win?100:Math.round(parseFloat(v.rev.slice(1))/4.82*100)}%"></span></span>
-      <button class="btn btn-secondary sm" data-act="test-campaign" style="margin-top:var(--xxs)">Test this one</button>`;
+      <button class="btn btn-secondary sm" data-act="test-campaign" style="margin-top:var(--xxs)">Preview messages from this approach</button>`;
     g.appendChild(c);
   });
   const tb=$("#waveTable tbody"); if(!tb) return;
@@ -1773,6 +2156,25 @@ const GR_CATS=[
            ["Pause everything if opt-out exceeds","1.5%"],["Global holdout","10%"]],
    kill:true}
 ];
+
+function renderProductOpportunities(surface,hostId){
+  const host=$("#"+hostId), opportunities=PRODUCT_OPPORTUNITIES[surface]||[];
+  if(!host) return;
+  host.innerHTML=`
+    <div class="opportunityHead">
+      <div class="row gap-xs"><h2 class="h-md">AI opportunities</h2><span class="tag tag-purple">${opportunities.length} detected</span></div>
+      <span class="t-sm sec">Patterns found in your account data</span>
+    </div>
+    <div class="opportunityRail">
+      ${opportunities.map(o=>`<button class="opportunityCard" data-product-opportunity="${o.k}">
+        <div class="row between gap-xs"><span class="tag tag-grey">${o.tag}</span><span class="tag tag-green oppImpact">${o.impact}</span></div>
+        <span class="h-md">${o.title}</span>
+        <span class="t-sm sec">${o.desc}</span>
+        <span class="t-sm med" style="margin-top:auto">See recommendation →</span>
+      </button>`).join("")}
+    </div>`;
+}
+
 let grSel=0;
 function renderGuardrails(){
   const l=$("#grList"); if(!l) return;
@@ -2047,7 +2449,13 @@ function convRows(){
 }
 function renderConv(){
   const rows=convRows(), list=$("#convItems"); list.innerHTML="";
-  $("#navPending").textContent=CONV.filter(c=>c.st==="pending").length;
+  const pending=CONV.filter(c=>c.st==="pending").length;
+  const live=CONV.filter(c=>c.st==="live").length;
+  $("#navPending").textContent=pending;
+  $("#convPendingCount").textContent=pending;
+  $("#convLiveCount").textContent=live;
+  $("#approveAll").textContent=pending?`Approve ${pending} waiting`:"Nothing waiting";
+  $("#approveAll").disabled=!pending;
   if(!rows.length){
     list.innerHTML=`<div class="col gap-xxs" style="align-items:center;padding:var(--xxl) var(--md)">
       <span class="t-md sec">Nothing matches</span><span class="t-sm ter">Try another filter or clear the search.</span></div>`;
@@ -2082,9 +2490,9 @@ function renderThread(c){
         <span class="t-sm ter mono">${c.id} · ${c.stage} · ${c.tier}</span>
       </div>
       <div class="row gap-xs">
-        <button class="btn btn-secondary sm" data-shopperone="${CONV.indexOf(c)}">Open shopper</button>
+        <button class="btn btn-secondary sm" data-shopperone="${CONV.indexOf(c)}">See shopper</button>
         ${c.st==="pending"?`<button class="btn btn-secondary sm">Reject</button>
-          <button class="btn btn-primary sm">Approve &amp; send</button>`:""}
+          <button class="btn btn-primary sm" data-conv-action="approve" data-conv-index="${CONV.indexOf(c)}" ${c.sending?"disabled":""}>${c.sending?"Sending…":"Approve &amp; send"}</button>`:""}
       </div>
     </div>
 
@@ -2113,14 +2521,34 @@ function renderThread(c){
         <span class="t-sm bold">${c.st==="pending"?"Ready to send":"The conversation"}</span>
         ${c.outcome?`<span class="tag tag-green">${c.outcome}</span>`:""}
       </div>
-      <div class="phone">${c.thread.map(m=>`<div class="bubble ${m[0]}">${m[1]}</div>
-        ${m[2]==="waiting"?`<span class="bTime">Held for your approval</span>`:""}`).join("")}</div>
+      ${c.st==="pending"?`<div class="messageReady">
+        <div class="messageReadyHead row between"><span class="t-sm med">Outbound message · SMS</span><span class="tag tag-orange">Awaiting approval</span></div>
+        <div class="messageReadyBody">${c.thread[0][1]}</div>
+      </div>`:`<div class="phone">${c.thread.map(m=>`<div class="bubble ${m[0]}">${m[1]}</div>
+        ${m[2]==="sent"?`<span class="bTime">Sent just now</span>`:""}`).join("")}</div>`}
     </div>`:""}
 
     ${c.st==="pending"?`<div class="row gap-xs" style="justify-content:flex-end">
       <button class="btn btn-secondary">Edit the message</button>
       <button class="btn btn-secondary">Reject</button>
-      <button class="btn btn-primary">Approve &amp; send</button></div>`:""}`;
+      <button class="btn btn-primary" data-conv-action="approve" data-conv-index="${CONV.indexOf(c)}" ${c.sending?"disabled":""}>${c.sending?"Sending…":"Approve &amp; send"}</button></div>`:""}`;
+}
+
+function approveConversation(i){
+  const c=CONV[i];
+  if(!c||c.st!=="pending"||c.sending)return;
+  c.sending=true;
+  renderConv();
+  setTimeout(()=>{
+    c.sending=false;
+    c.st="live";
+    c.when="Just now";
+    c.unread=false;
+    const last=c.thread[c.thread.length-1];
+    if(last)last[2]="sent";
+    convSel=i;
+    renderConv();
+  },650);
 }
 
 /* ===================== CAMPAIGN PREVIEW ===================== */
@@ -2128,8 +2556,7 @@ const PREV_FIRST=["Ana","Marc","Sam","Lena","Priya","Tom","Jonas","Chloé","Hugo
   "Ruben","Mei","Otto","Clara","Diego","Aisha","Pieter","Nora","Elias","Yuki","Tomas","Farah",
   "Bruno","Lena","Karl","Amara","Iris","Mateo","Sanne","Owen","Zoë","Rafa","Nina","Emil","Alba","Kwame","Lise","Ivan"];
 const PREV_LAST=["R.","D.","K.","P.","S.","W.","M.","B.","T.","L.","V.","N.","A.","J.","H.","F."];
-const PREV_ITEM=["the Alpine hardshell","the Ridge tights","the Merino base layer","the Summit shell",
-  "the Trail runners","the Storm gloves","the Bib shorts","the Cirrus mid-layer"];
+const PREV_ITEM=["the Alpine hardshell","the Summit shell","the Ridge hardshell","the Storm shell"];
 const PREV_STAGE=["First-time buyer","Repeat","VIP","At risk"];
 const PREV_TIER=["Member","Silver","Gold","Summit"];
 function genPreview(n){
@@ -2161,21 +2588,16 @@ let prevN=10, prevList=[];
 function renderPreview(){
   const g=$("#prevGrid"); if(!g) return;
   g.innerHTML=prevList.map((c,i)=>`
-    <button class="card pad-md" style="text-align:left;display:flex;flex-direction:column;gap:var(--xs)" data-prev="${i}">
-      <div class="row between gap-xs">
-        <span class="t-md med trunc">${c.who}</span>
-        <span class="tag tag-grey">${c.v.k}</span>
-      </div>
-      <div class="row gap-xxs wrap">
-        <span class="tag tag-grey">${c.stage}</span>
-        <span class="tag ${c.tier==="Gold"||c.tier==="Summit"?"tag-yellow":"tag-blue"}">${c.tier}</span>
-        ${c.hold?`<span class="tag tag-orange">Deferred</span>`:""}
-      </div>
-      <span class="t-sm sec" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${c.open}</span>
-      <span class="t-xs acc med">Read the conversation →</span>
-    </button>`).join("");
+    <div class="card pad-md" style="display:grid;grid-template-columns:36px 1fr auto;gap:var(--sm);align-items:start">
+      <span class="acctAv">${i+1}</span>
+      <div class="col gap-xxxs"><div class="row gap-xs"><span class="t-md med">${c.who}</span><span class="tag tag-grey">Variant ${c.v.k}</span></div>
+        <span class="t-md">${c.open}</span>
+        <span class="t-xs ter">${c.stage} · ${c.tier}</span></div>
+      ${c.hold?`<span class="tag tag-orange">Deferred</span>`:`<span class="tag tag-green">Ready</span>`}
+    </div>`).join("");
   const byV={}; prevList.forEach(c=>byV[c.v.k]=(byV[c.v.k]||0)+1);
   const held=prevList.filter(c=>c.hold).length;
+  if(!$("#prevSummary")) return;
   $("#prevSummary").classList.remove("hidden");
   $("#prevSummary").innerHTML=
     Object.entries(byV).map(([k,n])=>`<div class="kv"><span class="k">Variant ${k}</span>
@@ -2328,7 +2750,7 @@ function tierDetail(t,i,tot){
       <p class="t-sm sec" style="margin-bottom:var(--md)">The perks the engine can reach for instead of a discount.</p>
       <div class="grid g-2">
         <div class="field"><span class="label">Earn rate</span>
-          <select class="selectEl">${["1 point per $1","1.25 points per $1","1.5 points per $1","2 points per $1"]
+          <select class="selectEl">${["1 point per $1","1.25 points per $1","1.5 points per $1","2 points per $1","3 points per $1"]
             .map(o=>`<option ${o===t.earn?"selected":""}>${o}</option>`).join("")}</select></div>
         <div class="field"><span class="label">Maps to lifecycle stage</span>
           <select class="selectEl">${STAGES.map(s=>`<option ${t.stage.includes(s.n)?"selected":""}>${s.n}</option>`).join("")}</select></div>
@@ -2402,6 +2824,63 @@ function openPanel(t,s,b,f){
   $("#panelBody").innerHTML=b; $("#panelFoot").innerHTML=f;
   panel.classList.add("on"); overlay.classList.add("on");
 }
+function findProductOpportunity(k){
+  for(const [surface,items] of Object.entries(PRODUCT_OPPORTUNITIES)){
+    const opportunity=items.find(o=>o.k===k);
+    if(opportunity) return {surface,opportunity};
+  }
+}
+function removeProductOpportunity(surface,k){
+  const items=PRODUCT_OPPORTUNITIES[surface], i=items.findIndex(o=>o.k===k);
+  if(i>=0) items.splice(i,1);
+}
+function openProductOpportunity(k){
+  const found=findProductOpportunity(k); if(!found) return;
+  const o=found.opportunity;
+  openPanel(o.title,"AI opportunity · based on detected account patterns",`
+    <div class="banner banner-info"><div class="col gap-xxxs">
+      <span class="t-md med">Expected impact</span><span class="h-lg">${o.impact}</span>
+      <span class="t-sm sec">An estimate from comparable shoppers in this account, not a guarantee.</span>
+    </div></div>
+    <div class="card pad"><div class="col gap-xs">
+      <span class="t-sm bold">Pattern detected</span><p class="t-md sec">${o.pattern}</p>
+    </div></div>
+    <div class="card pad"><div class="col gap-xs">
+      <span class="t-sm bold">Recommended change</span><p class="t-md">${o.change}</p>
+    </div></div>`,
+    `<button class="btn btn-secondary" data-closepanel>Not now</button>
+     <button class="btn btn-primary" id="applyProductOpportunity">${o.action}</button>`);
+  $("#applyProductOpportunity").addEventListener("click",()=>applyProductOpportunity(k));
+}
+function applyProductOpportunity(k){
+  if(k==="gr-frequency"){
+    GR_CATS[0].fields[1][1]="5"; grSel=0;
+    removeProductOpportunity("guardrails",k);
+    renderGuardrails(); renderProductOpportunities("guardrails","guardrailOpportunities"); closePanel(); return;
+  }
+  if(k==="gr-timing"||k==="gr-offers"){
+    grSel=k==="gr-timing"?1:4; renderGuardrails(); closePanel(); return;
+  }
+  if(k.startsWith("lc-")){
+    stg={"lc-second":2,"lc-risk":5,"lc-vip":4}[k]; renderLifecycle(); closePanel(); return;
+  }
+  if(k==="loy-platinum"){
+    let i=TIERS.findIndex(t=>t.n==="Platinum");
+    if(i<0){
+      TIERS.push({n:"Platinum",at:"$4,000 spent in 12 months",m:184,stage:"VIP",
+        perks:"3 pts per $1, private drops, priority concierge sizing",ai:true,c:"var(--purple-700)",
+        cond:[["Spend in the last 12 months","≥","$4,000"],["Orders in the last 12 months","≥","8"]],
+        earn:"3 points per $1",aov:"$248",ltv:"$3,840",ret:"89%",pts:"0.2M"});
+      i=TIERS.length-1;
+    }
+    loySel={kind:"tier",i}; selectTab("loy-config");
+    removeProductOpportunity("loyalty",k);
+    renderLoyalty(); renderProductOpportunities("loyalty","loyaltyOpportunities"); closePanel(); return;
+  }
+  if(k==="loy-expiry") loySel={kind:"rewards"};
+  if(k==="loy-concierge") loySel={kind:"tier",i:2};
+  selectTab("loy-config"); renderLoyalty(); closePanel();
+}
 function closePanel(){panel.classList.remove("on");overlay.classList.remove("on");
   setTimeout(()=>panel.classList.remove("wide"),220)}
 $("#panelClose").addEventListener("click",closePanel);
@@ -2425,17 +2904,27 @@ function resetWizard(){
   $("#campSend").disabled=false;
   VARIANTS.length=0;
   VARIANTS.push(
-    {k:"A",n:"Answer the objection",ins:"Lead with why the mid-layer matters below 5°. No offer at all in the first message. If they ask about price, answer plainly and stop.",
+    {k:"A",n:"Product story",ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own an Alpine hardshell. Explain the new recycled insulation, the packable construction and how the two products work together below 5°C. Personalize the opening with the shell they own. Ask whether they want help choosing a size. Do not use an offer in the first message; if price comes up, answer plainly and stop selling.",
      off:"No offer",sent:137,rep:"11.7%",cvr:"6.6%",rev:"$4.82",marg:"full margin",win:true},
-    {k:"B",n:"Free shipping",ins:"Same opening, then offer free shipping on the mid-layer if they order this week. Never mention a percentage.",
+    {k:"B",n:"Product story + shipping",ins:"Tell the same Cirrus product story, personalized to the hardshell the shopper owns. After explaining the recycled insulation and packable construction, offer free shipping if they order this week. Make the offer secondary to the product reason. Ask if they want sizing help and never mention a percentage discount.",
      off:"Free shipping",sent:138,rep:"9.4%",cvr:"6.2%",rev:"$4.31",marg:"−$6.40 / order",win:false},
-    {k:"C",n:"10% off",ins:"Open with the seasonal reason, then offer 10% off with a unique code. Mention the code expires in 5 days.",
+    {k:"C",n:"Product story + 10%",ins:"Open with the cold-weather reason and introduce the Cirrus jacket as the compatible insulated layer for the hardshell they own. Explain one concrete product benefit before offering 10% off with a unique shopper code. State that the code expires in 5 days. Do not stack it with loyalty rewards.",
      off:"10% discount",sent:137,rep:"8.1%",cvr:"7.1%",rev:"$4.44",marg:"−$11.90 / order",win:false}
   );
   renderWizSteps();
   askTurn();
 }
 $$(".navItem").forEach(n=>n.addEventListener("click",()=>goto(n.dataset.page)));
+
+$("#oppType").addEventListener("change",e=>{oppFilterType=e.target.value;renderOpportunities()});
+$("#oppStatus").addEventListener("change",e=>{oppFilterStatus=e.target.value;renderOpportunities()});
+$("#oppSort").addEventListener("change",e=>{oppSort=e.target.value;renderOpportunities()});
+$("#oppPrev").addEventListener("click",()=>{const rows=visibleOpportunities(),i=rows.findIndex(o=>o.id===oppSel);if(rows.length){oppSel=rows[(i-1+rows.length)%rows.length].id;renderOpportunities()}});
+$("#oppNext").addEventListener("click",()=>{const rows=visibleOpportunities(),i=rows.findIndex(o=>o.id===oppSel);if(rows.length){oppSel=rows[(i+1)%rows.length].id;renderOpportunities()}});
+$("#oppSend").addEventListener("click",sendOpportunityMessage);
+$("#oppSay").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendOpportunityMessage()}});
+$("#oppVoice").addEventListener("click",()=>{const b=$("#oppVoice"),input=$("#oppSay");b.classList.add("listening");input.placeholder="Listening…";
+  setTimeout(()=>{input.value="Keep the recommendation conservative and show me exactly what will change.";b.classList.remove("listening");input.placeholder="Ask a question or request a change…";input.focus()},900)});
 
 /* tabs (Engagements: ACE | Scenarios) */
 function selectTab(tab){
@@ -2478,6 +2967,33 @@ const TEST_BODY=`
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-goto]");
   if(g){goto(g.dataset.goto);return}
+
+  const opportunitySelect=e.target.closest("[data-opp-select]");
+  if(opportunitySelect){oppSel=opportunitySelect.dataset.oppSelect;renderOpportunities();return}
+
+  const opportunityAction=e.target.closest("[data-opp-action]");
+  if(opportunityAction){applyOpportunityAction(opportunityAction.dataset.oppAction);return}
+
+  if(e.target.closest("[data-opp-dismiss]")){
+    const rows=visibleOpportunities(),i=rows.findIndex(o=>o.id===oppSel);
+    if(rows.length>1)oppSel=rows[(i+1)%rows.length].id;
+    renderOpportunities();return;
+  }
+
+  const productOpportunity=e.target.closest("[data-product-opportunity]");
+  if(productOpportunity){openProductOpportunity(productOpportunity.dataset.productOpportunity);return}
+
+  const opp=e.target.closest("[data-opportunity]");
+  if(opp){
+    goto("campaign-new");
+    $("#campSay").value=opp.dataset.opportunity==="launch"?"New product launch · Cirrus jacket":opp.dataset.opportunity==="restock"?"Summit shell restock":"First sub-zero forecast";
+    campAnswer();return
+  }
+
+  const ca=e.target.closest("[data-conv-action]");
+  if(ca&&ca.dataset.convAction==="approve"){
+    approveConversation(+ca.dataset.convIndex);return
+  }
 
   const t=e.target.closest("[data-toggle]");
   if(t){t.classList.toggle("on")}
@@ -2573,6 +3089,7 @@ $$("#campFilter .chip").forEach(c=>c.addEventListener("click",()=>{
   $$("#campFilter .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
   renderCampaigns();
 }));
+$("#editCampMetrics").addEventListener("click",openCampaignMetrics);
 
 /* campaign wizard compose */
 if($("#campSend")){
@@ -2582,6 +3099,12 @@ if($("#campSend")){
   });
   $("#campSay").addEventListener("input",e=>{
     e.target.style.height="auto"; e.target.style.height=Math.min(140,e.target.scrollHeight)+"px";
+  });
+  $("#campVoice").addEventListener("click",()=>{
+    const b=$("#campVoice"), input=$("#campSay");
+    b.classList.add("listening"); b.title="Listening…"; input.placeholder="Listening…";
+    setTimeout(()=>{const w=WIZARD[wizIdx];input.value=w.sample||(w.chips&&w.chips[0])||"Use the recommended option and keep it concise.";
+      b.classList.remove("listening");b.title="Answer by voice";input.placeholder="Type or speak your answer…";input.focus()},900);
   });
 }
 
@@ -2675,15 +3198,39 @@ function openShoppers(stage){
   $("#shopQ").addEventListener("input",e=>draw(e.target.value.toLowerCase()));
 }
 function openShopper(s){
-  openPanel(s.name, "Opens in its own tab in the real product", `
-    <div class="banner banner-info"><div class="col gap-xxxs">
-      <span class="t-md med">This is a stand-in for the shopper profile.</span>
-      <span class="t-sm sec">In the product this opens in a new tab so you can keep the list you were working through.</span>
-    </div></div>
+  const fullName=s.fullName||({"Ana R.":"Ana Rodriguez","Marc D.":"Marc Dubois","Sam K.":"Sam Kerr","Lena P.":"Lena Petersen","Priya S.":"Priya Shah"}[s.name]||s.name.replace(".",""));
+  const first=fullName.split(" ")[0], last=fullName.split(" ").slice(1).join(" ")||"Customer";
+  const slug=(first+"."+last).toLowerCase().replace(/[^a-z.]/g,"");
+  const orders=[
+    ["#10482","Aug 3, 2026","Winter Tights · Merino Socks","$148","Delivered"],
+    ["#9821","Mar 18, 2026","Alpine Hardshell","$289","Delivered"],
+    ["#9174","Nov 6, 2025","Trail Gloves","$64","Delivered"]
+  ].slice(0,Math.min(3,Math.max(1,s.orders||1)));
+  openPanel(fullName, "Shopper profile · identity, commerce and conversation context", `
+    <div class="card pad-md">
+      <div class="row between wrap gap-sm">
+        <div class="row gap-sm"><div class="acctAv" style="width:40px;height:40px;font-size:14px">${first[0]}${last[0]||""}</div>
+          <div class="col gap-xxxs"><h3 class="h-lg">${fullName}</h3><span class="t-sm sec">${s.tier} · ${s.orders||1} orders · ${s.ltv} lifetime value</span></div></div>
+        <span class="tag tag-green">Marketing consent active</span>
+      </div>
+      <div class="grid g-3" style="margin-top:var(--md)">
+        <div class="kv"><span class="k">First name</span><span class="t-md med">${first}</span></div>
+        <div class="kv"><span class="k">Last name</span><span class="t-md med">${last}</span></div>
+        <div class="kv"><span class="k">Phone</span><span class="t-md med mono">${s.id}</span></div>
+        <div class="kv"><span class="k">Email</span><span class="t-md med">${slug}@example.com</span></div>
+        <div class="kv"><span class="k">Shipping address</span><span class="t-md med">42 Alpine Way<br>Chamonix 74400 · France</span></div>
+        <div class="kv"><span class="k">Customer since</span><span class="t-md med">November 2025</span></div>
+      </div>
+    </div>
     <div class="grid g-3">
       <div class="card pad-md"><div class="kv"><span class="k">Lifetime value</span><span class="h-md">${s.ltv}</span></div></div>
       <div class="card pad-md"><div class="kv"><span class="k">Orders</span><span class="h-md">${s.orders}</span></div></div>
       <div class="card pad-md"><div class="kv"><span class="k">Tier</span><span class="h-md">${s.tier}</span></div></div>
+    </div>
+    <div class="col gap-xs">
+      <div class="row between"><span class="t-sm bold">Previous orders</span><span class="t-sm sec">${s.orders||1} total</span></div>
+      <div class="card" style="overflow:hidden"><table class="inner"><thead><tr><th>Order</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>${orders.map(o=>`<tr><td class="t-sm med">${o[0]}</td><td class="t-sm sec">${o[1]}</td><td class="t-sm">${o[2]}</td><td class="t-sm med num-t">${o[3]}</td><td><span class="tag tag-green">${o[4]}</span></td></tr>`).join("")}</tbody></table></div>
     </div>
     <div class="col gap-xs">
       <span class="t-sm bold">Recent conversations</span>
@@ -2706,6 +3253,11 @@ function openShopper(s){
    thread is persistent UI — everything the merchant sees is something the
    assistant showed them in response to a question. */
 const WIZARD=[
+  {step:1, ask:"Engage found three campaign opportunities. Want to start from one of them?",
+   hint:"These come from catalogue changes, shopper behaviour and seasonal timing.",
+   chips:["New product launch · Cirrus jacket","Summit shell restock","First sub-zero forecast","I have another idea"],
+   ack:(a)=>/cirrus|product/i.test(a)?"Great — I'll use the Cirrus launch as the starting point and find the strongest audience.":"Got it — we'll shape the opportunity together.",
+   card:null},
   {step:1, ask:"Who do you want to reach?",
    hint:"Describe them however you'd say it out loud.",
    chips:["Hardshell buyers with no mid-layer","Lapsed subscribers, delivery issue","VIPs who haven't seen the new season"],
@@ -2717,11 +3269,11 @@ const WIZARD=[
    chips:["This is right, continue","Show me as rules"],
    ack:(a)=>/rule/i.test(a) ? "Here's the same audience as rules — edit anything that's off." : "Good — that's the audience settled.",
    card:(a)=>/rule/i.test(a) ? rulesCard() : null},
-  {step:2, ask:"What's the point you want to land?",
-   hint:"Tell me the outcome you want, not the exact wording — I'll write the copy.",
-   chips:["Mid-layer is what makes it work below 5°","Come back, we fixed the fit issue","Early access before the drop"],
-   sample:"The mid-layer is the piece that makes the hardshell work below 5 degrees. Don't discount unless we have to — margin matters more than volume on this one.",
-   ack:"Here are three approaches, ordered so the cheapest one is tried first.",
+  {step:2, ask:"What story do you want to tell this audience?",
+   hint:"Start with the campaign moment. I'll ask for the product and turn your answer into a complete instruction.",
+   chips:["New product launch","A product is back in stock","A seasonal story","We fixed a product problem"],
+   sample:"New product launch: introduce the Cirrus insulated jacket to hardshell owners who need a warmer layer. Explain what is genuinely new, why it works with what they own, and lead with product education rather than a discount.",
+   ack:"I used the audience and the Cirrus product data to build a detailed instruction. Here are three approaches to test.",
    card:()=>variantCard()},
   {step:2, ask:"Keep all three, or change something?",
    hint:"You can remove a variant, add one, or edit any of the instructions above.",
@@ -2739,13 +3291,13 @@ const WIZARD=[
    chips:["Test 10%, send winner after an hour","Send to everyone at once","Let me set the split"],
    ack:"Set. Here's what I checked before anything is allowed to leave.",
    card:()=>checksCard()},
-  {step:3, ask:"Want to see what it would actually send, before you launch?",
-   hint:"I can generate real-looking conversations against this exact audience and these exact variants.",
-   chips:["Yes, show me 10","Yes, show me 20","Yes, show me 40","No, let's launch"],
+  {step:3, ask:"Review the first messages before launch?",
+   hint:"I'll generate a scrollable feed of the first 30 messages, in send order, across every variant.",
+   chips:["Preview first 30 messages","No, let's launch"],
    ack:(a)=>{
      const m=a.match(/\d+/);
-     if(m){ prevN=+m[0]; prevList=genPreview(prevN);
-       return "Here's "+prevN+" of them, split the way the real send would split them. Nothing was sent." }
+      if(m){ prevN=+m[0]; prevList=genPreview(prevN);
+       return "Here's the first "+prevN+" in send order. Nothing was sent." }
      return "Understood — nothing left to check.";
    },
    card:(a)=>/\d/.test(a) ? previewCard() : null,
@@ -2795,17 +3347,14 @@ function checksCard(){
     <div class="col gap-xs">${WIZ_CHECKS.map(c=>`<div class="row between">
       <div class="col gap-xxxs"><span class="t-sm med">${c[0]}</span><span class="t-sm sec">${c[1]}</span></div>
       <span class="tag ${c[2]}">${c[2]==="tag-green"?"Pass":"Deferred"}</span></div>`).join("")}</div>
-    <div class="row gap-xs" style="margin-top:var(--md);justify-content:flex-end">
-      <button class="btn btn-primary" id="wizLaunch">Launch the test wave</button>
-    </div>
   </div>`;
 }
 function previewCard(){
   return `<div class="card pad-md" style="max-width:640px">
     <div class="row between wrap gap-xs">
-      <div class="col gap-xxxs"><span class="h-sm">${prevN} sample conversations</span>
-        <span class="t-sm sec">Opened in a panel so you can scroll through them.</span></div>
-      <button class="btn btn-secondary sm" id="wizOpenPreview">Open the ${prevN}</button>
+      <div class="col gap-xxxs"><span class="h-sm">First ${prevN} outbound messages</span>
+        <span class="t-sm sec">Shown in send order so you can scan the whole wave, not review shoppers one by one.</span></div>
+      <button class="btn btn-secondary sm" id="wizOpenPreview">Review the ${prevN} messages</button>
     </div>
   </div>`;
 }
@@ -2891,19 +3440,22 @@ function campAnswer(){
 function afterCardMount(w){
   if($("#wizRuleList")) renderRules();
   if($("#wizVariantGrid")) renderVariants();
-  if($("#wizLaunch")) $("#wizLaunch").addEventListener("click",()=>{
-    $("#wizLaunch").textContent="Launched"; $("#wizLaunch").disabled=true;
-  });
   if($("#wizOpenPreview")) $("#wizOpenPreview").addEventListener("click",openPreviewPanel);
+}
+function launchCampaign(){
+  CAMPAIGNS.unshift({n:"Cirrus jacket launch",aud:"Active hardshell owners, no insulated layer",sent:"286 / 2,190",reach:"89.7%",reply:"—",click:"—",cvr:"—",orders:"—",aov:"—",gmv:"$0",roi:"—",opt:"0.1%",cost:"$184",rpk:"$0",win:"Testing 3 instructions",st:"Launching",prog:13});
+  renderCampaigns();
+  goto("campaigns");
 }
 function finishWizard(){
   $("#campCompose").style.display="none";
-  campAddAsk(`<span class="t-md med">That's everything set. Launch whenever you're ready — nothing has gone out yet.</span>`);
+  campAddAsk(`<div class="col gap-sm"><span class="t-md med">That's everything set. The audience, story, instructions and first 30 messages are ready — nothing has gone out yet.</span>
+    <button class="btn btn-primary" id="wizLaunch" style="width:fit-content">Launch campaign</button></div>`);
+  $("#wizLaunch").addEventListener("click",launchCampaign);
 }
 function openPreviewPanel(){
-  renderPreview();
-  openPanel(prevN+" sample conversations", "Generated against this audience and these variants · nothing was sent",
-    `<div class="grid g-3" id="prevGrid" style="grid-template-columns:1fr"></div>`,
+  openPanel("First "+prevN+" messages", "In send order, generated against this audience and every variant · nothing was sent",
+    `<div class="row gap-lg wrap hidden" id="prevSummary"></div><div class="col gap-xs" id="prevGrid"></div>`,
     `<button class="btn btn-secondary" id="prevRegen">Generate a different set</button>
      <button class="btn btn-primary" data-closepanel>Done</button>`);
   renderPreview();
@@ -3141,9 +3693,12 @@ $$("#repView button").forEach(b=>b.addEventListener("click",()=>{
 let rz; addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(renderReport,120)});
 
 renderReport(); renderBench();
-renderEng(); renderAce(); renderCampaigns(); renderRules(); renderVariants();
+renderEng(); renderAce(); renderCampaigns(); renderOpportunities(); renderRules(); renderVariants();
 renderGuardrails(); renderExclusions(); renderLifecycle();
 renderConv(); renderWiz(); renderLoyalty();
+renderProductOpportunities("guardrails","guardrailOpportunities");
+renderProductOpportunities("lifecycle","lifecycleOpportunities");
+renderProductOpportunities("loyalty","loyaltyOpportunities");
 </script>
 </body>
 </html>

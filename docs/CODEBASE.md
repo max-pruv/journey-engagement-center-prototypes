@@ -24,6 +24,7 @@ Each is a `<section class="page">`; `goto(page)` unhides one and hides the rest.
 | id | Nav item | Rendered by |
 | --- | --- | --- |
 | `page-overview` | Reporting | `renderReport` → `renderTiles`, `renderRevTable`, `stackedBars`/`lines`/`hBars`; plus `renderBench` |
+| `page-opportunities` | Opportunities | `renderOpportunities` → `renderOpportunityDetail`; actions route into campaigns, guardrails, ACE domains, lifecycle and loyalty |
 | `page-engagements` | Engagements | `renderAce` (AI tab), `renderEng` (Custom tab) |
 | `page-campaigns` | Campaigns | `renderCampaigns` |
 | `page-campaign-new` | (via Create) | `resetWizard` → `askTurn`/`campAnswer` drive a linear script (`WIZARD`), rendering `renderRules`/`renderVariants` inline as cards |
@@ -53,11 +54,13 @@ Change these, not the markup, when you want different content.
 | `OBJECTIVES`, `DISCOUNTS`, `CAP_UNITS` | The dropdown option lists on a lifecycle stage |
 | `SUPPRESSION` / `EXCLUSIONS` | The two guardrail blocks — timing vs people. `locked: true` means it can't be toggled |
 | `TIERS`, `EARN`, `REWARDS` | Loyalty. Tiers carry structured `cond` rows so the editor opens populated |
+| `PRODUCT_OPPORTUNITIES` | Horizontal, account-pattern recommendations for Guardrails, Lifecycle and Loyalty; each opens an evidence and action panel |
+| `OPPORTUNITIES` | The cross-product conversational opportunity inbox, including evidence, impact, proposal fields and action routing |
 | `DIMS` | The reporting dimensions. Each member carries a weekly base, a growth rate and **its own rates** — every number on the page is derived from those, so no two figures can disagree |
 | `METRICS` | The ten outbound metrics, each with a kind (`count` / `money` / `rate`) and a direction |
 | `GR_CATS` | The seven guardrail categories driving the master/detail |
 | `WEEKS`, `BENCH` | The 12-week axis and the benchmark rows |
-| `CAMPAIGNS`, `VARIANTS`, `RULES`, `WIZ`, `WIZ_CHECKS` | Campaigns list and the wizard |
+| `CAMPAIGNS`, `CAMP_METRICS`, `VARIANTS`, `RULES`, `WIZ`, `WIZ_CHECKS` | Campaigns list, selectable performance columns and the wizard |
 | `SIM_SHOPPERS` | The shoppers you can run a live test against |
 | `PREV_*` | Word pools for `genPreview(n)`, the pre-launch campaign preview |
 
@@ -84,8 +87,8 @@ Changing metric or view can never repaint a series.
 
 ## Mutable state
 
-Six variables, all module-scope: `aceState`, `engFilter`, `stg` (selected lifecycle stage),
-`convFilter`/`convSel`/`convQ`, `wizStep`, `studio`. Every one of them is followed by a `render*`
+Mutable module-scope state includes `aceState`, `engFilter`, `stg` (selected lifecycle stage),
+`convFilter`/`convSel`/`convQ`, `campColumns`, `wizStep`, `studio`. Every one of them is followed by a `render*`
 call — there is no reactive layer, so **if you mutate state you must re-render**.
 
 ## Panels
@@ -112,10 +115,11 @@ rule produced the answer — that note is the whole point of the feature.
 
 ## Charts
 
-Hand-rolled inline SVG, no library. `stackedBars` and `lines` **measure `host.clientWidth`** and
-generate at 1:1 so text doesn't get downscaled; `drawCharts()` re-runs on a debounced resize. Both
-have hover tooltips through a shared `#tip`, and both have a table view via the `data-view`
-segmented control.
+Hand-rolled inline SVG, no library. The main time-series view always uses `lines`, regardless of
+metric type: cardinal-spline curves, subtle per-series gradient fills, an animated draw, shared
+crosshair and hover points. It **measures `host.clientWidth`** and generates at 1:1 so text doesn't
+get downscaled; the report re-runs on a debounced resize. The same data also has ranked and table
+views through the `data-view` segmented control.
 
 **Palette.** `--dv-1 #7e55f6` (purple, ACE) · `--dv-2 #c35e4a` (coral) · `--dv-3 #149db8` (teal,
 Default) · `--dv-4 #0e4ea7` (blue), plus `--dv-other #b3b8c1`. Axiom steps validated **on all
