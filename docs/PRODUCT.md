@@ -44,60 +44,74 @@ between "suggest" and "supported" that nobody could name.
 and the one that needs the most education. It had a 28px-tall control; now it has a third of the
 screen and a Learn more panel.
 
-## 3. Domains are the only dial — and refusing one has a visible price
+## 3. Themes are the only dial — and refusing one has a visible price
 
-**Decision.** Eight domains bound what ACE may work on: replenishment, retention, cross-sell,
+**Decision.** Eight themes bound what ACE may work on: replenishment, retention, cross-sell,
 service recovery, subscriptions, loyalty moments, consideration, seasonal. Turn one off and ACE
-stops looking there entirely.
+stops looking there entirely, regardless of what any play underneath it is set to.
 
 **Why they exist.** Enterprise control. A merchant who cannot bound an autonomous system will not
 switch it on, and "all or nothing" is not a real choice at that size.
 
-**The tension, and the resolution.** Domains give control but create a blind spot: you can't see
-what you're declining. So a domain that is off does **not** show dashes. It shows its modelled
+**The tension, and the resolution.** Themes give control but create a blind spot: you can't see
+what you're declining. So a theme that is off does **not** show dashes. It shows its modelled
 potential — shoppers reachable, GMV, conversion, opt-out — in purple italics, with a header tag
 like `2 off · ≈$19,400 GMV left on the table`. The estimate is explicitly labelled as modelled on
-comparable merchants rather than measured on you. Declining a domain stays a choice, but an
+comparable merchants rather than measured on you. Declining a theme stays a choice, but an
 informed one.
 
-**Metrics on every domain row:** shoppers reached, GMV, conversion rate, opt-out rate. Those four,
+**Metrics on every theme row:** shoppers reached, GMV, conversion rate, opt-out rate. Those four,
 because they are the four a merchant actually argues about.
 
-**Per-domain instruction.** A domain can carry its own optional instruction, for merchants who need
-personalisation on one domain without touching the rest of the account. Same one-instruction rule
+**Per-theme instruction.** A theme can carry its own optional instruction, for merchants who need
+personalisation on one theme without touching the rest of the account. Same one-instruction rule
 as everywhere else.
 
-## 3b. Two layers: a domain, and the plays underneath it
+**Renamed from Domain.** "Domain" tested as a technical word — merchants read it as data
+governance, not as a lever they were meant to pull. "Theme" says the same thing in the language a
+merchant already uses to talk about a campaign idea.
 
-**Decision.** A domain is not a black box. Expand one and you see the **plays** it runs —
+## 3b. Two layers: a theme, and the plays underneath it
+
+**Decision.** A theme is not a black box. Expand one and you see the **plays** it runs —
 *Consideration & browse* holds Cart abandonment, Session abandonment, Browse abandonment and
 Welcome; *Subscriptions* holds renewal, card expiring, payment failed and the pause-save. Every
-play shows its own reach, GMV, conversion and opt-out, the trigger the engine uses, and its own
-instruction badged `Default` or `Customized`.
+play shows its own reach, GMV, conversion and opt-out, the trigger the engine uses, its own
+instruction badged `Default` or `Customized`, and its own on/off switch.
 
 **What it replaced.** A flat list of pre-built "standard" engagements sitting in the second tab
 next to the merchant's own, each with its own on/off switch. That list was the scenario library
 §1 says ACE isn't — it just wasn't labelled as one. A merchant switching *Cart abandonment* on and
 *Browse abandonment* off was picking use cases by hand, which is exactly the thing the switch was
-supposed to end.
+supposed to end. The first version of the two-layer table over-corrected for that by removing the
+play's switch entirely; the switch came back once it was clear the objection was never "a play has
+a dial", it was "the theme has to be the outermost one."
 
-**The rule that makes the two layers hold: a play has no switch of its own.** It is readable,
-inspectable and individually instructable, but the only dial is still the domain above it. That is
-the whole difference between showing your work and handing back the configuration burden.
+**The rule that makes the two layers hold: a play can never outrank its theme.** A play's own
+switch only decides whether *that one play* runs; the theme's switch still decides whether *any*
+play underneath it can run at all. Turning a play off narrows the theme without touching the
+account-wide dial, and turning the theme off overrides every play's own setting, on or off. That
+asymmetry — the outer dial always wins — is what keeps this from becoming the scenario library §1
+rules out: a merchant can fine-tune inside a theme, but can't rebuild ACE one play at a time without
+first deciding to allow the theme at all.
+
+**A row expands by clicking anywhere on it**, not just a chevron — the two layers are the point of
+the screen, so getting to the plays underneath a theme should take the smallest possible click.
 
 **Why show them at all, then.** Because "trust the machine" is not a demo. A merchant asked to turn
-on an autonomous system wants to know what it will actually *do*, and eight one-line domain
+on an autonomous system wants to know what it will actually *do*, and eight one-line theme
 descriptions don't answer that. The plays are the answer, and they're also the honest place to
 report a blocked integration: *Delivery exception* sits under Service recovery with a **Needs
 setup** tag and a modelled figure, so the missing carrier feed has a price on it.
 
-**Every domain number is derived from its plays.** `domTotals()` sums reach and GMV and re-derives
-the rates from the reach they were measured on. No hand-written totals, the same rule Reporting
-follows — so a domain row and the rows underneath it can never disagree.
+**Every theme number is derived from its plays.** `domTotals()` sums reach and GMV and re-derives
+the rates from the reach they were measured on, filtering out any play that's off — its own switch,
+its theme's, or ACE's. No hand-written totals, the same rule Reporting follows — so a theme row and
+the rows underneath it can never disagree.
 
 ## 4. One instruction per unit, and it is a skill
 
-**Decision.** Every engagement and every domain carries exactly **one** instruction. It is a skill
+**Decision.** Every engagement, every theme and every play carries exactly **one** instruction. It is a skill
 the agent loads when that thing fires. It has a badge: `Default` or `Customized`, and a
 "Reset to default" when it has been edited.
 
@@ -125,18 +139,21 @@ off. Nothing in it is "yours by default".
 
 ## 6. Opening an engagement opens a studio, not a summary
 
-**Decision.** Clicking an engagement (or its Edit button, or a domain or play instruction) opens a
+**Decision.** Clicking an engagement (or its Edit button, or a theme or play instruction) opens a
 wide two-column panel: on the left **when it fires** then **what it says**, on the right a **live
 testable conversation**. You pick a shopper, run it, then reply *as the shopper* and watch what
 comes back — with the reasoning shown under the thread.
 
-**When and What, in that order, and the When half is the tell.** For a custom engagement you set
-the trigger: the event, the wait, and an "only if" condition, with a read-back sentence underneath
-that says the whole thing in English and reminds you the timing guardrails still sit on top. For a
-**play**, the same block is present but stated rather than editable — *Set by the engine* — with a
-line saying to turn the domain off if you don't want it running. For a **domain instruction**,
-there is no trigger at all: "There's nothing to set. ACE watches for the moment across this whole
-domain and picks the hour per shopper."
+**When and What, in that order, and the When half is the tell.** For a custom engagement, the
+trigger is a sentence first — "when someone buys a bike and has never bought a helmet, wait 5 days"
+— the same "describe it, rules are the fallback" order §8 uses for audience. **Interpret** turns the
+sentence into the event, the wait and an "only if" condition; a read-back underneath says the whole
+thing in English and reminds you the timing guardrails still sit on top; "Edit as exact rules
+instead" swaps to the raw fields for a merchant who wants to be precise rather than descriptive. For
+a **play**, the same block is present but stated rather than editable — *Set by the engine* — with a
+line pointing at the play's own switch, or the theme's, if you don't want it running. For a
+**theme instruction**, there is no trigger at all: "There's nothing to set. ACE watches for the
+moment across this whole theme and picks the hour per shopper."
 
 Three variants of one panel, and reading them in sequence is the fastest way to understand who owns
 timing at each level. That is why the When block exists even where it has nothing to edit.
@@ -166,8 +183,8 @@ different from Default for no reason.
 
 **Why two are right.** They separate two natures of work: a switch you trust, and a list you
 maintain. That is a real boundary — and it only became a clean one once the pre-built engagements
-moved out of the list and into the switch (§3b). Before that, the "list you maintain" contained
-thirteen things nobody had written and four they had.
+moved out of the list and into the switch (§3b), as themes and plays. Before that, the "list you
+maintain" contained thirteen things nobody had written and four they had.
 
 **The condition.** A mode this important cannot be hidden behind tab selection, so its state lives
 in the strip and is readable from either tab.
@@ -230,7 +247,7 @@ real product that is a new tab, and the prototype says so.
 for you / Live / Closed / Stopped, and a source filter), thread on the right. Every thread opens
 with:
 
-1. **Why this conversation started**, in plain language, badged with source and domain
+1. **Why this conversation started**, in plain language, badged with source and theme
 2. **What it was reasoning from** — lifecycle stage, loyalty state, timing chosen, lever picked
 3. The conversation, or the exact guardrail that stopped it
 
@@ -252,6 +269,16 @@ whether the AI may offer it unprompted.
 less, and on the at-risk cohort they converted better. Loyalty is what lets the engine be generous
 without being expensive — which is why it sits here and not in a separate product area.
 
+## 14. Every screen is a link
+
+**Decision.** Each page carries its own `#hash` in the URL — Engagements, Loyalty, Conversations,
+all of them — updated on every navigation and read back on load. Copy the address bar and send it;
+the other person lands on the same screen instead of always on Reporting.
+
+**Why it matters here.** The prototype's job is alignment in meetings (see the top of this doc,
+and `CLAUDE.md`). "Look at the Engagements tab" is a worse instruction than a link that opens
+straight there.
+
 ---
 
 ## Vocabulary
@@ -263,8 +290,8 @@ Use these consistently; several of them were chosen against a worse alternative.
 | **Engagement** | Anything that reaches out to a shopper | "flow", "journey" |
 | **AI engagement / ACE** | The autonomous mode | "AI-found engagements", a list of scenarios |
 | **Custom engagement** | The engagements the merchant writes, and the only ones with a trigger they own | "scenarios you own", "standard engagement" |
-| **Domain** | The bound on what ACE may work on — the only dial | "category", "use case" |
-| **Play** | One thing ACE does inside a domain. Readable, instructable, **not** switchable | "standard engagement", "sub-domain", "scenario" |
+| **Theme** | The bound on what ACE may work on — the only account-wide dial | "domain", "category", "use case" |
+| **Play** | One thing ACE does inside a theme. Readable, instructable, has its own switch — but never overrides its theme's | "standard engagement", "sub-domain", "scenario" |
 | **When / What** | The two halves of an engagement: the trigger, then the instruction | "conditions and content" |
 | **Instruction** | The single skill attached to a unit | "prompt", "instruction stack" |
 | **Guardrail** | A hard limit no instruction can unlock | "setting" |

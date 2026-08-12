@@ -353,7 +353,7 @@ const STEPS=[
    ack:"Sensible. Everything it prepares lands in Conversations with the full reasoning attached, and nothing goes out until you approve it. Switch to Automatic whenever you've seen enough.",
    card:()=>`<div class="card"><div class="row between wrap gap-xs" style="margin-bottom:var(--xs)">
        <span class="h-md">ACE</span><span class="tag tag-blue">Manual acceptance</span></div>
-     <p class="t-sm sec" style="margin-bottom:var(--sm)">It does all the work, then waits for you. Six domains on, two off — and every standard engagement you'd otherwise switch on one by one is a play inside one of them.</p>
+     <p class="t-sm sec" style="margin-bottom:var(--sm)">It does all the work, then waits for you. Six themes on, two off — and every standard engagement you'd otherwise switch on one by one is a play inside one of them.</p>
      <div class="col gap-xxs">
        ${[["Replenishment & reorder",1,3],["Retention & win-back",1,3],["Cross-sell & complements",1,3],
           ["Service recovery",1,3],["Subscriptions",1,4],["Loyalty moments",1,3],
@@ -362,7 +362,7 @@ const STEPS=[
            <span class="row gap-xxs"><span class="t-xs ter">${x[2]} plays</span>
            <span class="tag ${x[1]?"tag-green":"tag-grey"}">${x[1]?"On":"Off"}</span></span></div>`).join("")}
      </div></div>`,
-   sum:["ACE","Manual acceptance · 6 of 8 domains"]}
+   sum:["ACE","Manual acceptance · 6 of 8 themes"]}
 ];
 
 let step=0, said={};

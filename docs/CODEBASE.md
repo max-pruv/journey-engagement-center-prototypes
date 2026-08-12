@@ -19,13 +19,17 @@ Line numbers below drift as soon as you edit. Grep for the marker instead — ev
 
 ## Screens
 
-Each is a `<section class="page">`; `goto(page)` unhides one and hides the rest.
+Each is a `<section class="page">`; `goto(page)` unhides one, hides the rest, and syncs `location.hash`
+to the page name — every screen has its own URL, so any of them can be copied out of the address bar
+and shared. `KNOWN_PAGES` (derived from the `.page` ids) gates which hashes `goto` will act on; a
+`hashchange` listener and a boot-time check make the URL work both ways — navigate and it updates,
+land on a link and it opens there.
 
 | id | Nav item | Rendered by |
 | --- | --- | --- |
 | `page-overview` | Reporting | `renderReport` → `renderTiles`, `renderRevTable`, `stackedBars`/`lines`/`hBars`; plus `renderBench` |
-| `page-opportunities` | Opportunities | `renderOpportunities` → `renderOpportunityDetail`; actions route into campaigns, guardrails, ACE domains, lifecycle and loyalty |
-| `page-engagements` | Engagements | `renderAce` (AI tab — domains **and** their plays), `renderEng` (Custom tab) |
+| `page-opportunities` | Opportunities | `renderOpportunities` → `renderOpportunityDetail`; actions route into campaigns, guardrails, ACE themes, lifecycle and loyalty |
+| `page-engagements` | Engagements | `renderAce` (AI tab — themes **and** their plays), `renderEng` (Custom tab) |
 | `page-campaigns` | Campaigns | `renderCampaigns` |
 | `page-campaign-new` | (via Create) | `resetWizard` → `askTurn`/`campAnswer` drive a linear script (`WIZARD`), rendering `renderRules`/`renderVariants` inline as cards |
 | `page-guardrails` | Guardrails | `renderGuardrails` (master/detail over `GR_CATS`) → `renderSuppression`, `renderExclusions` |
@@ -45,8 +49,8 @@ Change these, not the markup, when you want different content.
 | --- | --- |
 | `ENG` | The Custom engagement table — **merchant-written only**. `when` is `{ev, delay, cond}` (indexes into `WHEN_EVENTS` / `WHEN_DELAYS`, plus a free-text condition), `ins` is `Default` or `Customized`, `st` is `on`/`off` |
 | `WHEN_EVENTS` / `WHEN_DELAYS` | The trigger vocabulary the When block edits |
-| `ACE_DOMAINS` | The two-layer domain table. A domain carries `on`, `ins` and a `plays` array; **it carries no metrics of its own** — see below |
-| `ACE_DOMAINS[i].plays[j]` | One play. Real metrics (`reach`, `gmv`, `cvr`, `opt`) and/or the modelled ones (`potReach`, `potGmv`, `potCvr`, `potOpt`); `trg` is the trigger phrase, `ins` the badge, `st:"setup"` + `note` marks one blocked on an integration |
+| `ACE_DOMAINS` | The two-layer theme table (variable name kept as "domain" in code — see below). A theme carries `on`, `ins` and a `plays` array; **it carries no metrics of its own** — see below |
+| `ACE_DOMAINS[i].plays[j]` | One play. Real metrics (`reach`, `gmv`, `cvr`, `opt`) and/or the modelled ones (`potReach`, `potGmv`, `potCvr`, `potOpt`); `trg` is the trigger phrase, `ins` the badge, `on` the play's own switch (`undefined`/`true` = on, `false` = off), `st:"setup"` + `note` marks one blocked on an integration |
 | `ACE_MODES` | The three mode cards. `sum` is the headline, `brief` the one-liner on the card, `det`/`see`/`who` fill the Learn more panel |
 | `ACE_CHAIN` | The six agent steps, shown inside Learn more |
 | `CONV` | The conversations inbox. `why` is the plain-language reason, `reason` the key/value reasoning rows, `thread` the messages, `stop` the guardrail that blocked it |
@@ -66,26 +70,31 @@ Change these, not the markup, when you want different content.
 | `SIM_SHOPPERS` | The shoppers you can run a live test against |
 | `PREV_*` | Word pools for `genPreview(n)`, the pre-launch campaign preview |
 
-## The two-layer domain table
+## The two-layer theme table
 
-`ACE_DOMAINS` holds no metrics. Every figure on a domain row is folded from its plays, so the row
+`ACE_DOMAINS` holds no metrics. Every figure on a theme row is folded from its plays, so the row
 and the rows under it cannot drift apart:
 
 - `playReal(p)` / `playPot(p)` — one play's measured and modelled numbers. `playPot` falls back to
   the real ones, so an active play only needs `potX` fields where they differ.
-- `playLive(d,p,aceOn)` — is this play actually running? False if ACE is off, the domain is off, or
-  the play is `st:"setup"`.
+- `playLive(d,p,aceOn)` — is this play actually running? False if ACE is off, the theme is off, the
+  play's own switch (`p.on`) is off, or the play is `st:"setup"`.
 - `fold(rows)` — sums reach and GMV and **re-derives** cvr and opt from the reach they were measured
   on. Never an average of averages.
-- `domTotals(d,aceOn)` — the live fold, or `null` when nothing under the domain is running.
-- `domPotential(d)` — the fold of every play's modelled numbers, including the blocked ones. This is
-  what the italics show, and what the "GMV left on the table" tag sums.
+- `domTotals(d,aceOn)` — the live fold, or `null` when nothing under the theme is running.
+- `domPotential(d)` — the fold of every play's modelled numbers, including the off and blocked ones.
+  This is what the italics show, and what the "GMV left on the table" tag sums.
 
-`aceOpen` is a `Set` of expanded domain indexes; it starts full, because the two layers are the
-point of the screen. `data-domopen` toggles one, `#aceExpandAll` toggles all.
+`aceOpen` is a `Set` of expanded theme indexes; it starts full, because the two layers are the point
+of the screen. `data-domopen` sits on the whole theme row (not just the chevron) so clicking anywhere
+on it expands or collapses that theme; it must be checked **after** the row's own controls
+(`data-dom`, `data-dominstr`) in the delegated click handler, or a click on either of those would
+just toggle the row instead of doing what it says. `#aceExpandAll` toggles every theme at once.
 
-**A play deliberately has no toggle.** If you are tempted to add one, read §3b of PRODUCT.md first —
-that switch is the thing the restructure removed.
+**A play's own switch (`p.on`, via `data-play="i.j"`) never outranks its theme's.** `playLive`
+ANDs both together, so turning a theme off still overrides every play under it regardless of the
+play's own setting — the two-layer rule from §3b of PRODUCT.md holds; a play just narrows *within*
+an allowed theme now, instead of having no dial at all.
 
 `updateNavCount()` sets the Engagements nav badge from *both* layers: live plays plus custom
 engagements that are on. It is called by `renderAce` and `renderEng`, so either one keeps it honest.
@@ -98,7 +107,18 @@ engagements that are on. It is called by `renderAce` and `renderEng`, so either 
 | --- | --- | --- |
 | absent | "There's nothing to set" — the engine owns timing | `studioForDomain` |
 | `{mode:"read", line, domain}` | The trigger, stated, tagged *Set by the engine* | `studioForPlay` |
-| `{mode:"edit", ev, delay, cond}` | Two selects and a condition, with a live read-back | `studioForEng`, `studioForNew` |
+| `{mode:"edit", ev, delay, cond}` | A trigger you set, described in a sentence first, exact rules as the fallback | `studioForEng`, `studioForNew` |
+
+For `mode:"edit"`, the sentence (`#studioNl`) is the primary surface — same "describe it, rules
+are the fallback" order as campaign audience (§8 of PRODUCT.md). `whenToSentence(w)` renders the
+current `{ev,delay,cond}` back as English for an existing engagement; `studioForNew` seeds a worked
+example instead, since there's no trigger yet to describe. `#whenModeToggle` swaps between
+`#whenNlWrap` and `#whenRulesWrap` (the old two-select-plus-condition form) without touching either
+one's underlying fields — they both write to the same hidden `#whenEv`/`#whenDelay`/`#whenCond`,
+which is what `whenReadback()` and Save actually read. **Interpret** is decorative like the rest of
+the studio: for a brand-new engagement it fills in a canned example; for an existing one it just
+re-confirms the read-back, since the sentence shown was generated from that engagement's real
+trigger in the first place.
 
 `whenReadback()` rebuilds the English sentence on every change; it is wired in `openStudio` only when
 the block is editable. `ctx.nl` adds the describe-and-interpret box on top, which is the old
@@ -140,8 +160,9 @@ body contains `.studio` with two `.studioCol`. `openPanel` strips `wide` when th
 studio, and `closePanel` clears it after the transition — so a normal panel never inherits the
 wide width.
 
-Entry points: `studioForEng(i)` for an engagement, `studioForDomain(i)` for a domain, `openLearn(k)`
-for a mode, `openShoppers(stage)` → `openShopper(s)`, `openTier(i)` (`null` for a new tier).
+Entry points: `studioForEng(i)` for an engagement, `studioForDomain(i)` for a theme,
+`studioForPlay(i,j)` for a play, `openLearn(k)` for a mode, `openShoppers(stage)` → `openShopper(s)`,
+`openTier(i)` (`null` for a new tier).
 
 ## The live test
 

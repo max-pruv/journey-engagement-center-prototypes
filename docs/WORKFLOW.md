@@ -35,7 +35,7 @@ return JSON.stringify(out)})()
 
 Every key must be `ok` and every `_dom` count must be greater than zero. Anything else means a
 screen is blank. `playRows` at zero while `domRows` is 8 is the specific failure of a collapsed
-`aceOpen` — the probe runs against a fresh load, where every domain starts expanded, so it should
+`aceOpen` — the probe runs against a fresh load, where every theme starts expanded, so it should
 read 8 and 26.
 
 ## Check the JS parses before you look at anything
@@ -102,18 +102,21 @@ datasets that have drifted apart.
 
 ## Checking the two layers still agree
 
-`ACE_DOMAINS` carries no metrics — every domain figure is folded from its plays. If you edit a play's
-numbers, nothing else needs editing, but it is worth confirming the fold still behaves:
+`ACE_DOMAINS` carries no metrics — every theme figure is folded from its plays. If you edit a play's
+numbers, nothing else needs editing, but it is worth confirming the fold still behaves. This checks
+against every play being on, so it won't itself flag a play you've manually switched off — that's
+expected, `domTotals` is supposed to exclude it:
 
 ```js
 (()=>ACE_DOMAINS.map(d=>{const t=domTotals(d,true),p=domPotential(d);
-  const sum=d.plays.filter(x=>x.st!=="setup").reduce((a,x)=>a+(x.reach||0),0);
+  const sum=d.plays.filter(x=>x.st!=="setup"&&x.on!==false).reduce((a,x)=>a+(x.reach||0),0);
   return {n:d.n, foldedReach:t?Math.round(t.reach):null, handSum:d.on?sum:null,
           agree:!d.on||Math.round(t.reach)===sum, pot:Math.round(p.gmv)}}))()
 ```
 
-`agree` must be true on every row. A play with `st:"setup"` is excluded from the live fold but stays
-in the potential — that is deliberate, it is how a blocked integration gets a price tag.
+`agree` must be true on every row. A play with `st:"setup"` or with its own switch off is excluded
+from the live fold but stays in the potential — that is deliberate, it is how a blocked integration
+or a declined play gets a price tag.
 
 ## Changing a chart colour
 
@@ -158,10 +161,13 @@ done
 2. Force-reload from disk
 3. The isolation probe — all `ok`, all counts non-zero
 4. Sweep the reporting surface (above)
-5. Click the thing you changed, plus all three studio shapes (a domain instruction, a play, a custom
-   engagement — they render different When blocks), the Guardrails category list and the Lifecycle
-   stage detail
-6. Push, then confirm live == local
+5. Click the thing you changed, plus all three studio shapes (a theme instruction, a play, a custom
+   engagement — they render different When blocks; the custom-engagement one also has the
+   sentence/rules toggle), a theme row's click-to-expand and a play's own switch, the Guardrails
+   category list and the Lifecycle stage detail
+6. Load the page with a page name in the hash (e.g. `#loyalty`) and confirm it opens straight there;
+   click a nav item and confirm the address bar's hash updates to match
+7. Push, then confirm live == local
 
 ## A note on scope
 

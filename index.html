@@ -695,27 +695,27 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <div class="grid g-3" id="aceModeCards"></div>
           </div>
 
-          <!-- ===== DOMAINS ===== -->
+          <!-- ===== THEMES ===== -->
           <div class="card" style="overflow:hidden">
             <div class="col gap-xxxs" style="padding:var(--md) var(--lg)">
               <div class="row between wrap gap-sm">
-                <h2 class="h-md">Domains and the plays underneath them</h2>
+                <h2 class="h-md">Themes and the plays underneath them</h2>
                 <div class="row gap-xs">
                   <span class="tag tag-grey" id="aceDomCount">6 of 8 allowed</span>
                   <span class="tag tag-purple" id="aceDomPotential">2 off · ≈$19,400 GMV left on the table</span>
                   <button class="btn btn-tertiary sm" id="aceExpandAll">Collapse all</button>
                 </div>
               </div>
-              <p class="t-sm sec">Two layers. A <b>domain</b> is what ACE is allowed to work on — the control that matters if you need to bound an autonomous system. Under each one sit the <b>plays</b> it runs: the standard engagements, now owned by the engine rather than switched on one by one. Turn a domain off and every play under it stops: it won't propose them, won't send them, won't count them. We keep sizing the opportunity anyway, so you can see what you're declining.</p>
+              <p class="t-sm sec">Two layers. A <b>theme</b> is what ACE is allowed to work on — the control that matters if you need to bound an autonomous system. Under each one sit the <b>plays</b> it runs: the standard engagements, now owned by the engine. Each play can be switched off on its own without pulling the whole theme, and still carries exactly one instruction. Turn a theme off and every play under it stops regardless of its own switch: it won't propose them, won't send them, won't count them. We keep sizing the opportunity anyway, so you can see what you're declining. Click a row to expand it.</p>
             </div>
             <table id="aceDomainTable">
-              <thead><tr><th style="width:34%">Domain and plays</th><th>Shoppers reached</th><th>GMV</th>
+              <thead><tr><th style="width:34%">Theme and plays</th><th>Shoppers reached</th><th>GMV</th>
                 <th>Conversion</th><th>Opt-out</th><th>Instruction</th><th style="width:130px">Activated</th></tr></thead>
               <tbody></tbody>
             </table>
             <div class="sepH"></div>
             <div class="row between wrap gap-sm" style="padding:var(--sm) var(--lg)">
-              <span class="t-sm ter">Purple italics are estimates — a domain you've turned off, or a play with no integration behind it yet. Modelled on comparable merchants, not measured on you. A play has no switch of its own: the dial is the domain above it.</span>
+              <span class="t-sm ter">Purple italics are estimates — a theme you've turned off, a play you've switched off, or a play with no integration behind it yet. Modelled on comparable merchants, not measured on you.</span>
               <button class="btn btn-secondary sm" data-goto="conversations">See the conversations behind these numbers</button>
             </div>
           </div>
@@ -727,7 +727,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           <div class="banner banner-info">
             <div class="col gap-xxxs">
               <span class="t-md med">Everything here is something you wrote.</span>
-              <span class="t-sm sec">The standard engagements moved into AI engagement, where they run as plays inside a domain. What's left is the work that's specific to you — the moments ACE has no way to know about. Two parts to each one: <b>when</b> it fires, and <b>what</b> it says.</span>
+              <span class="t-sm sec">The standard engagements moved into AI engagement, where they run as plays inside a theme. What's left is the work that's specific to you — the moments ACE has no way to know about. Two parts to each one: <b>when</b> it fires, and <b>what</b> it says.</span>
             </div>
           </div>
 
@@ -756,7 +756,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             </table>
           </div>
 
-          <p class="t-sm ter">Custom engagements keep their own switch, because you own the timing. Plays inside a domain don't — the engine decides when those fire, and the domain decides whether they run at all.</p>
+          <p class="t-sm ter">Custom engagements keep their own switch, because you own the timing. A play inside a theme has a switch too, but never the timing — the engine decides when it fires, and the theme still governs whether it can run at all.</p>
         </div>
       </section>
 
@@ -1105,11 +1105,12 @@ const ENG=[
    when:{ev:11,delay:0,cond:"Viewed the cooling range in the last 30 days"}}
 ];
 
-/* ACE is one switch, not a list of scenarios — but a domain is not a black box
-   either. Two layers: the DOMAIN is the dial you turn, and under it sit the
-   PLAYS it runs. Plays are readable, each carries its own instruction, and none
-   of them has an on/off of its own: bounding the machine happens one level up.
-   Every domain figure is derived from its plays — see domTotals(). */
+/* ACE is one switch, not a list of scenarios — but a theme is not a black box
+   either. Two layers: the THEME is the dial you turn, and under it sit the
+   PLAYS it runs. Each play is readable, carries its own instruction, and now
+   its own on/off — but a play can never fire while its theme is off, so
+   bounding the machine still starts one level up.
+   Every theme figure is derived from its plays — see domTotals(). */
 const ACE_DOMAINS=[
   {n:"Replenishment & reorder",d:"Someone is due, or overdue, for something they already buy.",ins:"Customized",on:true,
    plays:[
@@ -1169,8 +1170,8 @@ const ACE_DOMAINS=[
 function playReal(p){ return {reach:p.reach||0,gmv:p.gmv||0,cvr:p.cvr||0,opt:p.opt||0} }
 function playPot(p){ return {reach:p.potReach??p.reach??0,gmv:p.potGmv??p.gmv??0,
                              cvr:p.potCvr??p.cvr??0,opt:p.potOpt??p.opt??0} }
-function playLive(d,p,aceOn){ return aceOn && d.on && p.st!=="setup" }
-/* Never hand-write a domain total: fold the plays. Rates are re-derived from
+function playLive(d,p,aceOn){ return aceOn && d.on && p.on!==false && p.st!=="setup" }
+/* Never hand-write a theme total: fold the plays. Rates are re-derived from
    the reach they were measured on, never averaged across plays. */
 function fold(rows){
   const reach=rows.reduce((a,r)=>a+r.reach,0), gmv=rows.reduce((a,r)=>a+r.gmv,0);
@@ -1184,7 +1185,7 @@ function domTotals(d,aceOn){
 function domPotential(d){ return fold(d.plays.map(playPot)) }
 const ACE_CHAIN=[
   ["Watch","Orders, tickets, sessions, consent and catalog, continuously."],
-  ["Find","An agent looks for a moment worth acting on, inside the domains you allow."],
+  ["Find","An agent looks for a moment worth acting on, inside the themes and plays you allow."],
   ["Decide","A second agent decides whether this specific person should hear from you, and when."],
   ["Write","A third writes the message from what it knows about them — not from a template."],
   ["Check","Guardrails run last. They can stop anything the agents decided."],
@@ -1294,10 +1295,10 @@ const OPPORTUNITIES=[
    proposal:{title:"Frequency guardrail",caption:"One account-wide change",rows:[["Current cap","8 / month"],["Recommended cap","5 / month"],["Weekly cap","Keep at 3"],["Minimum gap","Keep at 48h"]],chips:["All sources combined","Reversible"],action:"Apply limit of 5",act:"guardrail-frequency"}},
   {id:"seasonal-mode",type:"Mode",status:"pending",age:"Yesterday",score:90,
    title:"Seasonal & inventory mode could be active",issue:"ACE mode opportunity",volume:"3 moments missed · $18.4k modelled",impact:"$18.4k modelled GMV",
-   intro:["ACE detected three useful seasonal or inventory moments in the last 30 days, but this domain is off, so none became conversations.",
+   intro:["ACE detected three useful seasonal or inventory moments in the last 30 days, but this theme is off, so none became conversations.",
      "Turning it on would let ACE detect restocks, weather shifts and stock pressure. It would still obey your current Manual acceptance setting."],
    user:"What exactly would change?",
-   proposal:{title:"Seasonal & inventory",caption:"Activate one ACE domain",rows:[["Detection","Restocks, weather, inventory"],["Autonomy","Manual acceptance"],["Daily cap","Inside existing limit"],["Estimated reach","2,360 / month"]],chips:["No automatic sends","Full reasoning attached"],action:"Activate mode",act:"mode-seasonal"}},
+   proposal:{title:"Seasonal & inventory",caption:"Activate one ACE theme",rows:[["Detection","Restocks, weather, inventory"],["Autonomy","Manual acceptance"],["Daily cap","Inside existing limit"],["Estimated reach","2,360 / month"]],chips:["No automatic sends","Full reasoning attached"],action:"Activate mode",act:"mode-seasonal"}},
   {id:"platinum-tier",type:"Loyalty",status:"pending",age:"2 days ago",score:86,
    title:"184 members have outgrown Summit",issue:"Loyalty opportunity",volume:"Top cohort · 89% repeat rate",impact:"184 high-value members",
    intro:["I found 184 members spending above $4,000 a year. They currently receive the same Summit treatment as shoppers just above $2,000.",
@@ -1420,7 +1421,7 @@ const DIMS={
     {n:"ACE",     c:"var(--dv-1)",base:7720,g:.012,reply:.063,click:.043,cvr:.033,opt:.009,aov:118},
     {n:"Custom",  c:"var(--dv-2)",base:380, g:.128,reply:.094,click:.071,cvr:.077,opt:.007,aov:142},
     {n:"Campaign",c:"var(--dv-3)",base:950, g:.041,reply:.088,click:.062,cvr:.048,opt:.014,aov:186}]},
-  domain:{label:"ACE domain", head:"Domain", members:[
+  domain:{label:"ACE theme", head:"Theme", members:[
     {n:"Replenishment & reorder",base:520,g:.038,reply:.142,click:.101,cvr:.081,opt:.007,aov:76},
     {n:"Retention & win-back",   base:430,g:.031,reply:.086,click:.058,cvr:.044,opt:.016,aov:104},
     {n:"Cross-sell & complements",base:352,g:.035,reply:.121,click:.094,cvr:.069,opt:.009,aov:112},
@@ -1921,7 +1922,7 @@ function applyOpportunityAction(act){
 function sendOpportunityMessage(){
   const input=$("#oppSay"),text=input.value.trim();if(!text)return;
   const o=OPPORTUNITIES.find(x=>x.id===oppSel);
-  const replies={Campaign:"I updated the campaign brief and kept the first wave in review. The audience, holdout and guardrails remain visible before anything launches.",Configuration:"I can make that adjustment in the proposal. Nothing changes account-wide until you use the apply button.",Mode:"I kept this in Manual acceptance, so activating the domain creates drafts rather than sending automatically.",Lifecycle:"I added your request to the stage review. The threshold remains unchanged until you save it.",Loyalty:"I updated the proposed tier logic and rechecked how many members would qualify."};
+  const replies={Campaign:"I updated the campaign brief and kept the first wave in review. The audience, holdout and guardrails remain visible before anything launches.",Configuration:"I can make that adjustment in the proposal. Nothing changes account-wide until you use the apply button.",Mode:"I kept this in Manual acceptance, so activating the theme creates drafts rather than sending automatically.",Lifecycle:"I added your request to the stage review. The threshold remains unchanged until you save it.",Loyalty:"I updated the proposed tier logic and rechecked how many members would qualify."};
   input.value="";addOpportunityExchange(text,replies[o.type]||"I updated the recommendation and kept it ready for your review.");
 }
 
@@ -1987,7 +1988,7 @@ const ACE_MODES=[
    brief:"It does all the work, then waits for you.",
    det:"ACE finds the moment, picks the person, writes the message and runs every guardrail — then stops. Nothing sends without you. Each one lands in Conversations with the full reasoning attached: the lifecycle stage, the loyalty state, the timing it chose and the lever it picked. You approve, edit or reject. Anything you leave untouched for 48 hours expires rather than going out stale.",
    see:"A queue in Conversations, each with its reasoning and a sample message.",
-   who:"Pick this for the first few weeks, or on any domain where you want a human in the loop for good."},
+   who:"Pick this for the first few weeks, or on any theme where you want a human in the loop for good."},
   {k:"auto",n:"Automatic",tag:"tag-purple",
    sum:"It sends on its own, inside your guardrails.",
    brief:"Same work, no waiting. You review after, not before.",
@@ -2045,9 +2046,11 @@ function renderAce(){
       : `<td class="t-md num-t" style="color:var(--content-accent-default);font-style:italic">${potential}</td>`;
 
     const tr=el("tr","domRow");
+    tr.setAttribute("data-domopen",i);
+    tr.style.cursor="pointer";
     tr.innerHTML=`
       <td><div class="row gap-xs" style="align-items:flex-start">
-        <button class="twistie ${open?"open":""}" data-domopen="${i}" aria-label="Show the plays in this domain">
+        <button class="twistie ${open?"open":""}" tabindex="-1" aria-hidden="true">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m9 5 7 7-7 7"/></svg>
         </button>
         <div class="col gap-xxxs" style="flex:1">
@@ -2074,7 +2077,9 @@ function renderAce(){
     if(!open) return;
 
     d.plays.forEach((pl,j)=>{
-      const pLive=playLive(d,pl,on), v=pLive?playReal(pl):playPot(pl);
+      const pLive=playLive(d,pl,on), v=pLive?playReal(pl):playPot(pl), pOn=pl.on!==false;
+      const pInteractive=on&&pl.st!=="setup";
+      const pStatus=pl.st==="setup"?"Blocked":pLive?"Running":!on?"ACE is off":!d.on?"Off with the theme":"Off";
       const pc=(real,potential)=>pLive
         ? `<td class="t-md num-t">${real}</td>`
         : `<td class="t-md num-t" style="color:var(--content-accent-default);font-style:italic">${potential}</td>`;
@@ -2097,7 +2102,10 @@ function renderAce(){
           ${pl.ins==="Customized"?`<span class="dot" style="background:var(--purple-500)"></span>Instruction`
             :`<span class="ter">Default instruction</span>`}
         </button></td>
-        <td><span class="t-xs ter">${pl.st==="setup"?"Blocked":pLive?"Running":on?"Off with the domain":"ACE is off"}</span></td>`;
+        <td><div class="row gap-xs" style="justify-content:flex-end">
+          <span class="t-xs ter" style="text-align:right">${pStatus}</span>
+          <span class="toggle ${pOn?"on":""}" data-play="${i}.${j}" ${pInteractive?"":'style="opacity:.5;pointer-events:none"'}></span>
+        </div></td>`;
       tb.appendChild(ptr);
     });
   });
@@ -2995,14 +3003,22 @@ overlay.addEventListener("click",closePanel);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
 
 const NAV_OF={"campaign-new":"campaigns"};
-function goto(page){
+/* every screen gets its own #hash, so any page can be copied out of the
+   address bar and sent to someone else — they land on the same screen. */
+const KNOWN_PAGES=new Set($$(".page").map(p=>p.id.replace(/^page-/,"")));
+function goto(page,opts={}){
   $$(".page").forEach(p=>p.classList.add("hidden"));
   ($("#page-"+page)||$("#page-soon")).classList.remove("hidden");
   const navPage=NAV_OF[page]||page;
   $$(".navItem").forEach(n=>n.classList.toggle("on",n.dataset.page===navPage));
   $("#scroller").scrollTop=0; closePanel();
   if(page==="campaign-new") resetWizard();
+  if(!opts.fromHash && location.hash.slice(1)!==page) location.hash=page;
 }
+addEventListener("hashchange",()=>{
+  const page=location.hash.slice(1);
+  if(KNOWN_PAGES.has(page)) goto(page,{fromHash:true});
+});
 /* fresh conversation every time "Create a campaign" is opened */
 function resetWizard(){
   wizIdx=0; wizStep=1;
@@ -3111,17 +3127,24 @@ document.addEventListener("click",e=>{
   const dm=e.target.closest("[data-dom]");
   if(dm){const i=+dm.dataset.dom;ACE_DOMAINS[i].on=!ACE_DOMAINS[i].on;renderAce();return}
 
-  const dop=e.target.closest("[data-domopen]");
-  if(dop){const i=+dop.dataset.domopen;aceOpen.has(i)?aceOpen.delete(i):aceOpen.add(i);renderAce();return}
+  const di=e.target.closest("[data-dominstr]");
+  if(di){e.stopPropagation();studioForDomain(+di.dataset.dominstr);return}
+
+  const pt=e.target.closest("[data-play]");
+  if(pt){e.stopPropagation();const[i,j]=pt.dataset.play.split(".").map(Number);
+    const p=ACE_DOMAINS[i].plays[j]; p.on=(p.on===false); renderAce(); return}
 
   const pin=e.target.closest("[data-playinstr]");
   if(pin){e.stopPropagation();const[i,j]=pin.dataset.playinstr.split(".").map(Number);studioForPlay(i,j);return}
 
+  /* data-domopen sits on the whole domain row, so this must come after the
+     row's own controls above (data-dom, data-dominstr) or a click on either
+     of those would just expand/collapse the row instead of acting on them */
+  const dop=e.target.closest("[data-domopen]");
+  if(dop){const i=+dop.dataset.domopen;aceOpen.has(i)?aceOpen.delete(i):aceOpen.add(i);renderAce();return}
+
   const lm=e.target.closest("[data-learn]");
   if(lm){e.stopPropagation();openLearn(lm.dataset.learn);return}
-
-  const di=e.target.closest("[data-dominstr]");
-  if(di){e.stopPropagation();studioForDomain(+di.dataset.dominstr);return}
 
   if(e.target.closest("[data-closepanel]")) closePanel();
 
@@ -3692,7 +3715,7 @@ function simReply(text){
 }
 let studio={ctx:null,shopper:0,thread:[]};
 /* A custom engagement has two halves and the studio shows them in order:
-   WHEN it fires, then WHAT it says. A play inside a domain shows the same two,
+   WHEN it fires, then WHAT it says. A play inside a theme shows the same two,
    but the When half is the engine's, not yours — so it's stated, not editable. */
 function whenBlock(ctx){
   const w=ctx.when;
@@ -3700,7 +3723,7 @@ function whenBlock(ctx){
     <div class="col gap-xxs">
       <span class="t-sm bold">When — the trigger</span>
       <div class="card pad-md" style="background:var(--purple-50)">
-        <span class="t-sm sec">There's nothing to set. ACE watches for the moment across this whole domain and picks the hour per shopper. You own what it says; the guardrails own whether it may say it.</span>
+        <span class="t-sm sec">There's nothing to set. ACE watches for the moment across this whole theme and picks the hour per shopper. You own what it says; the guardrails own whether it may say it.</span>
       </div>
     </div>`;
   if(w.mode==="read") return `
@@ -3712,19 +3735,22 @@ function whenBlock(ctx){
       <div class="card pad-md" style="background:var(--purple-50)">
         <div class="col gap-xxxs">
           <span class="t-md med">Fires ${w.line}</span>
-          <span class="t-sm sec">This play sits inside <b>${w.domain}</b>. You can't retime it here — that's the difference between a play and a custom engagement. Turn the domain off if you don't want it running.</span>
+          <span class="t-sm sec">This play sits inside <b>${w.domain}</b>. You can't retime it here — that's the difference between a play and a custom engagement. Use its own switch in the table to turn off just this play, or turn off the whole theme.</span>
         </div>
       </div>
     </div>`;
+  /* the trigger is set by describing it, same as audience in the campaign
+     wizard — a sentence first, exact rules as the fallback if you'd rather
+     be precise. Both edit the same underlying ev/delay/cond. */
   return `
     <div class="col gap-xxs">
       <div class="row between wrap gap-xs">
         <span class="t-sm bold">When — the trigger</span>
         <span class="tag tag-coral">Yours to set</span>
       </div>
-      ${ctx.nl?`<div class="col gap-xxs">
-        <span class="t-sm sec">Describe the moment you want to catch and we'll turn it into a trigger.</span>
-        <textarea class="textarea" id="studioNl" style="min-height:64px">When someone buys a bike and has never bought a helmet, wait 5 days after delivery and suggest a helmet that matches their frame size.</textarea>
+      <div class="col gap-xxs" id="whenNlWrap">
+        <span class="t-sm sec">Describe the moment you want to catch, in plain language — we turn it into a trigger.</span>
+        <textarea class="textarea" id="studioNl" style="min-height:64px">${ctx.nl?"When someone buys a bike and has never bought a helmet, wait 5 days after delivery and suggest a helmet that matches their frame size.":whenToSentence(w)}</textarea>
         <div class="row between wrap gap-xs">
           <div class="chips">
             <button class="chip nlSample">High-value carts over $200 that stalled</button>
@@ -3732,23 +3758,35 @@ function whenBlock(ctx){
           </div>
           <button class="btn btn-ai sm" id="studioInterpret">Interpret</button>
         </div>
-      </div>`:""}
-      <div class="grid" style="grid-template-columns:1fr 1fr;gap:var(--sm)">
-        <div class="field"><span class="label">Fires on</span>
-          <select class="selectEl" id="whenEv">
-            ${WHEN_EVENTS.map((x,i)=>`<option value="${i}" ${i===w.ev?"selected":""}>${x}</option>`).join("")}
-          </select></div>
-        <div class="field"><span class="label">Then waits</span>
-          <select class="selectEl" id="whenDelay">
-            ${WHEN_DELAYS.map((x,i)=>`<option value="${i}" ${i===w.delay?"selected":""}>${x}</option>`).join("")}
-          </select></div>
       </div>
-      <div class="field"><span class="label">Only if <span class="ter">— who this applies to</span></span>
-        <input class="input" id="whenCond" value="${w.cond}"></div>
+      <div class="col gap-xxs hidden" id="whenRulesWrap">
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:var(--sm)">
+          <div class="field"><span class="label">Fires on</span>
+            <select class="selectEl" id="whenEv">
+              ${WHEN_EVENTS.map((x,i)=>`<option value="${i}" ${i===w.ev?"selected":""}>${x}</option>`).join("")}
+            </select></div>
+          <div class="field"><span class="label">Then waits</span>
+            <select class="selectEl" id="whenDelay">
+              ${WHEN_DELAYS.map((x,i)=>`<option value="${i}" ${i===w.delay?"selected":""}>${x}</option>`).join("")}
+            </select></div>
+        </div>
+        <div class="field"><span class="label">Only if <span class="ter">— who this applies to</span></span>
+          <input class="input" id="whenCond" value="${w.cond}"></div>
+      </div>
       <div class="card pad-md" style="background:var(--grey-50)">
         <span class="t-sm sec" id="whenReadback"></span>
       </div>
+      <button class="t-sm acc med" id="whenModeToggle" type="button"
+        style="width:fit-content;background:none;border:none;padding:0;cursor:pointer;text-align:left">Edit as exact rules instead</button>
     </div>`;
+}
+function whenToSentence(w){
+  const ev=WHEN_EVENTS[w.ev], dl=WHEN_DELAYS[w.delay];
+  const timing=dl==="Immediately"?"reach out right away"
+    :dl==="When the engine judges it best"?"let the engine pick the moment"
+    :"wait "+dl.replace(/^After /,"").toLowerCase();
+  const cond=w.cond?w.cond.charAt(0).toLowerCase()+w.cond.slice(1):"";
+  return "When "+ev.charAt(0).toLowerCase()+ev.slice(1)+", "+timing+(cond?", but only for "+cond:"")+".";
 }
 function whenReadback(){
   const n=$("#whenReadback"); if(!n) return;
@@ -3828,17 +3866,27 @@ function openStudio(ctx){
     whenReadback();
     ["#whenEv","#whenDelay"].forEach(s=>$(s).addEventListener("change",whenReadback));
     $("#whenCond").addEventListener("input",whenReadback);
-    if(ctx.nl){
-      $("#studioInterpret").addEventListener("click",()=>{
-        const b=$("#studioInterpret"); b.textContent="Reading your data…"; b.disabled=true;
-        setTimeout(()=>{
+    /* the sentence is the primary surface; Interpret turns it into the same
+       ev/delay/cond fields the rules view edits. A brand-new engagement has
+       nothing to read yet, so it gets a worked example; an existing one
+       already has a trigger, so Interpret just confirms it in the read-back. */
+    $("#studioInterpret").addEventListener("click",()=>{
+      const b=$("#studioInterpret"); b.textContent="Reading your sentence…"; b.disabled=true;
+      setTimeout(()=>{
+        if(ctx.nl){
           $("#whenEv").value=3; $("#whenDelay").value=6;
           $("#whenCond").value="Order contains Bikes · never bought a helmet";
-          whenReadback(); b.textContent="Interpret"; b.disabled=false;
-        },600);
-      });
-      $$(".nlSample").forEach(s=>s.addEventListener("click",()=>{$("#studioNl").value=s.textContent.trim()}));
-    }
+        }
+        whenReadback(); b.textContent="Interpret"; b.disabled=false;
+      },600);
+    });
+    $$(".nlSample").forEach(s=>s.addEventListener("click",()=>{$("#studioNl").value=s.textContent.trim()}));
+    $("#whenModeToggle").addEventListener("click",()=>{
+      const showingNl=!$("#whenNlWrap").classList.contains("hidden");
+      $("#whenNlWrap").classList.toggle("hidden",showingNl);
+      $("#whenRulesWrap").classList.toggle("hidden",!showingNl);
+      $("#whenModeToggle").textContent=showingNl?"Edit as a sentence instead":"Edit as exact rules instead";
+    });
   }
   $("#studioRun").addEventListener("click",()=>{
     studio.shopper=+$("#studioWho").value; studio.thread=[];
@@ -3891,24 +3939,25 @@ function studioForNew(){
     slug:"new-engagement",
     text:"Say why we're reaching out in the first line. Answer the obvious objection before naming a product. No offer in the first message — if they hesitate, use the loyalty levers before any discount. Two sentences."});
 }
-/* a domain instruction: no When at all, because the engine owns the timing */
+/* a theme instruction: no When at all, because the engine owns the timing */
 function studioForDomain(i){
   const d=ACE_DOMAINS[i];
-  openStudio({title:d.n,sub:"ACE domain · one instruction for every play underneath it",ins:d.ins,kind:"ACE",
+  openStudio({title:d.n,sub:"ACE theme · one instruction for every play underneath it",ins:d.ins,kind:"ACE",
     slug:"ace-"+slugify(d.n),
     text:d.ins==="Customized"
       ? "On replenishment, name the exact product and the interval we learned for this shopper, never a store average. Offer the loyalty reward before any discount. If they've changed cadence, ask rather than assume."
-      : "ACE writes this domain from your brand profile and the shopper's own history. Add an instruction here only if this domain needs something the rest of your account doesn't."});
+      : "ACE writes this theme from your brand profile and the shopper's own history. Add an instruction here only if this theme needs something the rest of your account doesn't."});
 }
-/* a play: the When is stated so you can read it, but it isn't yours to change */
+/* a play: the When is stated so you can read it, but it isn't yours to change.
+   It does have its own on/off, set from the table rather than in here. */
 function studioForPlay(i,j){
   const d=ACE_DOMAINS[i], p=d.plays[j];
-  openStudio({title:p.n,sub:d.n+" · a play inside this domain",ins:p.ins,kind:"ACE",
+  openStudio({title:p.n,sub:d.n+" · a play inside this theme",ins:p.ins,kind:"ACE",
     when:{mode:"read",line:p.trg,domain:d.n},
     slug:"ace-"+slugify(d.n)+"/"+slugify(p.n),
     text:p.ins==="Customized"
       ? "State the reason we're reaching out in the first line, and name the exact product rather than the category. Answer the obvious objection before selling anything. No offer in the first message — if they hesitate, use the loyalty levers before any discount. Two sentences."
-      : "ACE writes this play from your brand profile and the shopper's own history, inside the domain instruction above it. Edit here only if this one play needs something the rest of the domain doesn't."});
+      : "ACE writes this play from your brand profile and the shopper's own history, inside the theme instruction above it. Edit here only if this one play needs something the rest of the theme doesn't."});
 }
 
 /* boot */
@@ -3931,6 +3980,10 @@ renderConv(); renderWiz(); renderLoyalty();
 renderProductOpportunities("guardrails","guardrailOpportunities");
 renderProductOpportunities("lifecycle","lifecycleOpportunities");
 renderProductOpportunities("loyalty","loyaltyOpportunities");
+
+/* land on whatever page the URL names, so a shared link opens on that screen
+   instead of always resetting to Reporting */
+if(KNOWN_PAGES.has(location.hash.slice(1))) goto(location.hash.slice(1),{fromHash:true});
 </script>
 </body>
 </html>

@@ -46,20 +46,23 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
   touch it. Colour is bound to the entity, never to its rank.
 - **Everything in Reporting derives from six weekly primitives per member.** Never hand-write a
   total; if the chart and the table can disagree, the change is wrong. The same rule now binds the
-  domain table: `domTotals()` folds the plays, so `ACE_DOMAINS` carries no metrics of its own.
+  theme table: `domTotals()` folds the plays, so `ACE_DOMAINS` carries no metrics of its own.
 - **New interactive elements use `data-*` attributes and the delegated document click handler**, not
   per-node listeners — they must survive a re-render.
 
 ## The product model in six lines
 
-- **ACE is a switch, not a scenario library.** Off / Manual acceptance / Automatic. The only dial is
-  *domains*, and a domain that's off still shows what it would have been worth.
-- **Two layers under the switch: a domain, and the plays inside it.** The standard engagements live
+- **ACE is a switch, not a scenario library.** Off / Manual acceptance / Automatic. The only
+  account-wide dial is *themes*, and a theme that's off still shows what it would have been worth.
+- **Two layers under the switch: a theme, and the plays inside it.** The standard engagements live
   there now — *Consideration & browse* holds Cart abandonment, Session abandonment, Browse
-  abandonment, Welcome. A play is readable and instructable but **has no toggle**; the dial stays the
-  domain. Domain figures are folded from the plays, never hand-written.
-- **A custom engagement is When + What** — the trigger you own, then the instruction. Tab two is
-  custom-only; nothing pre-built lives there any more.
+  abandonment, Welcome. A play is readable, instructable, and has its own switch — but that switch
+  can only narrow *within* an allowed theme; the theme's own switch still overrides every play under
+  it. Theme figures are folded from the plays, never hand-written. Click anywhere on a theme's row to
+  expand or collapse the plays under it.
+- **A custom engagement is When + What** — the trigger you own, then the instruction. The trigger is
+  a sentence first ("when someone buys a bike…"), same as campaign audience; exact rules are the
+  fallback. Tab two is custom-only; nothing pre-built lives there any more.
 - **One instruction per unit**, and it's a skill. Badged `Default` or `Customized`.
 - **Instructions ask; guardrails decide.** Guardrails run last and can refuse anything.
 - **Suppression is timing; exclusion is people.** Two different blocks, deliberately.
@@ -68,6 +71,8 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
 - **KPI cards are read-only and account-wide** — deliberately independent of the report below them.
 - **Conversations is one row per person**, led by why it started and what the engine reasoned from.
   Approvals live there; there is no separate queue.
+- **Every page is a link.** `goto(page)` syncs `location.hash`, so any screen can be copied out of
+  the address bar and shared — useful given the prototype's whole job is alignment in meetings.
 
 Full vocabulary table at the end of `docs/PRODUCT.md` — use it, several terms were chosen against a
 worse alternative.
