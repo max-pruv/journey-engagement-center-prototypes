@@ -47,7 +47,7 @@
   --dv-other:#b3b8c1;
   --dv-ace:var(--dv-1);
   --dv-custom:var(--dv-2);
-  --dv-default:var(--dv-3);
+  --dv-campaign:var(--dv-3);
   --dv-grid:rgba(0,0,0,.06);
   --dv-axis:var(--grey-500);
 
@@ -190,6 +190,19 @@ th:last-child,td:last-child{padding-right:var(--lg);text-align:right}
 table.inner th:first-child,table.inner td:first-child{padding-left:var(--md)}
 table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .rowLink{cursor:pointer}
+/* two-layer domain table: a domain row, and the plays that sit under it */
+tr.domRow>td{background:var(--grey-50)}
+tr.domRow:hover>td{background:var(--grey-100)}
+tr.playRow>td{border-bottom:1px solid var(--border-neutral-subtle,var(--grey-100))}
+tr.playRow>td:first-child{padding-left:0}
+.playName{display:flex;gap:var(--sm);align-items:flex-start;padding-left:var(--lg)}
+.playRail{width:2px;align-self:stretch;min-height:32px;border-radius:1px;background:var(--grey-200);flex-shrink:0;margin-left:var(--xs)}
+.playRail.live{background:var(--purple-200)}
+.twistie{width:20px;height:20px;border-radius:var(--xxs);display:grid;place-items:center;flex-shrink:0;
+  border:0;background:transparent;color:var(--content-neutral-tertiary);cursor:pointer;transition:.15s}
+.twistie:hover{background:var(--grey-200);color:var(--content-neutral-default)}
+.twistie svg{transition:transform .15s}
+.twistie.open svg{transform:rotate(90deg)}
 .campaignTableWrap{overflow:auto;max-width:100%}
 #campTable{min-width:max-content}
 #campTable th,#campTable td{white-space:nowrap;min-width:112px}
@@ -686,40 +699,48 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           <div class="card" style="overflow:hidden">
             <div class="col gap-xxxs" style="padding:var(--md) var(--lg)">
               <div class="row between wrap gap-sm">
-                <h2 class="h-md">Domains</h2>
+                <h2 class="h-md">Domains and the plays underneath them</h2>
                 <div class="row gap-xs">
                   <span class="tag tag-grey" id="aceDomCount">6 of 8 allowed</span>
                   <span class="tag tag-purple" id="aceDomPotential">2 off · ≈$19,400 GMV left on the table</span>
+                  <button class="btn btn-tertiary sm" id="aceExpandAll">Collapse all</button>
                 </div>
               </div>
-              <p class="t-sm sec">What ACE is allowed to work on — the control that matters if you need to bound an autonomous system. Turn a domain off and it stops looking there entirely: it won't propose it, won't send it, won't count it. We keep sizing the opportunity anyway, so you can see what you're declining.</p>
+              <p class="t-sm sec">Two layers. A <b>domain</b> is what ACE is allowed to work on — the control that matters if you need to bound an autonomous system. Under each one sit the <b>plays</b> it runs: the standard engagements, now owned by the engine rather than switched on one by one. Turn a domain off and every play under it stops: it won't propose them, won't send them, won't count them. We keep sizing the opportunity anyway, so you can see what you're declining.</p>
             </div>
             <table id="aceDomainTable">
-              <thead><tr><th style="width:30%">Domain</th><th>Shoppers reached</th><th>GMV</th>
+              <thead><tr><th style="width:34%">Domain and plays</th><th>Shoppers reached</th><th>GMV</th>
                 <th>Conversion</th><th>Opt-out</th><th>Instruction</th><th style="width:130px">Activated</th></tr></thead>
               <tbody></tbody>
             </table>
             <div class="sepH"></div>
             <div class="row between wrap gap-sm" style="padding:var(--sm) var(--lg)">
-              <span class="t-sm ter">Rows in purple italics are estimates for domains you've turned off — modelled on comparable merchants, not measured on you.</span>
+              <span class="t-sm ter">Purple italics are estimates — a domain you've turned off, or a play with no integration behind it yet. Modelled on comparable merchants, not measured on you. A play has no switch of its own: the dial is the domain above it.</span>
               <button class="btn btn-secondary sm" data-goto="conversations">See the conversations behind these numbers</button>
             </div>
           </div>
 
                   </div>
 
-        <!-- ---------- TAB: SCENARIOS ---------- -->
+        <!-- ---------- TAB: CUSTOM ENGAGEMENT ---------- -->
         <div class="zone top tabPanel hidden" data-panel-for="scenarios">
+          <div class="banner banner-info">
+            <div class="col gap-xxxs">
+              <span class="t-md med">Everything here is something you wrote.</span>
+              <span class="t-sm sec">The standard engagements moved into AI engagement, where they run as plays inside a domain. What's left is the work that's specific to you — the moments ACE has no way to know about. Two parts to each one: <b>when</b> it fires, and <b>what</b> it says.</span>
+            </div>
+          </div>
+
           <div class="row between wrap gap-sm">
             <div class="chips" id="srcFilter">
               <button class="chip on" data-f="all">All <span class="ter" id="fcAll"></span></button>
-              <button class="chip" data-f="Default"><span class="srcSwatch" style="background:var(--dv-default)"></span>Default <span class="ter" id="fcDefault"></span></button>
-              <button class="chip" data-f="Custom"><span class="srcSwatch" style="background:var(--dv-custom)"></span>Custom <span class="ter" id="fcCustom"></span></button>
+              <button class="chip" data-f="on">Running <span class="ter" id="fcOn"></span></button>
+              <button class="chip" data-f="off">Paused <span class="ter" id="fcOff"></span></button>
             </div>
             <div class="row gap-xs">
               <select class="selectEl auto" id="statusFilter">
-                <option value="all">Any status</option><option value="on">On</option>
-                <option value="off">Off</option><option value="setup">Needs setup</option>
+                <option value="all">Any trigger</option><option value="event">Event triggers</option>
+                <option value="rhythm">Rhythm and signal triggers</option>
               </select>
               <select class="selectEl auto"><option>Sort: volume</option><option>Sort: conversion</option><option>Sort: name</option></select>
             </div>
@@ -728,14 +749,14 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           <div class="card" style="overflow:hidden">
             <table id="engTable">
               <thead><tr>
-                <th style="width:30%">Engagement</th><th>Built by</th><th>Trigger</th>
-                <th>Instruction</th><th>Sent · 30d</th><th>CVR</th><th style="width:150px">Status</th>
+                <th style="width:28%">Custom engagement</th><th style="width:26%">When — the trigger</th>
+                <th>What — the instruction</th><th>Sent · 30d</th><th>CVR</th><th style="width:150px">Status</th>
               </tr></thead>
               <tbody></tbody>
             </table>
           </div>
 
-          <p class="t-sm ter">Pre-built and self-written engagements sit in the same list — the only difference is who wrote them. Each carries one instruction.</p>
+          <p class="t-sm ter">Custom engagements keep their own switch, because you own the timing. Plays inside a domain don't — the engine decides when those fire, and the domain decides whether they run at all.</p>
         </div>
       </section>
 
@@ -914,7 +935,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
                 <button class="chip" data-f="stopped">Stopped</button>
               </div>
               <select class="selectEl" id="convSrc" style="height:32px;padding:4px 8px">
-                <option value="all">Every source</option><option>ACE</option><option>Default</option><option>Custom</option><option>Campaign</option>
+                <option value="all">Every source</option><option>ACE</option><option>Custom</option><option>Campaign</option>
               </select>
             </div>
             <div class="sepH"></div>
@@ -1031,7 +1052,8 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 <script>
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!=null)n.innerHTML=h;return n};
-const SRC={Default:{c:"var(--dv-default)",tag:"tag-blue"},Custom:{c:"var(--dv-custom)",tag:"tag-coral"},ACE:{c:"var(--dv-ace)",tag:"tag-purple"}};
+const SRC={ACE:{c:"var(--dv-ace)",tag:"tag-purple"},Custom:{c:"var(--dv-custom)",tag:"tag-coral"},
+           Campaign:{c:"var(--dv-campaign)",tag:"tag-teal"}};
 
 /* =======================================================================
    DATA
@@ -1062,48 +1084,104 @@ const BENCH=[
   {n:"Opt-out rate",v:0.9,med:1.6,top:0.7,max:3,unit:"%",good:"low"}
 ];
 
+/* A custom engagement is the only thing a merchant hand-builds now. Two parts:
+   WHEN it fires (the trigger) and WHAT it says (the instruction). */
+const WHEN_EVENTS=["Checkout abandoned","Session ends without a cart","Order placed","Order fulfilled",
+  "Delivery confirmed","Return processed","Support ticket resolved","Product back in stock",
+  "Subscription renewal due","Loyalty threshold crossed","On the shopper's own rhythm","Weather change where they live"];
+const WHEN_DELAYS=["Immediately","After 45 minutes","After 3 hours","After 20 hours","After 1 day",
+  "After 2 days","After 5 days","After 14 days","When the engine judges it best"];
+
 const ENG=[
-  {n:"Cart abandonment",d:"Checkout started, no order",s:"Default",trg:"Shopify · +45 min, +20h",ins:"Customized",sent:9420,cvr:"4.1%",st:"on"},
-  {n:"Welcome",d:"Opt-in confirmed",s:"Default",trg:"Consent · immediate",ins:"Default",sent:2860,cvr:"6.7%",st:"on"},
-  {n:"Post-purchase welcome",d:"First order placed",s:"Default",trg:"Shopify · +1 day",ins:"Customized",sent:3240,cvr:"2.2%",st:"on"},
-  {n:"Browse abandonment",d:"Repeat product views, no cart",s:"Default",trg:"On-site · +3h",ins:"Default",sent:4110,cvr:"1.8%",st:"on"},
-  {n:"Subscription renewal reminder",d:"Next charge approaching",s:"Default",trg:"Shopify · −3 days",ins:"Customized",sent:5180,cvr:"—",st:"on"},
-  {n:"Subscription card expiring",d:"Payment method expires soon",s:"Default",trg:"Billing · −7 days",ins:"Default",sent:640,cvr:"38.2%",st:"on"},
-  {n:"Subscription payment failed",d:"Dunning retry needed",s:"Default",trg:"Billing · +2h, +48h",ins:"Default",sent:310,cvr:"41.6%",st:"on"},
-  {n:"Replenishment due",d:"Past their own reorder rhythm",s:"Default",trg:"Timer · per category",ins:"Customized",sent:6730,cvr:"5.4%",st:"on"},
-  {n:"Win-back",d:"No order in 120 days",s:"Default",trg:"Timer · 120 / 180 days",ins:"Customized",sent:7900,cvr:"1.4%",st:"on"},
-  {n:"Post-resolution follow-up",d:"Support ticket resolved",s:"Default",trg:"Gorgias · +2 days",ins:"Default",sent:1480,cvr:"2.9%",st:"on"},
-  {n:"Back in stock",d:"Viewed or waitlisted item restocked",s:"Default",trg:"Shopify · immediate",ins:"Default",sent:0,cvr:"—",st:"setup",note:"Needs the restock webhook"},
-  {n:"Delivery exception",d:"Delayed, lost or held in customs",s:"Default",trg:"3PL · immediate",ins:"Default",sent:0,cvr:"—",st:"setup",note:"No carrier integration yet"},
-  {n:"Subscription paused or cancelled",d:"Save-the-subscription play",s:"Default",trg:"Shopify · +1 day",ins:"Default",sent:0,cvr:"—",st:"off"},
-
-  {n:"Helmet cross-sell",d:"Bike buyers who never bought a helmet",s:"Custom",trg:"Order fulfilled · +5 days",ins:"Customized",sent:420,cvr:"7.8%",st:"on"},
-  {n:"Fit-return recovery",d:"Returned for size, never came back",s:"Custom",trg:"Return processed",ins:"Customized",sent:180,cvr:"11.2%",st:"on"},
-  {n:"Leaky cart · $200+",d:"High-value carts that stalled at checkout",s:"Custom",trg:"Checkout abandoned",ins:"Customized",sent:250,cvr:"9.4%",st:"on"},
-  {n:"B2B reorder nudge",d:"Wholesale accounts past their cadence",s:"Custom",trg:"Timer · per account",ins:"Customized",sent:70,cvr:"22.9%",st:"on"},
-  {n:"Cold-snap cooling range",d:"Browsers during the temperature spike",s:"Custom",trg:"Weather + browse",ins:"Customized",sent:0,cvr:"—",st:"off"}
+  {n:"Helmet cross-sell",d:"Bike buyers who never bought a helmet",ins:"Customized",sent:420,cvr:"7.8%",st:"on",
+   when:{ev:3,delay:6,cond:"Order contains Bikes · never bought a helmet"}},
+  {n:"Fit-return recovery",d:"Returned for size, never came back",ins:"Customized",sent:180,cvr:"11.2%",st:"on",
+   when:{ev:5,delay:5,cond:"Return reason is size or fit"}},
+  {n:"Leaky cart · $200+",d:"High-value carts that stalled at checkout",ins:"Customized",sent:250,cvr:"9.4%",st:"on",
+   when:{ev:0,delay:1,cond:"Cart value ≥ $200"}},
+  {n:"B2B reorder nudge",d:"Wholesale accounts past their cadence",ins:"Customized",sent:70,cvr:"22.9%",st:"on",
+   when:{ev:10,delay:8,cond:"Account type is wholesale"}},
+  {n:"Cold-snap cooling range",d:"Browsers during the temperature spike",ins:"Customized",sent:0,cvr:"—",st:"off",
+   when:{ev:11,delay:0,cond:"Viewed the cooling range in the last 30 days"}}
 ];
 
-/* ACE is one switch, not a list of scenarios. Domains are the only dial:
-   they bound what the agent chain is allowed to work on. */
+/* ACE is one switch, not a list of scenarios — but a domain is not a black box
+   either. Two layers: the DOMAIN is the dial you turn, and under it sit the
+   PLAYS it runs. Plays are readable, each carries its own instruction, and none
+   of them has an on/off of its own: bounding the machine happens one level up.
+   Every domain figure is derived from its plays — see domTotals(). */
 const ACE_DOMAINS=[
-  {n:"Replenishment & reorder",d:"Someone is due, or overdue, for something they already buy.",ins:"Customized",
-   on:true, reach:2410,gmv:14900,cvr:"8.1%",opt:"0.7%", potReach:2400,potGmv:14000,potCvr:"7.8%",potOpt:"0.9%"},
-  {n:"Retention & win-back",ins:"Default",d:"Going quiet, or already gone, and worth one honest attempt.",
-   on:true, reach:1980,gmv:9100,cvr:"4.4%",opt:"1.6%", potReach:2000,potGmv:9000,potCvr:"4.2%",potOpt:"1.7%"},
-  {n:"Cross-sell & complements",ins:"Customized",d:"They own the thing; the companion piece is the obvious next step.",
-   on:true, reach:1640,gmv:11300,cvr:"6.9%",opt:"0.9%", potReach:1600,potGmv:11000,potCvr:"6.6%",potOpt:"1.0%"},
-  {n:"Service recovery",ins:"Default",d:"Something went wrong and the relationship is worth repairing.",
-   on:true, reach:520,gmv:2400,cvr:"3.2%",opt:"0.4%", potReach:500,potGmv:2300,potCvr:"3.1%",potOpt:"0.5%"},
-  {n:"Subscriptions",ins:"Default",d:"Renewals, failed payments, pauses worth saving.",
-   on:true, reach:410,gmv:5800,cvr:"12.6%",opt:"0.3%", potReach:400,potGmv:5600,potCvr:"12.1%",potOpt:"0.4%"},
-  {n:"Loyalty moments",ins:"Default",d:"A tier within reach, points about to expire, an anniversary.",
-   on:true, reach:280,gmv:3800,cvr:"9.8%",opt:"0.5%", potReach:280,potGmv:3700,potCvr:"9.5%",potOpt:"0.6%"},
-  {n:"Consideration & browse",ins:"Default",d:"Looking, hesitating, not yet a customer.",
-   on:false, reach:0,gmv:0,cvr:"—",opt:"—", potReach:3100,potGmv:12800,potCvr:"3.4%",potOpt:"1.8%"},
-  {n:"Seasonal & inventory",ins:"Default",d:"A restock, a weather swing, a range that suddenly matters.",
-   on:false, reach:0,gmv:0,cvr:"—",opt:"—", potReach:1450,potGmv:6600,potCvr:"5.1%",potOpt:"1.2%"}
+  {n:"Replenishment & reorder",d:"Someone is due, or overdue, for something they already buy.",ins:"Customized",on:true,
+   plays:[
+     {n:"Replenishment due",d:"Past their own reorder rhythm for something they already buy.",trg:"on their learned rhythm, per category",ins:"Customized",reach:1680,gmv:9800,cvr:8.4,opt:0.6},
+     {n:"Running low",d:"The usage model says the last one is nearly gone.",trg:"when the usage model says they are low",ins:"Default",reach:540,gmv:3900,cvr:7.8,opt:0.8},
+     {n:"Size up the reorder",d:"Buying the same thing often enough that the bigger format is cheaper for them.",trg:"on the third repeat order",ins:"Default",reach:190,gmv:1200,cvr:6.9,opt:1.0}
+   ]},
+  {n:"Retention & win-back",d:"Going quiet, or already gone, and worth one honest attempt.",ins:"Default",on:true,
+   plays:[
+     {n:"Win-back",d:"No order in 120 days, one honest attempt.",trg:"after 120 days quiet, again at 180",ins:"Customized",reach:1290,gmv:5600,cvr:3.9,opt:1.9},
+     {n:"At-risk save",d:"Already 1.5× past their own rhythm and still quiet.",trg:"at 1.5× their own gap",ins:"Default",reach:490,gmv:2600,cvr:5.2,opt:1.1},
+     {n:"Second-order gap",d:"One order, sitting in the window where a second one usually lands.",trg:"between day 48 and 62 after the first order",ins:"Default",reach:200,gmv:900,cvr:5.4,opt:0.9}
+   ]},
+  {n:"Cross-sell & complements",d:"They own the thing; the companion piece is the obvious next step.",ins:"Customized",on:true,
+   plays:[
+     {n:"Post-purchase companion",d:"First order landed and the obvious companion is missing.",trg:"1 day after delivery",ins:"Customized",reach:820,gmv:5400,cvr:6.4,opt:0.8},
+     {n:"Complete the kit",d:"Owns the base, missing the piece that finishes it.",trg:"14 days after the base item",ins:"Default",reach:560,gmv:4100,cvr:7.5,opt:0.9},
+     {n:"Upgrade path",d:"Outgrew the entry model and the step up is worth naming.",trg:"on the usage signal",ins:"Default",reach:260,gmv:1800,cvr:7.1,opt:1.2}
+   ]},
+  {n:"Service recovery",d:"Something went wrong and the relationship is worth repairing.",ins:"Default",on:true,
+   plays:[
+     {n:"Post-resolution follow-up",d:"A support ticket closed; check the fix actually held.",trg:"2 days after the ticket closes",ins:"Default",reach:380,gmv:1700,cvr:3.1,opt:0.3},
+     {n:"Return without a replacement",d:"Refund processed and nothing bought since.",trg:"5 days after the refund",ins:"Default",reach:140,gmv:700,cvr:3.5,opt:0.7},
+     {n:"Delivery exception",d:"Delayed, lost or held in customs.",trg:"on the carrier event",ins:"Default",reach:0,gmv:0,cvr:0,opt:0,
+      potReach:620,potGmv:2900,potCvr:2.4,potOpt:0.3,st:"setup",note:"No carrier integration yet"}
+   ]},
+  {n:"Subscriptions",d:"Renewals, failed payments, pauses worth saving.",ins:"Default",on:true,
+   plays:[
+     {n:"Renewal reminder",d:"Next charge approaching, no surprises.",trg:"3 days before the charge",ins:"Customized",reach:210,gmv:2900,cvr:11.4,opt:0.2},
+     {n:"Card expiring",d:"Payment method expires before the next charge.",trg:"7 days before the card expires",ins:"Default",reach:110,gmv:1600,cvr:13.8,opt:0.3},
+     {n:"Payment failed",d:"Dunning, without sounding like a debt collector.",trg:"2h after the failure, again at 48h",ins:"Default",reach:60,gmv:900,cvr:14.2,opt:0.4},
+     {n:"Pause or cancel save",d:"They asked to stop; find out whether it's the cadence or the product.",trg:"1 day after the request",ins:"Default",reach:30,gmv:400,cvr:13.1,opt:0.6}
+   ]},
+  {n:"Loyalty moments",d:"A tier within reach, points about to expire, an anniversary.",ins:"Default",on:true,
+   plays:[
+     {n:"Points about to expire",d:"A balance worth something, 30 days from being worth nothing.",trg:"30 days before the points expire",ins:"Default",reach:120,gmv:1500,cvr:9.2,opt:0.4},
+     {n:"A tier within reach",d:"One order away from the next tier.",trg:"when they cross 80% of the threshold",ins:"Default",reach:95,gmv:1400,cvr:10.6,opt:0.5},
+     {n:"Anniversary",d:"A year since the first order, said properly.",trg:"on the anniversary of the first order",ins:"Default",reach:65,gmv:900,cvr:9.7,opt:0.7}
+   ]},
+  {n:"Consideration & browse",d:"Looking, hesitating, not yet a customer.",ins:"Default",on:false,
+   plays:[
+     {n:"Cart abandonment",d:"Checkout started, no order.",trg:"45 min after checkout, again at 20h",ins:"Customized",potReach:1180,potGmv:6200,potCvr:4.6,potOpt:1.5},
+     {n:"Session abandonment",d:"Left mid-session without ever reaching the cart.",trg:"90 min after the session ends",ins:"Default",potReach:840,potGmv:2900,potCvr:2.7,potOpt:2.1},
+     {n:"Browse abandonment",d:"Repeat views of the same product, no cart.",trg:"3h after the third view",ins:"Default",potReach:690,potGmv:2600,potCvr:3.1,potOpt:1.9},
+     {n:"Welcome",d:"Opt-in confirmed, no first order yet.",trg:"immediately on consent",ins:"Default",potReach:390,potGmv:1100,potCvr:2.2,potOpt:1.7}
+   ]},
+  {n:"Seasonal & inventory",d:"A restock, a weather swing, a range that suddenly matters.",ins:"Default",on:false,
+   plays:[
+     {n:"Back in stock",d:"Something they viewed or waitlisted is available again.",trg:"on the restock event",ins:"Default",potReach:620,potGmv:3100,potCvr:6.2,potOpt:0.9},
+     {n:"Price drop on a watched item",d:"Something they looked at twice got cheaper.",trg:"on the price change",ins:"Default",potReach:430,potGmv:1900,potCvr:4.8,potOpt:1.3},
+     {n:"Weather swing",d:"A range that suddenly matters where they live.",trg:"on the forecast change",ins:"Default",potReach:400,potGmv:1600,potCvr:3.9,potOpt:1.5}
+   ]}
 ];
+
+/* A play's own numbers. Real when it's running, modelled when it isn't —
+   and a play with no integration behind it is only ever modelled. */
+function playReal(p){ return {reach:p.reach||0,gmv:p.gmv||0,cvr:p.cvr||0,opt:p.opt||0} }
+function playPot(p){ return {reach:p.potReach??p.reach??0,gmv:p.potGmv??p.gmv??0,
+                             cvr:p.potCvr??p.cvr??0,opt:p.potOpt??p.opt??0} }
+function playLive(d,p,aceOn){ return aceOn && d.on && p.st!=="setup" }
+/* Never hand-write a domain total: fold the plays. Rates are re-derived from
+   the reach they were measured on, never averaged across plays. */
+function fold(rows){
+  const reach=rows.reduce((a,r)=>a+r.reach,0), gmv=rows.reduce((a,r)=>a+r.gmv,0);
+  const w=(k)=>reach?rows.reduce((a,r)=>a+r[k]*r.reach,0)/reach:0;
+  return {reach,gmv,cvr:w("cvr"),opt:w("opt")};
+}
+function domTotals(d,aceOn){
+  const live=d.plays.filter(p=>playLive(d,p,aceOn));
+  return live.length?fold(live.map(playReal)):null;
+}
+function domPotential(d){ return fold(d.plays.map(playPot)) }
 const ACE_CHAIN=[
   ["Watch","Orders, tickets, sessions, consent and catalog, continuously."],
   ["Find","An agent looks for a moment worth acting on, inside the domains you allow."],
@@ -1248,26 +1326,26 @@ const OPPORTUNITIES=[
 
 const STAGES=[
   {n:"Visitor",rule:["Sessions ≥ 1","Opt-in = no"],pop:"18,400",days:"—",col:"var(--grey-300)",
-    obj:0,tone:0,disc:0,lever:[0],capN:1,capU:0,src:["Default"],
+    obj:0,tone:0,disc:0,lever:[0],capN:1,capU:0,src:["Custom"],
     note:"Nothing can send here without consent — suppression does most of the work."},
   {n:"Lead",rule:["Opt-in = yes","Orders = 0"],pop:"6,120",days:"22 d",col:"var(--blue-200)",
-    obj:1,tone:0,disc:1,lever:[0,3],capN:2,capU:0,src:["Default","Custom"],
+    obj:1,tone:0,disc:1,lever:[0,3],capN:2,capU:0,src:["Custom","Campaign"],
     note:"ACE stays out: too little signal on a shopper who has never bought."},
   {n:"First-time buyer",rule:["Orders = 1"],pop:"9,840",days:"62 d",col:"var(--teal-200)",
-    obj:2,tone:1,disc:1,lever:[0,3],capN:3,capU:0,src:["Default","Custom","ACE"],
+    obj:2,tone:1,disc:1,lever:[0,3],capN:3,capU:0,src:["ACE","Custom","Campaign"],
     note:"Median time to a second order is 62 days; win-back only starts at 120. This is the gap ACE fills."},
   {n:"Repeat",rule:["Orders 2–4"],pop:"4,270",days:"148 d",col:"var(--green-300)",
-    obj:3,tone:2,disc:2,lever:[0,2],capN:2,capU:0,src:["Default","Custom","ACE"],
+    obj:3,tone:2,disc:2,lever:[0,2],capN:2,capU:0,src:["ACE","Custom","Campaign"],
     note:"Reorder rhythm is learned per shopper here, not from the store average.",
     replen:[["Care products","38 days","34–44 days"],["Nutrition","27 days","24–31 days"],["Base layers","186 days","seasonal"]]},
   {n:"VIP",rule:["Orders ≥ 5","or LTV in top 10%"],pop:"1,180",days:"—",col:"var(--purple-300)",
-    obj:4,tone:3,disc:2,lever:[1,2,4],capN:2,capU:0,src:["Custom","ACE"],
+    obj:4,tone:3,disc:2,lever:[1,2,4],capN:2,capU:0,src:["ACE","Custom","Campaign"],
     note:"Mapped to the Gold and Summit loyalty tiers, so VIP means one thing everywhere."},
   {n:"At risk",rule:["1.5× past their own rhythm"],pop:"2,910",days:"41 d",col:"var(--orange-300)",
-    obj:5,tone:4,disc:3,lever:[0,3,5],capN:2,capU:0,src:["Default","Custom","ACE"],
+    obj:5,tone:4,disc:3,lever:[0,3,5],capN:2,capU:0,src:["ACE","Custom","Campaign"],
     note:"Free shipping beat 10% off on every at-risk cohort tested — cheaper, and it won."},
   {n:"Dormant",rule:["No order in 180 days"],pop:"7,650",days:"—",col:"var(--coral-400)",
-    obj:6,tone:4,disc:4,lever:[5],capN:1,capU:1,src:["Default","ACE"],
+    obj:6,tone:4,disc:4,lever:[5],capN:1,capU:1,src:["ACE","Campaign"],
     note:"One honest attempt, then stop. Most suppressed messages come from here."}
 ];
 
@@ -1335,10 +1413,13 @@ const DV=["var(--dv-1)","var(--dv-2)","var(--dv-3)","var(--dv-4)"], DV_OTHER="va
 
 /* member: base weekly reach, weekly growth, and its own rates */
 const DIMS={
+  /* ACE absorbed the standard engagements when they became plays, so it carries
+     their volume too — the source split is now the engine, your own work, and
+     one-off campaigns. */
   source:{label:"Source", head:"Source", members:[
-    {n:"Default",c:"var(--dv-3)",base:7480,g:.005,reply:.061,click:.042,cvr:.032,opt:.009,aov:118},
-    {n:"Custom", c:"var(--dv-2)",base:380, g:.128,reply:.094,click:.071,cvr:.077,opt:.007,aov:142},
-    {n:"ACE",    c:"var(--dv-1)",base:240, g:.230,reply:.118,click:.088,cvr:.066,opt:.011,aov:131}]},
+    {n:"ACE",     c:"var(--dv-1)",base:7720,g:.012,reply:.063,click:.043,cvr:.033,opt:.009,aov:118},
+    {n:"Custom",  c:"var(--dv-2)",base:380, g:.128,reply:.094,click:.071,cvr:.077,opt:.007,aov:142},
+    {n:"Campaign",c:"var(--dv-3)",base:950, g:.041,reply:.088,click:.062,cvr:.048,opt:.014,aov:186}]},
   domain:{label:"ACE domain", head:"Domain", members:[
     {n:"Replenishment & reorder",base:520,g:.038,reply:.142,click:.101,cvr:.081,opt:.007,aov:76},
     {n:"Retention & win-back",   base:430,g:.031,reply:.086,click:.058,cvr:.044,opt:.016,aov:104},
@@ -1915,10 +1996,21 @@ const ACE_MODES=[
    who:"Pick this once you've read a few dozen and you trust what it's doing."}
 ];
 let aceState="auto";
+/* which domains have their plays showing. Expanded by default — the two layers
+   are the point of the screen, so they should be visible without a click. */
+let aceOpen=new Set(ACE_DOMAINS.map((_,i)=>i));
+const rate=v=>(Math.round(v*10)/10).toFixed(1)+"%";
+/* the nav badge counts both layers: plays ACE is actually running, plus the
+   custom engagements you have switched on */
+function updateNavCount(){
+  const on=aceState!=="off";
+  const plays=ACE_DOMAINS.reduce((a,d)=>a+d.plays.filter(p=>playLive(d,p,on)).length,0);
+  $("#navEngCount").textContent=plays+ENG.filter(r=>r.st==="on").length;
+}
 function renderAce(){
   const M=ACE_MODES.find(m=>m.k===aceState), on=aceState!=="off";
   const allowed=ACE_DOMAINS.filter(d=>d.on), off=ACE_DOMAINS.filter(d=>!d.on);
-  const lostGmv=off.reduce((a,d)=>a+(d.potGmv||0),0);
+  const lostGmv=off.reduce((a,d)=>a+domPotential(d).gmv,0);
 
   $("#acePendingBtn").style.display = aceState==="manual" ? "" : "none";
   const badge=$("#aceTabBadge"); badge.textContent=M.n; badge.className="tag "+M.tag;
@@ -1936,28 +2028,40 @@ function renderAce(){
       <span class="t-sm acc med" style="margin-top:auto" data-learn="${m.k}">Learn more →</span>
     </button>`}).join("");
 
-  /* domains */
+  /* domains, and the plays underneath them */
   $("#aceDomCount").textContent=allowed.length+" of "+ACE_DOMAINS.length+" allowed";
   const pot=$("#aceDomPotential");
   if(off.length&&on){pot.style.display="";pot.textContent=off.length+" off · ≈$"+fmt(lostGmv)+" GMV left on the table"}
   else pot.style.display="none";
+  $("#aceExpandAll").textContent = aceOpen.size ? "Collapse all" : "Expand all";
 
   const tb=$("#aceDomainTable tbody"); tb.innerHTML="";
   ACE_DOMAINS.forEach((d,i)=>{
-    const live=d.on&&on;
-    const cell=(real,potential)=>live
+    const live=d.on&&on, open=aceOpen.has(i);
+    const t=live?domTotals(d,on):null, p=domPotential(d);
+    const nPlays=d.plays.length, nSetup=d.plays.filter(x=>x.st==="setup").length;
+    const cell=(real,potential)=>t
       ? `<td class="t-md num-t">${real}</td>`
       : `<td class="t-md num-t" style="color:var(--content-accent-default);font-style:italic">${potential}</td>`;
-    const tr=el("tr");
+
+    const tr=el("tr","domRow");
     tr.innerHTML=`
-      <td><div class="col gap-xxxs">
-        <span class="t-md med">${d.n}</span><span class="t-sm sec">${d.d}</span>
-        ${live?"":`<span class="tag tag-purple" style="margin-top:4px;width:fit-content">Not allowed — figures are estimates</span>`}
+      <td><div class="row gap-xs" style="align-items:flex-start">
+        <button class="twistie ${open?"open":""}" data-domopen="${i}" aria-label="Show the plays in this domain">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m9 5 7 7-7 7"/></svg>
+        </button>
+        <div class="col gap-xxxs" style="flex:1">
+          <div class="row gap-xs wrap"><span class="t-md med">${d.n}</span>
+            <span class="tag tag-grey">${nPlays} play${nPlays===1?"":"s"}</span>
+            ${nSetup&&live?`<span class="tag tag-orange">${nSetup} needs setup</span>`:""}</div>
+          <span class="t-sm sec">${d.d}</span>
+          ${live?"":`<span class="tag tag-purple" style="margin-top:4px;width:fit-content">Not allowed — figures are estimates</span>`}
+        </div>
       </div></td>
-      ${cell(fmt(d.reach),"≈"+fmt(d.potReach))}
-      ${cell("$"+fmt(d.gmv),"≈$"+fmt(d.potGmv))}
-      ${cell(d.cvr,"≈"+d.potCvr)}
-      ${cell(d.opt,"≈"+d.potOpt)}
+      ${cell(fmt(Math.round(t?t.reach:0)),"≈"+fmt(Math.round(p.reach)))}
+      ${cell("$"+fmt(Math.round(t?t.gmv:0)),"≈$"+fmt(Math.round(p.gmv)))}
+      ${cell(rate(t?t.cvr:0),"≈"+rate(p.cvr))}
+      ${cell(rate(t?t.opt:0),"≈"+rate(p.opt))}
       <td><button class="btn btn-secondary sm" data-dominstr="${i}">
         ${d.ins==="Customized"?`<span class="dot" style="background:var(--purple-500)"></span>Instruction`
           :`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Add instruction`}
@@ -1967,8 +2071,38 @@ function renderAce(){
         <span class="toggle ${d.on?"on":""}" data-dom="${i}" ${on?"":'style="opacity:.5;pointer-events:none"'}></span>
       </div></td>`;
     tb.appendChild(tr);
+    if(!open) return;
+
+    d.plays.forEach((pl,j)=>{
+      const pLive=playLive(d,pl,on), v=pLive?playReal(pl):playPot(pl);
+      const pc=(real,potential)=>pLive
+        ? `<td class="t-md num-t">${real}</td>`
+        : `<td class="t-md num-t" style="color:var(--content-accent-default);font-style:italic">${potential}</td>`;
+      const ptr=el("tr","playRow");
+      ptr.innerHTML=`
+        <td><div class="playName">
+          <span class="playRail ${pLive?"live":""}"></span>
+          <div class="col gap-xxxs" style="flex:1">
+            <div class="row gap-xs wrap"><span class="t-md med">${pl.n}</span>
+              ${pl.st==="setup"?`<span class="tag tag-orange">${pl.note}</span>`:""}</div>
+            <span class="t-sm sec">${pl.d}</span>
+            <span class="t-xs ter">Fires ${pl.trg}</span>
+          </div>
+        </div></td>
+        ${pc(fmt(v.reach),"≈"+fmt(v.reach))}
+        ${pc("$"+fmt(v.gmv),"≈$"+fmt(v.gmv))}
+        ${pc(rate(v.cvr),"≈"+rate(v.cvr))}
+        ${pc(rate(v.opt),"≈"+rate(v.opt))}
+        <td><button class="btn btn-tertiary sm" data-playinstr="${i}.${j}">
+          ${pl.ins==="Customized"?`<span class="dot" style="background:var(--purple-500)"></span>Instruction`
+            :`<span class="ter">Default instruction</span>`}
+        </button></td>
+        <td><span class="t-xs ter">${pl.st==="setup"?"Blocked":pLive?"Running":on?"Off with the domain":"ACE is off"}</span></td>`;
+      tb.appendChild(ptr);
+    });
   });
 
+  updateNavCount();
 }
 
 function renderBench(){
@@ -2001,9 +2135,16 @@ function renderBench(){
    ENGAGEMENTS
    ======================================================================= */
 let engFilter="all";
+/* the trigger, read back as a sentence — the same words the studio edits */
+const RHYTHM_EVENTS=[10,11];
+function whenLine(w){
+  const ev=WHEN_EVENTS[w.ev], dl=WHEN_DELAYS[w.delay];
+  return dl==="Immediately" ? ev+", immediately" : ev+", "+dl.toLowerCase();
+}
 function renderEng(){
-  const st=$("#statusFilter").value;
-  const rows=ENG.filter(r=>(engFilter==="all"||r.s===engFilter)&&(st==="all"||r.st===st));
+  const tf=$("#statusFilter").value;
+  const kind=r=>RHYTHM_EVENTS.includes(r.when.ev)?"rhythm":"event";
+  const rows=ENG.filter(r=>(engFilter==="all"||r.st===engFilter)&&(tf==="all"||kind(r)===tf));
   const tb=$("#engTable tbody"); tb.innerHTML="";
   rows.forEach(r=>{
     const i=ENG.indexOf(r);
@@ -2013,13 +2154,15 @@ function renderEng(){
         <span class="t-md med">${r.n}</span><span class="t-sm sec">${r.d}</span>
         ${r.note?`<span class="tag tag-orange" style="margin-top:4px;width:fit-content">${r.note}</span>`:""}
       </div></td>
-      <td><span class="tag ${SRC[r.s].tag}"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span></td>
-      <td class="t-sm sec">${r.trg}</td>
+      <td><div class="col gap-xxxs">
+        <span class="t-sm med">${whenLine(r.when)}</span>
+        <span class="t-xs ter">only if ${r.when.cond.toLowerCase()}</span>
+      </div></td>
       <td><span class="tag ${r.ins==="Customized"?"tag-purple":"tag-grey"}">${r.ins}</span></td>
       <td class="t-md num-t ${r.sent?"":"ter"}">${r.sent?fmt(r.sent):"—"}</td>
       <td class="t-md num-t ${r.cvr==="—"?"ter":""}">${r.cvr}</td>
       <td><div class="row gap-xs" style="justify-content:flex-end">
-        <button class="btn btn-secondary sm" data-test="${i}">Test</button>
+        <button class="btn btn-secondary sm" data-test="${i}">Edit</button>
         <span class="toggle ${r.st==="on"?"on":""}" data-eng="${i}"></span>
       </div></td>`;
     tr.addEventListener("click",e=>{
@@ -2029,51 +2172,15 @@ function renderEng(){
     tb.appendChild(tr);
   });
   $("#fcAll").textContent=ENG.length;
-  ["Default","Custom"].forEach(s=>{const n=$("#fc"+s);if(n)n.textContent=ENG.filter(r=>r.s===s).length});
+  $("#fcOn").textContent=ENG.filter(r=>r.st==="on").length;
+  $("#fcOff").textContent=ENG.filter(r=>r.st!=="on").length;
   $("#scnBadge").textContent=ENG.length;
-  $("#navEngCount").textContent=ENG.filter(r=>r.st==="on").length;
+  updateNavCount();
 }
 
-function instructionText(r){
-  if(r.s==="ACE") return "State the reason we're reaching out in the first line. Name the exact product they bought, never the category. Suggest the companion item, not a bigger version of the same thing. No offer in the first message — if they hesitate, use the loyalty levers before any discount. Keep it to two sentences.";
-  if(r.s==="Custom") return "Lead with fit and safety, never price. Do not discount in the first message. If the shopper asks a sizing question, answer it properly and offer to hold the item. Stop selling the moment they raise a problem with an existing order.";
-  return "Remind them what's in the cart by name. Offer sizing help before any incentive. Never promise a delivery date. If they reply with a support question, answer it and hand off rather than continuing to sell.";
-}
+const ENG_DEFAULT_TEXT="Lead with fit and safety, never price. Do not discount in the first message. If the shopper asks a sizing question, answer it properly and offer to hold the item. Stop selling the moment they raise a problem with an existing order.";
+function instructionText(r){ return r.text||ENG_DEFAULT_TEXT }
 function openEngagement(i){ studioForEng(i) }
-
-const NEW_BODY=`
-  <div class="banner banner-ai">
-    <div class="col gap-xxxs">
-      <span class="t-md med">Describe the moment you want to catch.</span>
-      <span class="t-sm sec">This is the only thing that's different about a custom engagement. Once it exists, it sits in the same list and behaves like everything else.</span>
-    </div>
-  </div>
-  <textarea class="textarea" id="newNl" style="min-height:96px">When someone buys a bike and has never bought a helmet, wait 5 days after delivery and suggest a helmet that matches their frame size.</textarea>
-  <div class="row between wrap gap-sm">
-    <div class="chips">
-      <button class="chip nlSample">High-value carts over $200 that stalled</button>
-      <button class="chip nlSample">Returned for size, never came back</button>
-    </div>
-    <button class="btn btn-ai" id="newInterpret">Interpret</button>
-  </div>
-  <div id="newResult" class="hidden">
-    <div class="sepH" style="margin-bottom:var(--md)"></div>
-    <div class="row between" style="margin-bottom:var(--sm)">
-      <span class="h-md">Read back — edit anything that's off</span><span class="tag tag-purple">Draft</span>
-    </div>
-    <div class="grid g-3" style="margin-bottom:var(--md)">
-      <div class="card pad-md"><div class="kv"><span class="k">Trigger</span><span class="t-md med">Order fulfilled</span></div>
-        <div class="t-sm sec" style="margin-top:4px">Shopify · order contains <b>Bikes</b></div></div>
-      <div class="card pad-md"><div class="kv"><span class="k">Audience</span><span class="t-md med">No helmet, ever</span></div>
-        <div class="t-sm sec" style="margin-top:4px">≈ 1,860 shoppers / quarter</div></div>
-      <div class="card pad-md"><div class="kv"><span class="k">Timing</span><span class="t-md med">Delivery + 5 days</span></div>
-        <div class="t-sm sec" style="margin-top:4px">Falls back to fulfilment + 8 d</div></div>
-    </div>
-    <div class="field">
-      <span class="label">Instruction <span class="ter">— one per engagement, starts from the default and becomes “Customized” once you edit it</span></span>
-      <textarea class="textarea" style="min-height:110px">Lead with fit and safety, never price. No discount in the first message. If they ask about sizing, answer it and offer to hold the item.</textarea>
-    </div>
-  </div>`;
 
 /* =======================================================================
    CAMPAIGNS
@@ -2339,7 +2446,7 @@ function renderLifecycle(){
             <button class="btn btn-secondary sm" style="width:fit-content">Add a lever</button>
           </div></div>
         <div class="field"><span class="label">Sources allowed to touch this stage</span>
-          <div class="chipInput">${["Default","Custom","ACE"].map(x=>{const on=s.src.includes(x);
+          <div class="chipInput">${["ACE","Custom","Campaign"].map(x=>{const on=s.src.includes(x);
             return `<span class="tag ${on?SRC[x].tag:"tag-grey"}" style="${on?"":"opacity:.4;text-decoration:line-through"}">${x}</span>`}).join("")}</div></div>
       </div>
       <div class="banner banner-info" style="margin-top:var(--md)">
@@ -2383,7 +2490,7 @@ const CONV=[
            ["in","oh really? yeah I'd give it another go"],
            ["out","Great. What's your usual waist and inseam? I'll pick the exact size, and returns are free on your tier if it's still off."]]},
 
-  {who:"Lena P.",id:"+49 15• ••• 22",stage:"Repeat",tier:"Silver",src:"Default",domain:"Replenishment due",
+  {who:"Lena P.",id:"+49 15• ••• 22",stage:"Repeat",tier:"Silver",src:"ACE",domain:"Replenishment & reorder · Replenishment due",
    st:"closed",when:"1 h ago",outcome:"Ordered · $64",
    why:"Day 40 on her own 38-day cadence for care products.",
    reason:[["Lifecycle","Repeat · build the rhythm"],["Loyalty","Silver · earned 80 points on this order"],
@@ -2407,7 +2514,7 @@ const CONV=[
    reason:[["Guardrail","Open support ticket — don't sell to someone waiting on a problem"],["Retry","Queued, re-evaluates on ticket close"]],
    thread:[]},
 
-  {who:"Jonas M.",id:"+46 7• ••• 12",stage:"Dormant",tier:"Member",src:"Default",domain:"Win-back",
+  {who:"Jonas M.",id:"+46 7• ••• 12",stage:"Dormant",tier:"Member",src:"ACE",domain:"Retention & win-back · Win-back",
    st:"stopped",when:"3 h ago",
    why:"210 days since his last order, still opted in.",
    stop:"Stopped by guardrails: frequency cap. He's already had 3 messages this week.",
@@ -2438,7 +2545,7 @@ const CONV=[
 ];
 const CONV_ST={pending:["Waiting for you","tag-orange"],live:["Live","tag-blue"],
   closed:["Closed","tag-green"],stopped:["Stopped","tag-grey"]};
-const SRC_TAG={ACE:"tag-purple",Default:"tag-blue",Custom:"tag-coral",Campaign:"tag-teal"};
+const SRC_TAG={ACE:"tag-purple",Custom:"tag-coral",Campaign:"tag-teal"};
 
 let convFilter="all", convSel=0, convQ="";
 function convRows(){
@@ -3004,6 +3111,12 @@ document.addEventListener("click",e=>{
   const dm=e.target.closest("[data-dom]");
   if(dm){const i=+dm.dataset.dom;ACE_DOMAINS[i].on=!ACE_DOMAINS[i].on;renderAce();return}
 
+  const dop=e.target.closest("[data-domopen]");
+  if(dop){const i=+dop.dataset.domopen;aceOpen.has(i)?aceOpen.delete(i):aceOpen.add(i);renderAce();return}
+
+  const pin=e.target.closest("[data-playinstr]");
+  if(pin){e.stopPropagation();const[i,j]=pin.dataset.playinstr.split(".").map(Number);studioForPlay(i,j);return}
+
   const lm=e.target.closest("[data-learn]");
   if(lm){e.stopPropagation();openLearn(lm.dataset.learn);return}
 
@@ -3052,15 +3165,7 @@ document.addEventListener("click",e=>{
     `<button class="btn btn-secondary">Try another shopper</button><button class="btn btn-primary">Looks right</button>`);return}
 
   const p=e.target.closest("[data-panel]");
-  if(p&&p.dataset.panel==="new"){
-    openPanel("New engagement","Describe it, we turn it into a trigger",NEW_BODY,
-      `<button class="btn btn-secondary">Test</button><button class="btn btn-primary">Save as draft</button>`);
-    $("#newInterpret").addEventListener("click",()=>{
-      const b=$("#newInterpret");b.textContent="Reading your data…";b.disabled=true;
-      setTimeout(()=>{$("#newResult").classList.remove("hidden");b.textContent="Interpret";b.disabled=false},600);
-    });
-    $$(".nlSample").forEach(s=>s.addEventListener("click",()=>{$("#newNl").value=s.textContent.trim()}));
-  }
+  if(p&&p.dataset.panel==="new"){ studioForNew(); return }
 });
 
 $("#scroller").addEventListener("scroll",e=>{
@@ -3073,6 +3178,10 @@ $$("#srcFilter .chip").forEach(c=>c.addEventListener("click",()=>{
   engFilter=c.dataset.f; renderEng();
 }));
 $("#statusFilter").addEventListener("change",renderEng);
+$("#aceExpandAll").addEventListener("click",()=>{
+  if(aceOpen.size) aceOpen.clear(); else ACE_DOMAINS.forEach((_,i)=>aceOpen.add(i));
+  renderAce();
+});
 $$("#convFilter .chip").forEach(c=>c.addEventListener("click",()=>{
   $$("#convFilter .chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
   convFilter=c.dataset.f; renderConv();
@@ -3582,14 +3691,82 @@ function simReply(text){
           note:"Kept it to one question. Two-sentence limit respected."};
 }
 let studio={ctx:null,shopper:0,thread:[]};
+/* A custom engagement has two halves and the studio shows them in order:
+   WHEN it fires, then WHAT it says. A play inside a domain shows the same two,
+   but the When half is the engine's, not yours — so it's stated, not editable. */
+function whenBlock(ctx){
+  const w=ctx.when;
+  if(!w) return `
+    <div class="col gap-xxs">
+      <span class="t-sm bold">When — the trigger</span>
+      <div class="card pad-md" style="background:var(--purple-50)">
+        <span class="t-sm sec">There's nothing to set. ACE watches for the moment across this whole domain and picks the hour per shopper. You own what it says; the guardrails own whether it may say it.</span>
+      </div>
+    </div>`;
+  if(w.mode==="read") return `
+    <div class="col gap-xxs">
+      <div class="row between wrap gap-xs">
+        <span class="t-sm bold">When — the trigger</span>
+        <span class="tag tag-purple">Set by the engine</span>
+      </div>
+      <div class="card pad-md" style="background:var(--purple-50)">
+        <div class="col gap-xxxs">
+          <span class="t-md med">Fires ${w.line}</span>
+          <span class="t-sm sec">This play sits inside <b>${w.domain}</b>. You can't retime it here — that's the difference between a play and a custom engagement. Turn the domain off if you don't want it running.</span>
+        </div>
+      </div>
+    </div>`;
+  return `
+    <div class="col gap-xxs">
+      <div class="row between wrap gap-xs">
+        <span class="t-sm bold">When — the trigger</span>
+        <span class="tag tag-coral">Yours to set</span>
+      </div>
+      ${ctx.nl?`<div class="col gap-xxs">
+        <span class="t-sm sec">Describe the moment you want to catch and we'll turn it into a trigger.</span>
+        <textarea class="textarea" id="studioNl" style="min-height:64px">When someone buys a bike and has never bought a helmet, wait 5 days after delivery and suggest a helmet that matches their frame size.</textarea>
+        <div class="row between wrap gap-xs">
+          <div class="chips">
+            <button class="chip nlSample">High-value carts over $200 that stalled</button>
+            <button class="chip nlSample">Returned for size, never came back</button>
+          </div>
+          <button class="btn btn-ai sm" id="studioInterpret">Interpret</button>
+        </div>
+      </div>`:""}
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:var(--sm)">
+        <div class="field"><span class="label">Fires on</span>
+          <select class="selectEl" id="whenEv">
+            ${WHEN_EVENTS.map((x,i)=>`<option value="${i}" ${i===w.ev?"selected":""}>${x}</option>`).join("")}
+          </select></div>
+        <div class="field"><span class="label">Then waits</span>
+          <select class="selectEl" id="whenDelay">
+            ${WHEN_DELAYS.map((x,i)=>`<option value="${i}" ${i===w.delay?"selected":""}>${x}</option>`).join("")}
+          </select></div>
+      </div>
+      <div class="field"><span class="label">Only if <span class="ter">— who this applies to</span></span>
+        <input class="input" id="whenCond" value="${w.cond}"></div>
+      <div class="card pad-md" style="background:var(--grey-50)">
+        <span class="t-sm sec" id="whenReadback"></span>
+      </div>
+    </div>`;
+}
+function whenReadback(){
+  const n=$("#whenReadback"); if(!n) return;
+  const ev=WHEN_EVENTS[+$("#whenEv").value], dl=WHEN_DELAYS[+$("#whenDelay").value], c=$("#whenCond").value.trim();
+  n.innerHTML=`<b>${ev}</b>, ${dl==="Immediately"?"we go straight away":dl==="When the engine judges it best"?"the engine picks the hour":"we wait "+dl.replace(/^After /,"").toLowerCase()}`
+    +(c?` — but only if <b>${c}</b>.`:".")
+    +` Timing guardrails still apply on top: quiet hours, frequency caps and anyone in the exclusion list.`;
+}
 function openStudio(ctx){
   studio={ctx,shopper:0,thread:[]};
   panel.classList.add("wide");
   openPanel(ctx.title, ctx.sub, `
     <div class="studio">
       <div class="studioCol">
+        ${whenBlock(ctx)}
+        <div class="sepH"></div>
         <div class="row between wrap gap-xs">
-          <div class="row gap-xs"><span class="t-sm bold">Instruction</span>
+          <div class="row gap-xs"><span class="t-sm bold">What — the instruction</span>
             <span class="tag ${ctx.ins==="Customized"?"tag-purple":"tag-grey"}">${ctx.ins}</span></div>
           ${ctx.ins==="Customized"?`<button class="btn btn-tertiary sm ter">Reset to default</button>`:""}
         </div>
@@ -3628,8 +3805,41 @@ function openStudio(ctx){
       </div>
     </div>`,
     `<button class="btn btn-secondary" id="studioRun">Run test</button>
-     <button class="btn btn-primary">Save instruction</button>`);
+     <button class="btn btn-primary" id="studioSave">${ctx.nl?"Create the engagement":ctx.when&&ctx.when.mode==="edit"?"Save the engagement":"Save instruction"}</button>`);
   drawStudio();
+  /* Only the custom-engagement studio writes back — a play's instruction and a
+     domain's are still decorative, same as every other Save in the prototype. */
+  $("#studioSave").addEventListener("click",()=>{
+    if(!ctx.when||ctx.when.mode!=="edit") return closePanel();
+    const w={ev:+$("#whenEv").value,delay:+$("#whenDelay").value,cond:$("#whenCond").value.trim()};
+    const text=$("#studioIns").value.trim();
+    if(ctx.nl){
+      const nl=$("#studioNl").value.trim();
+      ENG.push({n:"New custom engagement",d:nl||"Written by you",
+        note:"Draft — switch it on when you're ready",
+        ins:"Customized",sent:0,cvr:"—",st:"off",when:w,text});
+    } else {
+      const r=ENG[ctx.engIndex];
+      r.when=w; r.text=text; if(text!==ENG_DEFAULT_TEXT) r.ins="Customized";
+    }
+    renderEng(); selectTab("scenarios"); closePanel();
+  });
+  if(ctx.when&&ctx.when.mode==="edit"){
+    whenReadback();
+    ["#whenEv","#whenDelay"].forEach(s=>$(s).addEventListener("change",whenReadback));
+    $("#whenCond").addEventListener("input",whenReadback);
+    if(ctx.nl){
+      $("#studioInterpret").addEventListener("click",()=>{
+        const b=$("#studioInterpret"); b.textContent="Reading your data…"; b.disabled=true;
+        setTimeout(()=>{
+          $("#whenEv").value=3; $("#whenDelay").value=6;
+          $("#whenCond").value="Order contains Bikes · never bought a helmet";
+          whenReadback(); b.textContent="Interpret"; b.disabled=false;
+        },600);
+      });
+      $$(".nlSample").forEach(s=>s.addEventListener("click",()=>{$("#studioNl").value=s.textContent.trim()}));
+    }
+  }
   $("#studioRun").addEventListener("click",()=>{
     studio.shopper=+$("#studioWho").value; studio.thread=[];
     const sh=SIM_SHOPPERS[studio.shopper];
@@ -3665,18 +3875,40 @@ function drawStudio(){
          <span class="t-xs ter">Pick a shopper and press Run test.</span></div>`;
   t.scrollTop=t.scrollHeight;
 }
+const slugify=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+/* a custom engagement: you set the When, you write the What */
 function studioForEng(i){
   const r=ENG[i];
-  openStudio({title:r.n,sub:r.d,ins:r.ins,kind:r.s,
-    slug:r.n.toLowerCase().replace(/[^a-z0-9]+/g,"-"),text:instructionText(r)});
+  openStudio({title:r.n,sub:"Custom engagement · when it fires and what it says",ins:r.ins,kind:"Custom",
+    engIndex:i,when:{mode:"edit",ev:r.when.ev,delay:r.when.delay,cond:r.when.cond},
+    slug:slugify(r.n),text:instructionText(r)});
 }
+/* a new one: same two halves, both empty, with the read-back to fill them */
+function studioForNew(){
+  openStudio({title:"New custom engagement",sub:"Two things to settle: when it fires, and what it says",
+    ins:"Customized",kind:"Custom",nl:true,
+    when:{mode:"edit",ev:0,delay:1,cond:""},
+    slug:"new-engagement",
+    text:"Say why we're reaching out in the first line. Answer the obvious objection before naming a product. No offer in the first message — if they hesitate, use the loyalty levers before any discount. Two sentences."});
+}
+/* a domain instruction: no When at all, because the engine owns the timing */
 function studioForDomain(i){
   const d=ACE_DOMAINS[i];
-  openStudio({title:d.n,sub:"ACE domain · optional instruction",ins:d.ins,kind:"ACE",
-    slug:"ace-"+d.n.toLowerCase().replace(/[^a-z0-9]+/g,"-"),
+  openStudio({title:d.n,sub:"ACE domain · one instruction for every play underneath it",ins:d.ins,kind:"ACE",
+    slug:"ace-"+slugify(d.n),
     text:d.ins==="Customized"
       ? "On replenishment, name the exact product and the interval we learned for this shopper, never a store average. Offer the loyalty reward before any discount. If they've changed cadence, ask rather than assume."
       : "ACE writes this domain from your brand profile and the shopper's own history. Add an instruction here only if this domain needs something the rest of your account doesn't."});
+}
+/* a play: the When is stated so you can read it, but it isn't yours to change */
+function studioForPlay(i,j){
+  const d=ACE_DOMAINS[i], p=d.plays[j];
+  openStudio({title:p.n,sub:d.n+" · a play inside this domain",ins:p.ins,kind:"ACE",
+    when:{mode:"read",line:p.trg,domain:d.n},
+    slug:"ace-"+slugify(d.n)+"/"+slugify(p.n),
+    text:p.ins==="Customized"
+      ? "State the reason we're reaching out in the first line, and name the exact product rather than the category. Answer the obvious objection before selling anything. No offer in the first message — if they hesitate, use the loyalty levers before any discount. Two sentences."
+      : "ACE writes this play from your brand profile and the shopper's own history, inside the domain instruction above it. Edit here only if this one play needs something the rest of the domain doesn't."});
 }
 
 /* boot */

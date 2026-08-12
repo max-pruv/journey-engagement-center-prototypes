@@ -45,7 +45,8 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
   `#7e55f6` / `#c35e4a` / `#149db8` / `#0e4ea7`. Re-run the validator with `--pairs all` if you
   touch it. Colour is bound to the entity, never to its rank.
 - **Everything in Reporting derives from six weekly primitives per member.** Never hand-write a
-  total; if the chart and the table can disagree, the change is wrong.
+  total; if the chart and the table can disagree, the change is wrong. The same rule now binds the
+  domain table: `domTotals()` folds the plays, so `ACE_DOMAINS` carries no metrics of its own.
 - **New interactive elements use `data-*` attributes and the delegated document click handler**, not
   per-node listeners — they must survive a re-render.
 
@@ -53,6 +54,12 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
 
 - **ACE is a switch, not a scenario library.** Off / Manual acceptance / Automatic. The only dial is
   *domains*, and a domain that's off still shows what it would have been worth.
+- **Two layers under the switch: a domain, and the plays inside it.** The standard engagements live
+  there now — *Consideration & browse* holds Cart abandonment, Session abandonment, Browse
+  abandonment, Welcome. A play is readable and instructable but **has no toggle**; the dial stays the
+  domain. Domain figures are folded from the plays, never hand-written.
+- **A custom engagement is When + What** — the trigger you own, then the instruction. Tab two is
+  custom-only; nothing pre-built lives there any more.
 - **One instruction per unit**, and it's a skill. Badged `Default` or `Customized`.
 - **Instructions ask; guardrails decide.** Guardrails run last and can refuse anything.
 - **Suppression is timing; exclusion is people.** Two different blocks, deliberately.
