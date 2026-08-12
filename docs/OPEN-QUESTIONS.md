@@ -50,7 +50,7 @@ trigger.
   and free text is accepted but not read. Same honesty gap as onboarding.html.
 - **Shopper profile** is a stand-in panel. In the product it opens in a new tab; the prototype says
   so rather than faking it.
-- **Approve / Reject** in Conversations don't mutate state.
+- **Reject** in Conversations does not mutate state yet. Approve & send now moves the message to Live and updates the pending counts.
 - **Dark mode.** Tokens exist for it in Axiom; the prototype only implements light.
 - The `NEW_BODY` "New engagement" flow and the studio are two shapes for overlapping jobs. Folding
   the former into a studio variant would remove a concept.
