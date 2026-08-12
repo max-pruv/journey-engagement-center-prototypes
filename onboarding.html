@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set up your Engagement Center — AI Journey</title>
+<style>
+:root{
+  --white:#ffffff; --black:#1e242e;
+  --grey-50:#fafafa; --grey-100:#ebecef; --grey-200:#d5d7dd; --grey-300:#c7cad1;
+  --grey-400:#b3b8c1; --grey-500:#6e7686; --grey-600:#5c6370; --grey-900:#22252a;
+  --coral-500:#ff9780; --green-50:#e9fbf5; --green-100:#bbf2e1; --green-500:#32c898; --green-800:#147656;
+  --red-50:#ffecef; --red-700:#d90b28; --orange-50:#fff5ee; --orange-100:#ffe0cb; --orange-800:#a94f13;
+  --purple-50:#f1ecff; --purple-100:#dad0ff; --purple-200:#c4b7ff; --purple-300:#b7a7ff;
+  --purple-500:#7e55f6; --purple-700:#683fcf; --purple-800:#4c3c9d;
+  --blue-50:#f5f9ff; --blue-100:#d8e9fd; --blue-900:#073c85;
+  --teal-50:#e8f5f8; --teal-800:#0b5665;
+  --content-neutral-default:var(--black); --content-neutral-secondary:var(--grey-600);
+  --content-neutral-tertiary:var(--grey-500); --content-accent-default:var(--purple-700);
+  --content-success-default:var(--green-800);
+  --border-neutral-default:rgba(0,0,0,.08);
+  --elevation-neutral-bg:var(--grey-50); --surface-neutral-secondary:var(--grey-100);
+  --surface-accent-default:var(--purple-50); --ai-gradient:#7d19f0;
+  --xxxs:4px; --xxs:6px; --xs:8px; --sm:12px; --md:16px; --lg:24px; --xl:32px; --xxl:48px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:14px;line-height:1.45;color:var(--content-neutral-default);
+  background:var(--elevation-neutral-bg);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,textarea,select{font:inherit;color:inherit}
+a{color:var(--content-accent-default)}
+
+.h-xxl{font-size:24px;font-weight:600;letter-spacing:-.01em}
+.h-lg{font-size:18px;font-weight:600}.h-md{font-size:16px;font-weight:600}
+.t-sm{font-size:12px}.t-xs{font-size:10px}
+.med{font-weight:500}.bold{font-weight:600}
+.sec{color:var(--content-neutral-secondary)}.ter{color:var(--content-neutral-tertiary)}
+.acc{color:var(--content-accent-default)}
+.row{display:flex;align-items:center;gap:var(--xs)}
+.row.between{justify-content:space-between}
+.col{display:flex;flex-direction:column}
+.wrap{flex-wrap:wrap}
+.gap-xxxs{gap:var(--xxxs)}.gap-xxs{gap:var(--xxs)}.gap-xs{gap:var(--xs)}
+.gap-sm{gap:var(--sm)}.gap-md{gap:var(--md)}
+.hidden{display:none !important}
+
+.app{display:flex;height:100vh;padding:var(--xs);gap:var(--xs)}
+.main{flex:1;min-width:0;background:var(--white);border:1px solid var(--border-neutral-default);
+  border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
+.side{width:352px;flex-shrink:0;background:var(--white);border:1px solid var(--border-neutral-default);
+  border-radius:16px;display:flex;flex-direction:column;overflow:hidden}
+@media (max-width:1000px){.side{display:none}}
+
+.top{padding:var(--md) var(--lg);border-bottom:1px solid var(--border-neutral-default);
+  display:flex;align-items:center;gap:var(--sm)}
+.logo{width:28px;height:28px;border-radius:var(--xs);background:var(--black);color:var(--coral-500);
+  display:grid;place-items:center;font-weight:700;font-size:14px;flex-shrink:0}
+.progress{flex:1;height:5px;border-radius:3px;background:var(--grey-100);overflow:hidden;max-width:320px}
+.progress > span{display:block;height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--ai-gradient),var(--purple-500));transition:width .4s cubic-bezier(.32,.72,0,1)}
+
+.thread{flex:1;overflow-y:auto;padding:var(--lg);display:flex;flex-direction:column;gap:var(--md)}
+.turn{display:flex;gap:var(--sm);align-items:flex-start;max-width:760px;
+  animation:rise .32s cubic-bezier(.32,.72,0,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.av{width:28px;height:28px;border-radius:var(--xs);flex-shrink:0;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500))}
+.ask{background:var(--white);border:1px solid var(--purple-100);border-radius:14px;border-top-left-radius:4px;
+  padding:var(--sm) var(--md)}
+.said{align-self:flex-end;max-width:78%;background:var(--surface-neutral-secondary);border-radius:14px;
+  border-bottom-right-radius:4px;padding:var(--sm) var(--md);animation:rise .28s cubic-bezier(.32,.72,0,1) both}
+.typing{display:inline-flex;gap:4px;padding:4px 0}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--grey-300);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+
+.compose{border-top:1px solid var(--border-neutral-default);padding:var(--md) var(--lg);
+  display:flex;flex-direction:column;gap:var(--sm);background:var(--white)}
+.chips{display:flex;gap:var(--xxs);flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:var(--xxs);padding:7px 12px;border-radius:999px;
+  font-size:13px;font-weight:500;border:1px solid var(--border-neutral-default);background:var(--white);
+  color:var(--content-neutral-secondary)}
+.chip:hover{background:var(--surface-accent-default);border-color:var(--purple-200);color:var(--content-accent-default)}
+.chip.on{background:var(--black);color:var(--white);border-color:var(--black)}
+.inputRow{display:flex;gap:var(--xs);align-items:flex-end}
+.ta{flex:1;border:1px solid var(--border-neutral-default);border-radius:var(--xs);padding:10px 12px;
+  font-size:14px;min-height:44px;max-height:140px;resize:none;line-height:1.5;background:var(--white)}
+.ta:focus{outline:2px solid var(--purple-200);border-color:var(--purple-500)}
+.btn{display:inline-flex;align-items:center;gap:var(--xxs);height:40px;padding:0 var(--md);
+  border-radius:var(--xs);font-size:14px;font-weight:500;white-space:nowrap}
+.btn.sm{height:30px;padding:0 var(--sm);font-size:12px}
+.btn-primary{background:var(--black);color:var(--white)}
+.btn-primary:hover{background:var(--grey-900)}
+.btn-secondary{background:var(--white);border:1px solid var(--border-neutral-default)}
+.btn-secondary:hover{background:rgba(27,35,50,.03)}
+.btn-ai{background:linear-gradient(96deg,var(--ai-gradient),var(--purple-500));color:var(--white)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+
+.sideHead{padding:var(--md) var(--lg);border-bottom:1px solid var(--border-neutral-default)}
+.sideBody{flex:1;overflow-y:auto;padding:var(--md) var(--lg);display:flex;flex-direction:column;gap:var(--sm)}
+.sum{border:1px solid var(--border-neutral-default);border-radius:10px;padding:var(--sm) var(--md);
+  display:flex;flex-direction:column;gap:2px;opacity:.45;transition:.3s}
+.sum.done{opacity:1;border-color:var(--green-100);background:var(--green-50)}
+.sum.now{opacity:1;border-color:var(--purple-200);background:var(--purple-50)}
+.sum .k{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--content-neutral-tertiary)}
+
+.card{background:var(--white);border:1px solid var(--border-neutral-default);border-radius:12px;padding:var(--md)}
+.tag{display:inline-flex;align-items:center;gap:var(--xxxs);height:20px;padding:0 var(--xxs);
+  border-radius:var(--xxs);font-size:11px;font-weight:500}
+.tag-grey{background:var(--surface-neutral-secondary);color:var(--content-neutral-secondary)}
+.tag-purple{background:var(--purple-50);color:var(--purple-800)}
+.tag-green{background:var(--green-50);color:var(--green-800)}
+.tag-blue{background:var(--blue-100);color:var(--blue-900)}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--xs)}
+.kv{display:flex;flex-direction:column;gap:1px}
+.kv .k{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--content-neutral-tertiary)}
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="main">
+    <div class="top">
+      <div class="logo">G</div>
+      <div class="col gap-xxxs" style="flex:1;min-width:0">
+        <span class="med">Set up your Engagement Center</span>
+        <span class="t-xs ter" id="stepLabel">Step 1 of 7 · Your store</span>
+      </div>
+      <div class="progress"><span id="bar" style="width:7%"></span></div>
+      <button class="btn btn-secondary sm" id="skip">Skip setup</button>
+    </div>
+
+    <div class="thread" id="thread"></div>
+
+    <div class="compose" id="compose">
+      <div class="chips" id="chips"></div>
+      <div class="inputRow">
+        <textarea class="ta" id="say" rows="1" placeholder="Type your answer…"></textarea>
+        <button class="btn btn-ai" id="send">Send</button>
+      </div>
+      <span class="t-xs ter" id="hint"></span>
+    </div>
+  </main>
+
+  <aside class="side">
+    <div class="sideHead">
+      <span class="h-md">What we're setting up</span>
+      <p class="t-sm sec" style="margin-top:2px">Everything here is editable later. Nothing sends until you say so.</p>
+    </div>
+    <div class="sideBody" id="summary"></div>
+  </aside>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!=null)n.innerHTML=h;return n};
+const SPARK=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>`;
+
+/* Each step asks one thing. `card` is what the assistant shows after you answer —
+   the read-back that makes the answer concrete. */
+const STEPS=[
+  {k:"store", label:"Your store",
+   ask:"Let's set this up together. I've already connected to your Shopify and your Gorgias inbox — that's 18 months of orders, 41,000 shoppers and 12,400 support conversations to work from.<br><br>Before anything else: what do you actually sell, in your words?",
+   hint:"One sentence is plenty. It shapes how every message reads.",
+   chips:["Technical outdoor apparel","Skincare and supplements","Home and furniture","Bikes and accessories"],
+   answer:"Technical outdoor apparel — hardshells, mid-layers, tights. People buy for a specific trip and come back seasonally.",
+   ack:"That helps. Seasonal, considered purchases with a real fit question attached — so sizing help is going to be worth more than discounts here.",
+   card:()=>`<div class="card"><div class="row between wrap gap-xs" style="margin-bottom:var(--xs)">
+       <span class="h-md">Connected</span><span class="tag tag-green"><span class="dot" style="background:var(--green-500)"></span>Live</span></div>
+     <div class="grid2">
+       ${[["Shopify","Orders, carts, subscriptions"],["Gorgias","Tickets, CSAT, returns"],
+          ["Consent","Opt-in and opt-out state"],["Timers","Derived lifecycle events"]]
+         .map(x=>`<div class="kv"><span class="k">${x[0]}</span><span class="t-sm sec">${x[1]}</span></div>`).join("")}
+     </div>
+     <div class="row gap-xs wrap" style="margin-top:var(--sm)">
+       <span class="tag tag-grey">3PL — not connected</span><span class="tag tag-grey">Ads — not connected</span>
+     </div>
+     <p class="t-sm ter" style="margin-top:var(--xs)">Those two are gaps, not errors. Delivery events are the highest-value one to add later.</p></div>`,
+   sum:["Store","Technical outdoor apparel · seasonal, fit-sensitive"]},
+
+  {k:"voice", label:"Brand voice",
+   ask:"How should we sound when we message a shopper? Write it the way you'd brief a new hire on their first day.",
+   hint:"This becomes the brand instruction underneath every message.",
+   chips:["Warm and direct, never pushy","Expert and precise","Playful and informal"],
+   answer:"Warm and direct, never pushy. We use \"we\", British spelling, and we never oversell. If someone has a problem, we fix it before we sell anything.",
+   ack:"Noted. I'll also hold you to the last part — if a shopper raises a problem mid-conversation, the agent stops selling and hands off.",
+   card:()=>`<div class="card"><span class="h-md">Brand instruction</span>
+     <p class="t-sm sec" style="margin:var(--xxs) 0 var(--sm)">Applied to every message, from every source.</p>
+     <div class="col gap-xxs">
+       ${[["Tone","Warm and direct, never pushy"],["Voice","First person plural, British spelling"],
+          ["Hard rule","Answer a problem before selling anything"],["Sign-off","Rosa, your agent persona"]]
+         .map(x=>`<div class="row between"><span class="t-sm sec">${x[0]}</span><span class="t-sm med">${x[1]}</span></div>`).join("")}
+     </div></div>`,
+   sum:["Brand voice","Warm and direct · problems before sales"]},
+
+  {k:"lifecycle", label:"Lifecycle",
+   ask:"I've read your order history and worked out what your customer journey actually looks like. Have a look — does this match how you think about your customers?",
+   hint:"You can rename a stage or change a threshold at any time.",
+   chips:["That's right","Merge Repeat and VIP","Our VIP bar is higher"],
+   answer:"That's right — though our VIP bar feels a bit low. Make it 5 orders, not 4.",
+   ack:"Done, VIP starts at 5 orders. One thing worth knowing: your median time to a second order is 62 days, and nothing you run today touches days 48 to 58. That's the biggest gap in your lifecycle.",
+   card:()=>`<div class="card"><span class="h-md">Your lifecycle, computed</span>
+     <p class="t-sm sec" style="margin:var(--xxs) 0 var(--sm)">Recomputed nightly from orders, sessions and tickets.</p>
+     <div class="col gap-xxs">
+       ${[["Visitor","18,400","No opt-in"],["Lead","6,120","Opted in, no order"],
+          ["First-time buyer","9,840","1 order · 62 days to the next"],["Repeat","4,270","2–4 orders"],
+          ["VIP","1,180","5+ orders"],["At risk","2,910","1.5× past their own rhythm"],
+          ["Dormant","7,650","No order in 180 days"]]
+         .map(x=>`<div class="row between gap-xs">
+           <span class="t-sm med" style="min-width:104px">${x[0]}</span>
+           <span class="t-sm num" style="font-variant-numeric:tabular-nums">${x[1]}</span>
+           <span class="t-sm ter" style="flex:1;text-align:right">${x[2]}</span></div>`).join("")}
+     </div></div>`,
+   sum:["Lifecycle","7 stages · VIP at 5+ orders"]},
+
+  {k:"guardrails", label:"Guardrails",
+   ask:"Now the limits. These are hard — no instruction can talk its way past them. Three questions:<br><br>How often is too often, when should we stay quiet, and how much are you willing to discount?",
+   hint:"I've pre-filled what works for most merchants your size.",
+   chips:["Those defaults are fine","Tighter — 2 a week","No discounts at all"],
+   answer:"Those defaults are fine, but cap the discount at 10% and never within two weeks of a full-price order.",
+   ack:"Set. And because discount is expensive, I'll reach for cheaper levers first — answering the objection, then early access, then points, then free shipping. Discount is last.",
+   card:()=>`<div class="card"><span class="h-md">Guardrails</span>
+     <p class="t-sm sec" style="margin:var(--xxs) 0 var(--sm)">Checked last, on every single message.</p>
+     <div class="col gap-xxs">
+       ${[["Frequency","3 per week · 8 per month"],["Minimum gap","48 hours"],
+          ["Quiet hours","21:00–09:00, shopper's timezone"],["Discount ceiling","10% without approval"],
+          ["Discount cool-off","14 days after a full-price order"],["Holdout","10%, never messaged"]]
+         .map(x=>`<div class="row between"><span class="t-sm sec">${x[0]}</span><span class="t-sm med">${x[1]}</span></div>`).join("")}
+     </div>
+     <div class="row gap-xxs wrap" style="margin-top:var(--sm)">
+       <span class="tag tag-grey">1 · Objection</span><span class="tag tag-purple">2 · Early access</span>
+       <span class="tag tag-purple">3 · Points</span><span class="tag tag-blue">4 · Free shipping</span>
+       <span class="tag tag-grey" style="background:var(--orange-50);color:var(--orange-800)">5 · Discount</span>
+     </div></div>`,
+   sum:["Guardrails","3/week · quiet 21–09 · discount ≤10%"]},
+
+  {k:"exclusions", label:"Who to leave alone",
+   ask:"Separately from timing: is there anyone we should never contact at all?<br><br>I'd suggest anyone who left you a poor review, anyone who rated a support conversation badly, and anyone in an open dispute. Selling to those people costs you more than it earns.",
+   hint:"You can add your own list later, or upload one.",
+   chips:["All three, yes","Add: heavy returners","Just disputes"],
+   answer:"All three, yes. And add anyone who's returned more than half of what they bought — that's a fit problem, not a demand problem.",
+   ack:"Agreed, and that's a good instinct. That's 4,180 shoppers out of every audience from now on.",
+   card:()=>`<div class="card"><span class="h-md">Never contacted</span>
+     <div class="col gap-xxs" style="margin-top:var(--xs)">
+       ${[["Review of 3★ or less","640"],["Support rating of 1 or 2","310"],["Open dispute","48"],
+          ["Asked us to stop, in words","1,290"],["Returned over half their orders","210"],
+          ["Do-not-market flag","1,380"]]
+         .map(x=>`<div class="row between"><span class="t-sm sec">${x[0]}</span><span class="t-sm med">${x[1]}</span></div>`).join("")}
+     </div>
+     <div class="row between" style="margin-top:var(--sm);padding-top:var(--xs);border-top:1px solid var(--border-neutral-default)">
+       <span class="t-sm bold">Total excluded</span><span class="t-sm bold">4,180 shoppers</span></div></div>`,
+   sum:["Exclusions","4,180 shoppers · bad reviews, low CSAT, disputes"]},
+
+  {k:"loyalty", label:"Loyalty",
+   ask:"Do you run a loyalty programme? If you do, I can use points and early access instead of discounts — same generosity, a fraction of the margin.",
+   hint:"If you don't have one, we can skip it and come back.",
+   chips:["Yes, four tiers","Yes, points only","Not yet"],
+   answer:"Yes, four tiers — Member, Silver, Gold, Summit.",
+   ack:"Good. I've mapped Gold and Summit onto your VIP stage so \"VIP\" means one thing everywhere. On your at-risk shoppers, free shipping from points beat a 10% discount last quarter — cheaper for you and it converted better.",
+   card:()=>`<div class="card"><span class="h-md">Loyalty, mapped</span>
+     <div class="col gap-xxs" style="margin-top:var(--xs)">
+       ${[["Member","9,420","Lead · First-time buyer"],["Silver","5,610","Repeat"],
+          ["Gold","2,730","VIP"],["Summit","1,180","VIP"]]
+         .map(x=>`<div class="row between gap-xs"><span class="t-sm med" style="min-width:64px">${x[0]}</span>
+           <span class="t-sm" style="font-variant-numeric:tabular-nums">${x[1]}</span>
+           <span class="t-sm ter" style="flex:1;text-align:right">→ ${x[2]}</span></div>`).join("")}
+     </div>
+     <p class="t-sm ter" style="margin-top:var(--sm)">Free shipping from points costs you $6.40. A 10% discount on the same order costs $12.</p></div>`,
+   sum:["Loyalty","4 tiers · Gold and Summit map to VIP"]},
+
+  {k:"ace", label:"Autonomy",
+   ask:"Last one, and it's the real decision.<br><br>ACE watches your data, finds the moment, decides who should hear from you and writes the message. Everything above bounds it. The only question left is whether it sends on its own, or waits for you.",
+   hint:"Most merchants start on Manual acceptance and move to Automatic within a month.",
+   chips:["Manual acceptance to start","Automatic, I trust it","Off for now"],
+   answer:"Manual acceptance to start. I want to read a few dozen before I let it send.",
+   ack:"Sensible. Everything it prepares lands in Conversations with the full reasoning attached, and nothing goes out until you approve it. Switch to Automatic whenever you've seen enough.",
+   card:()=>`<div class="card"><div class="row between wrap gap-xs" style="margin-bottom:var(--xs)">
+       <span class="h-md">ACE</span><span class="tag tag-blue">Manual acceptance</span></div>
+     <p class="t-sm sec" style="margin-bottom:var(--sm)">It does all the work, then waits for you. Six domains on, two off.</p>
+     <div class="col gap-xxs">
+       ${[["Replenishment & reorder",1],["Retention & win-back",1],["Cross-sell & complements",1],
+          ["Service recovery",1],["Subscriptions",1],["Loyalty moments",1],
+          ["Consideration & browse",0],["Seasonal & inventory",0]]
+         .map(x=>`<div class="row between"><span class="t-sm ${x[1]?"":"ter"}">${x[0]}</span>
+           <span class="tag ${x[1]?"tag-green":"tag-grey"}">${x[1]?"On":"Off"}</span></div>`).join("")}
+     </div></div>`,
+   sum:["ACE","Manual acceptance · 6 of 8 domains"]}
+];
+
+let step=0, said={};
+const thread=$("#thread"), chips=$("#chips");
+
+function scroll(){thread.scrollTop=thread.scrollHeight}
+function addAsk(html){const t=el("div","turn");
+  t.innerHTML=`<span class="av">${SPARK}</span><div class="ask">${html}</div>`;
+  thread.appendChild(t);scroll();return t}
+function addSaid(text){const t=el("div","said",text);thread.appendChild(t);scroll();return t}
+function addTyping(){const t=el("div","turn");
+  t.innerHTML=`<span class="av">${SPARK}</span><div class="ask"><span class="typing"><i></i><i></i><i></i></span></div>`;
+  thread.appendChild(t);scroll();return t}
+
+function renderSummary(){
+  $("#summary").innerHTML=STEPS.map((s,i)=>{
+    const state=i<step?"done":i===step?"now":"";
+    const val=said[s.k]?said[s.k]:(i===step?"Answering now…":"Not set yet");
+    return `<div class="sum ${state}">
+      <span class="k">${s.label}</span>
+      <span class="t-sm ${i<step?"med":"ter"}">${val}</span></div>`}).join("")
+    + (step>=STEPS.length?`<button class="btn btn-primary" style="margin-top:var(--sm)" onclick="location.href='index.html'">Open the Engagement Center</button>`:"");
+}
+function renderStep(){
+  const s=STEPS[step];
+  $("#stepLabel").textContent=`Step ${step+1} of ${STEPS.length} · ${s.label}`;
+  $("#bar").style.width=((step)/STEPS.length*100+7)+"%";
+  chips.innerHTML=s.chips.map(c=>`<button class="chip">${c}</button>`).join("");
+  $$(".chip",chips).forEach(b=>b.addEventListener("click",()=>{
+    $("#say").value = b.textContent===s.chips[0] ? s.answer : b.textContent;
+    $("#say").focus();
+  }));
+  $("#hint").textContent=s.hint;
+  $("#say").value="";
+  addAsk(s.ask);
+  renderSummary();
+}
+function answer(){
+  const v=$("#say").value.trim(); if(!v) return;
+  const s=STEPS[step];
+  addSaid(v);
+  said[s.k]=s.sum[1];
+  $("#say").value=""; chips.innerHTML=""; $("#send").disabled=true;
+  const typing=addTyping();
+  setTimeout(()=>{
+    typing.remove();
+    addAsk(s.ack);
+    const card=el("div","turn");
+    card.innerHTML=`<span class="av" style="opacity:0"></span><div style="flex:1;max-width:520px">${s.card()}</div>`;
+    thread.appendChild(card); scroll();
+    step++; $("#send").disabled=false;
+    renderSummary();
+    if(step<STEPS.length) setTimeout(()=>{renderStep();scroll()},550);
+    else finish();
+  },780);
+}
+function finish(){
+  $("#stepLabel").textContent="Setup complete";
+  $("#bar").style.width="100%";
+  $("#compose").classList.add("hidden");
+  setTimeout(()=>{
+    addAsk(`That's everything. Your Engagement Center is set up and ACE is on manual acceptance, so nothing sends without you.<br><br>
+      Based on what I can already see, the first thing I'd look at is the gap between day 48 and day 58 after a first order — 1,240 shoppers are sitting in it right now, and nothing you run touches them.`);
+    const t=el("div","turn");
+    t.innerHTML=`<span class="av" style="opacity:0"></span><div style="flex:1;max-width:520px">
+      <div class="card" style="border-color:var(--purple-200);background:linear-gradient(140deg,var(--purple-50),transparent 70%)">
+        <span class="h-md">Ready to go</span>
+        <p class="t-sm sec" style="margin:var(--xxs) 0 var(--sm)">Nothing has been sent. Everything below is editable.</p>
+        <div class="col gap-xxs">
+          ${STEPS.map(s=>`<div class="row between"><span class="t-sm sec">${s.label}</span>
+            <span class="t-sm med" style="text-align:right;max-width:60%">${s.sum[1]}</span></div>`).join("")}
+        </div>
+        <div class="row gap-xs" style="margin-top:var(--md)">
+          <button class="btn btn-primary" onclick="location.href='index.html'">Open the Engagement Center</button>
+          <button class="btn btn-secondary" onclick="location.reload()">Start over</button>
+        </div>
+      </div></div>`;
+    thread.appendChild(t); scroll(); renderSummary();
+  },500);
+}
+
+$("#send").addEventListener("click",answer);
+$("#say").addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();answer()}
+});
+$("#say").addEventListener("input",e=>{
+  e.target.style.height="auto"; e.target.style.height=Math.min(140,e.target.scrollHeight)+"px";
+});
+$("#skip").addEventListener("click",()=>location.href="index.html");
+
+addAsk(`Hello — I'm the agent that's going to be talking to your shoppers.<br><br>
+  Before I say a word to anyone, I want to understand your business, agree the limits I work inside, and let you decide how much rope I get. Seven questions, about four minutes.`);
+setTimeout(renderStep,700);
+</script>
+</body>
+</html>

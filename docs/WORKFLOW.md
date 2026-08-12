@@ -20,14 +20,15 @@ render function in isolation and reports which one breaks:
 
 ```js
 (()=>{const out={};
-[['bench',renderBench],['rev',renderRev],['eng',renderEng],['ace',renderAce],['camp',renderCampaigns],
- ['rules',renderRules],['variants',renderVariants],['guard',renderGuardrails],['excl',renderExclusions],
+[['report',renderReport],['bench',renderBench],['eng',renderEng],['ace',renderAce],
+ ['camp',renderCampaigns],['rules',renderRules],['variants',renderVariants],['guard',renderGuardrails],
  ['lc',renderLifecycle],['conv',renderConv],['wiz',renderWiz],['loy',renderLoyalty]]
  .forEach(([k,f])=>{try{f();out[k]='ok'}catch(e){out[k]=e.message.slice(0,60)}});
 const n=s=>document.querySelectorAll(s).length;
-out._dom={lc:n('#lcList .lcItem'),levers:n('#lcDetail .lever'),modes:n('.modeBig'),
- dom:n('#aceDomainTable tbody tr'),conv:n('#convItems .convItem'),tiers:n('#tierTable tbody tr'),
- eng:n('#engTable tbody tr'),excl:n('#exclusionList > div')};
+out._dom={tiles:n('#repTiles .tile'),chart:n('#repChart svg'),rev:n('#revTable tbody tr'),
+ grList:n('#grList .lcItem'),grDetail:n('#grDetail .card'),lc:n('#lcList .lcItem'),
+ levers:n('#lcDetail .lever'),modes:n('.modeBig'),dom:n('#aceDomainTable tbody tr'),
+ conv:n('#convItems .convItem'),tiers:n('#tierTable tbody tr'),eng:n('#engTable tbody tr')};
 return JSON.stringify(out)})()
 ```
 
@@ -74,17 +75,41 @@ EOF
 
 Assert on both boundaries. Every time an assert was skipped, the splice landed in the wrong place.
 
-## Changing a chart colour
+## Sweeping the reporting surface
 
-Re-run the dataviz validator; the current three-colour set passes all six checks and you should not
-lose that. From the `dataviz` skill directory:
+Ten metrics × five dimensions × three views is 150 states, and a broken one is invisible until
+someone lands on it. Sweep them all, and check the projections agree:
 
-```bash
-node scripts/validate_palette.js "#0d6cf2,#c35e4a,#7e55f6" --mode light
+```js
+(()=>{const errs=[];
+Object.keys(METRICS).forEach(mk=>Object.keys(DIMS).forEach(dk=>['time','rank','table'].forEach(v=>{
+  rep.metric=mk;rep.dim=dk;rep.view=v;
+  try{renderReport(); if(!document.querySelectorAll('#repChart svg, #repTable table').length)
+    errs.push(mk+'/'+dk+'/'+v+' rendered nothing')}
+  catch(e){errs.push(mk+'/'+dk+'/'+v+': '+e.message)}})));
+rep.metric='gmv';rep.dim='source';rep.view='time';renderReport();
+const tbl=dimTotals('source').reduce((a,r)=>a+r.gmv,0);
+const ser=Math.round(repSeries().reduce((a,s)=>a+s.total,0));
+return JSON.stringify({errors:errs.length, first:errs[0]||null, totalsAgree:Math.abs(tbl-ser)<2})})()
 ```
 
-Every check must PASS. A contrast WARN is not dismissable — it obligates visible labels or a table
-view.
+`errors: 0` and `totalsAgree: true`. The second one is the real test — it proves the chart and the
+revenue table are still two projections of the same primitives rather than two hand-maintained
+datasets that have drifted apart.
+
+## Changing a chart colour
+
+Re-run the dataviz validator; the current four-colour set passes all six checks on all pairs and
+you should not lose that. From the `dataviz` skill directory:
+
+```bash
+node scripts/validate_palette.js "#7e55f6,#c35e4a,#149db8,#0e4ea7" --mode light --pairs all
+```
+
+Every check must PASS. **Use `--pairs all`, not the default** — the earlier three-colour set passed
+adjacent-pairs and still had a blue/purple pairing readers couldn't separate in the line chart,
+where every series is compared against every other. A contrast WARN is not dismissable; it
+obligates visible labels or a table view.
 
 ---
 
@@ -114,8 +139,10 @@ done
 1. `node -e …` — JS parses
 2. Force-reload from disk
 3. The isolation probe — all `ok`, all counts non-zero
-4. Click the thing you changed, plus the studio and the Lifecycle stage detail (the two most fragile)
-5. Push, then confirm live == local
+4. Sweep the reporting surface (above)
+5. Click the thing you changed, plus the studio, the Guardrails category list and the Lifecycle
+   stage detail — the four most fragile
+6. Push, then confirm live == local
 
 ## A note on scope
 

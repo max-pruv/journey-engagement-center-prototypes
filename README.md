@@ -25,26 +25,33 @@ in a meeting. It is not a codebase to ship — it is a spec you can operate.
 If you are an AI agent picking this up, read [CLAUDE.md](CLAUDE.md) first — it is the short version
 of all of the above, plus the failure modes that have actually bitten in this repo.
 
+## Two pages
+
+| File | What it is |
+| --- | --- |
+| `index.html` | The product itself |
+| `onboarding.html` | A conversational first-run setup — seven questions that configure the whole Engagement Center before a single message is sent |
+
 ## Running it
 
 ```bash
 open index.html
 ```
 
-No build, no dependencies, no network calls. One file, ~2,550 lines: tokens and CSS, then the
-markup for every screen, then the data and render functions.
+No build, no dependencies, no network calls. Tokens and CSS, then the markup for every screen, then
+the data and render functions.
 
 ## The seven surfaces
 
 | Surface | What it is |
 | --- | --- |
-| **Overview** | Volume and conversion by source, a revenue table in GMV, benchmark vs category |
+| **Reporting** | Read-only KPI cards, then a report you drive: any metric × any dimension × over-time / ranked / table |
 | **Engagements** | Two tabs. **AI engagement** — ACE: one mode switch plus domains. **Custom engagement** — the scenarios the merchant defines, pre-built or self-written |
-| **Campaigns** | Past campaigns, then a three-step conversational wizard: who / what / how |
-| **Guardrails** | Frequency, quiet hours, suppression, who we never contact, what may be offered, what may be said, volume and proof |
+| **Campaigns** | Past campaigns, then a three-step conversational wizard: who / what / how — ending in a generated preview of 10–40 real-looking conversations before anything launches |
+| **Guardrails** | Seven categories in a master/detail list: frequency, timing, suppression, exclusions, offers, content, volume & proof |
 | **Lifecycle** | What defines each stage, and how each stage is treated — objective, tone, what we're willing to give, configurable levers |
 | **Conversations** | A marketing inbox. One row is one person: why it started, what the engine reasoned from, what was sent |
-| **Loyalty** | Editable tiers with entry conditions, earn rules, reward catalogue — the levers cheaper than margin |
+| **Loyalty** | Two tabs — an overview of where members sit, and a configuration master/detail for tiers, earn rules and rewards |
 
 ## The three claims it is making
 

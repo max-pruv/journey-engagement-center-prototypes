@@ -38,10 +38,16 @@
   --states-hover-default:rgba(27,35,50,.03);
   --ai-gradient:#7d19f0;
 
-  /* dataviz — categorical, validated (lightness band, chroma, CVD ΔE, contrast) */
-  --dv-default:#0d6cf2;
-  --dv-custom:#c35e4a;
-  --dv-ace:#7e55f6;
+  /* dataviz — categorical, validated on ALL pairs (lightness band, chroma,
+     CVD ΔE, normal-vision floor, contrast). Do not change by eye. */
+  --dv-1:#7e55f6;   /* purple  — ACE keeps the AI identity */
+  --dv-2:#c35e4a;   /* coral   */
+  --dv-3:#149db8;   /* teal    */
+  --dv-4:#0e4ea7;   /* blue    */
+  --dv-other:#b3b8c1;
+  --dv-ace:var(--dv-1);
+  --dv-custom:var(--dv-2);
+  --dv-default:var(--dv-3);
   --dv-grid:rgba(0,0,0,.06);
   --dv-axis:var(--grey-500);
 
@@ -192,6 +198,23 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .banner-warn{background:var(--orange-50);border:1px solid var(--orange-100)}
 .banner-ok{background:var(--green-50);border:1px solid var(--green-100)}
 
+/* stat tile — matches the Gorgias metric card */
+.tile{position:relative;display:flex;flex-direction:column;gap:var(--xxxs);
+  padding:var(--md) var(--md) 0;border-radius:14px;border:1px solid var(--border-neutral-default);
+  background:var(--white);box-shadow:0 1px 2px rgba(16,24,40,.04);overflow:hidden;
+  min-height:158px;transition:.14s}
+
+.tileHead{display:flex;align-items:center;gap:var(--xxs);width:100%}
+.tileLabel{font-size:14px;color:var(--content-neutral-secondary);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.tileIcon{color:var(--grey-400);flex-shrink:0;display:grid;place-items:center}
+.tileIcon:hover{color:var(--content-neutral-secondary)}
+.tileValue{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.1;
+  font-variant-numeric:tabular-nums}
+.tileDelta{display:inline-flex;align-items:center;gap:var(--xxxs);font-size:15px;font-weight:600;
+  color:var(--content-neutral-default);font-variant-numeric:tabular-nums}
+.tileSpark{margin:auto -1px -1px;width:calc(100% + 2px);display:block}
+
 /* big mode cards */
 .modeBig{display:flex;flex-direction:column;gap:var(--xxs);text-align:left;padding:var(--md);border-radius:12px;
   border:1px solid var(--border-neutral-default);background:var(--white);min-height:132px;transition:.12s}
@@ -265,12 +288,6 @@ table.inner th:last-child,table.inner td:last-child{padding-right:var(--md)}
 .tabItem.on{color:var(--content-neutral-default);border-bottom-color:var(--black)}
 .zone.top{padding-top:var(--lg)}
 
-/* persistent ACE strip — sticky under the page header, above the tabs */
-.aceStrip{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:var(--sm);flex-wrap:wrap;
-  margin:0 var(--lg) var(--md);padding:var(--xs) var(--sm) var(--xs) var(--xs);border-radius:10px;
-  border:1px solid var(--purple-200);
-  background:linear-gradient(100deg,rgba(125,25,240,.07),rgba(126,85,246,.035) 60%,var(--white))}
-.aceStrip.off{border-color:var(--border-neutral-default);background:var(--grey-50)}
 
 /* segmented */
 .seg{display:inline-flex;background:var(--surface-neutral-secondary);border-radius:var(--xs);padding:2px}
@@ -364,7 +381,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 .tierBar > span{display:block}
 </style>
 </head>
-<body data-palette="#0d6cf2,#c35e4a,#7e55f6">
+<body data-palette="#7e55f6,#c35e4a,#149db8,#0e4ea7">
 
 <div class="app">
   <!-- ============ RAIL ============ -->
@@ -412,98 +429,85 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
     <button class="navItem" data-page="loyalty">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>
       Loyalty <span class="count">4</span></button>
-    <button class="navItem" data-page="soon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-      Performance</button>
-    <button class="navItem" data-page="soon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
-      Brand profile</button>
   </aside>
 
   <!-- ============ CONTENT ============ -->
   <main class="content">
     <div class="scroller" id="scroller">
 
-      <!-- ======== OVERVIEW ======== -->
+      <!-- ======== OVERVIEW · reporting ======== -->
       <section class="page" id="page-overview">
         <header class="pageHeader">
           <div class="ttl">
-            <div class="row gap-xs"><h1 class="h-xxl">Overview</h1>
+            <div class="row gap-xs"><h1 class="h-xxl">Reporting</h1>
               <span class="tag tag-green"><span class="dot" style="background:var(--green-500)"></span>Live</span></div>
-            <p class="t-md sec">How your outbound engagement is performing, and where the volume is coming from.</p>
+            <p class="t-md sec">Outbound performance, sliced the way you need it.</p>
           </div>
           <div class="pageActions">
-            <select class="selectEl auto"><option>Last 12 weeks</option><option>Last 30 days</option><option>Quarter to date</option></select>
+            <select class="selectEl auto" id="repRange">
+              <option>Last 12 weeks</option><option>Last 6 weeks</option><option>Quarter to date</option>
+            </select>
             <button class="btn btn-secondary">Export</button>
           </div>
         </header>
 
-        <div class="zone">
-          <div class="grid g-stat">
-            <div class="card pad-md"><div class="t-sm sec">Interactions</div>
-              <div class="h-xxl num-t" style="margin-top:2px">48,210</div>
-              <div class="t-sm" style="color:var(--content-success-default)">+18.4% vs previous period</div></div>
-            <div class="card pad-md"><div class="t-sm sec">Measured revenue vs holdout</div>
-              <div class="h-xxl num-t" style="margin-top:2px">$41,280</div>
-              <div class="t-sm sec">on $312k attributed</div></div>
-            <div class="card pad-md"><div class="t-sm sec">Conversion rate</div>
-              <div class="h-xxl num-t" style="margin-top:2px">4.3%</div>
-              <div class="t-sm" style="color:var(--content-success-default)">+0.6 pt</div></div>
-            <div class="card pad-md"><div class="t-sm sec">Opt-out rate</div>
-              <div class="h-xxl num-t" style="margin-top:2px">0.9%</div>
-              <div class="t-sm" style="color:var(--content-success-default)">under the 1.5% cap</div></div>
-          </div>
+        <div class="zone top">
+          <!-- headline metrics -->
+          <div class="grid g-stat" id="repTiles"></div>
 
-          <div class="grid g-2">
-            <!-- CHART 1 -->
-            <div class="card chartCard">
-              <div class="chartHead">
-                <div class="col gap-xxxs">
-                  <h2 class="h-md">Interactions by source</h2>
-                  <p class="t-sm sec">Weekly volume. ACE is net-new reach, not a reallocation of your flows.</p>
+          <!-- the report -->
+          <div class="card" style="overflow:hidden">
+            <div class="row between wrap gap-sm" style="padding:var(--md) var(--lg) var(--sm)">
+              <div class="row gap-xs wrap">
+                <div class="field" style="min-width:190px">
+                  <span class="label">Metric</span>
+                  <select class="selectEl" id="repMetric"></select>
                 </div>
-                <div class="seg" data-view="vol"><button class="on" data-v="chart">Chart</button><button data-v="table">Table</button></div>
+                <div class="field" style="min-width:190px">
+                  <span class="label">Break down by</span>
+                  <select class="selectEl" id="repDim"></select>
+                </div>
               </div>
-              <div class="legend" id="legVol"></div>
-              <div id="chartVol" style="margin-top:var(--xs)"></div>
-              <div id="tableVol" class="hidden" style="margin-top:var(--xs);max-height:280px;overflow:auto"></div>
+              <div class="row gap-xs" style="align-self:flex-end">
+                <div class="seg" id="repView">
+                  <button class="on" data-v="time">Over time</button>
+                  <button data-v="rank">Ranked</button>
+                  <button data-v="table">Table</button>
+                </div>
+              </div>
             </div>
-
-            <!-- CHART 2 -->
-            <div class="card chartCard">
-              <div class="chartHead">
+            <div style="padding:0 var(--lg) var(--md)">
+              <div class="row between wrap gap-sm" style="margin-bottom:var(--xs)">
                 <div class="col gap-xxxs">
-                  <h2 class="h-md">Conversion rate by source</h2>
-                  <p class="t-sm sec">Share of interactions that led to an order within 7 days.</p>
+                  <span class="h-md" id="repTitle">GMV by source</span>
+                  <span class="t-sm sec" id="repSub"></span>
                 </div>
-                <div class="seg" data-view="cvr"><button class="on" data-v="chart">Chart</button><button data-v="table">Table</button></div>
+                <div class="legend" id="repLegend"></div>
               </div>
-              <div class="legend" id="legCvr"></div>
-              <div id="chartCvr" style="margin-top:var(--xs)"></div>
-              <div id="tableCvr" class="hidden" style="margin-top:var(--xs);max-height:280px;overflow:auto"></div>
+              <div id="repChart"></div>
+              <div id="repTable" class="hidden" style="max-height:340px;overflow:auto"></div>
+              <p class="t-xs ter" id="repNote" style="margin-top:var(--xs)"></p>
             </div>
           </div>
 
-          <!-- REVENUE -->
+          <!-- the money table, driven by the same breakdown -->
           <div class="card" style="overflow:hidden">
             <div class="row between wrap gap-sm" style="padding:var(--md) var(--lg)">
               <div class="col gap-xxxs">
-                <h2 class="h-md">Revenue by source</h2>
-                <p class="t-sm sec">Last 12 weeks. Measured lift is treated minus holdout, not modelled attribution.</p>
+                <h2 class="h-md" id="revTitle">Revenue by source</h2>
+                <p class="t-sm sec">Every outbound metric that matters, on one row. Measured lift is treated minus holdout, not modelled attribution.</p>
               </div>
-              <div class="row gap-xs">
-                <span class="t-sm sec">Total GMV</span>
-                <span class="h-md num-t">$648,220</span>
-              </div>
+              <div class="row gap-xs"><span class="t-sm sec">Total GMV</span>
+                <span class="h-md num-t" id="revTotal">—</span></div>
             </div>
             <table id="revTable">
-              <thead><tr><th>Source</th><th>Interactions</th><th>Orders</th><th>CVR</th>
-                <th>AOV</th><th>GMV</th><th>GMV / 1k sent</th><th>Measured lift</th><th>Cost</th></tr></thead>
+              <thead><tr><th id="revDimHead">Source</th><th>Reached</th><th>Reply rate</th><th>Click rate</th>
+                <th>Conversion</th><th>Orders</th><th>AOV</th><th>GMV</th><th>GMV / 1k</th><th>Opt-out</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
 
-          <!-- BENCHMARK -->
+          <!-- benchmark -->
           <div class="card pad">
             <div class="row between" style="margin-bottom:var(--md)">
               <div class="col gap-xxxs">
@@ -533,20 +537,6 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           </div>
         </header>
 
-        <!-- persistent ACE strip: state is never hidden behind a tab -->
-        <div class="aceStrip" id="aceStrip">
-          <div style="width:28px;height:28px;border-radius:var(--xs);flex-shrink:0;display:grid;place-items:center;
-               background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500))">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>
-          </div>
-          <span class="t-md med" id="aceStripTitle">ACE · sends automatically</span>
-          <span class="tag tag-purple" id="aceStripTag">Automatic</span>
-          <span class="t-sm sec trunc" id="aceStripNote" style="flex:1;min-width:120px">6 of 8 domains allowed.</span>
-          <span class="t-sm sec num-t" id="aceStripStats">7,240 reached · $47,300 GMV</span>
-          <button class="btn btn-secondary sm" id="acePendingBtn" data-goto="conversations" style="display:none">Review 4 waiting</button>
-          <button class="btn btn-tertiary sm acc" data-tab="ace">Manage →</button>
-        </div>
-
         <div class="tabList">
           <button class="tabItem on" data-tab="ace">AI engagement <span class="tag tag-purple" id="aceTabBadge">Automatic</span></button>
           <button class="tabItem" data-tab="scenarios">Custom engagement <span class="tag tag-grey" id="scnBadge">18</span></button>
@@ -554,20 +544,14 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 
         <!-- ---------- TAB: ACE ---------- -->
         <div class="zone top tabPanel" data-panel-for="ace">
-          <div class="banner banner-ai">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ai-gradient)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>
-            <div class="col gap-xxxs" style="flex:1">
-              <span class="t-md med">There is nothing to build here.</span>
-              <span class="t-sm sec">ACE finds the moment, decides who should hear from you, writes the message and sends it. You choose how much rope it gets, and which domains it may work in. That's the whole surface.</span>
-            </div>
-            <button class="btn btn-secondary sm" data-goto="conversations">Read every conversation</button>
-          </div>
-
           <!-- ===== MODE: three cards, properly sized, with the education in them ===== -->
           <div class="col gap-xs">
             <div class="row between wrap gap-sm">
               <h2 class="h-lg">How much rope does ACE get?</h2>
-              <span class="t-sm ter">You can change this at any time. Nothing in flight is lost.</span>
+              <div class="row gap-xs">
+                <button class="btn btn-secondary sm" id="acePendingBtn" data-goto="conversations" style="display:none">Review 4 waiting</button>
+                <span class="t-sm ter">You can change this at any time. Nothing in flight is lost.</span>
+              </div>
             </div>
             <div class="grid g-3" id="aceModeCards"></div>
           </div>
@@ -585,8 +569,8 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
               <p class="t-sm sec">What ACE is allowed to work on — the control that matters if you need to bound an autonomous system. Turn a domain off and it stops looking there entirely: it won't propose it, won't send it, won't count it. We keep sizing the opportunity anyway, so you can see what you're declining.</p>
             </div>
             <table id="aceDomainTable">
-              <thead><tr><th style="width:30%">Domain</th><th>Instruction</th><th>Shoppers reached</th><th>GMV</th>
-                <th>Conversion</th><th>Opt-out</th><th style="width:110px">Allowed</th></tr></thead>
+              <thead><tr><th style="width:30%">Domain</th><th>Shoppers reached</th><th>GMV</th>
+                <th>Conversion</th><th>Opt-out</th><th>Instruction</th><th style="width:130px">Activated</th></tr></thead>
               <tbody></tbody>
             </table>
             <div class="sepH"></div>
@@ -774,6 +758,24 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
               <div class="sepH" style="margin:var(--md) 0"></div>
               <h3 class="h-sm" style="margin-bottom:var(--xs)">Before it goes out</h3>
               <div class="col gap-xs" id="wizChecks"></div>
+            </div>
+
+            <div class="card pad" id="w3Preview" style="display:none">
+              <div class="row between wrap gap-sm" style="margin-bottom:var(--sm)">
+                <div class="col gap-xxxs">
+                  <h2 class="h-md">See what it would actually send</h2>
+                  <p class="t-sm sec">Generated against real shoppers in this audience, with the variants split the way the wave would split them. Nothing leaves.</p>
+                </div>
+                <div class="row gap-xs">
+                  <div class="seg" id="prevVol">
+                    <button class="on" data-n="10">10</button><button data-n="20">20</button>
+                    <button data-n="30">30</button><button data-n="40">40</button>
+                  </div>
+                  <button class="btn btn-ai" id="prevGo">Generate</button>
+                </div>
+              </div>
+              <div id="prevSummary" class="row wrap gap-lg hidden" style="margin-bottom:var(--md)"></div>
+              <div class="grid g-3" id="prevGrid"></div>
               <div class="row between" style="margin-top:var(--md)">
                 <button class="btn btn-secondary" data-act="test-campaign">Preview on one shopper</button>
                 <button class="btn btn-primary">Launch the test wave</button>
@@ -783,7 +785,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </div>
       </section>
 
-      <!-- ======== GUARDRAILS ======== -->
+      <!-- ======== GUARDRAILS · master / detail ======== -->
       <section class="page hidden" id="page-guardrails">
         <header class="pageHeader">
           <div class="ttl">
@@ -791,137 +793,15 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
             <p class="t-md sec">The hard limits every engagement obeys. An instruction can ask; a guardrail decides.</p>
           </div>
           <div class="pageActions">
-            <button class="btn btn-secondary" data-goto="conversations">What was suppressed</button>
+            <button class="btn btn-secondary" data-goto="conversations">What was stopped</button>
             <button class="btn btn-primary">Save guardrails</button>
           </div>
         </header>
 
-        <div class="zone">
-          <div class="banner banner-ok">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green-800)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><path d="M12 3 4.5 6v5.7c0 4.5 3.1 8.7 7.5 9.8 4.4-1.1 7.5-5.3 7.5-9.8V6L12 3z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>
-            <div class="col gap-xxxs" style="flex:1">
-              <span class="t-md med">0 breaches in the last 30 days across 48,210 sends.</span>
-              <span class="t-sm sec">1,842 messages were stopped before sending — mostly frequency caps and open support tickets.</span>
-            </div>
-          </div>
-
-          <div class="grid g-2">
-            <div class="card pad">
-              <h2 class="h-md">How often a shopper can hear from you</h2>
-              <p class="t-sm sec" style="margin-bottom:var(--md)">Counted across all sources together — ACE cannot borrow budget from your default flows.</p>
-              <div class="col gap-sm">
-                <div class="row between"><span class="t-md">Max messages per shopper, per week</span><input class="input num" value="3"></div>
-                <div class="row between"><span class="t-md">Max per shopper, per month</span><input class="input num" value="8"></div>
-                <div class="row between"><span class="t-md">Minimum gap between two messages</span><input class="input num" value="48h"></div>
-                <div class="row between"><span class="t-md">Collision window — no two engagements within</span><input class="input num" value="24h"></div>
-                <div class="sepH"></div>
-                <div class="row between">
-                  <div class="col gap-xxxs" style="max-width:74%">
-                    <span class="t-md med">When two engagements collide</span>
-                    <span class="t-sm sec">The loser is deferred, never dropped.</span></div>
-                  <select class="selectEl auto"><option selected>Highest expected value wins</option><option>Default flows win</option><option>ACE wins</option></select>
-                </div>
-              </div>
-            </div>
-
-            <div class="card pad">
-              <h2 class="h-md">When you're allowed to send</h2>
-              <p class="t-sm sec" style="margin-bottom:var(--md)">Always in the shopper's timezone, never yours.</p>
-              <div class="col gap-sm">
-                <div class="row between"><span class="t-md">Quiet hours</span>
-                  <div class="row gap-xxs"><input class="input num" value="21:00"><span class="sec">→</span><input class="input num" value="09:00"></div></div>
-                <div class="row between"><span class="t-md">Weekend window</span>
-                  <div class="row gap-xxs"><input class="input num" value="10:00"><span class="sec">→</span><input class="input num" value="18:00"></div></div>
-                <div class="row between"><span class="t-md med">Use the shopper's local timezone</span><span class="toggle on" data-toggle></span></div>
-                <div class="row between"><span class="t-md med">Pause on public holidays</span><span class="toggle on" data-toggle></span></div>
-                <div class="sepH"></div>
-                <div class="row between">
-                  <div class="col gap-xxxs" style="max-width:74%">
-                    <span class="t-md med">Let the engine pick the exact hour</span>
-                    <span class="t-sm sec">Inside your window, from when this shopper usually replies.</span></div>
-                  <span class="toggle on" data-toggle></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="card pad">
-              <h2 class="h-md">Who never gets messaged</h2>
-              <p class="t-sm sec" style="margin-bottom:var(--md)">Checked before any decision. The locked ones can't be turned off.</p>
-              <div class="col gap-sm" id="suppressionList"></div>
-            </div>
-
-            <div class="card pad">
-              <div class="row between wrap gap-xs">
-                <h2 class="h-md">Who we never contact</h2>
-                <span class="tag tag-grey" id="exclCount">4,180 shoppers excluded</span>
-              </div>
-              <p class="t-sm sec" style="margin-bottom:var(--md)">Suppression above is about timing — this is about people. Anyone matching a rule here is out of every audience, every engagement, every campaign.</p>
-              <div class="col gap-sm" id="exclusionList"></div>
-              <div class="sepH" style="margin:var(--md) 0"></div>
-              <div class="row between">
-                <div class="col gap-xxxs" style="max-width:72%">
-                  <span class="t-md med">Never-contact list</span>
-                  <span class="t-sm sec">Uploaded or added by hand — competitors, press, employees, anyone who asked.</span>
-                </div>
-                <button class="btn btn-secondary sm">312 people · manage</button>
-              </div>
-            </div>
-
-            <div class="card pad">
-              <h2 class="h-md">What the AI may offer</h2>
-              <p class="t-sm sec" style="margin-bottom:var(--md)">Discount is the last lever, not the first — Loyalty gives it cheaper ones.</p>
-              <div class="col gap-sm">
-                <div class="field">
-                  <span class="label">Order of preference</span>
-                  <div class="chipInput">
-                    <span class="tag tag-grey">1 · Answer the objection</span>
-                    <span class="tag tag-purple">2 · Early access</span>
-                    <span class="tag tag-purple">3 · Points boost</span>
-                    <span class="tag tag-blue">4 · Free shipping</span>
-                    <span class="tag tag-orange">5 · Discount</span>
-                  </div>
-                </div>
-                <div class="row between"><span class="t-md">Max discount the AI can give alone</span><input class="input num" value="10%"></div>
-                <div class="row between"><span class="t-md">Needs approval up to</span><input class="input num" value="20%"></div>
-                <div class="row between"><span class="t-md">No discount within X days of a full-price order</span><input class="input num" value="14"></div>
-                <div class="row between"><span class="t-md med">Unique code per shopper</span><span class="toggle on" data-toggle></span></div>
-              </div>
-            </div>
-
-            <div class="card pad">
-              <h2 class="h-md">What the AI may say</h2>
-              <p class="t-sm sec" style="margin-bottom:var(--md)">Content rails sit above every instruction — no instruction can unlock them.</p>
-              <div class="col gap-sm">
-                <div class="field"><span class="label">Never say</span>
-                  <div class="chipInput">
-                    <span class="tag tag-red">guaranteed delivery date</span><span class="tag tag-red">medical claims</span>
-                    <span class="tag tag-red">"limited stock" unless true</span><span class="tag tag-red">competitor names</span>
-                    <span class="t-sm ter">+ add</span></div></div>
-                <div class="row between"><span class="t-md med">Always include an opt-out line</span><span class="toggle on" style="opacity:.55;pointer-events:none"></span></div>
-                <div class="row between"><span class="t-md med">Only link to your own domain</span><span class="toggle on" data-toggle></span></div>
-                <div class="row between"><span class="t-md med">Emoji allowed</span><span class="toggle" data-toggle></span></div>
-                <div class="row between"><span class="t-md">Max characters per message</span><input class="input num" value="320"></div>
-              </div>
-            </div>
-
-            <div class="card pad">
-              <h2 class="h-md">Volume, cost and proof</h2>
-              <p class="t-sm sec" style="margin-bottom:var(--md)">The rails that stop an autonomous system surprising you at month end.</p>
-              <div class="col gap-sm">
-                <div class="row between"><span class="t-md">Max AI-found sends per day</span><input class="input num" value="1,500"></div>
-                <div class="row between"><span class="t-md">Monthly spend cap</span><input class="input num" value="$4,000"></div>
-                <div class="row between"><span class="t-md">Pause everything if opt-out exceeds</span><input class="input num" value="1.5%"></div>
-                <div class="sepH"></div>
-                <div class="row between">
-                  <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">Global holdout</span>
-                    <span class="t-sm sec">Never messaged, so lift is measured rather than modelled.</span></div>
-                  <input class="input num" value="10%"></div>
-                <div class="row between">
-                  <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">Kill switch</span>
-                    <span class="t-sm sec">Stops every outbound message immediately.</span></div>
-                  <button class="btn btn-secondary sm" style="color:var(--content-error-default);border-color:var(--red-100)">Pause all outbound</button></div>
-              </div>
-            </div>
+        <div class="zone top">
+          <div class="lcWrap">
+            <div class="lcList" id="grList"></div>
+            <div class="col gap-md" id="grDetail"></div>
           </div>
         </div>
       </section>
@@ -988,7 +868,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </div>
       </section>
 
-      <!-- ======== LOYALTY ======== -->
+      <!-- ======== LOYALTY · overview + configuration ======== -->
       <section class="page hidden" id="page-loyalty">
         <header class="pageHeader">
           <div class="ttl">
@@ -1001,59 +881,62 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           </div>
         </header>
 
-        <div class="zone">
-          <div class="banner banner-ai">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ai-gradient)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>
-            <div class="col gap-xxxs" style="flex:1">
-              <span class="t-md med">Why Loyalty sits inside the Engagement Center.</span>
-              <span class="t-sm sec">A discount costs you margin every time. Points, early access and a tier bump cost far less and, on your at-risk cohort, they converted better. Loyalty is what lets the engine be generous without being expensive.</span>
-            </div>
-          </div>
+        <div class="tabList">
+          <button class="tabItem on" data-tab="loy-home">Overview</button>
+          <button class="tabItem" data-tab="loy-config">Configuration <span class="tag tag-grey" id="loyCfgCount">4</span></button>
+        </div>
 
-          <div class="grid g-stat">
-            <div class="card pad-md"><div class="t-sm sec">Members</div><div class="h-xxl num-t" style="margin-top:2px">18,940</div><div class="t-sm sec">61% of buyers</div></div>
-            <div class="card pad-md"><div class="t-sm sec">Points outstanding</div><div class="h-xxl num-t" style="margin-top:2px">4.2M</div><div class="t-sm sec">≈ $42k liability</div></div>
-            <div class="card pad-md"><div class="t-sm sec">Redemption rate</div><div class="h-xxl num-t" style="margin-top:2px">31%</div><div class="t-sm" style="color:var(--content-success-default)">+4 pt</div></div>
-            <div class="card pad-md"><div class="t-sm sec">Member vs non-member LTV</div><div class="h-xxl num-t" style="margin-top:2px">2.4×</div><div class="t-sm sec">$412 vs $172</div></div>
-          </div>
+        <!-- ---------- OVERVIEW ---------- -->
+        <div class="zone top tabPanel" data-panel-for="loy-home">
+          <div class="grid g-stat" id="loyTiles"></div>
 
-          <!-- tiers -->
           <div class="card" style="overflow:hidden">
             <div class="col gap-xs" style="padding:var(--md) var(--lg)">
-              <div class="row between wrap gap-xs">
-                <h2 class="h-md">Tiers</h2>
-                <button class="btn btn-secondary sm" data-tier="new">New tier</button>
+              <div class="row between wrap gap-sm">
+                <h2 class="h-md">Where your members are</h2>
+                <button class="btn btn-secondary sm" data-tab="loy-config">Configure tiers</button>
               </div>
-              <p class="t-sm sec">You define them: the conditions that get someone in, the perks, and which lifecycle stage the tier maps to — so "VIP" means one thing across the whole product.</p>
+              <p class="t-sm sec">Each tier maps to a lifecycle stage, so "VIP" means one thing across the whole product.</p>
               <div class="tierBar" id="tierBar" style="margin-top:var(--xs)"></div>
               <div class="legend" id="tierLegend"></div>
             </div>
             <table id="tierTable">
-              <thead><tr><th>Tier</th><th>Enters when</th><th>Members</th><th>AOV</th><th>LTV</th>
-                <th>Repeat rate</th><th>Maps to stage</th><th style="width:150px">AI may offer</th></tr></thead>
+              <thead><tr><th>Tier</th><th>Members</th><th>Share</th><th>AOV</th><th>LTV</th>
+                <th>Repeat rate</th><th>Points out</th><th>Maps to stage</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
 
-          <div class="grid g-2">
-            <!-- earn rules -->
-            <div class="card pad">
-              <h2 class="h-md">How members earn</h2>
-              <p class="t-sm sec" style="margin-bottom:var(--md)">The engine can trigger any of these as a reward inside a conversation.</p>
-              <div class="col gap-sm" id="earnList"></div>
+          <div class="card" style="overflow:hidden">
+            <div class="col gap-xxxs" style="padding:var(--md) var(--lg)">
+              <h2 class="h-md">What members are redeeming</h2>
+              <p class="t-sm sec">Your cost sits next to the points cost, so the cheap levers are obvious.</p>
             </div>
+            <table id="rewardTable">
+              <thead><tr><th>Reward</th><th>Points</th><th>Your cost</th><th>Redeemed · 30d</th>
+                <th style="width:130px">AI may offer</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
 
-            <!-- reward catalog -->
-            <div class="card" style="overflow:hidden">
-              <div class="col gap-xxxs" style="padding:var(--md) var(--md) var(--sm)">
-                <h2 class="h-md">Reward catalogue</h2>
-                <p class="t-sm sec">Turn off anything you don't want the AI offering unprompted.</p>
+        <!-- ---------- CONFIGURATION ---------- -->
+        <div class="zone top tabPanel hidden" data-panel-for="loy-config">
+          <div class="lcWrap">
+            <div class="col gap-md">
+              <div class="col gap-xxxs">
+                <div class="row between">
+                  <span class="navGroup" style="margin:0;padding:0 var(--xs) var(--xxs)">Tiers</span>
+                  <button class="btn btn-tertiary sm acc" data-tier="new" style="padding:0 var(--xs)">+ Add</button>
+                </div>
+                <div class="lcList" id="loyList"></div>
               </div>
-              <table class="inner" id="rewardTable">
-                <thead><tr><th>Reward</th><th>Cost</th><th>Your cost</th><th>Redeemed 30d</th><th style="width:90px">AI</th></tr></thead>
-                <tbody></tbody>
-              </table>
+              <div class="col gap-xxxs">
+                <span class="navGroup" style="margin:0;padding:0 var(--xs) var(--xxs)">Program</span>
+                <div class="lcList" id="loyProgList"></div>
+              </div>
             </div>
+            <div class="col gap-md" id="loyDetail"></div>
           </div>
         </div>
       </section>
@@ -1062,7 +945,7 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
       <section class="page hidden" id="page-soon">
         <header class="pageHeader"><div class="ttl">
           <h1 class="h-xxl">Not in this prototype</h1>
-          <p class="t-md sec">This mockup covers Overview, Engagements, Campaigns, Guardrails, Lifecycle, Activity and Loyalty.</p></div></header>
+          <p class="t-md sec">This prototype covers Reporting, Engagements, Campaigns, Guardrails, Lifecycle, Conversations and Loyalty. Brand profile lives in your global account configuration, outside AI Journey.</p></div></header>
       </section>
 
     </div>
@@ -1094,17 +977,6 @@ const SRC={Default:{c:"var(--dv-default)",tag:"tag-blue"},Custom:{c:"var(--dv-cu
    DATA
    ======================================================================= */
 const WEEKS=["Jun 2","Jun 9","Jun 16","Jun 23","Jun 30","Jul 7","Jul 14","Jul 21","Jul 28","Aug 4","Aug 11","Aug 18"];
-const VOL={Default:[7480,7610,7390,7720,7840,7660,7910,7780,8020,7950,8110,8040],
-           Custom :[ 380, 420, 510, 640, 720, 810, 980,1120,1240,1380,1490,1620],
-           ACE    :[   0,   0, 240, 620,1080,1520,1980,2340,2610,2880,3140,3420]};
-const CVR ={Default:[3.0,3.1,3.0,3.2,3.1,3.3,3.2,3.4,3.3,3.4,3.3,3.4],
-            Custom :[6.8,7.0,7.4,7.1,7.6,7.9,7.7,8.0,8.2,7.9,8.1,8.2],
-            ACE    :[null,null,5.2,5.6,5.9,6.3,6.6,6.9,7.1,7.3,7.4,7.6]};
-const REV=[
-  {s:"Default",int:93510,ord:2992,cvr:"3.2%",aov:"$118",gmv:353060,per:"$3,775",lift:"+$21,400",liftPct:"+6%",cost:"$8,420"},
-  {s:"Custom", int:11310,ord: 871,cvr:"7.7%",aov:"$142",gmv:123680,per:"$10,936",lift:"+$38,900",liftPct:"+31%",cost:"$1,020"},
-  {s:"ACE",    int:19830,ord:1309,cvr:"6.6%",aov:"$131",gmv:171480,per:"$8,647",lift:"+$74,300",liftPct:"+43%",cost:"$2,180"}
-];
 const CAMPAIGNS=[
   {n:"Mid-layer season opener",aud:"Hardshell owners, no mid-layer",sent:"3,802",cvr:"6.8%",gmv:"$62,410",win:"Answer the objection",st:"Measuring"},
   {n:"Summit tier early access",aud:"Summit + Gold loyalty tiers",sent:"1,180",cvr:"11.4%",gmv:"$41,900",win:"Early access, no discount",st:"Sent"},
@@ -1296,6 +1168,299 @@ const REWARDS=[
 /* =======================================================================
    CHART PRIMITIVES
    ======================================================================= */
+/* =======================================================================
+   REPORTING ENGINE
+   Everything is derived from five weekly primitives per member, so no two
+   numbers on the page can disagree with each other.
+   ======================================================================= */
+const DV=["var(--dv-1)","var(--dv-2)","var(--dv-3)","var(--dv-4)"], DV_OTHER="var(--dv-other)";
+
+/* member: base weekly reach, weekly growth, and its own rates */
+const DIMS={
+  source:{label:"Source", head:"Source", members:[
+    {n:"Default",c:"var(--dv-3)",base:7480,g:.005,reply:.061,click:.042,cvr:.032,opt:.009,aov:118},
+    {n:"Custom", c:"var(--dv-2)",base:380, g:.128,reply:.094,click:.071,cvr:.077,opt:.007,aov:142},
+    {n:"ACE",    c:"var(--dv-1)",base:240, g:.230,reply:.118,click:.088,cvr:.066,opt:.011,aov:131}]},
+  domain:{label:"ACE domain", head:"Domain", members:[
+    {n:"Replenishment & reorder",base:520,g:.038,reply:.142,click:.101,cvr:.081,opt:.007,aov:76},
+    {n:"Retention & win-back",   base:430,g:.031,reply:.086,click:.058,cvr:.044,opt:.016,aov:104},
+    {n:"Cross-sell & complements",base:352,g:.035,reply:.121,click:.094,cvr:.069,opt:.009,aov:112},
+    {n:"Subscriptions",          base:88, g:.024,reply:.164,click:.132,cvr:.126,opt:.003,aov:64},
+    {n:"Service recovery",       base:112,g:.019,reply:.097,click:.041,cvr:.032,opt:.004,aov:141},
+    {n:"Loyalty moments",        base:60, g:.041,reply:.151,click:.118,cvr:.098,opt:.005,aov:138}]},
+  stage:{label:"Lifecycle stage", head:"Stage", members:[
+    {n:"First-time buyer",base:2740,g:.021,reply:.092,click:.068,cvr:.048,opt:.010,aov:104},
+    {n:"Repeat",          base:2180,g:.018,reply:.108,click:.081,cvr:.071,opt:.006,aov:126},
+    {n:"At risk",         base:1620,g:.026,reply:.064,click:.039,cvr:.028,opt:.019,aov:98},
+    {n:"VIP",             base:820, g:.014,reply:.147,click:.112,cvr:.094,opt:.004,aov:186},
+    {n:"Dormant",         base:1240,g:.009,reply:.031,click:.017,cvr:.011,opt:.022,aov:88},
+    {n:"Lead",            base:940, g:.032,reply:.076,click:.052,cvr:.021,opt:.012,aov:79}]},
+  tier:{label:"Loyalty tier", head:"Tier", members:[
+    {n:"Member",base:4120,g:.016,reply:.071,click:.048,cvr:.034,opt:.013,aov:78},
+    {n:"Silver",base:2640,g:.021,reply:.104,click:.079,cvr:.062,opt:.008,aov:96},
+    {n:"Gold",  base:1180,g:.024,reply:.138,click:.106,cvr:.089,opt:.005,aov:124},
+    {n:"Summit",base:420, g:.019,reply:.176,click:.141,cvr:.121,opt:.002,aov:186}]},
+  channel:{label:"Channel", head:"Channel", members:[
+    {n:"SMS",base:6900,g:.008,reply:.079,click:.054,cvr:.038,opt:.010,aov:116},
+    {n:"RCS",base:1200,g:.094,reply:.146,click:.118,cvr:.081,opt:.006,aov:134}]}
+};
+
+const METRICS={
+  gmv:      {label:"GMV",                 kind:"money", better:"high"},
+  orders:   {label:"Orders",              kind:"count", better:"high"},
+  reached:  {label:"Shoppers reached",    kind:"count", better:"high"},
+  conv:     {label:"Conversations",       kind:"count", better:"high"},
+  cvr:      {label:"Conversion rate",     kind:"rate",  better:"high"},
+  reply:    {label:"Reply rate",          kind:"rate",  better:"high"},
+  click:    {label:"Click rate",          kind:"rate",  better:"high"},
+  opt:      {label:"Opt-out rate",        kind:"rate",  better:"low"},
+  aov:      {label:"Average order value", kind:"money", better:"high"},
+  rp1k:     {label:"Revenue per 1k sent", kind:"money", better:"high"}
+};
+
+/* deterministic wobble so the series look real and never move between renders */
+const wob=(i,w)=>1+((Math.sin((i+1)*2.7+w*1.31)+Math.sin((i+1)*1.1+w*.53))*.021);
+function prim(m,i,w){
+  const reached=Math.round(m.base*Math.pow(1+m.g,w)*wob(i,w));
+  const replies=Math.round(reached*m.reply), clicks=Math.round(reached*m.click);
+  const orders=Math.round(reached*m.cvr), optouts=Math.round(reached*m.opt);
+  return {reached,replies,clicks,orders,optouts,gmv:Math.round(orders*m.aov)};
+}
+function metricAt(key,m,i,w){
+  const p=prim(m,i,w);
+  switch(key){
+    case "gmv":return p.gmv; case "orders":return p.orders;
+    case "reached":case "conv":return p.reached;
+    case "cvr":return p.reached?p.orders/p.reached*100:0;
+    case "reply":return p.reached?p.replies/p.reached*100:0;
+    case "click":return p.reached?p.clicks/p.reached*100:0;
+    case "opt":return p.reached?p.optouts/p.reached*100:0;
+    case "aov":return p.orders?p.gmv/p.orders:0;
+    case "rp1k":return p.reached?p.gmv/p.reached*1000:0;
+  }
+}
+/* a rate over a period is re-derived from the totals, never averaged */
+function metricTotal(key,m,i){
+  let t={reached:0,replies:0,clicks:0,orders:0,optouts:0,gmv:0};
+  for(let w=0;w<WEEKS.length;w++){const p=prim(m,i,w);for(const k in t)t[k]+=p[k]}
+  switch(key){
+    case "gmv":return t.gmv; case "orders":return t.orders;
+    case "reached":case "conv":return t.reached;
+    case "cvr":return t.orders/t.reached*100;
+    case "reply":return t.replies/t.reached*100;
+    case "click":return t.clicks/t.reached*100;
+    case "opt":return t.optouts/t.reached*100;
+    case "aov":return t.gmv/t.orders;
+    case "rp1k":return t.gmv/t.reached*1000;
+  }
+}
+function dimTotals(dimKey){
+  const d=DIMS[dimKey];
+  return d.members.map((m,i)=>{
+    let t={reached:0,replies:0,clicks:0,orders:0,optouts:0,gmv:0};
+    for(let w=0;w<WEEKS.length;w++){const p=prim(m,i,w);for(const k in t)t[k]+=p[k]}
+    return {n:m.n,...t};
+  });
+}
+const fmtM=(key,v)=>{
+  const k=METRICS[key].kind;
+  if(k==="money") return "$"+fmt(Math.round(v));
+  if(k==="rate")  return v.toFixed(1)+"%";
+  return fmt(Math.round(v));
+};
+
+/* Assign once, by entity: the four biggest members of each dimension get the
+   four categorical hues, everything else is Other. Computed at load, never
+   per-render, so changing metric or view can never repaint a series. */
+Object.values(DIMS).forEach(d=>{
+  const order=d.members.map((m,i)=>({m,i,tot:(()=>{let g=0;
+      for(let w=0;w<WEEKS.length;w++)g+=prim(m,i,w).gmv; return g})()}))
+    .sort((a,b)=>b.tot-a.tot);
+  order.forEach((r,slot)=>{if(!r.m.c) r.m.c = slot<DV.length ? DV[slot] : DV_OTHER});
+});
+
+let rep={metric:"gmv",dim:"source",view:"time"};
+
+function repSeries(){
+  const d=DIMS[rep.dim];
+  /* colour is bound to the member, not to where it ranks — a filter that
+     changes the series count must not repaint the survivors */
+  const ranked=d.members.map((m,i)=>({m,i,tot:metricTotal("gmv",m,i)}))
+    .sort((a,b)=>b.tot-a.tot);
+  const keep=ranked.slice(0,4), rest=ranked.slice(4);
+  const out=keep.map(r=>({n:r.m.n,c:r.m.c||DV[r.i%DV.length],
+    vals:WEEKS.map((_,w)=>metricAt(rep.metric,r.m,r.i,w)),
+    total:metricTotal(rep.metric,r.m,r.i)}));
+  if(rest.length){
+    /* fold the tail into Other, re-derived from primitives so rates stay honest */
+    const vals=WEEKS.map((_,w)=>{
+      let t={reached:0,replies:0,clicks:0,orders:0,optouts:0,gmv:0};
+      rest.forEach(r=>{const p=prim(r.m,r.i,w);for(const k in t)t[k]+=p[k]});
+      return fromTotals(rep.metric,t);
+    });
+    let tt={reached:0,replies:0,clicks:0,orders:0,optouts:0,gmv:0};
+    rest.forEach(r=>{for(let w=0;w<WEEKS.length;w++){const p=prim(r.m,r.i,w);for(const k in tt)tt[k]+=p[k]}});
+    out.push({n:"Other ("+rest.length+")",c:DV_OTHER,vals,total:fromTotals(rep.metric,tt)});
+  }
+  return out;
+}
+function fromTotals(key,t){
+  switch(key){
+    case "gmv":return t.gmv; case "orders":return t.orders;
+    case "reached":case "conv":return t.reached;
+    case "cvr":return t.reached?t.orders/t.reached*100:0;
+    case "reply":return t.reached?t.replies/t.reached*100:0;
+    case "click":return t.reached?t.clicks/t.reached*100:0;
+    case "opt":return t.reached?t.optouts/t.reached*100:0;
+    case "aov":return t.orders?t.gmv/t.orders:0;
+    case "rp1k":return t.reached?t.gmv/t.reached*1000:0;
+  }
+}
+
+function renderReport(){
+  const M=METRICS[rep.metric], D=DIMS[rep.dim], series=repSeries();
+  const stacked = M.kind!=="rate";
+  $("#repTitle").textContent=M.label+" by "+D.label.toLowerCase();
+  $("#repSub").textContent = rep.view==="rank"
+    ? "Ranked over the last 12 weeks."
+    : stacked ? "Weekly, stacked. Segments add up to the total."
+              : "Weekly. Rates are re-derived from totals, never averaged.";
+  $("#repNote").textContent = M.kind==="rate"
+    ? "A rate over a period is computed from the period's totals, so a low-volume week can't distort it."
+    : (series.some(s=>s.n.startsWith("Other")) ? "Series beyond the top four are folded into Other, so no colour is reused." : "");
+
+  $("#repLegend").innerHTML=series.map(s=>
+    `<span class="legendItem"><span class="srcSwatch" style="background:${s.c}"></span>${s.n}</span>`).join("");
+
+  $("#repChart").classList.toggle("hidden",rep.view==="table");
+  $("#repTable").classList.toggle("hidden",rep.view!=="table");
+  $("#repLegend").classList.toggle("hidden",rep.view==="rank");
+
+  if(rep.view==="table"){
+    let h=`<table class="inner"><thead><tr><th>Week</th>${series.map(s=>`<th>${s.n}</th>`).join("")}</tr></thead><tbody>`;
+    WEEKS.forEach((w,i)=>{h+=`<tr><td class="t-md med">${w}</td>${series.map(s=>
+      `<td class="t-md num-t">${fmtM(rep.metric,s.vals[i])}</td>`).join("")}</tr>`});
+    $("#repTable").innerHTML=h+"</tbody></table>";
+  } else if(rep.view==="rank"){
+    hBars($("#repChart"),series.map(s=>({n:s.n,v:s.total})),rep.metric);
+  } else if(stacked){
+    stackedBars($("#repChart"),series,rep.metric);
+  } else {
+    lines($("#repChart"),series,rep.metric);
+  }
+  renderTiles(); renderRevTable();
+}
+
+function sparkline(vals,w,h){
+  const max=Math.max(...vals), min=Math.min(...vals), span=(max-min)||1;
+  const x=i=>i/(vals.length-1)*w, y=v=>h-8-((v-min)/span)*(h-18);
+  const pts=vals.map((v,i)=>[x(i),y(v)]);
+  /* smooth with a light cardinal spline so it reads like the reference card */
+  let d="M"+pts[0][0]+" "+pts[0][1];
+  for(let i=0;i<pts.length-1;i++){
+    const p0=pts[i-1]||pts[i], p1=pts[i], p2=pts[i+1], p3=pts[i+2]||p2;
+    const c1=[p1[0]+(p2[0]-p0[0])/6, p1[1]+(p2[1]-p0[1])/6];
+    const c2=[p2[0]-(p3[0]-p1[0])/6, p2[1]-(p3[1]-p1[1])/6];
+    d+=`C${c1[0]} ${c1[1]},${c2[0]} ${c2[1]},${p2[0]} ${p2[1]}`;
+  }
+  const id="sg"+Math.round(vals[0]*7919%99999);
+  return `<svg class="tileSpark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--dv-1)" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="var(--dv-1)" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${d}L${w} ${h}L0 ${h}Z" fill="url(#${id})"/>
+    <path d="${d}" fill="none" stroke="var(--dv-1)" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+  </svg>`;
+}
+const METRIC_HELP={
+  gmv:"Gross merchandise value from orders placed within 7 days of an outbound message.",
+  reached:"Distinct shoppers who received at least one message in the period.",
+  conv:"Conversations started by an outbound message.",
+  orders:"Orders placed within 7 days of an outbound message.",
+  cvr:"Orders divided by shoppers reached, computed on period totals.",
+  reply:"Share of shoppers who replied at least once.",
+  click:"Share of shoppers who opened a link we sent.",
+  opt:"Share of shoppers who opted out after a message. Lower is better.",
+  aov:"GMV divided by orders.",
+  rp1k:"GMV per thousand shoppers reached — the comparable one across sources of different size."
+};
+function renderTiles(){
+  /* account totals — deliberately independent of the breakdown below */
+  const tiles=["gmv","reached","cvr","reply","opt"], d=DIMS.source;
+  $("#repTiles").innerHTML=tiles.map(k=>{
+    const M=METRICS[k];
+    const weekly=WEEKS.map((_,w)=>{
+      let t={reached:0,replies:0,clicks:0,orders:0,optouts:0,gmv:0};
+      d.members.forEach((m,i)=>{const p=prim(m,i,w);for(const key in t)t[key]+=p[key]});
+      return fromTotals(k,t);
+    });
+    const half=Math.floor(WEEKS.length/2);
+    const sum=(a,b)=>{let t={reached:0,replies:0,clicks:0,orders:0,optouts:0,gmv:0};
+      for(let w=a;w<b;w++) d.members.forEach((m,i)=>{const p=prim(m,i,w);for(const key in t)t[key]+=p[key]});
+      return fromTotals(k,t)};
+    const now=sum(half,WEEKS.length), was=sum(0,half);
+    const delta=was?((now-was)/was*100):0;
+    const up=delta>=0;
+    return `<div class="tile">
+      <div class="tileHead">
+        <span class="tileLabel">${M.label}</span>
+        <span class="tileIcon" data-help="${k}" title="${METRIC_HELP[k]}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/></svg></span>
+        <span class="tileIcon" title="Add to a dashboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+      </div>
+      <div class="tileValue">${fmtM(k,fromTotals(k,(()=>{let t={reached:0,replies:0,clicks:0,orders:0,optouts:0,gmv:0};
+        d.members.forEach((m,i)=>{for(let w=0;w<WEEKS.length;w++){const p=prim(m,i,w);for(const key in t)t[key]+=p[key]}});return t})()))}</div>
+      <div class="tileDelta">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+          style="transform:rotate(${up?0:90}deg)"><path d="M7 17 17 7M17 7h-7M17 7v7"/></svg>
+        ${Math.abs(delta).toFixed(0)}%
+      </div>
+      ${sparkline(weekly,260,62)}
+    </div>`}).join("");
+}
+
+function renderRevTable(){
+  const D=DIMS[rep.dim], rows=dimTotals(rep.dim);
+  $("#revTitle").textContent="Revenue by "+D.label.toLowerCase();
+  $("#revDimHead").textContent=D.head;
+  const T=rows.reduce((a,r)=>{for(const k in a)a[k]+=r[k];return a},
+    {reached:0,replies:0,clicks:0,orders:0,optouts:0,gmv:0});
+  $("#revTotal").textContent="$"+fmt(T.gmv);
+  const colorOf=n=>{const s=repSeries().find(x=>x.n===n);return s?s.c:DV_OTHER};
+  const tb=$("#revTable tbody"); tb.innerHTML="";
+  rows.sort((a,b)=>b.gmv-a.gmv).forEach(r=>{
+    const tr=el("tr");
+    tr.innerHTML=`
+      <td><div class="row gap-xs"><span class="srcSwatch" style="background:${colorOf(r.n)}"></span>
+        <span class="t-md med">${r.n}</span></div></td>
+      <td class="t-md num-t">${fmt(r.reached)}</td>
+      <td class="t-md num-t">${(r.replies/r.reached*100).toFixed(1)}%</td>
+      <td class="t-md num-t">${(r.clicks/r.reached*100).toFixed(1)}%</td>
+      <td class="t-md num-t">${(r.orders/r.reached*100).toFixed(1)}%</td>
+      <td class="t-md num-t">${fmt(r.orders)}</td>
+      <td class="t-md num-t">$${fmt(Math.round(r.gmv/r.orders))}</td>
+      <td class="t-md num-t bold">$${fmt(r.gmv)}</td>
+      <td class="t-md num-t">$${fmt(Math.round(r.gmv/r.reached*1000))}</td>
+      <td class="t-md num-t">${(r.optouts/r.reached*100).toFixed(1)}%</td>`;
+    tb.appendChild(tr);
+  });
+  const tr=el("tr"); tr.style.background="var(--grey-50)";
+  tr.innerHTML=`<td class="t-md bold">Total</td>
+    <td class="t-md num-t bold">${fmt(T.reached)}</td>
+    <td class="t-md num-t bold">${(T.replies/T.reached*100).toFixed(1)}%</td>
+    <td class="t-md num-t bold">${(T.clicks/T.reached*100).toFixed(1)}%</td>
+    <td class="t-md num-t bold">${(T.orders/T.reached*100).toFixed(1)}%</td>
+    <td class="t-md num-t bold">${fmt(T.orders)}</td>
+    <td class="t-md num-t bold">$${fmt(Math.round(T.gmv/T.orders))}</td>
+    <td class="t-md num-t bold">$${fmt(T.gmv)}</td>
+    <td class="t-md num-t bold">$${fmt(Math.round(T.gmv/T.reached*1000))}</td>
+    <td class="t-md num-t bold">${(T.optouts/T.reached*100).toFixed(1)}%</td>`;
+  tb.appendChild(tr);
+}
+
 const tip=$("#tip");
 function showTip(html,x,y){tip.innerHTML=html;tip.style.opacity=1;
   const r=tip.getBoundingClientRect();
@@ -1303,129 +1468,123 @@ function showTip(html,x,y){tip.innerHTML=html;tip.style.opacity=1;
   tip.style.top=Math.max(10,y-r.height-12)+"px";}
 function hideTip(){tip.style.opacity=0}
 const fmt=n=>n.toLocaleString("en-US");
-const SERIES=["Default","Custom","ACE"];
 
-function legend(node,extra){
-  node.innerHTML=SERIES.map(s=>`<span class="legendItem"><span class="srcSwatch" style="background:${SRC[s].c}"></span>${s}</span>`).join("")
-    + (extra||"");
-}
-
-/* stacked bars — 2px surface gap BETWEEN segments, bottom anchored, 4px rounded top end */
-function stackedBars(host,data){
-  const W=Math.max(320,host.clientWidth||520), H=212, PL=44,PR=8,PT=10,PB=26, GAP=2;
+/* stacked bars — 2px gap BETWEEN segments, bottom anchored, 4px rounded top */
+function stackedBars(host,series,metricKey){
+  const W=Math.max(320,host.clientWidth||520), H=250, PL=56,PR=10,PT=12,PB=28, GAP=2;
   const iw=W-PL-PR, ih=H-PT-PB;
-  const totals=WEEKS.map((_,i)=>SERIES.reduce((a,s)=>a+data[s][i],0));
-  const max=Math.ceil(Math.max(...totals)/2000)*2000;
-  const slot=iw/WEEKS.length;
-  const bw=Math.max(8,Math.min(26,slot-10));
-  const x=i=>PL+(i+.5)*slot-bw/2;
-  const y=v=>PT+ih-(v/max)*ih;
+  const totals=WEEKS.map((_,i)=>series.reduce((a,s)=>a+s.vals[i],0));
+  const {max,step}=niceScale(Math.max(...totals)||1);
+  const slot=iw/WEEKS.length, bw=Math.max(8,Math.min(26,slot-10));
+  const x=i=>PL+(i+.5)*slot-bw/2, y=v=>PT+ih-(v/max)*ih;
   let g="";
-  for(let t=0;t<=max;t+=max/4){
+  for(let t=0;t<=max+1e-9;t+=step){
     g+=`<line class="gridline" x1="${PL}" x2="${W-PR}" y1="${y(t)}" y2="${y(t)}"/>`;
-    g+=`<text x="${PL-8}" y="${y(t)+4}" text-anchor="end">${t>=1000?(t/1000)+"k":t}</text>`;
+    g+=`<text x="${PL-8}" y="${y(t)+4}" text-anchor="end">${axisLabel(metricKey,t)}</text>`;
   }
   WEEKS.forEach((w,i)=>{
     if(i%2===0) g+=`<text x="${x(i)+bw/2}" y="${H-8}" text-anchor="middle">${w}</text>`;
     let acc=0;
-    const topIdx=SERIES.reduce((m,s,si)=>data[s][i]>0?si:m,-1);
-    SERIES.forEach((s,si)=>{
-      const v=data[s][i]; if(!v){return}
-      const isTop = si===topIdx;
-      const yBottom=y(acc);
-      const yTop=y(acc+v) + (isTop?0:GAP);
-      const h=Math.max(1,yBottom-yTop);
-      g+=`<path d="${roundedTop(x(i),yTop,bw,h,isTop?4:0)}" fill="${SRC[s].c}"/>`;
+    const topIdx=series.reduce((m,s,si)=>s.vals[i]>0?si:m,-1);
+    series.forEach((s,si)=>{
+      const v=s.vals[i]; if(!v) return;
+      const isTop=si===topIdx, yB=y(acc), yT=y(acc+v)+(isTop?0:GAP);
+      g+=`<path d="${roundedTop(x(i),yT,bw,Math.max(1,yB-yT),isTop?4:0)}" fill="${s.c}"/>`;
       acc+=v;
     });
     g+=`<rect class="hit" x="${x(i)-5}" y="${PT}" width="${bw+10}" height="${ih}" data-i="${i}"/>`;
   });
-  host.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly interactions by source">${g}</svg>`;
+  host.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${METRICS[metricKey].label} over time">${g}</svg>`;
   const svg=host.querySelector("svg");
   svg.addEventListener("mousemove",e=>{
     const h=e.target.closest(".hit"); if(!h) return hideTip();
     const i=+h.dataset.i, b=h.getBoundingClientRect();
-    showTip(`<b>Week of ${WEEKS[i]}</b>`+SERIES.map(s=>
-      `<div class="tRow"><span><span class="srcSwatch" style="background:${SRC[s].c}"></span> ${s}</span><span>${fmt(data[s][i])}</span></div>`).join("")
-      +`<div class="tRow" style="border-top:1px solid rgba(255,255,255,.2);margin-top:4px;padding-top:4px"><span>Total</span><span>${fmt(totals[i])}</span></div>`,
-      b.left+b.width/2,b.top);
+    showTip(`<b>Week of ${WEEKS[i]}</b>`+series.map(s=>
+      `<div class="tRow"><span><span class="srcSwatch" style="background:${s.c}"></span> ${s.n}</span>
+       <span>${fmtM(metricKey,s.vals[i])}</span></div>`).join("")
+      +`<div class="tRow" style="border-top:1px solid rgba(255,255,255,.2);margin-top:4px;padding-top:4px">
+        <span>Total</span><span>${fmtM(metricKey,totals[i])}</span></div>`, b.left+b.width/2,b.top);
   });
   svg.addEventListener("mouseleave",hideTip);
+}
+/* four gridlines on a round step, so the axis never reads $17.5k */
+function niceScale(raw){
+  const rough=raw/4, mag=Math.pow(10,Math.floor(Math.log10(rough)));
+  const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=rough)||10*mag;
+  return {max:Math.ceil(raw/step)*step, step};
 }
 function roundedTop(x,y,w,h,r){
   if(!r) return `M${x} ${y}h${w}v${h}h${-w}z`;
   return `M${x} ${y+r}a${r} ${r} 0 0 1 ${r} ${-r}h${w-2*r}a${r} ${r} 0 0 1 ${r} ${r}v${h-r}h${-w}z`;
 }
+function axisLabel(key,v){
+  const k=METRICS[key].kind;
+  if(k==="rate") return v.toFixed(v<10?1:0)+"%";
+  if(k==="money") return v>=1000?"$"+(v/1000).toFixed(v>=10000?0:1)+"k":"$"+Math.round(v);
+  return v>=1000?(v/1000).toFixed(v>=10000?0:1)+"k":Math.round(v);
+}
 
-/* multi-line — 2px strokes, crosshair tooltip */
-function lines(host,data){
-  const W=Math.max(320,host.clientWidth||520), H=212, PL=38,PR=86,PT=10,PB=26;
+/* multi-line — 2px strokes, crosshair, direct labels carrying the series name */
+function lines(host,series,metricKey){
+  const W=Math.max(320,host.clientWidth||520), H=250, PL=52,PR=132,PT=12,PB=28;
   const iw=W-PL-PR, ih=H-PT-PB;
-  const max=10, step=iw/(WEEKS.length-1);
-  const x=i=>PL+i*step, y=v=>PT+ih-(v/max)*ih;
+  const {max,step}=niceScale(Math.max(...series.flatMap(s=>s.vals))||1);
+  const dx=iw/(WEEKS.length-1), x=i=>PL+i*dx, y=v=>PT+ih-(v/max)*ih;
   let g="";
-  for(let t=0;t<=max;t+=2.5){
+  for(let t=0;t<=max+1e-9;t+=step){
     g+=`<line class="gridline" x1="${PL}" x2="${PL+iw}" y1="${y(t)}" y2="${y(t)}"/>`;
-    g+=`<text x="${PL-8}" y="${y(t)+4}" text-anchor="end">${t}%</text>`;
+    g+=`<text x="${PL-8}" y="${y(t)+4}" text-anchor="end">${axisLabel(metricKey,t)}</text>`;
   }
   WEEKS.forEach((w,i)=>{if(i%2===0)g+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${w}</text>`});
   g+=`<line class="crosshair" id="ch" y1="${PT}" y2="${PT+ih}"/>`;
-  SERIES.forEach(s=>{
-    const pts=data[s].map((v,i)=>v==null?null:[x(i),y(v)]).filter(Boolean);
-    g+=`<path d="${pts.map((p,i)=>(i?"L":"M")+p[0]+" "+p[1]).join("")}" fill="none" stroke="${SRC[s].c}" stroke-width="2" stroke-linecap="round"/>`;
-    const last=pts[pts.length-1], lv=data[s][WEEKS.length-1];
-    g+=`<circle cx="${last[0]}" cy="${last[1]}" r="4" fill="${SRC[s].c}" stroke="var(--white)" stroke-width="2"/>`;
-    g+=`<text x="${last[0]+9}" y="${last[1]+4}" style="font-weight:600">${s} ${lv}%</text>`;
+  const ends=series.map((s,si)=>({si,y:y(s.vals[s.vals.length-1])})).sort((a,b)=>a.y-b.y);
+  const placed={}; let last=-99;
+  ends.forEach(e=>{const yy=Math.max(e.y,last+13); placed[e.si]=yy; last=yy});
+  series.forEach((s,si)=>{
+    const pts=s.vals.map((v,i)=>[x(i),y(v)]);
+    g+=`<path d="${pts.map((p,i)=>(i?"L":"M")+p[0]+" "+p[1]).join("")}" fill="none" stroke="${s.c}" stroke-width="2" stroke-linecap="round"/>`;
+    const l=pts[pts.length-1];
+    g+=`<circle cx="${l[0]}" cy="${l[1]}" r="4" fill="${s.c}" stroke="var(--white)" stroke-width="2"/>`;
+    g+=`<text x="${l[0]+9}" y="${placed[si]+4}" style="font-weight:600">${s.n} ${fmtM(metricKey,s.vals[s.vals.length-1])}</text>`;
   });
-  WEEKS.forEach((w,i)=>{g+=`<rect class="hit" x="${x(i)-step/2}" y="${PT}" width="${step}" height="${ih}" data-i="${i}"/>`});
-  host.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly conversion rate by source">${g}</svg>`;
+  WEEKS.forEach((w,i)=>{g+=`<rect class="hit" x="${x(i)-dx/2}" y="${PT}" width="${dx}" height="${ih}" data-i="${i}"/>`});
+  host.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${METRICS[metricKey].label} over time">${g}</svg>`;
   const svg=host.querySelector("svg"), ch=svg.querySelector("#ch");
   svg.addEventListener("mousemove",e=>{
     const h=e.target.closest(".hit"); if(!h) return;
     const i=+h.dataset.i, b=svg.getBoundingClientRect();
     ch.setAttribute("x1",x(i)); ch.setAttribute("x2",x(i)); ch.style.opacity=1;
-    showTip(`<b>Week of ${WEEKS[i]}</b>`+SERIES.map(s=>data[s][i]==null?"":
-      `<div class="tRow"><span><span class="srcSwatch" style="background:${SRC[s].c}"></span> ${s}</span><span>${data[s][i]}%</span></div>`).join(""),
+    showTip(`<b>Week of ${WEEKS[i]}</b>`+series.map(s=>
+      `<div class="tRow"><span><span class="srcSwatch" style="background:${s.c}"></span> ${s.n}</span>
+       <span>${fmtM(metricKey,s.vals[i])}</span></div>`).join(""),
       b.left+(x(i)/W)*b.width, b.top+40);
   });
   svg.addEventListener("mouseleave",()=>{ch.style.opacity=0;hideTip()});
 }
 
-function dataTable(host,data,unit){
-  let h=`<table class="inner"><thead><tr><th>Week</th>${SERIES.map(s=>`<th>${s}</th>`).join("")}</tr></thead><tbody>`;
-  WEEKS.forEach((w,i)=>{h+=`<tr><td class="t-md med">${w}</td>${SERIES.map(s=>
-    `<td class="t-md num-t">${data[s][i]==null?"—":(unit==="%"?data[s][i]+"%":fmt(data[s][i]))}</td>`).join("")}</tr>`});
-  host.innerHTML=h+"</tbody></table>";
-}
-
-function renderRev(){
-  const tb=$("#revTable tbody"); tb.innerHTML="";
-  const T={int:0,ord:0,gmv:0};
-  REV.forEach(r=>{T.int+=r.int;T.ord+=r.ord;T.gmv+=r.gmv;
-    const tr=el("tr");
-    tr.innerHTML=`
-      <td><span class="tag ${SRC[r.s].tag}"><span class="srcSwatch" style="background:${SRC[r.s].c}"></span>${r.s}</span></td>
-      <td class="t-md num-t">${fmt(r.int)}</td>
-      <td class="t-md num-t">${fmt(r.ord)}</td>
-      <td class="t-md num-t">${r.cvr}</td>
-      <td class="t-md num-t">${r.aov}</td>
-      <td class="t-md num-t bold">$${fmt(r.gmv)}</td>
-      <td class="t-md num-t">${r.per}</td>
-      <td><div class="col gap-xxxs" style="align-items:flex-start">
-        <span class="t-md num-t med" style="color:var(--content-success-default)">${r.lift}</span>
-        <span class="t-xs ter">${r.liftPct} vs holdout</span></div></td>
-      <td class="t-md num-t sec">${r.cost}</td>`;
-    tb.appendChild(tr);
+/* ranked horizontal bars — one measure, so one hue */
+function hBars(host,rows,metricKey){
+  rows=rows.slice().sort((a,b)=>b.v-a.v);
+  const W=Math.max(320,host.clientWidth||520), rowH=34, PL=Math.min(190,W*.32), PR=86;
+  const H=rows.length*rowH+12, iw=W-PL-PR, max=Math.max(...rows.map(r=>r.v))||1;
+  let g="";
+  rows.forEach((r,i)=>{
+    const y=i*rowH+6, w=Math.max(2,(r.v/max)*iw);
+    g+=`<text x="${PL-12}" y="${y+18}" text-anchor="end" style="fill:var(--content-neutral-default);font-size:12px">${r.n.length>26?r.n.slice(0,25)+"…":r.n}</text>`;
+    g+=`<rect x="${PL}" y="${y+3}" width="${iw}" height="18" rx="4" fill="var(--grey-100)"/>`;
+    g+=`<rect x="${PL}" y="${y+3}" width="${w}" height="18" rx="4" fill="var(--dv-1)"/>`;
+    g+=`<text x="${PL+iw+10}" y="${y+18}" style="font-weight:600;fill:var(--content-neutral-default);font-size:12px">${fmtM(metricKey,r.v)}</text>`;
+    g+=`<rect class="hit" x="0" y="${y}" width="${W}" height="${rowH}" data-i="${i}"/>`;
   });
-  const tr=el("tr");
-  tr.style.background="var(--grey-50)";
-  tr.innerHTML=`<td class="t-md bold">Total</td>
-    <td class="t-md num-t bold">${fmt(T.int)}</td><td class="t-md num-t bold">${fmt(T.ord)}</td>
-    <td class="t-md num-t bold">4.1%</td><td class="t-md num-t bold">$125</td>
-    <td class="t-md num-t bold">$${fmt(T.gmv)}</td><td class="t-md num-t bold">$5,200</td>
-    <td class="t-md num-t bold" style="color:var(--content-success-default)">+$134,600</td>
-    <td class="t-md num-t bold sec">$11,620</td>`;
-  tb.appendChild(tr);
+  host.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${METRICS[metricKey].label} ranked">${g}</svg>`;
+  const svg=host.querySelector("svg");
+  svg.addEventListener("mousemove",e=>{
+    const h=e.target.closest(".hit"); if(!h) return hideTip();
+    const r=rows[+h.dataset.i], b=h.getBoundingClientRect();
+    showTip(`<b>${r.n}</b><div class="tRow"><span>${METRICS[metricKey].label}</span><span>${fmtM(metricKey,r.v)}</span></div>`,
+      b.left+b.width/2,b.top+18);
+  });
+  svg.addEventListener("mouseleave",hideTip);
 }
 
 function renderCampaigns(){
@@ -1471,15 +1630,6 @@ function renderAce(){
   const allowed=ACE_DOMAINS.filter(d=>d.on), off=ACE_DOMAINS.filter(d=>!d.on);
   const lostGmv=off.reduce((a,d)=>a+(d.potGmv||0),0);
 
-  /* strip */
-  $("#aceStripTitle").textContent = aceState==="off" ? "ACE is off"
-    : aceState==="manual" ? "ACE · waiting for your approval" : "ACE · sends automatically";
-  const tag=$("#aceStripTag"); tag.textContent=M.n; tag.className="tag "+M.tag;
-  $("#aceStripNote").textContent = on
-    ? allowed.length+" of "+ACE_DOMAINS.length+" domains allowed."
-    : "Nothing running.";
-  $("#aceStripStats").textContent = on ? "7,240 reached · $47,300 GMV" : "—";
-  $("#aceStrip").classList.toggle("off",!on);
   $("#acePendingBtn").style.display = aceState==="manual" ? "" : "none";
   const badge=$("#aceTabBadge"); badge.textContent=M.n; badge.className="tag "+M.tag;
 
@@ -1514,12 +1664,18 @@ function renderAce(){
         <span class="t-md med">${d.n}</span><span class="t-sm sec">${d.d}</span>
         ${live?"":`<span class="tag tag-purple" style="margin-top:4px;width:fit-content">Not allowed — figures are estimates</span>`}
       </div></td>
-      <td><button class="pill" data-dominstr="${i}">${d.ins==="Customized"?"Customized":"Add instruction"}</button></td>
       ${cell(fmt(d.reach),"≈"+fmt(d.potReach))}
       ${cell("$"+fmt(d.gmv),"≈$"+fmt(d.potGmv))}
       ${cell(d.cvr,"≈"+d.potCvr)}
       ${cell(d.opt,"≈"+d.potOpt)}
-      <td><span class="toggle ${d.on?"on":""}" data-dom="${i}" ${on?"":'style="opacity:.5;pointer-events:none"'}></span></td>`;
+      <td><button class="btn btn-secondary sm" data-dominstr="${i}">
+        ${d.ins==="Customized"?`<span class="dot" style="background:var(--purple-500)"></span>Instruction`
+          :`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Add instruction`}
+      </button></td>
+      <td><div class="row gap-xs" style="justify-content:flex-end">
+        <span class="t-sm ${d.on?"med":"ter"}" style="min-width:24px;text-align:right">${d.on?"Yes":"No"}</span>
+        <span class="toggle ${d.on?"on":""}" data-dom="${i}" ${on?"":'style="opacity:.5;pointer-events:none"'}></span>
+      </div></td>`;
     tb.appendChild(tr);
   });
 
@@ -1670,14 +1826,128 @@ function renderVariants(){
 /* =======================================================================
    GUARDRAILS
    ======================================================================= */
+/* ===================== GUARDRAILS (master / detail) ===================== */
+const GR_CATS=[
+  {k:"frequency",n:"Frequency",d:"How often a shopper hears from you",c:"var(--blue-200)",
+   sum:"Counted across every source together — ACE cannot borrow budget from your own engagements.",
+   fields:[["Max messages per shopper, per week","3"],["Max per shopper, per month","8"],
+           ["Minimum gap between two messages","48h"],["Collision window — no two engagements within","24h"]],
+   select:["When two engagements collide","The loser is deferred, never dropped.",
+           ["Highest expected value wins","Your own engagements win","ACE wins"]]},
+  {k:"timing",n:"Timing",d:"When you're allowed to send",c:"var(--teal-200)",
+   sum:"Always evaluated in the shopper's timezone, never yours.",
+   fields:[["Quiet hours start","21:00"],["Quiet hours end","09:00"],
+           ["Weekend window start","10:00"],["Weekend window end","18:00"]],
+   toggles:[["Use the shopper's local timezone","",true],["Pause on public holidays","",true],
+            ["Let the engine pick the exact hour","Inside your window, from when this shopper usually replies.",true]]},
+  {k:"suppression",n:"Suppression",d:"Don't message them right now",c:"var(--orange-300)",
+   sum:"About timing, not about people. Checked before any decision — the locked ones can't be turned off.",
+   list:"suppression"},
+  {k:"exclusions",n:"Exclusions",d:"Never contact them at all",c:"var(--coral-400)",
+   sum:"About people, not timing. Anyone matching a rule here is out of every audience, every engagement, every campaign.",
+   list:"exclusions"},
+  {k:"offers",n:"Offers",d:"What the AI may give away",c:"var(--purple-300)",
+   sum:"Discount is the last lever, not the first — Loyalty gives it cheaper ones.",
+   levers:true,
+   fields:[["Max discount the AI can give alone","10%"],["Needs approval up to","20%"],
+           ["No discount within X days of a full-price order","14"],["Minimum order for free shipping","$65"]],
+   toggles:[["Unique discount code per shopper","So nothing leaks to coupon sites.",true]]},
+  {k:"content",n:"Content",d:"What the AI may say",c:"var(--green-300)",
+   sum:"Content rails sit above every instruction — no instruction can unlock them.",
+   banned:true,
+   fields:[["Max characters per message","320"]],
+   toggles:[["Always include an opt-out line","Legal requirement.",true,true],
+            ["Only link to your own domain","",true],["Emoji allowed","",false]]},
+  {k:"volume",n:"Volume & proof",d:"Cost, caps and measurement",c:"var(--grey-300)",
+   sum:"The rails that stop an autonomous system surprising you at month end.",
+   fields:[["Max AI-found sends per day","1,500"],["Monthly spend cap","$4,000"],
+           ["Pause everything if opt-out exceeds","1.5%"],["Global holdout","10%"]],
+   kill:true}
+];
+let grSel=0;
 function renderGuardrails(){
-  const l=$("#suppressionList"); l.innerHTML="";
-  SUPPRESSION.forEach(s=>{
+  const l=$("#grList"); if(!l) return;
+  l.innerHTML="";
+  GR_CATS.forEach((c,i)=>{
+    const b=el("button","lcItem"+(i===grSel?" on":""));
+    b.innerHTML=`<span class="bar" style="background:${c.c}"></span>
+      <div class="col gap-xxxs" style="flex:1;min-width:0">
+        <span class="t-md med">${c.n}</span><span class="t-xs ter">${c.d}</span></div>`;
+    b.addEventListener("click",()=>{grSel=i;renderGuardrails()});
+    l.appendChild(b);
+  });
+  const c=GR_CATS[grSel];
+  let body=`
+    <div class="col gap-xxxs">
+      <div class="row gap-xs">
+        <span class="dot" style="background:${c.c};width:10px;height:10px"></span>
+        <h2 class="h-lg">${c.n}</h2>
+      </div>
+      <p class="t-md sec">${c.sum}</p>
+    </div>
+    <div class="card pad"><div class="col gap-sm">`;
+
+  if(c.levers) body+=`
+    <div class="field"><span class="label">Order of preference</span>
+      <div class="chipInput">
+        <span class="tag tag-grey">1 · Answer the objection</span>
+        <span class="tag tag-purple">2 · Early access</span>
+        <span class="tag tag-purple">3 · Points boost</span>
+        <span class="tag tag-blue">4 · Free shipping</span>
+        <span class="tag tag-orange">5 · Discount</span>
+      </div></div>`;
+  if(c.banned) body+=`
+    <div class="field"><span class="label">Never say</span>
+      <div class="chipInput">
+        <span class="tag tag-red">guaranteed delivery date</span><span class="tag tag-red">medical claims</span>
+        <span class="tag tag-red">"limited stock" unless true</span><span class="tag tag-red">competitor names</span>
+        <span class="t-sm ter">+ add</span></div></div>`;
+
+  (c.fields||[]).forEach(f=>{body+=`<div class="row between gap-md">
+    <span class="t-md">${f[0]}</span><input class="input num" value="${f[1]}"></div>`});
+
+  (c.toggles||[]).forEach(t=>{body+=`<div class="row between gap-md">
+    <div class="col gap-xxxs" style="max-width:76%"><span class="t-md med">${t[0]}</span>
+      ${t[1]?`<span class="t-sm sec">${t[1]}</span>`:""}</div>
+    <span class="toggle ${t[2]?"on":""}" ${t[3]?'style="opacity:.55;pointer-events:none"':"data-toggle"}></span></div>`});
+
+  if(c.select) body+=`<div class="sepH"></div>
+    <div class="row between gap-md">
+      <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">${c.select[0]}</span>
+        <span class="t-sm sec">${c.select[1]}</span></div>
+      <select class="selectEl auto">${c.select[2].map(o=>`<option>${o}</option>`).join("")}</select></div>`;
+
+  if(c.list==="suppression") body+=`<div class="col gap-sm" id="suppressionList"></div>`;
+  if(c.list==="exclusions") body+=`
+    <div class="row between"><span class="t-sm sec">Currently excluded</span>
+      <span class="tag tag-grey" id="exclCount">—</span></div>
+    <div class="col gap-sm" id="exclusionList"></div>
+    <div class="sepH"></div>
+    <div class="row between">
+      <div class="col gap-xxxs" style="max-width:72%"><span class="t-md med">Never-contact list</span>
+        <span class="t-sm sec">Uploaded or added by hand — competitors, press, employees, anyone who asked.</span></div>
+      <button class="btn btn-secondary sm">312 people · manage</button></div>`;
+
+  if(c.kill) body+=`<div class="sepH"></div>
+    <div class="row between">
+      <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">Kill switch</span>
+        <span class="t-sm sec">Stops every outbound message immediately, all sources.</span></div>
+      <button class="btn btn-secondary sm" style="color:var(--content-error-default);border-color:var(--red-100)">Pause all outbound</button></div>`;
+
+  body+=`</div></div>`;
+  $("#grDetail").innerHTML=body;
+  if(c.list==="suppression") renderSuppression();
+  if(c.list==="exclusions") renderExclusions();
+}
+function renderSuppression(){
+  const l=$("#suppressionList"); if(!l) return;
+  l.innerHTML="";
+  SUPPRESSION.forEach(x=>{
     const r=el("div","row between");
     r.innerHTML=`<div class="col gap-xxxs" style="max-width:76%">
-        <div class="row gap-xxs"><span class="t-md med">${s.n}</span>${s.locked?`<span class="tag tag-grey">Locked</span>`:""}</div>
-        <span class="t-sm sec">${s.d}</span></div>
-      <span class="toggle ${s.on?"on":""}" ${s.locked?'style="opacity:.55;pointer-events:none"':'data-toggle'}></span>`;
+        <div class="row gap-xxs"><span class="t-md med">${x.n}</span>${x.locked?`<span class="tag tag-grey">Locked</span>`:""}</div>
+        <span class="t-sm sec">${x.d}</span></div>
+      <span class="toggle ${x.on?"on":""}" ${x.locked?'style="opacity:.55;pointer-events:none"':'data-toggle'}></span>`;
     l.appendChild(r);
   });
 }
@@ -1944,34 +2214,134 @@ function renderThread(c){
       <button class="btn btn-primary">Approve &amp; send</button></div>`:""}`;
 }
 
+/* ===================== CAMPAIGN PREVIEW ===================== */
+const PREV_FIRST=["Ana","Marc","Sam","Lena","Priya","Tom","Jonas","Chloé","Hugo","Ingrid","Nils","Sofia",
+  "Ruben","Mei","Otto","Clara","Diego","Aisha","Pieter","Nora","Elias","Yuki","Tomas","Farah",
+  "Bruno","Lena","Karl","Amara","Iris","Mateo","Sanne","Owen","Zoë","Rafa","Nina","Emil","Alba","Kwame","Lise","Ivan"];
+const PREV_LAST=["R.","D.","K.","P.","S.","W.","M.","B.","T.","L.","V.","N.","A.","J.","H.","F."];
+const PREV_ITEM=["the Alpine hardshell","the Ridge tights","the Merino base layer","the Summit shell",
+  "the Trail runners","the Storm gloves","the Bib shorts","the Cirrus mid-layer"];
+const PREV_STAGE=["First-time buyer","Repeat","VIP","At risk"];
+const PREV_TIER=["Member","Silver","Gold","Summit"];
+function genPreview(n){
+  const out=[];
+  for(let i=0;i<n;i++){
+    const who=PREV_FIRST[i%PREV_FIRST.length]+" "+PREV_LAST[(i*5)%PREV_LAST.length];
+    const v=VARIANTS[i%VARIANTS.length];
+    const item=PREV_ITEM[(i*3)%PREV_ITEM.length];
+    const stage=PREV_STAGE[(i*7)%PREV_STAGE.length];
+    const tier=PREV_TIER[(i*11)%PREV_TIER.length];
+    const first=who.split(" ")[0];
+    const open = v.off==="No offer"
+      ? `${first} — you've got ${item}, but nothing to go under it below 5°. The mid-layer is the piece that makes the shell work. Want me to show you the two that fit what you own?`
+      : v.off==="Free shipping"
+      ? `${first} — the mid-layer is what makes ${item} work below 5°. Shipping's on us if you pick one up this week. Want the two that fit?`
+      : `${first} — ${item} needs a mid-layer under it once it drops below 5°. Here's 10% off yours, yours for the next 5 days. Want me to narrow it to two?`;
+    const replies=[
+      null,null,
+      [["in","what size would I need?"],["out","Medium, going by "+item+". It sits under it without bunching — here are the two: [link]"]],
+      [["in","already have one thanks"],["out","Fair enough — I'll leave it there. Shout if you want a hand with sizing later."]],
+      [["in","is it warm enough for -5?"],["out","Down to about -3 on its own. Below that people layer it under the shell, which you already have."]]
+    ][i%5];
+    out.push({who,v,item,stage,tier,open,replies,
+      hold: i%9===0 ? "Deferred — already queued for Replenishment this week" : null});
+  }
+  return out;
+}
+let prevN=10, prevList=[];
+function renderPreview(){
+  const g=$("#prevGrid"); if(!g) return;
+  g.innerHTML=prevList.map((c,i)=>`
+    <button class="card pad-md" style="text-align:left;display:flex;flex-direction:column;gap:var(--xs)" data-prev="${i}">
+      <div class="row between gap-xs">
+        <span class="t-md med trunc">${c.who}</span>
+        <span class="tag tag-grey">${c.v.k}</span>
+      </div>
+      <div class="row gap-xxs wrap">
+        <span class="tag tag-grey">${c.stage}</span>
+        <span class="tag ${c.tier==="Gold"||c.tier==="Summit"?"tag-yellow":"tag-blue"}">${c.tier}</span>
+        ${c.hold?`<span class="tag tag-orange">Deferred</span>`:""}
+      </div>
+      <span class="t-sm sec" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${c.open}</span>
+      <span class="t-xs acc med">Read the conversation →</span>
+    </button>`).join("");
+  const byV={}; prevList.forEach(c=>byV[c.v.k]=(byV[c.v.k]||0)+1);
+  const held=prevList.filter(c=>c.hold).length;
+  $("#prevSummary").classList.remove("hidden");
+  $("#prevSummary").innerHTML=
+    Object.entries(byV).map(([k,n])=>`<div class="kv"><span class="k">Variant ${k}</span>
+      <span class="h-md num-t">${n}</span></div>`).join("")
+    +`<div class="kv"><span class="k">Deferred by guardrails</span><span class="h-md num-t">${held}</span>
+       <span class="t-xs ter">collision with another engagement</span></div>
+      <div class="kv"><span class="k">Would send now</span><span class="h-md num-t">${prevList.length-held}</span></div>`;
+}
+function openPreviewConv(i){
+  const c=prevList[i];
+  const thread=[["out",c.open]].concat(c.replies||[]);
+  openPanel(c.who, "Preview · nothing was sent", `
+    <div class="row gap-xs wrap">
+      <span class="tag tag-grey">${c.stage}</span>
+      <span class="tag ${c.tier==="Gold"||c.tier==="Summit"?"tag-yellow":"tag-blue"}">${c.tier}</span>
+      <span class="tag tag-purple">Variant ${c.v.k} · ${c.v.n}</span>
+      ${c.hold?`<span class="tag tag-orange">Deferred</span>`:""}
+    </div>
+    <div class="card pad-md" style="background:var(--blue-50);border-color:var(--blue-100)">
+      <span class="t-sm bold">Why this shopper is in the audience</span>
+      <p class="t-md sec" style="margin-top:var(--xxxs)">Bought ${c.item} last winter, still active, and has never bought a mid-layer.</p>
+    </div>
+    <div class="col gap-xs">
+      <span class="t-sm bold">What the instruction produced</span>
+      <div class="phone">${thread.map(m=>`<div class="bubble ${m[0]}">${m[1]}</div>`).join("")}
+        <span class="bTime">Preview — nothing sent</span></div>
+    </div>
+    ${c.hold?`<div class="banner banner-warn"><div class="col gap-xxxs">
+      <span class="t-md med">This one would wait</span>
+      <span class="t-sm sec">${c.hold}. It goes out once the collision window clears.</span></div></div>`:""}
+    <div class="col gap-xs">
+      <span class="t-sm bold">The instruction behind it</span>
+      <div class="card pad-md" style="background:var(--grey-50)"><span class="t-sm sec">${c.v.ins}</span></div>
+    </div>`,
+    `<button class="btn btn-secondary">Show me another</button>
+     <button class="btn btn-primary">Looks right</button>`);
+}
+
+/* ===================== LOYALTY (overview + configuration) ===================== */
+let loySel={kind:"tier",i:2};
 function renderLoyalty(){
   const tot=TIERS.reduce((a,t)=>a+t.m,0);
+
+  /* ---------- overview ---------- */
+  const members=tot, pts="4.2M", redeem="31%", ltvX="2.4×";
+  $("#loyTiles").innerHTML=[
+    ["Members",fmt(members),Math.round(members/31000*100)+"% of your buyers"],
+    ["Points outstanding",pts,"≈ $42,000 of liability"],
+    ["Redemption rate",redeem,"of points earned in the period"],
+    ["Member vs non-member LTV",ltvX,"$412 against $172"]
+  ].map(x=>`<div class="card pad-md"><div class="t-sm sec">${x[0]}</div>
+      <div class="h-xxl num-t" style="margin-top:2px">${x[1]}</div>
+      <div class="t-sm sec">${x[2]}</div></div>`).join("");
+
   $("#tierBar").innerHTML=TIERS.map(t=>
-    `<span style="width:${(t.m/tot*100)}%;background:${t.c}" title="${t.n}"></span>`).join("");
+    `<span style="width:${t.m/tot*100}%;background:${t.c}" title="${t.n}"></span>`).join("");
   $("#tierLegend").innerHTML=TIERS.map(t=>
     `<span class="legendItem"><span class="srcSwatch" style="background:${t.c}"></span>${t.n} ${fmt(t.m)}</span>`).join("");
+
   const tb=$("#tierTable tbody"); tb.innerHTML="";
-  TIERS.forEach(t=>{
-    const tr=el("tr");
-    tr.className="rowLink";
+  TIERS.forEach((t,i)=>{
+    const tr=el("tr","rowLink");
     tr.innerHTML=`<td><div class="row gap-xs"><span class="srcSwatch" style="background:${t.c};width:10px;height:10px"></span>
         <span class="t-md med">${t.n}</span></div></td>
-      <td class="t-sm sec">${t.at}</td><td class="t-md num-t">${fmt(t.m)}</td>
-      <td class="t-md num-t">${t.aov}</td><td class="t-md num-t bold">${t.ltv}</td>
+      <td class="t-md num-t">${fmt(t.m)}</td>
+      <td class="t-md num-t sec">${(t.m/tot*100).toFixed(0)}%</td>
+      <td class="t-md num-t">${t.aov}</td>
+      <td class="t-md num-t bold">${t.ltv}</td>
       <td class="t-md num-t">${t.ret}</td>
-      <td><span class="tag tag-grey">${t.stage}</span></td>
-      <td><div class="row gap-xs" style="justify-content:flex-end">
-        <button class="btn btn-secondary sm" data-tier="${TIERS.indexOf(t)}">Edit</button>
-        <span class="toggle ${t.ai?"on":""}" data-toggle></span></div></td>`;
+      <td class="t-md num-t sec">${t.pts}</td>
+      <td><span class="tag tag-grey">${t.stage}</span></td>`;
+    tr.addEventListener("click",()=>{loySel={kind:"tier",i};selectTab("loy-config");renderLoyalty()});
     tb.appendChild(tr);
   });
-  const e=$("#earnList"); e.innerHTML="";
-  EARN.forEach(x=>{
-    const r=el("div","row between");
-    r.innerHTML=`<div class="col gap-xxxs" style="max-width:74%"><span class="t-md med">${x.n}</span>
-      <span class="t-sm sec">${x.d}</span></div><span class="toggle ${x.on?"on":""}" data-toggle></span>`;
-    e.appendChild(r);
-  });
+
   const rt=$("#rewardTable tbody"); rt.innerHTML="";
   REWARDS.forEach(x=>{
     const tr=el("tr");
@@ -1980,6 +2350,136 @@ function renderLoyalty(){
       <td class="t-md num-t">${fmt(x.r)}</td><td><span class="toggle ${x.ai?"on":""}" data-toggle></span></td>`;
     rt.appendChild(tr);
   });
+
+  /* ---------- configuration: master ---------- */
+  $("#loyCfgCount").textContent=TIERS.length;
+  const ml=$("#loyList"); ml.innerHTML="";
+  TIERS.forEach((t,i)=>{
+    const on=loySel.kind==="tier"&&loySel.i===i;
+    const b=el("button","lcItem"+(on?" on":""));
+    b.innerHTML=`<span class="bar" style="background:${t.c}"></span>
+      <div class="col gap-xxxs" style="flex:1;min-width:0">
+        <span class="t-md med">${t.n}</span><span class="t-xs ter">${fmt(t.m)} members</span></div>`;
+    b.addEventListener("click",()=>{loySel={kind:"tier",i};renderLoyalty()});
+    ml.appendChild(b);
+  });
+  const pl=$("#loyProgList"); pl.innerHTML="";
+  [["earn","Earn rules",EARN.filter(e=>e.on).length+" active"],
+   ["rewards","Reward catalogue",REWARDS.length+" rewards"]].forEach(([k,n,sub])=>{
+    const on=loySel.kind===k;
+    const b=el("button","lcItem"+(on?" on":""));
+    b.innerHTML=`<span class="bar" style="background:var(--grey-300)"></span>
+      <div class="col gap-xxxs" style="flex:1;min-width:0">
+        <span class="t-md med">${n}</span><span class="t-xs ter">${sub}</span></div>`;
+    b.addEventListener("click",()=>{loySel={kind:k};renderLoyalty()});
+    pl.appendChild(b);
+  });
+
+  /* ---------- configuration: detail ---------- */
+  $("#loyDetail").innerHTML =
+    loySel.kind==="tier" ? tierDetail(TIERS[loySel.i],loySel.i,tot)
+    : loySel.kind==="earn" ? earnDetail() : rewardDetail();
+  if(loySel.kind==="earn") renderEarn();
+}
+
+function tierDetail(t,i,tot){
+  const condRows=(t.cond||[]).map(c=>`
+    <div class="ruleRow">
+      <span class="joinBadge">AND</span>
+      <select class="selectEl"><option selected>${c[0]}</option><option>Orders in the last 12 months</option>
+        <option>Spend in the last 12 months</option><option>Lifetime spend</option>
+        <option>Points balance</option><option>Subscription active</option><option>Returns rate</option></select>
+      <select class="selectEl"><option selected>${c[1]}</option><option>&gt;</option><option>=</option><option>&lt;</option></select>
+      <input class="input" value="${c[2]}">
+      <button class="btn btn-tertiary sm ter">✕</button>
+    </div>`).join("");
+  return `
+    <div class="row between wrap gap-sm">
+      <div class="row gap-xs">
+        <span class="dot" style="background:${t.c};width:10px;height:10px"></span>
+        <h2 class="h-lg">${t.n}</h2>
+        <span class="tag tag-grey">${fmt(t.m)} members · ${(t.m/tot*100).toFixed(0)}%</span>
+      </div>
+      <div class="row gap-xs">
+        <button class="btn btn-secondary sm" data-shoppers="VIP">See the members</button>
+        <button class="btn btn-secondary sm" style="color:var(--content-error-default)">Delete tier</button>
+      </div>
+    </div>
+
+    <div class="card pad">
+      <h3 class="h-md">Who gets in</h3>
+      <p class="t-sm sec" style="margin-bottom:var(--sm)">Recomputed nightly. Moving a threshold moves people on the next run.</p>
+      <div class="col gap-xs">${condRows}</div>
+      <button class="btn btn-secondary sm" style="margin-top:var(--sm)">Add a condition</button>
+    </div>
+
+    <div class="card pad">
+      <h3 class="h-md">What they get</h3>
+      <p class="t-sm sec" style="margin-bottom:var(--md)">The perks the engine can reach for instead of a discount.</p>
+      <div class="grid g-2">
+        <div class="field"><span class="label">Earn rate</span>
+          <select class="selectEl">${["1 point per $1","1.25 points per $1","1.5 points per $1","2 points per $1"]
+            .map(o=>`<option ${o===t.earn?"selected":""}>${o}</option>`).join("")}</select></div>
+        <div class="field"><span class="label">Maps to lifecycle stage</span>
+          <select class="selectEl">${STAGES.map(s=>`<option ${t.stage.includes(s.n)?"selected":""}>${s.n}</option>`).join("")}</select></div>
+      </div>
+      <div class="field" style="margin-top:var(--md)"><span class="label">Perks</span>
+        <textarea class="textarea">${t.perks}</textarea></div>
+      <div class="row between" style="margin-top:var(--md)">
+        <div class="col gap-xxxs" style="max-width:74%">
+          <span class="t-md med">The AI may offer these perks unprompted</span>
+          <span class="t-sm sec">If off, the perks still exist — the engine just won't reach for them in a conversation.</span>
+        </div>
+        <span class="toggle ${t.ai?"on":""}" data-toggle></span>
+      </div>
+    </div>
+
+    <div class="card pad">
+      <h3 class="h-md">This tier today</h3>
+      <div class="grid g-3" style="margin-top:var(--sm)">
+        ${[["Members",fmt(t.m)],["Average order",t.aov],["Lifetime value",t.ltv],
+           ["Repeat rate",t.ret],["Points outstanding",t.pts],["Earn rate",t.earn]]
+          .map(x=>`<div class="card pad-md"><div class="kv"><span class="k">${x[0]}</span>
+            <span class="h-md num-t">${x[1]}</span></div></div>`).join("")}
+      </div>
+    </div>`;
+}
+function earnDetail(){
+  return `
+    <div class="row between wrap gap-sm">
+      <div class="col gap-xxxs"><h2 class="h-lg">Earn rules</h2>
+        <p class="t-sm sec">How members accumulate points. The engine can trigger any of these inside a conversation.</p></div>
+      <button class="btn btn-secondary sm">Add a rule</button>
+    </div>
+    <div class="card pad"><div class="col gap-sm" id="earnList"></div></div>`;
+}
+function renderEarn(){
+  const e=$("#earnList"); if(!e) return;
+  e.innerHTML="";
+  EARN.forEach(x=>{
+    const r=el("div","row between");
+    r.innerHTML=`<div class="col gap-xxxs" style="max-width:74%"><span class="t-md med">${x.n}</span>
+      <span class="t-sm sec">${x.d}</span></div><span class="toggle ${x.on?"on":""}" data-toggle></span>`;
+    e.appendChild(r);
+  });
+}
+function rewardDetail(){
+  return `
+    <div class="row between wrap gap-sm">
+      <div class="col gap-xxxs"><h2 class="h-lg">Reward catalogue</h2>
+        <p class="t-sm sec">Turn off anything you don't want the AI offering unprompted. Your cost is the number that should decide it.</p></div>
+      <button class="btn btn-secondary sm">Add a reward</button>
+    </div>
+    <div class="card" style="overflow:hidden">
+      <table class="inner">
+        <thead><tr><th>Reward</th><th>Points</th><th>Your cost</th><th>Redeemed · 30d</th><th style="width:110px">AI may offer</th></tr></thead>
+        <tbody>${REWARDS.map(x=>`<tr>
+          <td class="t-md med">${x.n}</td><td class="t-sm sec">${x.p}</td>
+          <td class="t-sm ${x.cost==="$0"?"":"sec"}" ${x.cost==="$0"?'style="color:var(--content-success-default)"':''}>${x.cost}</td>
+          <td class="t-md num-t">${fmt(x.r)}</td>
+          <td><span class="toggle ${x.ai?"on":""}" data-toggle></span></td></tr>`).join("")}</tbody>
+      </table>
+    </div>`;
 }
 
 /* =======================================================================
@@ -2066,6 +2566,9 @@ document.addEventListener("click",e=>{
   const ex=e.target.closest("[data-excl]");
   if(ex){const i=+ex.dataset.excl;EXCLUSIONS[i].on=!EXCLUSIONS[i].on;renderExclusions();return}
 
+  const pv=e.target.closest("[data-prev]");
+  if(pv){openPreviewConv(+pv.dataset.prev);return}
+
   const ws=e.target.closest("[data-wizsend]");
   if(ws){wizSend(+ws.dataset.wizsend);return}
   const wg=e.target.closest("[data-wizgo]");
@@ -2074,7 +2577,15 @@ document.addEventListener("click",e=>{
   if(wsp){wizStep=+wsp.dataset.step;renderWiz();return}
 
   const tn=e.target.closest("[data-tier]");
-  if(tn){openTier(tn.dataset.tier==="new"?null:+tn.dataset.tier);return}
+  if(tn){
+    if(tn.dataset.tier==="new"){
+      TIERS.push({n:"New tier",at:"—",m:0,stage:"VIP",perks:"",ai:true,c:"var(--purple-300)",
+        cond:[["Spend in the last 12 months","≥","$1,200"],["Orders in the last 12 months","≥","5"]],
+        earn:"1.5 points per $1",aov:"—",ltv:"—",ret:"—",pts:"—"});
+      loySel={kind:"tier",i:TIERS.length-1};
+    } else loySel={kind:"tier",i:+tn.dataset.tier};
+    selectTab("loy-config"); renderLoyalty(); return;
+  }
 
   const sh=e.target.closest("[data-shoppers]");
   if(sh){openShoppers(sh.dataset.shoppers);return}
@@ -2317,6 +2828,7 @@ function wizSend(n){
   setTimeout(()=>{
     $("#wizAck"+n).classList.remove("hidden");
     const res=$("#w"+n+"Result"); if(res) res.style.display="";
+    if(n===3){const p=$("#w3Preview"); if(p) p.style.display=""}
   },500);
 }
 
@@ -2537,15 +3049,29 @@ function studioForDomain(i){
       : "ACE writes this domain from your brand profile and the shopper's own history. Add an instruction here only if this domain needs something the rest of your account doesn't."});
 }
 
+$$("#prevVol button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#prevVol button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  prevN=+b.dataset.n; if(prevList.length){prevList=genPreview(prevN);renderPreview()}
+}));
+$("#prevGo").addEventListener("click",()=>{
+  const b=$("#prevGo"); b.textContent="Generating…"; b.disabled=true;
+  setTimeout(()=>{prevList=genPreview(prevN);renderPreview();b.textContent="Regenerate";b.disabled=false},650);
+});
+
 /* boot */
-legend($("#legVol"));
-legend($("#legCvr"),`<span class="legendItem ter" style="margin-left:auto">ACE started week 3</span>`);
-function drawCharts(){stackedBars($("#chartVol"),VOL);lines($("#chartCvr"),CVR)}
-drawCharts();
-let rz; addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(drawCharts,120)});
-dataTable($("#tableVol"),VOL);
-dataTable($("#tableCvr"),CVR,"%");
-renderBench(); renderRev();
+$("#repMetric").innerHTML=Object.entries(METRICS).map(([k,m])=>
+  `<option value="${k}" ${k===rep.metric?"selected":""}>${m.label}</option>`).join("");
+$("#repDim").innerHTML=Object.entries(DIMS).map(([k,d])=>
+  `<option value="${k}" ${k===rep.dim?"selected":""}>${d.label}</option>`).join("");
+$("#repMetric").addEventListener("change",e=>{rep.metric=e.target.value;renderReport()});
+$("#repDim").addEventListener("change",e=>{rep.dim=e.target.value;renderReport()});
+$$("#repView button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#repView button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  rep.view=b.dataset.v; renderReport();
+}));
+let rz; addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(renderReport,120)});
+
+renderReport(); renderBench();
 renderEng(); renderAce(); renderCampaigns(); renderRules(); renderVariants();
 renderGuardrails(); renderExclusions(); renderLifecycle();
 renderConv(); renderWiz(); renderLoyalty();

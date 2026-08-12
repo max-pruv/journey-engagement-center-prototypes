@@ -23,15 +23,15 @@ Each is a `<section class="page">`; `goto(page)` unhides one and hides the rest.
 
 | id | Nav item | Rendered by |
 | --- | --- | --- |
-| `page-overview` | Overview | `renderRev`, `renderBench`, `drawCharts`, `dataTable` |
+| `page-overview` | Reporting | `renderReport` → `renderTiles`, `renderRevTable`, `stackedBars`/`lines`/`hBars`; plus `renderBench` |
 | `page-engagements` | Engagements | `renderAce` (AI tab), `renderEng` (Custom tab) |
 | `page-campaigns` | Campaigns | `renderCampaigns` |
 | `page-campaign-new` | (via Create) | `renderWiz`, `renderRules`, `renderVariants` |
-| `page-guardrails` | Guardrails | `renderGuardrails`, `renderExclusions` |
+| `page-guardrails` | Guardrails | `renderGuardrails` (master/detail over `GR_CATS`) → `renderSuppression`, `renderExclusions` |
 | `page-lifecycle` | Lifecycle | `renderLifecycle` |
 | `page-conversations` | Conversations | `renderConv`, `renderThread` |
-| `page-loyalty` | Loyalty | `renderLoyalty` |
-| `page-soon` | Performance, Brand profile | — placeholder |
+| `page-loyalty` | Loyalty | `renderLoyalty` — overview tab plus a master/detail over tiers, earn rules and rewards |
+| `page-soon` | — | placeholder for anything not built |
 
 `NAV_OF` maps a page to the nav item that should look active — that's how `campaign-new` keeps
 Campaigns highlighted.
@@ -53,9 +53,34 @@ Change these, not the markup, when you want different content.
 | `OBJECTIVES`, `DISCOUNTS`, `CAP_UNITS` | The dropdown option lists on a lifecycle stage |
 | `SUPPRESSION` / `EXCLUSIONS` | The two guardrail blocks — timing vs people. `locked: true` means it can't be toggled |
 | `TIERS`, `EARN`, `REWARDS` | Loyalty. Tiers carry structured `cond` rows so the editor opens populated |
-| `VOL`, `CVR`, `WEEKS`, `REV`, `BENCH` | Overview charts and the revenue table |
+| `DIMS` | The reporting dimensions. Each member carries a weekly base, a growth rate and **its own rates** — every number on the page is derived from those, so no two figures can disagree |
+| `METRICS` | The ten outbound metrics, each with a kind (`count` / `money` / `rate`) and a direction |
+| `GR_CATS` | The seven guardrail categories driving the master/detail |
+| `WEEKS`, `BENCH` | The 12-week axis and the benchmark rows |
 | `CAMPAIGNS`, `VARIANTS`, `RULES`, `WIZ`, `WIZ_CHECKS` | Campaigns list and the wizard |
 | `SIM_SHOPPERS` | The shoppers you can run a live test against |
+| `PREV_*` | Word pools for `genPreview(n)`, the pre-launch campaign preview |
+
+## The reporting engine
+
+`DIMS[dim].members[i]` holds a weekly base, a growth rate and per-member rates. `prim(m,i,w)`
+expands that into six primitives for one week — reached, replies, clicks, orders, optouts, gmv.
+Everything else is derived:
+
+- `metricAt(key,m,i,w)` — one member, one week
+- `metricTotal(key,m,i)` — one member over the period
+- `fromTotals(key,totals)` — a metric from summed primitives
+
+**Rates are always re-derived from period totals, never averaged across weeks.** That is why the
+chart, the tiles and the revenue table can never disagree — there is one source of truth and three
+projections of it. There is a test for this in WORKFLOW.md.
+
+`repSeries()` takes the top four members and folds the rest into `Other`, re-deriving Other's
+values from primitives so its rates stay honest.
+
+**Colour is bound to the member, not to its rank.** Assignment happens once at load: the four
+biggest members of each dimension take the four categorical hues, everything else is `--dv-other`.
+Changing metric or view can never repaint a series.
 
 ## Mutable state
 
@@ -92,10 +117,17 @@ generate at 1:1 so text doesn't get downscaled; `drawCharts()` re-runs on a debo
 have hover tooltips through a shared `#tip`, and both have a table view via the `data-view`
 segmented control.
 
-**Palette.** `--dv-default #0d6cf2`, `--dv-custom #c35e4a`, `--dv-ace #7e55f6` — Axiom steps that
-pass all six dataviz checks (lightness band, chroma floor, CVD ΔE, normal-vision floor, contrast).
-The set is also on `<body data-palette>`. **If you change a series colour, re-run the validator**
-(see WORKFLOW.md); don't eyeball it.
+**Palette.** `--dv-1 #7e55f6` (purple, ACE) · `--dv-2 #c35e4a` (coral) · `--dv-3 #149db8` (teal,
+Default) · `--dv-4 #0e4ea7` (blue), plus `--dv-other #b3b8c1`. Axiom steps validated **on all
+pairs**, not just adjacent ones — the earlier blue/purple pairing failed the normal-vision floor
+(ΔE 11.5, under 15) and was genuinely hard to tell apart in the line chart. The set is on
+`<body data-palette>`. **If you change a series colour, re-run the validator** (see WORKFLOW.md);
+don't eyeball it.
+
+**Stat tiles** match the Gorgias metric card: label, info icon and a `+`, a large tabular number,
+a delta whose direction comes from a rotated arrow rather than from colour, and a full-bleed
+`sparkline()` with a gradient fill. They are **read-only and account-wide** — deliberately
+independent of the report below them.
 
 Stacked bars put the 2px gap on the *top* of each segment except the topmost, so the bottom segment
 stays anchored to the baseline. Only the topmost segment gets the 4px rounded end.
@@ -111,6 +143,20 @@ stays anchored to the baseline. Only the topmost segment gets the 4px rounded en
   per-node listeners, so they survive a re-render.
 - Copy is plain English, no em-dash-free rule but no jargon either. It reads like a colleague
   explaining the product, because half the prototype's job is the copy.
+
+## Ranked and table views
+
+`hBars` is a single-measure chart, so it uses one hue — ranking is magnitude, not identity. The
+table view is not a nicety: the dataviz rules require a table alternative wherever colour carries
+meaning.
+
+## The campaign preview
+
+`genPreview(n)` builds n plausible conversations from word pools, splitting the variants the way the
+wave would and marking roughly one in nine as deferred by a collision. It is index-driven, so the
+same n always produces the same set. `openPreviewConv(i)` opens one as a full thread with the
+instruction that produced it. Nothing about it is a simulation of the model — it exists so a
+merchant can see the shape and tone of what a campaign would send before committing.
 
 ## Known dead ends
 

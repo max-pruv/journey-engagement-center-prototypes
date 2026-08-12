@@ -39,8 +39,12 @@ trigger.
 
 ## Not built
 
-- **Performance** and **Brand profile** are nav placeholders.
-- **Overview** has no date-range behaviour; the selector is decorative.
+- **Brand profile** is a nav placeholder. Performance was removed — Reporting covers it.
+- **Reporting** has no date-range behaviour; the selector is decorative. The dimensions are
+  independent partitions with their own bases, so totals differ between them; in the real product
+  they would all partition the same account.
+- **Onboarding** (`onboarding.html`) is scripted: the chips prefill an answer and any typed text is
+  accepted, but nothing is parsed. It argues for a shape, not a flow.
 - **Rule builder** rows render but don't compose or affect the audience estimate.
 - **Shopper profile** is a stand-in panel. In the product it opens in a new tab; the prototype says
   so rather than faking it.

@@ -1,8 +1,8 @@
 # CLAUDE.md
 
 A clickable UI/UX prototype for configuring **AI Journey** on a merchant account, in the Gorgias
-**Axiom** design system. One self-contained `index.html`, ~2,550 lines, no build, no dependencies,
-no network calls. Public at
+**Axiom** design system. Two self-contained pages — `index.html` (the product) and `onboarding.html`
+(a conversational first-run setup) — no build, no dependencies, no network calls. Public at
 https://max-pruv.github.io/journey-engagement-center-prototypes/ — pushing to `main` deploys.
 
 Owner: Max Pruvost, VP of Product, R&D. The prototype is a **spec you can operate**, used to align
@@ -41,8 +41,11 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
   deliberately removed when the repo went public. Do not reintroduce them.
 - **Axiom tokens only** — no hex colours, no off-scale spacing, type through the `.h-*` / `.t-*`
   classes.
-- **The chart palette is validated**, not chosen by eye: `#0d6cf2` / `#c35e4a` / `#7e55f6`. If you
-  change a series colour, re-run the dataviz validator and keep all six checks passing.
+- **The chart palette is validated on ALL pairs**, not chosen by eye:
+  `#7e55f6` / `#c35e4a` / `#149db8` / `#0e4ea7`. Re-run the validator with `--pairs all` if you
+  touch it. Colour is bound to the entity, never to its rank.
+- **Everything in Reporting derives from six weekly primitives per member.** Never hand-write a
+  total; if the chart and the table can disagree, the change is wrong.
 - **New interactive elements use `data-*` attributes and the delegated document click handler**, not
   per-node listeners — they must survive a re-render.
 
@@ -55,6 +58,7 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
 - **Suppression is timing; exclusion is people.** Two different blocks, deliberately.
 - **Loyalty is the lever that's cheaper than margin** — which is why it lives inside the Engagement
   Center.
+- **KPI cards are read-only and account-wide** — deliberately independent of the report below them.
 - **Conversations is one row per person**, led by why it started and what the engine reasoned from.
   Approvals live there; there is no separate queue.
 
