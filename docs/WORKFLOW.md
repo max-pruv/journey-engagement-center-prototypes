@@ -30,7 +30,7 @@ out._dom={tiles:n('#repTiles .tile'),chart:n('#repChart svg'),rev:n('#revTable t
  levers:n('#lcDetail .lever'),modes:n('.modeBig'),
  domRows:n('#aceDomainTable tbody tr.domRow'),playRows:n('#aceDomainTable tbody tr.playRow'),
  conv:n('#convItems .convItem'),tiers:n('#tierTable tbody tr'),eng:n('#engTable tbody tr'),
- channelCards:n('#channelCards .card')};
+ chList:n('#chList .lcItem'),chDetail:n('#chDetail .card')};
 return JSON.stringify(out)})()
 ```
 
@@ -166,8 +166,8 @@ done
    engagement — they render different When blocks; the custom-engagement one also has the
    sentence/rules toggle), confirm the studio opens single-column with testing collapsed and that
    "Test this skill" / "Run test" both widen it correctly, a theme row's click-to-expand and a
-   play's own switch, the Guardrails category list, the Channels page's per-card toggles, and the
-   Lifecycle stage detail
+   play's own switch, the Guardrails category list, the Channels list (including a channel with
+   `extra` settings, like Email), and the Lifecycle stage detail
 6. Load the page with a page name in the hash (e.g. `#loyalty`) and confirm it opens straight there;
    click a nav item and confirm the address bar's hash updates to match. For Engagements and
    Loyalty, also load a `#page/tab` hash (e.g. `#engagements/scenarios`) and confirm it opens on

@@ -904,7 +904,10 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </header>
 
         <div class="zone top">
-          <div class="grid g-2" id="channelCards"></div>
+          <div class="lcWrap">
+            <div class="lcList" id="chList"></div>
+            <div class="col gap-md" id="chDetail"></div>
+          </div>
 
           <div class="card pad-md">
             <div class="row between gap-md">
@@ -2314,50 +2317,66 @@ const GR_CATS=[
 
 /* Channels is its own page, deliberately separate from Guardrails — a
    channel is where a message goes and who it's sent as, not a limit on
-   what an engagement may do. One card per channel; `extra` holds settings
+   what an engagement may do. Master/detail, the same shape Guardrails and
+   Lifecycle already use, so picking a channel works the same way picking a
+   guardrail category or a lifecycle stage does. `extra` holds settings
    that only make sense for that one channel (e.g. Email's quiet-hours
-   exemption), so they live where a merchant is already looking, not in a
-   shared list further down the page. */
+   exemption), so they live in its detail rather than a shared list. */
 const CHANNELS=[
-  {n:"SMS",d:"Text-only. Works everywhere and is the fallback for every other channel.",on:true,locked:true,
+  {n:"SMS",c:"var(--blue-200)",d:"Text-only. Works everywhere and is the fallback for every other channel.",on:true,locked:true,
    sends:["AlpineSupply · short code 78-2001","+1 415 555 0134 · long code"],status:"Verified",tag:"tag-green"},
-  {n:"RCS",d:"Rich media, buttons and read receipts, where the carrier and device support it. Falls back to SMS automatically when it isn't.",on:true,
+  {n:"RCS",c:"var(--teal-200)",d:"Rich media, buttons and read receipts, where the carrier and device support it. Falls back to SMS automatically when it isn't.",on:true,
    sends:["Alpine Supply Co. · verified brand agent"],status:"Verified",tag:"tag-green"},
-  {n:"Email",d:"Best for longer or receipt-style sends — a different medium, not a shorter SMS.",on:true,
+  {n:"Email",c:"var(--green-300)",d:"Best for longer or receipt-style sends — a different medium, not a shorter SMS.",on:true,
    sends:["hello@alpinesupply.example.com"],status:"Domain verification pending",tag:"tag-orange",
    extra:[["Exempt from quiet hours","An inbox doesn't buzz in someone's pocket the way a text does — let Email send on the engine's normal schedule instead of waiting for the SMS/RCS window in Guardrails → Timing.",false],
           ["Always include an unsubscribe link","Legal requirement, separate from the SMS/RCS opt-out line in Guardrails → Content.",true,true]]},
-  {n:"Instagram",d:"DMs to shoppers who've messaged the account or opted in from an ad. Short, casual, image-friendly.",on:false,
+  {n:"Instagram",c:"var(--coral-400)",d:"DMs to shoppers who've messaged the account or opted in from an ad. Short, casual, image-friendly.",on:false,
    sends:["@alpinesupplyco"],status:"Not connected",tag:"tag-grey"},
-  {n:"Messenger",d:"Facebook DMs — the same audience shape as Instagram, a different app.",on:false,
+  {n:"Messenger",c:"var(--purple-200)",d:"Facebook DMs — the same audience shape as Instagram, a different app.",on:false,
    sends:["Alpine Supply Co."],status:"Not connected",tag:"tag-grey"},
-  {n:"TikTok",d:"DMs to shoppers who follow or have engaged with the account.",on:false,
+  {n:"TikTok",c:"var(--grey-300)",d:"DMs to shoppers who follow or have engaged with the account.",on:false,
    sends:["@alpinesupplyco"],status:"Not connected",tag:"tag-grey"},
-  {n:"TikTok Shop",d:"Order and shipping updates tied to a TikTok Shop purchase.",on:false,
+  {n:"TikTok Shop",c:"var(--orange-300)",d:"Order and shipping updates tied to a TikTok Shop purchase.",on:false,
    sends:["Alpine Supply Co. Shop"],status:"Not connected",tag:"tag-grey",
    note:"Transactional only — TikTok Shop's own policy restricts this channel to order and shipping updates, so it never carries marketing content regardless of the skill."}
 ];
+let chSel=0;
 function renderChannels(){
-  const host=$("#channelCards"); if(!host) return;
-  host.innerHTML=CHANNELS.map(ch=>`
-    <div class="card pad-md">
-      <div class="row between gap-md">
-        <div class="col gap-xxxs"><span class="h-sm">${ch.n}</span>
-          <span class="t-sm sec">${ch.d}</span></div>
+  const l=$("#chList"); if(!l) return;
+  l.innerHTML="";
+  CHANNELS.forEach((ch,i)=>{
+    const b=el("button","lcItem"+(i===chSel?" on":""));
+    b.innerHTML=`<span class="bar" style="background:${ch.c}"></span>
+      <div class="col gap-xxxs" style="flex:1;min-width:0">
+        <span class="t-md med">${ch.n}</span>
+        <span class="t-xs ter">${ch.on?"On":"Off"} · ${ch.status}</span></div>`;
+    b.addEventListener("click",()=>{chSel=i;renderChannels()});
+    l.appendChild(b);
+  });
+  const ch=CHANNELS[chSel];
+  $("#chDetail").innerHTML=`
+    <div class="col gap-xxxs">
+      <div class="row between wrap gap-sm">
+        <div class="row gap-xs">
+          <span class="dot" style="background:${ch.c};width:10px;height:10px"></span>
+          <h2 class="h-lg">${ch.n}</h2>
+        </div>
         <span class="toggle ${ch.on?"on":""}" ${ch.locked?'style="opacity:.55;pointer-events:none"':"data-toggle"}></span>
       </div>
-      <div class="sepH" style="margin:var(--sm) 0"></div>
+      <p class="t-md sec">${ch.d}</p>
+    </div>
+    <div class="card pad"><div class="col gap-sm">
       <div class="field"><span class="label">Sends as</span>
         <select class="selectEl">${ch.sends.map(s=>`<option>${s}</option>`).join("")}<option>Add a new one…</option></select></div>
-      <span class="tag ${ch.tag}" style="width:fit-content;margin-top:var(--xs)">${ch.status}</span>
-      ${ch.note?`<p class="t-xs ter" style="margin-top:var(--xs)">${ch.note}</p>`:""}
-      ${ch.extra?`<div class="sepH" style="margin:var(--sm) 0"></div>
-        <div class="col gap-sm">${ch.extra.map(t=>`<div class="row between gap-md">
-          <div class="col gap-xxxs" style="max-width:76%"><span class="t-md med">${t[0]}</span>
-            <span class="t-sm sec">${t[1]}</span></div>
-          <span class="toggle ${t[2]?"on":""}" ${t[3]?'style="opacity:.55;pointer-events:none"':"data-toggle"}></span>
-        </div>`).join("")}</div>`:""}
-    </div>`).join("");
+      <span class="tag ${ch.tag}" style="width:fit-content">${ch.status}</span>
+      ${ch.note?`<p class="t-sm ter">${ch.note}</p>`:""}
+      ${ch.extra?`<div class="sepH"></div>${ch.extra.map(t=>`<div class="row between gap-md">
+        <div class="col gap-xxxs" style="max-width:76%"><span class="t-md med">${t[0]}</span>
+          <span class="t-sm sec">${t[1]}</span></div>
+        <span class="toggle ${t[2]?"on":""}" ${t[3]?'style="opacity:.55;pointer-events:none"':"data-toggle"}></span>
+      </div>`).join("")}`:""}
+    </div></div>`;
 }
 
 function renderProductOpportunities(surface,hostId){

@@ -220,13 +220,18 @@ unless nothing leads by more than 5%, in which case hold and say so.
 
 Three suppression rules and two exclusion rules are locked and cannot be turned off.
 
-## 9b. Channels is its own page, one card per channel
+## 9b. Channels is its own page, master/detail like Lifecycle
 
-**Decision.** Seven channels — SMS, RCS, Email, Instagram, Messenger, TikTok, TikTok Shop — each
-get their own card on a dedicated **Channels** page, not a row in a shared list. A card holds:
+**Decision.** Seven channels — SMS, RCS, Email, Instagram, Messenger, TikTok, TikTok Shop — sit in
+a list on a dedicated **Channels** page; clicking one opens its detail on the right. Same shape as
+Lifecycle's stage list and Guardrails' category list, deliberately: a merchant who already knows
+how to pick a lifecycle stage or a guardrail category doesn't have to learn a new pattern to pick a
+channel. The list row carries the channel's name and a one-line status (`On · Verified`,
+`Off · Not connected`) so the whole set is scannable without opening any of them. A channel's
+detail holds:
 
-- **A switch.** SMS is locked on — it's what RCS and every social DM channel falls back to, so
-  turning it off isn't a real choice. Everything else is a real toggle.
+- **A switch**, next to the heading. SMS is locked on — it's what RCS and every social DM channel
+  falls back to, so turning it off isn't a real choice. Everything else is a real toggle.
 - **"Sends as,"** a picker over the identities already connected for that channel (a short code or
   long code for SMS, a verified brand agent for RCS, a from-address for Email, a handle or page
   name for the social channels) — not a free-text field, because a merchant doesn't type a sender
@@ -234,31 +239,29 @@ get their own card on a dedicated **Channels** page, not a row in a shared list.
 - **A status tag** — `Verified`, `Domain verification pending`, `Not connected` — the same "Needs
   setup" honesty Engagements uses for a play with no integration behind it (§3b), applied here to a
   channel with no connection yet.
-- **Settings that only make sense for that one channel**, inside its own card rather than a shared
-  list further down the page. Today that's Email's two: exempt from Timing's quiet hours (off by
-  default — an inbox doesn't buzz in someone's pocket the way a text does, but that's a merchant's
-  call, not an assumption) and a locked, legally-required unsubscribe line, separate from the
-  SMS/RCS opt-out line in Guardrails → Content. TikTok Shop carries a note instead of a toggle: its
-  own platform policy restricts it to order and shipping updates, so it never carries marketing
-  content regardless of the skill.
+- **Settings that only make sense for that one channel**, inside its own detail rather than a
+  shared list. Today that's Email's two: exempt from Timing's quiet hours (off by default — an
+  inbox doesn't buzz in someone's pocket the way a text does, but that's a merchant's call, not an
+  assumption) and a locked, legally-required unsubscribe line, separate from the SMS/RCS opt-out
+  line in Guardrails → Content. TikTok Shop carries a note instead of a toggle: its own platform
+  policy restricts it to order and shipping updates, so it never carries marketing content
+  regardless of the skill.
 
-Below the cards, one account-wide setting: **"Optimize for"** decides which channel goes first when
-a shopper can receive more than one — *Best chance of success* (richest channel first),
-*Lowest cost* (cheapest first), or *Fastest delivery* (SMS first). Each option states the order it
-implies rather than hiding it behind a label, and it never overrides a channel a merchant has
-switched off above.
+Below the list, one account-wide setting that stays visible regardless of which channel is
+selected: **"Optimize for"** decides which channel goes first when a shopper can receive more than
+one — *Best chance of success* (richest channel first), *Lowest cost* (cheapest first), or
+*Fastest delivery* (SMS first). Each option states the order it implies rather than hiding it
+behind a label, and it never overrides a channel a merchant has switched off in the list.
 
-**What it replaced.** The first pass put Channels inside Guardrails, as one more master/detail
-category next to Frequency and Timing. That was the wrong instinct: a guardrail is a limit on what
-an engagement may do; a channel is where a message goes and who it's sent as — a different kind of
-decision, made by a different part of the org, and conflating them made both harder to scan. It
-also modelled the multi-channel choice as a hardcoded "fallback order," which doesn't hold once
-cost matters as much as reach — "Optimize for" replaced it once that was pointed out.
-
-**Why cards, not a table.** A row-per-channel table reads fine for three channels; at seven, with
-Email needing two extra settings no other channel has, a table either grows extra columns nobody
-else uses or hides them behind a click. A card per channel scales the same way regardless of how
-many channels get added, and keeps a channel's own settings physically next to its own switch.
+**What it replaced.** Two passes before this one. The first put Channels inside Guardrails, as one
+more master/detail category next to Frequency and Timing — wrong because a guardrail is a limit on
+what an engagement may do, and a channel is where a message goes and who it's sent as; conflating
+them made both harder to scan. The second gave Channels its own page but as a grid of cards, one
+per channel, each holding its own switch, sender picker and settings. That felt native for three
+channels; once social channels made it seven, cards of uneven height (Email's two extra settings
+against everyone else's none) stopped reading as one coherent list. Master/detail — the same shape
+Lifecycle already uses for seven stages — scales the way a card grid didn't, and it means a
+merchant never has to learn a second pattern for "pick one thing, see its settings."
 
 **What it deliberately doesn't do.** It doesn't re-litigate consent — "no valid consent on file" is
 already a locked Suppression rule in Guardrails, and it applies the same way regardless of channel.
