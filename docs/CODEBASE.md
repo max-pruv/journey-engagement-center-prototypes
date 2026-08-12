@@ -43,6 +43,7 @@ there.
 | `page-campaigns` | Campaigns | `renderCampaigns` |
 | `page-campaign-new` | (via Create) | `resetWizard` → `askTurn`/`campAnswer` drive a linear script (`WIZARD`), rendering `renderRules`/`renderVariants` inline as cards |
 | `page-guardrails` | Guardrails | `renderGuardrails` (master/detail over `GR_CATS`) → `renderSuppression`, `renderExclusions` |
+| `page-channels` | Channels | `renderChannels` — one card per `CHANNELS` entry, not a master/detail |
 | `page-lifecycle` | Lifecycle | `renderLifecycle` |
 | `page-conversations` | Conversations | `renderConv`, `renderThread` |
 | `page-loyalty` | Loyalty | `renderLoyalty` — overview tab plus a master/detail over tiers, earn rules and rewards |
@@ -74,7 +75,8 @@ Change these, not the markup, when you want different content.
 | `OPPORTUNITIES` | The cross-product conversational opportunity inbox, including evidence, impact, proposal fields and action routing |
 | `DIMS` | The reporting dimensions. Each member carries a weekly base, a growth rate and **its own rates** — every number on the page is derived from those, so no two figures can disagree. `source` is ACE / Custom / Campaign; ACE absorbed the old `Default` volume when the standard engagements became plays |
 | `METRICS` | The ten outbound metrics, each with a kind (`count` / `money` / `rate`) and a direction |
-| `GR_CATS` | The eight guardrail categories driving the master/detail. A category is built from optional pieces — `fields` (short value inputs), `toggles`, `select`, plus per-category special blocks (`levers`, `banned`, `list`, `kill`, `senders`) — `renderGuardrails` checks each and appends the matching markup, so a new category is additive: reuse the pieces that fit, skip the rest |
+| `GR_CATS` | The seven guardrail categories driving the master/detail. A category is built from optional pieces — `fields` (short value inputs), `toggles`, `select`, plus per-category special blocks (`levers`, `banned`, `list`, `kill`) — `renderGuardrails` checks each and appends the matching markup, so a new category is additive: reuse the pieces that fit, skip the rest |
+| `CHANNELS` | The seven channel cards on the Channels page — SMS through TikTok Shop. `sends` is the list of already-connected identities the "Sends as" picker offers; `extra` (optional) is settings that only apply to that one channel, e.g. Email's quiet-hours exemption |
 | `WEEKS`, `BENCH` | The 12-week axis and the benchmark rows |
 | `CAMPAIGNS`, `CAMP_METRICS`, `VARIANTS`, `RULES`, `WIZ`, `WIZ_CHECKS` | Campaigns list, selectable performance columns and the wizard |
 | `SIM_SHOPPERS` | The shoppers you can run a live test against |

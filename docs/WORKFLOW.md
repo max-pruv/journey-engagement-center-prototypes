@@ -22,14 +22,15 @@ render function in isolation and reports which one breaks:
 (()=>{const out={};
 [['report',renderReport],['bench',renderBench],['eng',renderEng],['ace',renderAce],
  ['camp',renderCampaigns],['rules',renderRules],['variants',renderVariants],['guard',renderGuardrails],
- ['lc',renderLifecycle],['conv',renderConv],['wiz',renderWiz],['loy',renderLoyalty]]
+ ['channels',renderChannels],['lc',renderLifecycle],['conv',renderConv],['wiz',renderWiz],['loy',renderLoyalty]]
  .forEach(([k,f])=>{try{f();out[k]='ok'}catch(e){out[k]=e.message.slice(0,60)}});
 const n=s=>document.querySelectorAll(s).length;
 out._dom={tiles:n('#repTiles .tile'),chart:n('#repChart svg'),rev:n('#revTable tbody tr'),
  grList:n('#grList .lcItem'),grDetail:n('#grDetail .card'),lc:n('#lcList .lcItem'),
  levers:n('#lcDetail .lever'),modes:n('.modeBig'),
  domRows:n('#aceDomainTable tbody tr.domRow'),playRows:n('#aceDomainTable tbody tr.playRow'),
- conv:n('#convItems .convItem'),tiers:n('#tierTable tbody tr'),eng:n('#engTable tbody tr')};
+ conv:n('#convItems .convItem'),tiers:n('#tierTable tbody tr'),eng:n('#engTable tbody tr'),
+ channelCards:n('#channelCards .card')};
 return JSON.stringify(out)})()
 ```
 
@@ -165,7 +166,8 @@ done
    engagement — they render different When blocks; the custom-engagement one also has the
    sentence/rules toggle), confirm the studio opens single-column with testing collapsed and that
    "Test this skill" / "Run test" both widen it correctly, a theme row's click-to-expand and a
-   play's own switch, the Guardrails category list and the Lifecycle stage detail
+   play's own switch, the Guardrails category list, the Channels page's per-card toggles, and the
+   Lifecycle stage detail
 6. Load the page with a page name in the hash (e.g. `#loyalty`) and confirm it opens straight there;
    click a nav item and confirm the address bar's hash updates to match. For Engagements and
    Loyalty, also load a `#page/tab` hash (e.g. `#engagements/scenarios`) and confirm it opens on

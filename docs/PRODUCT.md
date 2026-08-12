@@ -220,34 +220,49 @@ unless nothing leads by more than 5%, in which case hold and say so.
 
 Three suppression rules and two exclusion rules are locked and cannot be turned off.
 
-## 9b. Channels join Guardrails, not a new page
+## 9b. Channels is its own page, one card per channel
 
-**Decision.** SMS, RCS and Email get a category in the same master/detail list as Frequency and
-Timing, rather than a settings screen of their own. Four things live there:
+**Decision.** Seven channels — SMS, RCS, Email, Instagram, Messenger, TikTok, TikTok Shop — each
+get their own card on a dedicated **Channels** page, not a row in a shared list. A card holds:
 
-- **Enablement**, one switch per channel. SMS is locked on — it is what RCS and Email fall back to
-  when they can't be used, so turning it off isn't a real choice.
-- **A fallback order** (`RCS → SMS → Email` by default) — the engine tries the richest channel a
-  shopper can actually receive and only steps down the list on failure, the same "try the best,
-  fail down" idea Timing already applies to the hour it sends.
-- **One channel-specific override of another category:** Email is exempt from Timing's quiet hours
-  by default, off. An inbox doesn't interrupt the way a text does, so holding Email to the same
-  21:00–09:00 window as SMS/RCS is a stricter rule than the medium calls for — but it stays a
-  merchant's call, not an assumption baked into the engine.
-- **Sender identity**, read-only: what a shopper actually sees a message arrive as (short code,
-  verified RCS agent name, from-address) and whether it's verified — the same "Needs setup" honesty
-  Engagements uses for a play with no integration behind it (§3b), applied to a channel with no
-  verified sender.
+- **A switch.** SMS is locked on — it's what RCS and every social DM channel falls back to, so
+  turning it off isn't a real choice. Everything else is a real toggle.
+- **"Sends as,"** a picker over the identities already connected for that channel (a short code or
+  long code for SMS, a verified brand agent for RCS, a from-address for Email, a handle or page
+  name for the social channels) — not a free-text field, because a merchant doesn't type a sender
+  identity, they select one that's already been set up.
+- **A status tag** — `Verified`, `Domain verification pending`, `Not connected` — the same "Needs
+  setup" honesty Engagements uses for a play with no integration behind it (§3b), applied here to a
+  channel with no connection yet.
+- **Settings that only make sense for that one channel**, inside its own card rather than a shared
+  list further down the page. Today that's Email's two: exempt from Timing's quiet hours (off by
+  default — an inbox doesn't buzz in someone's pocket the way a text does, but that's a merchant's
+  call, not an assumption) and a locked, legally-required unsubscribe line, separate from the
+  SMS/RCS opt-out line in Guardrails → Content. TikTok Shop carries a note instead of a toggle: its
+  own platform policy restricts it to order and shipping updates, so it never carries marketing
+  content regardless of the skill.
 
-**Why a category, not a page.** Every other constraint on what ACE and custom engagements may do
-already lives in Guardrails — frequency, timing, offers, content. Which channel a message can use,
-and what it's allowed to do there, is the same kind of constraint. A new nav item for three toggles
-and a sender table would be the single-purpose-screen mistake §1 and §7 both argue against; this
-fits the master/detail Guardrails already has, with zero new plumbing.
+Below the cards, one account-wide setting: **"Optimize for"** decides which channel goes first when
+a shopper can receive more than one — *Best chance of success* (richest channel first),
+*Lowest cost* (cheapest first), or *Fastest delivery* (SMS first). Each option states the order it
+implies rather than hiding it behind a label, and it never overrides a channel a merchant has
+switched off above.
+
+**What it replaced.** The first pass put Channels inside Guardrails, as one more master/detail
+category next to Frequency and Timing. That was the wrong instinct: a guardrail is a limit on what
+an engagement may do; a channel is where a message goes and who it's sent as — a different kind of
+decision, made by a different part of the org, and conflating them made both harder to scan. It
+also modelled the multi-channel choice as a hardcoded "fallback order," which doesn't hold once
+cost matters as much as reach — "Optimize for" replaced it once that was pointed out.
+
+**Why cards, not a table.** A row-per-channel table reads fine for three channels; at seven, with
+Email needing two extra settings no other channel has, a table either grows extra columns nobody
+else uses or hides them behind a click. A card per channel scales the same way regardless of how
+many channels get added, and keeps a channel's own settings physically next to its own switch.
 
 **What it deliberately doesn't do.** It doesn't re-litigate consent — "no valid consent on file" is
-already a locked Suppression rule, and it applies the same way regardless of channel. Channels
-governs the medium and the identity behind it, not who's allowed to be contacted at all.
+already a locked Suppression rule in Guardrails, and it applies the same way regardless of channel.
+Channels governs the medium and the identity behind it, not who's allowed to be contacted at all.
 
 ## 10. Levers are configured objects, not labels
 

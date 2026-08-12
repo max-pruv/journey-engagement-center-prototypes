@@ -521,6 +521,9 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
     <button class="navItem" data-page="lifecycle">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 1 1-3.3-7"/><path d="M21 4v5h-5"/><circle cx="12" cy="12" r="2.4"/></svg>
       Lifecycle <span class="count">6</span></button>
+    <button class="navItem" data-page="channels">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="18.5" r="1.6"/><path d="M8.5 15.5a5 5 0 0 1 7 0"/><path d="M5.5 12.5a9 9 0 0 1 13 0"/></svg>
+      Channels</button>
 
     <div class="navGroup">Operate</div>
     <button class="navItem" data-page="conversations">
@@ -884,6 +887,35 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
           <div class="lcWrap">
             <div class="lcList" id="grList"></div>
             <div class="col gap-md" id="grDetail"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== CHANNELS · one card per channel ======== -->
+      <section class="page hidden" id="page-channels">
+        <header class="pageHeader">
+          <div class="ttl">
+            <h1 class="h-xxl">Channels</h1>
+            <p class="t-md sec">Where a message goes, who it's sent as, and what's allowed to happen there.</p>
+          </div>
+          <div class="pageActions">
+            <button class="btn btn-primary">Save channels</button>
+          </div>
+        </header>
+
+        <div class="zone top">
+          <div class="grid g-2" id="channelCards"></div>
+
+          <div class="card pad-md">
+            <div class="row between gap-md">
+              <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">Optimize for</span>
+                <span class="t-sm sec">When a shopper can receive more than one channel, this decides which one goes first — it never overrides a channel that's off above.</span></div>
+              <select class="selectEl auto">
+                <option>Best chance of success — richest channel first (RCS → SMS → Email)</option>
+                <option>Lowest cost — cheapest channel first (Email → SMS → RCS)</option>
+                <option>Fastest delivery — SMS first (SMS → RCS → Email)</option>
+              </select>
+            </div>
           </div>
         </div>
       </section>
@@ -2255,19 +2287,6 @@ const GR_CATS=[
            ["Weekend window start","10:00"],["Weekend window end","18:00"]],
    toggles:[["Use the shopper's local timezone","",true],["Pause on public holidays","",true],
             ["Let the engine pick the exact hour","Inside your window, from when this shopper usually replies.",true]]},
-  {k:"channels",n:"Channels",d:"Where a message goes, and what it's allowed to do there",c:"var(--blue-100)",
-   sum:"RCS is richer but not everyone can receive it, so the engine falls back automatically. Email doesn't interrupt the way a text does, and it plays by its own rules below.",
-   toggles:[
-     ["SMS","Text-only. Works everywhere and is the fallback for both other channels.",true,true],
-     ["RCS","Rich media, buttons and read receipts, where the carrier and device support it.",true],
-     ["Email","Best for longer or receipt-style sends — a different medium, not a shorter SMS.",true],
-     ["Exempt Email from quiet hours","An inbox doesn't buzz in someone's pocket the way a text does — let Email send on the engine's normal schedule instead of waiting for the SMS/RCS window above.",false],
-     ["Always include an unsubscribe link in Email","Legal requirement, separate from the SMS/RCS opt-out line in Content.",true,true]],
-   select:["Fallback order when a shopper can receive more than one","Tries the first channel; only moves down the list if it can't be delivered.",
-           ["RCS → SMS → Email","SMS → RCS → Email","Email → SMS → RCS"]],
-   senders:[["SMS","AlpineSupply · short code 78-2001","Verified","tag-green"],
-            ["RCS","Alpine Supply Co. · verified brand agent","Verified","tag-green"],
-            ["Email","hello@alpinesupply.example.com","Domain verification pending","tag-orange"]]},
   {k:"suppression",n:"Suppression",d:"Don't message them right now",c:"var(--orange-300)",
    sum:"About timing, not about people. Checked before any decision — the locked ones can't be turned off.",
    list:"suppression"},
@@ -2292,6 +2311,54 @@ const GR_CATS=[
            ["Pause everything if opt-out exceeds","1.5%"],["Global holdout","10%"]],
    kill:true}
 ];
+
+/* Channels is its own page, deliberately separate from Guardrails — a
+   channel is where a message goes and who it's sent as, not a limit on
+   what an engagement may do. One card per channel; `extra` holds settings
+   that only make sense for that one channel (e.g. Email's quiet-hours
+   exemption), so they live where a merchant is already looking, not in a
+   shared list further down the page. */
+const CHANNELS=[
+  {n:"SMS",d:"Text-only. Works everywhere and is the fallback for every other channel.",on:true,locked:true,
+   sends:["AlpineSupply · short code 78-2001","+1 415 555 0134 · long code"],status:"Verified",tag:"tag-green"},
+  {n:"RCS",d:"Rich media, buttons and read receipts, where the carrier and device support it. Falls back to SMS automatically when it isn't.",on:true,
+   sends:["Alpine Supply Co. · verified brand agent"],status:"Verified",tag:"tag-green"},
+  {n:"Email",d:"Best for longer or receipt-style sends — a different medium, not a shorter SMS.",on:true,
+   sends:["hello@alpinesupply.example.com"],status:"Domain verification pending",tag:"tag-orange",
+   extra:[["Exempt from quiet hours","An inbox doesn't buzz in someone's pocket the way a text does — let Email send on the engine's normal schedule instead of waiting for the SMS/RCS window in Guardrails → Timing.",false],
+          ["Always include an unsubscribe link","Legal requirement, separate from the SMS/RCS opt-out line in Guardrails → Content.",true,true]]},
+  {n:"Instagram",d:"DMs to shoppers who've messaged the account or opted in from an ad. Short, casual, image-friendly.",on:false,
+   sends:["@alpinesupplyco"],status:"Not connected",tag:"tag-grey"},
+  {n:"Messenger",d:"Facebook DMs — the same audience shape as Instagram, a different app.",on:false,
+   sends:["Alpine Supply Co."],status:"Not connected",tag:"tag-grey"},
+  {n:"TikTok",d:"DMs to shoppers who follow or have engaged with the account.",on:false,
+   sends:["@alpinesupplyco"],status:"Not connected",tag:"tag-grey"},
+  {n:"TikTok Shop",d:"Order and shipping updates tied to a TikTok Shop purchase.",on:false,
+   sends:["Alpine Supply Co. Shop"],status:"Not connected",tag:"tag-grey",
+   note:"Transactional only — TikTok Shop's own policy restricts this channel to order and shipping updates, so it never carries marketing content regardless of the skill."}
+];
+function renderChannels(){
+  const host=$("#channelCards"); if(!host) return;
+  host.innerHTML=CHANNELS.map(ch=>`
+    <div class="card pad-md">
+      <div class="row between gap-md">
+        <div class="col gap-xxxs"><span class="h-sm">${ch.n}</span>
+          <span class="t-sm sec">${ch.d}</span></div>
+        <span class="toggle ${ch.on?"on":""}" ${ch.locked?'style="opacity:.55;pointer-events:none"':"data-toggle"}></span>
+      </div>
+      <div class="sepH" style="margin:var(--sm) 0"></div>
+      <div class="field"><span class="label">Sends as</span>
+        <select class="selectEl">${ch.sends.map(s=>`<option>${s}</option>`).join("")}<option>Add a new one…</option></select></div>
+      <span class="tag ${ch.tag}" style="width:fit-content;margin-top:var(--xs)">${ch.status}</span>
+      ${ch.note?`<p class="t-xs ter" style="margin-top:var(--xs)">${ch.note}</p>`:""}
+      ${ch.extra?`<div class="sepH" style="margin:var(--sm) 0"></div>
+        <div class="col gap-sm">${ch.extra.map(t=>`<div class="row between gap-md">
+          <div class="col gap-xxxs" style="max-width:76%"><span class="t-md med">${t[0]}</span>
+            <span class="t-sm sec">${t[1]}</span></div>
+          <span class="toggle ${t[2]?"on":""}" ${t[3]?'style="opacity:.55;pointer-events:none"':"data-toggle"}></span>
+        </div>`).join("")}</div>`:""}
+    </div>`).join("");
+}
 
 function renderProductOpportunities(surface,hostId){
   const host=$("#"+hostId), opportunities=PRODUCT_OPPORTUNITIES[surface]||[];
@@ -2363,14 +2430,6 @@ function renderGuardrails(){
       <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">${c.select[0]}</span>
         <span class="t-sm sec">${c.select[1]}</span></div>
       <select class="selectEl auto">${c.select[2].map(o=>`<option>${o}</option>`).join("")}</select></div>`;
-
-  if(c.senders) body+=`<div class="sepH"></div>
-    <div class="field"><span class="label">Sender identity</span></div>
-    <div class="card" style="overflow:hidden"><table class="inner">
-      <thead><tr><th>Channel</th><th>Sends as</th><th style="width:180px">Status</th></tr></thead>
-      <tbody>${c.senders.map(s=>`<tr><td class="t-md med">${s[0]}</td><td class="t-sm sec">${s[1]}</td>
-        <td><span class="tag ${s[3]}">${s[2]}</span></td></tr>`).join("")}</tbody>
-    </table></div>`;
 
   if(c.list==="suppression") body+=`<div class="col gap-sm" id="suppressionList"></div>`;
   if(c.list==="exclusions") body+=`
@@ -4055,7 +4114,7 @@ let rz; addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(renderRepo
 
 renderReport(); renderBench();
 renderEng(); renderAce(); renderCampaigns(); renderOpportunities(); renderRules(); renderVariants();
-renderGuardrails(); renderExclusions(); renderLifecycle();
+renderGuardrails(); renderExclusions(); renderLifecycle(); renderChannels();
 renderConv(); renderWiz(); renderLoyalty();
 renderProductOpportunities("guardrails","guardrailOpportunities");
 renderProductOpportunities("lifecycle","lifecycleOpportunities");
