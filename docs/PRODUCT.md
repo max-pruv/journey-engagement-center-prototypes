@@ -247,11 +247,14 @@ detail holds:
   policy restricts it to order and shipping updates, so it never carries marketing content
   regardless of the skill.
 
-Below the list, one account-wide setting that stays visible regardless of which channel is
-selected: **"Optimize for"** decides which channel goes first when a shopper can receive more than
-one — *Best chance of success* (richest channel first), *Lowest cost* (cheapest first), or
-*Fastest delivery* (SMS first). Each option states the order it implies rather than hiding it
-behind a label, and it never overrides a channel a merchant has switched off in the list.
+Above the list, a **General** card holds account-wide settings that apply across every channel
+rather than to any one of them — today just one: **"Optimize for"** decides which channel goes
+first when a shopper can receive more than one — *Best chance of success* (richest channel first),
+*Lowest cost* (cheapest first), or *Fastest delivery* (SMS first). Each option states the order it
+implies rather than hiding it behind a label, and it never overrides a channel a merchant has
+switched off below. It comes first because it's the thing that's true regardless of which channel
+a merchant is about to click into — reading it after the list would mean re-reading the list once
+you find it.
 
 **What it replaced.** Two passes before this one. The first put Channels inside Guardrails, as one
 more master/detail category next to Frequency and Timing — wrong because a guardrail is a limit on

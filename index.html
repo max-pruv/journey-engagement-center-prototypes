@@ -904,21 +904,26 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
         </header>
 
         <div class="zone top">
-          <div class="lcWrap">
-            <div class="lcList" id="chList"></div>
-            <div class="col gap-md" id="chDetail"></div>
-          </div>
-
-          <div class="card pad-md">
-            <div class="row between gap-md">
+          <div class="card" style="overflow:hidden">
+            <div class="col gap-xxxs" style="padding:var(--md) var(--lg)">
+              <h2 class="h-md">General</h2>
+              <p class="t-sm sec">Applies across every channel below, not to any one of them.</p>
+            </div>
+            <div class="sepH"></div>
+            <div class="row between gap-md" style="padding:var(--md) var(--lg)">
               <div class="col gap-xxxs" style="max-width:70%"><span class="t-md med">Optimize for</span>
-                <span class="t-sm sec">When a shopper can receive more than one channel, this decides which one goes first — it never overrides a channel that's off above.</span></div>
+                <span class="t-sm sec">When a shopper can receive more than one channel, this decides which one goes first — it never overrides a channel that's off below.</span></div>
               <select class="selectEl auto">
                 <option>Best chance of success — richest channel first (RCS → SMS → Email)</option>
                 <option>Lowest cost — cheapest channel first (Email → SMS → RCS)</option>
                 <option>Fastest delivery — SMS first (SMS → RCS → Email)</option>
               </select>
             </div>
+          </div>
+
+          <div class="lcWrap">
+            <div class="lcList" id="chList"></div>
+            <div class="col gap-md" id="chDetail"></div>
           </div>
         </div>
       </section>
