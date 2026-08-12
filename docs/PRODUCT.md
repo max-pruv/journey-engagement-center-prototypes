@@ -314,6 +314,24 @@ reset. A fixed-width list is a good default but not a good ceiling — a long sh
 reasoning-heavy thread deserves more room sometimes, and the merchant should get to decide that,
 not the prototype.
 
+**"Why this conversation started" is a sentence plus the bullets behind it.** The one-line summary
+stays — it's what you read first — but underneath it, 3–4 bullets break the decision into the
+specific evidence the engine weighed: the timing signal, the behavioral history, the thing that
+made *now* the right moment rather than last week or next. "Day 51 of her window" is a claim; "the
+median for buyers like her is day 54, and nothing today covers days 48–58" is the kind of thing a
+merchant can actually push back on. Depth here is what makes the reasoning inspectable rather than
+asserted — the same argument as the live test in the studio (§6).
+
+**A feedback loop sits directly under it.** Two buttons — *Useful* / *Not quite right* — plus an
+optional note, so a merchant can flag a specific decision without leaving the thread or filing a
+ticket. Sending requires a vote first; the note alone isn't a signal, a vote is. Once sent, the
+card shows a one-line confirmation instead of asking again — this is a place to register a
+correction, not a survey a merchant re-answers every visit. It's per-conversation state (`c.fb`),
+so it survives switching to another conversation and back, the same as the unread flag and the
+approve-and-send spinner. Like everything outside the custom-engagement studio, sending is
+decorative — it doesn't change future conversations in the prototype — but the surface exists
+because the reasoning it's attached to is now detailed enough to actually disagree with.
+
 **Why loyalty appears in the reasoning.** It is the cheapest lever and the least obvious one. Seeing
 *"Member · 900 points, enough for free shipping → points before discount, costs you $6.40 instead
 of $12"* is what makes the loyalty integration legible.

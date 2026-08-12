@@ -64,7 +64,7 @@ Change these, not the markup, when you want different content.
 | `ACE_DOMAINS[i].plays[j]` | One play. Real metrics (`reach`, `gmv`, `cvr`, `opt`) and/or the modelled ones (`potReach`, `potGmv`, `potCvr`, `potOpt`); `trg` is the trigger phrase, `ins` the badge, `on` the play's own switch (`undefined`/`true` = on, `false` = off), `st:"setup"` + `note` marks one blocked on an integration |
 | `ACE_MODES` | The three mode cards. `sum` is the headline, `brief` the one-liner on the card, `det`/`see`/`who` fill the Learn more panel |
 | `ACE_CHAIN` | The six agent steps, shown inside Learn more |
-| `CONV` | The conversations inbox. `why` is the plain-language reason, `reason` the key/value reasoning rows, `thread` the messages, `stop` the guardrail that blocked it |
+| `CONV` | The conversations inbox. `why` is the one-line reason, `whyBullets` (optional) the evidence behind it, `reason` the key/value reasoning rows, `thread` the messages, `stop` the guardrail that blocked it, `fb` the feedback-loop state (`{vote, note, sent}`, lazily created by `convFeedback()` the first time a thread renders) |
 | `STAGES` | The seven lifecycle stages. `lever` holds indexes into `LEVERS`; `capN`/`capU` are the message cap value and unit |
 | `LEVERS` / `LEVER_CFG` | Lever names, and per-lever configuration fields keyed by lever index |
 | `TONE_TEXT` | The prefilled tone textarea, keyed by stage name |
@@ -160,8 +160,12 @@ Changing metric or view can never repaint a series.
 ## Mutable state
 
 Mutable module-scope state includes `aceState`, `engFilter`, `stg` (selected lifecycle stage),
-`convFilter`/`convSel`/`convQ`, `campColumns`, `wizStep`, `studio`. Every one of them is followed by a `render*`
-call — there is no reactive layer, so **if you mutate state you must re-render**.
+`convFilter`/`convSel`/`convQ`, `campColumns`, `wizStep`, `studio`, `chSel` (selected channel).
+Every one of them is followed by a `render*` call — there is no reactive layer, so **if you mutate
+state you must re-render**. A few pieces of state live on the data object itself instead of a
+module-scope variable, because they need to survive being scrolled past and back: `c.unread`,
+`c.sending`, and `c.fb` (the Conversations feedback loop) all live on the `CONV` row they belong
+to, not in a variable that only knows about whichever conversation is currently open.
 
 ## Panels
 

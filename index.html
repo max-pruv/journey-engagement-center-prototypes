@@ -117,6 +117,7 @@ input,textarea,select{font:inherit;color:inherit}
 .btn-primary:hover{background:var(--grey-900)}
 .btn-secondary{background:var(--white);border:1px solid var(--border-neutral-default);box-shadow:0 1px 2px rgba(0,0,0,.04)}
 .btn-secondary:hover{background:var(--states-hover-default)}
+.btn-secondary.on{background:var(--surface-accent-default);color:var(--content-accent-default);border-color:var(--purple-200)}
 .btn-tertiary:hover{background:var(--surface-neutral-secondary)}
 .btn-ai{background:linear-gradient(96deg,var(--ai-gradient),var(--purple-500));color:var(--white)}
 .btn-ai:hover{filter:brightness(1.08)}
@@ -320,6 +321,8 @@ tr.playRow>td:first-child{padding-left:0}
 .convItem.on{background:var(--surface-accent-default)}
 .convItem.unread .who{font-weight:600}
 .inboxThread{overflow-y:auto;padding:var(--lg);display:flex;flex-direction:column;gap:var(--md)}
+.whyBullets{margin:var(--xs) 0 0;padding-left:18px;display:flex;flex-direction:column;gap:var(--xxxs)}
+.whyBullets li{line-height:1.5}
 .searchWrap{display:flex;align-items:center;gap:var(--xs);border:1px solid var(--border-neutral-default);
   border-radius:var(--xs);padding:0 var(--xs);background:var(--white);height:34px}
 .searchInput{border:0;outline:0;background:none;flex:1;font-size:13px;height:100%}
@@ -2590,6 +2593,10 @@ const CONV=[
   {who:"Ana R.",id:"+1 415 ••• 2140",stage:"First-time buyer",tier:"Member",src:"ACE",domain:"Cross-sell & complements",
    st:"pending",when:"12 min ago",unread:true,
    why:"Day 51 of her 62-day second-order window. Bought the Winter Tights, never a base layer, and no flow of yours covers day 48–58.",
+   whyBullets:["She's on day 51 of the 48–62 day window where a second order usually lands — the median across First-time buyers like her is day 54.",
+     "Bought the Winter Tights and has never ordered a base layer, the single most common pairing for that product.",
+     "No engagement in your account currently covers days 48–58, so without this she falls through the gap entirely.",
+     "Her region drops below 5° within 10 days — the base layer gets more relevant if we wait, not less."],
    reason:[["Lifecycle","First-time buyer · goal is a second order"],["Loyalty","Member · 340 points, 60 short of a free-shipping reward"],
            ["Timing","09:40 local — when she replied last time"],["Lever","Answer the objection. No offer; loyalty reward held in reserve"]],
    thread:[["out","Hey Ana — how are the Winter Tights holding up? Most people pair them with the Merino base layer once it drops below 5°. Want me to show you the two that fit your size?","waiting"]]},
@@ -2597,6 +2604,10 @@ const CONV=[
   {who:"Marc D.",id:"+33 6 •• •• 71",stage:"VIP",tier:"Gold",src:"ACE",domain:"Replenishment & reorder",
    st:"pending",when:"18 min ago",unread:true,
    why:"2.1× past his own 38-day reorder gap on the care kit. No open ticket, no recent return — the silence isn't a service problem.",
+   whyBullets:["2.1× past his own learned reorder rhythm for the care kit (38 days) — unusually long for him specifically, not the account average.",
+     "No open support ticket and no return in the last 90 days, so this was ruled out as a service problem before treating it as a sales opportunity.",
+     "Gold tier makes early access available as a lever, ahead of any discount.",
+     "18:20 local is his usual reply window, based on his last 6 conversations."],
    reason:[["Lifecycle","VIP · protect the relationship"],["Loyalty","Gold · early access is available, so no discount needed"],
            ["Timing","18:20 local, his usual window"],["Lever","Early access to the new formula"]],
    thread:[["out","Marc — it's been a while. You usually restock the care kit around now. Anything changed, or should I set one aside before Friday?","waiting"]]},
@@ -2604,6 +2615,10 @@ const CONV=[
   {who:"Sam K.",id:"+44 7•• ••• 903",stage:"At risk",tier:"Silver",src:"Custom",domain:"Fit-return recovery",
    st:"live",when:"41 min ago",unread:true,
    why:"Returned for fit last spring and never came back. The dial and the cut were both changed in March, which is exactly what they complained about.",
+   whyBullets:["Returned the shorts last spring specifically for a short-running length — the return reason was logged, not inferred.",
+     "Hasn't ordered since; classified At risk for over 90 days.",
+     "The dial and cut were changed in March, directly addressing the complaint — new information worth surfacing, not a repeat pitch.",
+     "Silver tier includes free returns, so the risk of trying again is already covered — used as reassurance instead of a discount."],
    reason:[["Lifecycle","At risk · re-engage before they go quiet"],["Loyalty","Silver · free returns already included, used as the reassurance"],
            ["Guardrails","Discount withheld — free returns was enough"],["Lever","Lead with the product change, not an apology"]],
    thread:[["out","Hi Sam — you sent back the shorts last spring because the length ran short. We changed the dial and the cut in March. Want me to work out your size properly this time?"],
@@ -2613,6 +2628,9 @@ const CONV=[
   {who:"Lena P.",id:"+49 15• ••• 22",stage:"Repeat",tier:"Silver",src:"ACE",domain:"Replenishment & reorder · Replenishment due",
    st:"closed",when:"1 h ago",outcome:"Ordered · $64",
    why:"Day 40 on her own 38-day cadence for care products.",
+   whyBullets:["Day 40 against her own learned 38-day reorder cadence for care products — 2 days past her rhythm, not the account average.",
+     "Repeat stage; the goal here is building the rhythm, not winning her back from anywhere.",
+     "No lever needed — she reorders on her own once reminded, so nothing was offered."],
    reason:[["Lifecycle","Repeat · build the rhythm"],["Loyalty","Silver · earned 80 points on this order"],
            ["Timing","Morning, her usual"],["Lever","None needed"]],
    thread:[["out","Lena, you're about due for the care kit refill — want the same one, or the new concentrate?"],
@@ -2621,6 +2639,9 @@ const CONV=[
   {who:"Priya S.",id:"+1 646 ••• 3390",stage:"VIP",tier:"Summit",src:"Campaign",domain:"Mid-layer season opener",
    st:"live",when:"2 h ago",
    why:"In the Mid-layer season opener audience, and she asked about sizing on the shell in chat yesterday without ordering.",
+   whyBullets:["In the Mid-layer season opener campaign audience (variant A, no offer).",
+     "Asked about sizing on the 38 shell in chat yesterday and didn't order — an unresolved question, not disinterest.",
+     "Summit tier gets concierge sizing instead of a discount, which answers the actual blocker."],
    reason:[["Campaign","Mid-layer season opener · variant A, no offer"],["Loyalty","Summit · concierge sizing offered instead of a discount"],
            ["Lifecycle","VIP · deference, early access over money"],["Lever","Answer the objection first"]],
    thread:[["out","Priya — you asked about the 38 in the shell yesterday. It runs true to size with a mid-layer underneath. Want me to hold one?"],
@@ -2630,6 +2651,9 @@ const CONV=[
   {who:"Tom W.",id:"+1 206 ••• 8871",stage:"First-time buyer",tier:"Member",src:"ACE",domain:"Cross-sell & complements",
    st:"stopped",when:"1 h ago",
    why:"Day 49 of his second-order window — but he has an open ticket about a delayed parcel.",
+   whyBullets:["Day 49 of the 48–62 day second-order window — same signal as Ana's, different outcome.",
+     "Has an open support ticket about a delayed parcel, logged 6 hours ago.",
+     "Guardrail rule: never sell to someone waiting on an unresolved problem — this one held even though the timing signal was otherwise strong."],
    stop:"Stopped by guardrails: open support ticket. It will try again once the ticket is resolved.",
    reason:[["Guardrail","Open support ticket — don't sell to someone waiting on a problem"],["Retry","Queued, re-evaluates on ticket close"]],
    thread:[]},
@@ -2637,6 +2661,9 @@ const CONV=[
   {who:"Jonas M.",id:"+46 7• ••• 12",stage:"Dormant",tier:"Member",src:"ACE",domain:"Retention & win-back · Win-back",
    st:"stopped",when:"3 h ago",
    why:"210 days since his last order, still opted in.",
+   whyBullets:["210 days since his last order — well past the 120-day Dormant threshold.",
+     "Still opted in, so re-engagement is allowed in principle.",
+     "Already sent 3 of 3 messages allowed this week — the frequency cap held before this one could go out."],
    stop:"Stopped by guardrails: frequency cap. He's already had 3 messages this week.",
    reason:[["Guardrail","3 of 3 messages used this week"],["Retry","Next Monday at the earliest"]],
    thread:[]},
@@ -2644,6 +2671,9 @@ const CONV=[
   {who:"Chloé B.",id:"+33 7 •• •• 08",stage:"Repeat",tier:"Silver",src:"Custom",domain:"Helmet cross-sell",
    st:"closed",when:"4 h ago",outcome:"Ordered · $89",
    why:"Bought a frame 5 days ago, zero helmets in her lifetime orders.",
+   whyBullets:["Bought a bike frame 5 days ago — the Helmet cross-sell trigger fires at day 5 after delivery.",
+     "Zero helmets across her entire order history, not just recently.",
+     "Repeat stage, so the tone stays familiar rather than introductory."],
    reason:[["Lifecycle","Repeat · familiar tone"],["Loyalty","Silver · 1.25 points per dollar mentioned at close"],
            ["Lever","Fit and safety, never price"]],
    thread:[["out","Chloé — nice frame. One thing you'll want before the first proper ride: a helmet that actually fits the way you ride. Want me to narrow it to two?"],
@@ -2652,6 +2682,9 @@ const CONV=[
   {who:"Hugo T.",id:"+34 6•• ••• 41",stage:"At risk",tier:"Member",src:"ACE",domain:"Retention & win-back",
    st:"pending",when:"5 h ago",unread:true,
    why:"1.7× past his own rhythm, and he browsed twice last week without buying.",
+   whyBullets:["1.7× past his own learned rhythm — above the 1.5× threshold that defines At risk for him.",
+     "Browsed the trail shoes twice last week without ordering — active interest, not silence.",
+     "900 points is enough for free shipping, so that's offered before any discount."],
    reason:[["Lifecycle","At risk · open question before any offer"],["Loyalty","Member · 900 points, enough for free shipping"],
            ["Lever","Points before discount — costs you $6.40 instead of $12"]],
    thread:[["out","Hugo — saw you back looking at the trail shoes. Anything holding you up? You've got enough points for free shipping if that helps.","waiting"]]},
@@ -2659,6 +2692,9 @@ const CONV=[
   {who:"Ingrid L.",id:"+47 4•• •• 90",stage:"VIP",tier:"Gold",src:"ACE",domain:"Loyalty moments",
    st:"pending",when:"6 h ago",unread:true,
    why:"120 points from Summit, and 1,400 points expire at the end of the month.",
+   whyBullets:["120 points from crossing into Summit — close enough that naming it is worth doing.",
+     "1,400 points expire at the end of the month if unused.",
+     "VIP stage: the message rewards, it doesn't sell."],
    reason:[["Loyalty","Gold → Summit within reach; expiring points are the hook"],["Lifecycle","VIP · reward, don't sell"],
            ["Lever","Tier fast-track mentioned, no discount"]],
    thread:[["out","Ingrid — you're 120 points from Summit, and 1,400 of yours expire on the 31st. Want me to show you what they'd cover?","waiting"]]}
@@ -2707,6 +2743,30 @@ function renderConv(){
   });
   renderThread(CONV[convSel]);
 }
+/* the feedback loop: a merchant votes on the reasoning and can add a note.
+   Stored on the conversation itself (c.fb), not a render-local variable, so
+   it survives switching to another conversation and back — same pattern as
+   c.unread and c.sending. */
+function convFeedback(c){
+  const fb=c.fb||(c.fb={vote:null,note:"",sent:false});
+  const i=CONV.indexOf(c);
+  if(fb.sent) return `
+    <div class="card pad-md" style="background:var(--green-50);border-color:var(--green-100)">
+      <span class="t-sm med">Thanks — this is sent back to tune how ${c.domain.split(" · ")[0]} reasons next time.</span>
+    </div>`;
+  return `
+    <div class="card pad-md">
+      <span class="t-sm bold" style="display:block;margin-bottom:var(--xs)">Was this reasoning right?</span>
+      <div class="row gap-xs" style="margin-bottom:var(--sm)">
+        <button class="btn btn-secondary sm ${fb.vote==="up"?"on":""}" data-conv-vote="up" data-conv-index="${i}">Useful</button>
+        <button class="btn btn-secondary sm ${fb.vote==="down"?"on":""}" data-conv-vote="down" data-conv-index="${i}">Not quite right</button>
+      </div>
+      <div class="col gap-xxs">
+        <textarea class="textarea" id="convFbNote" placeholder="Optional — what should it have weighed differently?" style="min-height:56px">${fb.note}</textarea>
+        <button class="btn btn-secondary sm" style="width:fit-content" data-conv-feedback-send="${i}" ${fb.vote?"":"disabled"}>Send feedback</button>
+      </div>
+    </div>`;
+}
 function renderThread(c){
   const st=CONV_ST[c.st];
   $("#convThread").innerHTML=`
@@ -2729,7 +2789,12 @@ function renderThread(c){
         <span class="tag ${SRC_TAG[c.src]}">${c.src} · ${c.domain}</span>
       </div>
       <span class="t-md sec">${c.why}</span>
+      ${(c.whyBullets||[]).length?`<ul class="whyBullets">
+        ${c.whyBullets.map(w=>`<li class="t-sm sec">${w}</li>`).join("")}
+      </ul>`:""}
     </div>
+
+    ${convFeedback(c)}
 
     <div class="col gap-xs">
       <span class="t-sm bold">What it was reasoning from</span>
@@ -2759,6 +2824,8 @@ function renderThread(c){
       <button class="btn btn-secondary">Edit the message</button>
       <button class="btn btn-secondary">Reject</button>
       <button class="btn btn-primary" data-conv-action="approve" data-conv-index="${CONV.indexOf(c)}" ${c.sending?"disabled":""}>${c.sending?"Sending…":"Approve &amp; send"}</button></div>`:""}`;
+  const fbNote=$("#convFbNote");
+  if(fbNote) fbNote.addEventListener("input",()=>{c.fb.note=fbNote.value});
 }
 
 function approveConversation(i){
@@ -3250,6 +3317,21 @@ document.addEventListener("click",e=>{
   const ca=e.target.closest("[data-conv-action]");
   if(ca&&ca.dataset.convAction==="approve"){
     approveConversation(+ca.dataset.convIndex);return
+  }
+
+  const cv=e.target.closest("[data-conv-vote]");
+  if(cv){
+    const c=CONV[+cv.dataset.convIndex], note=$("#convFbNote");
+    if(note) c.fb.note=note.value;
+    c.fb.vote=c.fb.vote===cv.dataset.convVote?null:cv.dataset.convVote;
+    renderThread(c);return
+  }
+  const cf=e.target.closest("[data-conv-feedback-send]");
+  if(cf){
+    const c=CONV[+cf.dataset.convFeedbackSend], note=$("#convFbNote");
+    if(!c.fb.vote) return;
+    c.fb.note=note?note.value:c.fb.note; c.fb.sent=true;
+    renderThread(c);return
   }
 
   const t=e.target.closest("[data-toggle]");
