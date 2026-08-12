@@ -423,9 +423,10 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
   transform:translateX(calc(100% + 16px));transition:transform .22s cubic-bezier(.32,.72,0,1)}
 .panel.on{transform:none}
 .panel.wide{width:min(1080px,96vw)}
-.studio{display:grid;grid-template-columns:1fr 1fr;gap:var(--lg);min-height:520px}
+.studio{display:grid;grid-template-columns:1fr;gap:var(--lg);min-height:520px}
+.studio.testOpen{grid-template-columns:3fr 2fr}
 .studioCol{display:flex;flex-direction:column;gap:var(--xs);min-width:0}
-@media (max-width:900px){.studio{grid-template-columns:1fr}
+@media (max-width:900px){.studio{grid-template-columns:1fr}.studio.testOpen{grid-template-columns:1fr}
   .studioCol{border-left:0 !important;padding-left:0 !important}}
 .panelHead{padding:var(--md) var(--lg);display:flex;align-items:flex-start;gap:var(--sm);
   border-bottom:1px solid var(--border-neutral-default)}
@@ -3797,9 +3798,11 @@ function whenReadback(){
 }
 function openStudio(ctx){
   studio={ctx,shopper:0,thread:[]};
-  panel.classList.add("wide");
+  /* starts at the normal panel width — editing a skill doesn't need the wide
+     two-column layout until testing is opened (see openTest below) */
+  panel.classList.remove("wide");
   openPanel(ctx.title, ctx.sub, `
-    <div class="studio">
+    <div class="studio" id="studioGrid">
       <div class="studioCol">
         ${whenBlock(ctx)}
         <div class="sepH"></div>
@@ -3821,9 +3824,10 @@ function openStudio(ctx){
           <span class="tag tag-grey">≤3 msg / week</span><span class="tag tag-grey">quiet 21:00–09:00</span>
           <span class="tag tag-grey">discount ≤10%</span><span class="tag tag-grey">exclusions</span>
         </div>
+        <button class="btn btn-tertiary sm" id="studioTestOpen" style="width:fit-content">Test this skill →</button>
       </div>
 
-      <div class="studioCol" style="border-left:1px solid var(--border-neutral-default);padding-left:var(--lg)">
+      <div class="studioCol hidden" id="studioTestCol" style="border-left:1px solid var(--border-neutral-default);padding-left:var(--lg)">
         <div class="row between wrap gap-xs">
           <span class="t-sm bold">Live test</span>
           <span class="tag tag-green">Nothing is sent</span>
@@ -3845,6 +3849,10 @@ function openStudio(ctx){
     `<button class="btn btn-secondary" id="studioRun">Run test</button>
      <button class="btn btn-primary" id="studioSave">${ctx.nl?"Create the engagement":ctx.when&&ctx.when.mode==="edit"?"Save the engagement":"Save skill"}</button>`);
   drawStudio();
+  /* Testing is secondary to the skill itself, so it starts closed and takes no
+     width until asked for — either link opens it, "Run test" opens and runs. */
+  const openTest=()=>{panel.classList.add("wide");$("#studioGrid").classList.add("testOpen");$("#studioTestCol").classList.remove("hidden")};
+  $("#studioTestOpen").addEventListener("click",openTest);
   /* Only the custom-engagement studio writes back — a play's skill and a
      theme's are still decorative, same as every other Save in the prototype. */
   $("#studioSave").addEventListener("click",()=>{
@@ -3889,6 +3897,7 @@ function openStudio(ctx){
     });
   }
   $("#studioRun").addEventListener("click",()=>{
+    openTest();
     studio.shopper=+$("#studioWho").value; studio.thread=[];
     const sh=SIM_SHOPPERS[studio.shopper];
     studio.thread.push(["out",simOpener(studio.ctx,sh)]);

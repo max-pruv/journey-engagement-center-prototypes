@@ -142,9 +142,10 @@ off. Nothing in it is "yours by default".
 
 ## 6. Opening an engagement opens a studio, not a summary
 
-**Decision.** Clicking an engagement (or its Edit button, or a theme or play skill) opens a
-wide two-column panel: on the left **when it fires** then **what it says**, on the right a **live
-testable conversation**. You pick a shopper, run it, then reply *as the shopper* and watch what
+**Decision.** Clicking an engagement (or its Edit button, or a theme or play skill) opens a panel:
+**when it fires** then **what it says**. A **live testable conversation** sits behind "Test this
+skill" — closed by default, so the skill is the whole panel until you ask to test it, then it
+widens into two columns. You pick a shopper, run it, then reply *as the shopper* and watch what
 comes back — with the reasoning shown under the thread.
 
 **When and What, in that order, and the When half is the tell.** For a custom engagement, the
@@ -162,7 +163,9 @@ Three variants of one panel, and reading them in sequence is the fastest way to 
 timing at each level. That is why the When block exists even where it has nothing to edit.
 
 **What it replaced.** "What it produced last time" — a static transcript. It told you nothing you
-could act on and couldn't be interrogated.
+could act on and couldn't be interrogated. The panel also used to open at full two-column width by
+default; that gave testing the same visual weight as the skill on every single open, most of which
+are a quick edit with no intention to test. Testing earns its width when you ask for it, not before.
 
 **Why it earns the space.** It is where the guardrail model stops being a claim:
 

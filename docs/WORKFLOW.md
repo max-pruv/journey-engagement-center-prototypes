@@ -163,8 +163,9 @@ done
 4. Sweep the reporting surface (above)
 5. Click the thing you changed, plus all three studio shapes (a theme skill, a play, a custom
    engagement — they render different When blocks; the custom-engagement one also has the
-   sentence/rules toggle), a theme row's click-to-expand and a play's own switch, the Guardrails
-   category list and the Lifecycle stage detail
+   sentence/rules toggle), confirm the studio opens single-column with testing collapsed and that
+   "Test this skill" / "Run test" both widen it correctly, a theme row's click-to-expand and a
+   play's own switch, the Guardrails category list and the Lifecycle stage detail
 6. Load the page with a page name in the hash (e.g. `#loyalty`) and confirm it opens straight there;
    click a nav item and confirm the address bar's hash updates to match
 7. Push, then confirm live == local

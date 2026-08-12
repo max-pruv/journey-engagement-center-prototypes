@@ -155,10 +155,15 @@ call — there is no reactive layer, so **if you mutate state you must re-render
 
 `openPanel(title, sub, bodyHTML, footHTML)` fills the single `#panel`. `closePanel()` hides it.
 
-The studio is a wide two-column variant: `panel.classList.add("wide")` before `openPanel`, and the
-body contains `.studio` with two `.studioCol`. `openPanel` strips `wide` when the body isn't a
-studio, and `closePanel` clears it after the transition — so a normal panel never inherits the
-wide width.
+The studio can become a wide two-column variant, but starts single-column at the normal panel
+width — testing is secondary to the skill itself, so it costs no width until asked for.
+`openStudio` explicitly removes `wide` up front (so a stale state from a previous studio session
+can't leak in), and the body's `#studioTestCol` starts `hidden` inside a `.studio` grid that
+defaults to one column. Clicking "Test this skill" or "Run test" calls the shared `openTest()`
+closure, which adds `wide` to the panel, `testOpen` to `#studioGrid` (switching the grid to
+`3fr 2fr`), and un-hides `#studioTestCol`. `openPanel` also strips `wide` whenever the body isn't a
+studio, and `closePanel` clears it after the transition — so a normal panel never inherits the wide
+width either way.
 
 Entry points: `studioForEng(i)` for an engagement, `studioForDomain(i)` for a theme,
 `studioForPlay(i,j)` for a play, `openLearn(k)` for a mode, `openShoppers(stage)` → `openShopper(s)`,
