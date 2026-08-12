@@ -71,8 +71,9 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
 - **KPI cards are read-only and account-wide** — deliberately independent of the report below them.
 - **Conversations is one row per person**, led by why it started and what the engine reasoned from.
   Approvals live there; there is no separate queue.
-- **Every page is a link.** `goto(page)` syncs `location.hash`, so any screen can be copied out of
-  the address bar and shared — useful given the prototype's whole job is alignment in meetings.
+- **Every page is a link, tabs included.** `goto(page)` syncs `location.hash`; Engagements and
+  Loyalty go one level deeper (`#engagements/scenarios`) so a link can point at one tab, not just
+  the page — useful given the prototype's whole job is alignment in meetings.
 
 Full vocabulary table at the end of `docs/PRODUCT.md` — use it, several terms were chosen against a
 worse alternative.

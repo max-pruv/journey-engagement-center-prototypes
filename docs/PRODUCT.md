@@ -279,10 +279,13 @@ without being expensive — which is why it sits here and not in a separate prod
 
 **Decision.** Each page carries its own `#hash` in the URL — Engagements, Loyalty, Conversations,
 all of them — updated on every navigation and read back on load. Copy the address bar and send it;
-the other person lands on the same screen instead of always on Reporting.
+the other person lands on the same screen instead of always on Reporting. The two tabbed pages go
+one level deeper: `#engagements/scenarios` opens straight to Custom engagement, `#engagements/ace`
+to AI engagement, `#loyalty/loy-config` to the tier editor — so a link can point at the exact
+argument being made, not just the page it lives on.
 
 **Why it matters here.** The prototype's job is alignment in meetings (see the top of this doc,
-and `CLAUDE.md`). "Look at the Engagements tab" is a worse instruction than a link that opens
+and `CLAUDE.md`). "Look at the Custom engagement tab in Engagements" is a worse instruction than a link that opens
 straight there.
 
 ---

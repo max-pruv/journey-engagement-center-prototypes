@@ -3005,8 +3005,22 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
 
 const NAV_OF={"campaign-new":"campaigns"};
 /* every screen gets its own #hash, so any page can be copied out of the
-   address bar and sent to someone else — they land on the same screen. */
+   address bar and sent to someone else — they land on the same screen. A page
+   with tabs (Engagements' AI/Custom, Loyalty's Overview/Configuration) gets a
+   deeper #page/tab hash, so a link can point at "Custom engagement" or
+   "AI engagement · Automatic" specifically, not just the page they live on. */
 const KNOWN_PAGES=new Set($$(".page").map(p=>p.id.replace(/^page-/,"")));
+function currentTabFor(page){
+  const on=$("#page-"+page+" .tabItem.on");
+  return on?on.dataset.tab:null;
+}
+function syncHash(){
+  const shown=$$(".page").find(p=>!p.classList.contains("hidden"));
+  if(!shown) return;
+  const page=shown.id.replace(/^page-/,""), tab=currentTabFor(page);
+  const next=tab?page+"/"+tab:page;
+  if(location.hash.slice(1)!==next) location.hash=next;
+}
 function goto(page,opts={}){
   $$(".page").forEach(p=>p.classList.add("hidden"));
   ($("#page-"+page)||$("#page-soon")).classList.remove("hidden");
@@ -3014,12 +3028,15 @@ function goto(page,opts={}){
   $$(".navItem").forEach(n=>n.classList.toggle("on",n.dataset.page===navPage));
   $("#scroller").scrollTop=0; closePanel();
   if(page==="campaign-new") resetWizard();
-  if(!opts.fromHash && location.hash.slice(1)!==page) location.hash=page;
+  if(!opts.fromHash) syncHash();
 }
-addEventListener("hashchange",()=>{
-  const page=location.hash.slice(1);
-  if(KNOWN_PAGES.has(page)) goto(page,{fromHash:true});
-});
+function landOnHash(){
+  const [page,tab]=location.hash.slice(1).split("/");
+  if(!KNOWN_PAGES.has(page)) return;
+  goto(page,{fromHash:true});
+  if(tab && $("#page-"+page+" .tabItem[data-tab=\""+tab+"\"]")) selectTab(tab);
+}
+addEventListener("hashchange",landOnHash);
 /* fresh conversation every time "Create a campaign" is opened */
 function resetWizard(){
   wizIdx=0; wizStep=1;
@@ -3050,10 +3067,14 @@ $("#oppSay").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.p
 $("#oppVoice").addEventListener("click",()=>{const b=$("#oppVoice"),input=$("#oppSay");b.classList.add("listening");input.placeholder="Listening…";
   setTimeout(()=>{input.value="Keep the recommendation conservative and show me exactly what will change.";b.classList.remove("listening");input.placeholder="Ask a question or request a change…";input.focus()},900)});
 
-/* tabs (Engagements: ACE | Scenarios) */
+/* tabs (Engagements: ACE | Scenarios, Loyalty: Overview | Configuration).
+   Scoped to the tab's own .page — a document-wide toggle would clear one
+   page's active tab as a side effect of clicking a tab on another page. */
 function selectTab(tab){
-  $$(".tabItem").forEach(t=>t.classList.toggle("on",t.dataset.tab===tab));
-  $$(".tabPanel").forEach(p=>p.classList.toggle("hidden",p.dataset.panelFor!==tab));
+  const btn=$$(".tabItem").find(t=>t.dataset.tab===tab); if(!btn) return;
+  const page=btn.closest(".page");
+  $$(".tabItem",page).forEach(t=>t.classList.toggle("on",t.dataset.tab===tab));
+  $$(".tabPanel",page).forEach(p=>p.classList.toggle("hidden",p.dataset.panelFor!==tab));
 }
 const ENGAGEMENT_TABS=["ace","scenarios"];
 document.addEventListener("click",e=>{
@@ -3064,6 +3085,7 @@ document.addEventListener("click",e=>{
   if(ENGAGEMENT_TABS.includes(t.dataset.tab) && $("#page-engagements").classList.contains("hidden")){
     goto("engagements"); selectTab(t.dataset.tab);
   }
+  syncHash();
 });
 
 const TEST_BODY=`
@@ -3990,9 +4012,9 @@ renderProductOpportunities("guardrails","guardrailOpportunities");
 renderProductOpportunities("lifecycle","lifecycleOpportunities");
 renderProductOpportunities("loyalty","loyaltyOpportunities");
 
-/* land on whatever page the URL names, so a shared link opens on that screen
+/* land on whatever page (and tab, if the link named one) the URL points at,
    instead of always resetting to Reporting */
-if(KNOWN_PAGES.has(location.hash.slice(1))) goto(location.hash.slice(1),{fromHash:true});
+landOnHash();
 </script>
 </body>
 </html>

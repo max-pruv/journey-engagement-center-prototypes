@@ -167,7 +167,10 @@ done
    "Test this skill" / "Run test" both widen it correctly, a theme row's click-to-expand and a
    play's own switch, the Guardrails category list and the Lifecycle stage detail
 6. Load the page with a page name in the hash (e.g. `#loyalty`) and confirm it opens straight there;
-   click a nav item and confirm the address bar's hash updates to match
+   click a nav item and confirm the address bar's hash updates to match. For Engagements and
+   Loyalty, also load a `#page/tab` hash (e.g. `#engagements/scenarios`) and confirm it opens on
+   that tab, and click a tab on one page then visit the other — its own tab must still be active,
+   not blank (that's the failure mode `selectTab` scoping to `.closest(".page")` exists to prevent)
 7. Push, then confirm live == local
 
 ## A note on scope

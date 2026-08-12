@@ -21,9 +21,19 @@ Line numbers below drift as soon as you edit. Grep for the marker instead — ev
 
 Each is a `<section class="page">`; `goto(page)` unhides one, hides the rest, and syncs `location.hash`
 to the page name — every screen has its own URL, so any of them can be copied out of the address bar
-and shared. `KNOWN_PAGES` (derived from the `.page` ids) gates which hashes `goto` will act on; a
-`hashchange` listener and a boot-time check make the URL work both ways — navigate and it updates,
-land on a link and it opens there.
+and shared. `KNOWN_PAGES` (derived from the `.page` ids) gates which hashes `goto` will act on.
+
+Pages with tabs (Engagements' AI/Custom, Loyalty's Overview/Configuration) get a deeper
+`#page/tab` hash, so a link can point at "Custom engagement" specifically, not just Engagements.
+`syncHash()` reads the currently visible page and, if it has one, its currently active tab
+(`currentTabFor(page)`, which just reads whichever `.tabItem` inside that page carries `.on`) and
+writes the combined hash — called from `goto()` and from the `[data-tab]` click handler, so both a
+plain page nav and a same-page tab switch keep the URL honest. `landOnHash()` is the read side: it
+parses `page/tab` off `location.hash`, calls `goto(page,{fromHash:true})`, and only calls
+`selectTab(tab)` if that tab actually exists on that page — a stray or mistyped tab segment is
+ignored rather than landing on a blank tab area. A `hashchange` listener and a boot-time call to
+`landOnHash()` make the URL work both ways — navigate and it updates, land on a link and it opens
+there.
 
 | id | Nav item | Rendered by |
 | --- | --- | --- |
