@@ -476,11 +476,94 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 /* loyalty tier ramp */
 .tierBar{display:flex;height:26px;border-radius:var(--xxs);overflow:hidden;gap:2px;background:transparent}
 .tierBar > span{display:block}
+
+/* ============ MOBILE ============
+   Below 880px the sidebar becomes an off-canvas drawer (there's no room for
+   both a 272px rail and content), and every fixed-width two-column layout —
+   master/detail, the conversation inbox, the opportunities workspace —
+   stacks to one column. This is the single breakpoint the whole layout
+   keys off; component-level tweaks below it use the same number so nothing
+   drifts out of sync with the shell switching modes. */
+.mobileMenuBtn{display:none;position:fixed;top:var(--sm);left:var(--sm);z-index:61;width:40px;height:40px;
+  border-radius:var(--xs);background:var(--white);border:1px solid var(--border-neutral-default);
+  box-shadow:0 2px 8px rgba(16,24,40,.12);align-items:center;justify-content:center;color:var(--content-neutral-default)}
+.sidebarBackdrop{display:none;position:fixed;inset:0;background:rgba(16,24,40,.4);z-index:59}
+.sidebarBackdrop.on{display:block}
+/* the side panel has its own close button in the same top-left corner the
+   hamburger floats in — without this they'd sit on top of each other */
+body:has(#panel.on) .mobileMenuBtn{display:none}
+@media (max-width:880px){
+  .app{padding:0;height:100dvh}
+  .content{border-radius:0;border:0}
+  .mobileMenuBtn{display:flex}
+  .sidebar{position:fixed;top:0;left:0;bottom:0;width:min(272px,82vw);z-index:60;
+    transform:translateX(-100%);transition:transform .22s cubic-bezier(.32,.72,0,1);
+    background:var(--elevation-neutral-default);box-shadow:0 0 0 rgba(0,0,0,0)}
+  .sidebar.open{transform:none;box-shadow:16px 0 32px rgba(16,24,40,.16)}
+
+  /* master/detail: Guardrails, Lifecycle, Channels — list on top, capped
+     height with its own scroll, detail underneath at full width */
+  .lcWrap{grid-template-columns:1fr;gap:var(--md)}
+  .lcList{flex-direction:row;overflow-x:auto;gap:var(--xxs);padding-bottom:var(--xxs)}
+  .lcItem{width:auto;flex-shrink:0;min-width:160px;flex-direction:column;align-items:flex-start;gap:var(--xxs)}
+  .lcItem .bar{width:100%;height:3px;align-self:stretch}
+
+  /* conversation inbox: list on top (own scroll), thread below; the resize
+     handle is a desktop-only affordance, dragging a vertical stack apart
+     doesn't mean anything once the columns are gone */
+  .inbox{grid-template-columns:1fr;grid-template-rows:auto 1fr;overflow-y:auto}
+  .inboxResize{display:none}
+  .inboxList{max-height:38vh;border-right:0;border-bottom:1px solid var(--border-neutral-default)}
+
+  /* opportunities workspace: same idea, master list capped, thread below */
+  .oppWorkspace{grid-template-columns:1fr;height:auto;min-height:0}
+  .oppMaster{border-right:0;border-bottom:1px solid var(--border-neutral-default);max-height:38vh}
+
+  .zone{padding:0 var(--md) var(--md)}
+  .pageHeader{padding:var(--md) var(--md) var(--md) calc(var(--md) + 44px);flex-wrap:wrap}
+  .pageHeader .ttl{flex:1 1 100%}
+  .pageActions{flex-wrap:wrap}
+
+  /* data tables don't reflow for narrow screens — column count is the
+     information, not just styling — so they scroll horizontally inside
+     their own card instead of squeezing illegible columns or overflowing
+     the page. table{width:100%} (global rule) is what was forcing columns
+     to compress; max-content lets the table claim its natural width so the
+     card's scrollbar has something real to scroll. !important is required
+     because several table cards set overflow:hidden inline for their
+     rounded corners, which otherwise beats this rule regardless of
+     specificity. */
+  .card:has(table){overflow-x:auto !important}
+  .card:has(table) table{width:max-content;min-width:100%}
+
+  /* the "label on the left, control on the right" row — a guardrail
+     toggle, a lifecycle field, Channels' "Optimize for" — is the single
+     most common layout piece in the settings surfaces, and none of it was
+     built to wrap: the label column carries an inline max-width (70-76%,
+     scattered across dozens of call sites) sized for a wide desktop row,
+     which on a phone squeezes it into a vertical ladder of single words
+     while the control gets pushed half off-screen. flex-wrap alone only
+     enables wrapping when a row doesn't fit — it never forces a break in
+     rows that already fit on one line — so this is safe to apply broadly.
+     The attribute selector is a blanket override for those scattered
+     inline max-widths without editing every call site individually. */
+  .row.between{flex-wrap:wrap;row-gap:var(--xs)}
+  .row.between > [style*="max-width"]{max-width:100% !important}
+  .row.between .selectEl.auto{width:100%}
+
+  /* Opportunities builds its own header instead of using .pageHeader, so it
+     needs the same hamburger clearance applied separately */
+  .oppMasterHead{padding-left:calc(var(--md) + 44px)}
+}
 </style>
 </head>
 <body data-palette="#7e55f6,#c35e4a,#149db8,#0e4ea7">
 
 <div class="app">
+  <button class="mobileMenuBtn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+  <div class="sidebarBackdrop" id="sidebarBackdrop"></div>
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar">
     <div class="productHead">
@@ -3179,7 +3262,7 @@ function closePanel(){panel.classList.remove("on");overlay.classList.remove("on"
   setTimeout(()=>panel.classList.remove("wide"),220)}
 $("#panelClose").addEventListener("click",closePanel);
 overlay.addEventListener("click",closePanel);
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePanel();closeSidebar()}});
 
 const NAV_OF={"campaign-new":"campaigns"};
 /* every screen gets its own #hash, so any page can be copied out of the
@@ -3233,7 +3316,20 @@ function resetWizard(){
   renderWizSteps();
   askTurn();
 }
-$$(".navItem").forEach(n=>n.addEventListener("click",()=>goto(n.dataset.page)));
+$$(".navItem").forEach(n=>n.addEventListener("click",()=>{goto(n.dataset.page);closeSidebar()}));
+
+/* the sidebar becomes an off-canvas drawer below 880px (see the MOBILE CSS
+   block). Opening/closing it is independent of goto() — the drawer isn't
+   page state, it's viewport state — but navigating away closes it, the
+   same way a mobile nav drawer is expected to behave. */
+function openSidebar(){$(".sidebar").classList.add("open");$("#sidebarBackdrop").classList.add("on");
+  $("#mobileMenuBtn").setAttribute("aria-expanded","true")}
+function closeSidebar(){$(".sidebar").classList.remove("open");$("#sidebarBackdrop").classList.remove("on");
+  $("#mobileMenuBtn").setAttribute("aria-expanded","false")}
+$("#mobileMenuBtn").addEventListener("click",()=>{
+  $(".sidebar").classList.contains("open")?closeSidebar():openSidebar();
+});
+$("#sidebarBackdrop").addEventListener("click",closeSidebar);
 
 $("#oppType").addEventListener("change",e=>{oppFilterType=e.target.value;renderOpportunities()});
 $("#oppStatus").addEventListener("change",e=>{oppFilterStatus=e.target.value;renderOpportunities()});

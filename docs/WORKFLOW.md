@@ -173,7 +173,11 @@ done
    Loyalty, also load a `#page/tab` hash (e.g. `#engagements/scenarios`) and confirm it opens on
    that tab, and click a tab on one page then visit the other — its own tab must still be active,
    not blank (that's the failure mode `selectTab` scoping to `.closest(".page")` exists to prevent)
-7. Push, then confirm live == local
+7. At a narrow viewport (~390px, see `docs/CODEBASE.md` → Mobile): `document.documentElement.scrollWidth`
+   must equal `window.innerWidth` on every page you touched — any mismatch means something is
+   overflowing. Open the sidebar drawer and confirm it closes on a nav click and on a backdrop
+   click; open a panel and confirm the hamburger hides while it's open
+8. Push, then confirm live == local
 
 ## A note on scope
 

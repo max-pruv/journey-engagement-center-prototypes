@@ -49,6 +49,10 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
   theme table: `domTotals()` folds the plays, so `ACE_DOMAINS` carries no metrics of its own.
 - **New interactive elements use `data-*` attributes and the delegated document click handler**, not
   per-node listeners — they must survive a re-render.
+- **The layout is responsive below 880px** — sidebar becomes a drawer, master/detail lists stack,
+  tables scroll horizontally instead of squeezing columns illegible. One breakpoint, in `docs/CODEBASE.md`
+  under "Mobile." A new two-column layout or a new label+control row should work at 390px without
+  a special case — see that section before assuming one is needed.
 
 ## The product model in six lines
 

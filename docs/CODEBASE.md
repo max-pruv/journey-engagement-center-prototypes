@@ -167,6 +167,47 @@ module-scope variable, because they need to survive being scrolled past and back
 `c.sending`, and `c.fb` (the Conversations feedback loop) all live on the `CONV` row they belong
 to, not in a variable that only knows about whichever conversation is currently open.
 
+## Mobile
+
+One breakpoint, `@media (max-width:880px)`, in a single CSS block near the end of `<style>` (search
+`MOBILE`) so it always cascades after every other rule it needs to override. Below it:
+
+- **The sidebar becomes an off-canvas drawer.** `.sidebar` is `position:fixed`, translated off-screen
+  by default; `.sidebar.open` slides it in. `#mobileMenuBtn` (a hamburger, floating fixed top-left,
+  `display:none` above the breakpoint) toggles it via `openSidebar()`/`closeSidebar()`;
+  `#sidebarBackdrop` dims the page and closes it on click; clicking a nav item closes it too
+  (`goto()` doesn't know about the drawer — it's viewport state, not page state — so the nav item's
+  own click handler calls `closeSidebar()` after `goto()`). `body:has(#panel.on) .mobileMenuBtn`
+  hides the hamburger while a side panel is open — both float in the same top-left corner, and the
+  panel already has its own close button.
+- **Master/detail lists go horizontal.** `.lcWrap` drops to one column; `.lcList` flips to a
+  horizontally-scrolling row of pills instead of a vertical list, since a vertical list of 7-8 items
+  each spanning the full width would push the detail below the fold. Covers Guardrails, Lifecycle,
+  Channels and Loyalty's tier/program lists for free — they all already used `.lcList`/`.lcItem`.
+- **The Conversations inbox and Opportunities workspace stack** — list on top with a capped
+  `max-height` and its own scroll, detail below. `.inboxResize` (the desktop drag handle) is hidden;
+  dragging a vertical stack apart isn't a meaningful action once the columns are gone.
+- **Tables scroll horizontally instead of losing columns.** The global `table{width:100%}` rule is
+  what makes columns compress illegibly on a narrow screen; `.card:has(table) table{width:max-content}`
+  lets a table claim its natural width inside a `.card:has(table){overflow-x:auto}` wrapper, so the
+  hidden columns are a swipe away instead of gone. The `!important` on `overflow-x` is load-bearing —
+  several table cards set `overflow:hidden` inline for their rounded corners, and inline styles beat
+  an external stylesheet rule for the same property regardless of selector specificity.
+- **Label-left, control-right rows wrap.** `.row.between` (a guardrail toggle, a lifecycle field,
+  Channels' "Optimize for") is the single most common settings-row shape, and none of the dozens of
+  call sites were built expecting to wrap — several carry an inline `style="max-width:70%"` (or 76%)
+  on the label sized for a wide desktop row. `.row.between{flex-wrap:wrap}` plus a blanket
+  `[style*="max-width"]{max-width:100% !important}` override fixes all of them at once rather than
+  editing each call site. `flex-wrap:wrap` alone never forces a row that already fits to break, so
+  this is safe on rows that were never a problem.
+- **Two headers build their own markup instead of using `.pageHeader`** — Opportunities
+  (`.oppMasterHead`) and the studio panel's own header. Both got their own hamburger-clearance
+  padding rather than inheriting `.pageHeader`'s; if a future page does the same, it needs the same
+  treatment, `.pageHeader`'s fix won't reach it.
+
+If you add a new two-column layout or a new label+control row, it should already work at 390px
+without a special case — check it against this section before assuming it needs one.
+
 ## Panels
 
 `openPanel(title, sub, bodyHTML, footHTML)` fills the single `#panel`. `closePanel()` hides it.
