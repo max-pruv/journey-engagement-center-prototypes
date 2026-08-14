@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intelligence Hub · Business Read</title>
+<style>
+:root{
+  --white:#fff;--black:#1e242e;--grey-50:#fafafa;--grey-100:#ebecef;--grey-200:#d5d7dd;--grey-400:#9aa0ad;--grey-500:#6e7686;--grey-600:#5c6370;
+  --purple-50:#f1ecff;--purple-100:#dad0ff;--purple-200:#c4b7ff;--purple-500:#7e55f6;--purple-700:#683fcf;
+  --blue-50:#f5f9ff;--blue-100:#d8e9fd;--blue-600:#0d6cf2;--teal-50:#e8f5f8;--teal-200:#93d1de;--teal-800:#0b5665;
+  --green-50:#e9fbf5;--green-300:#74dcba;--green-500:#22c58b;--green-800:#147656;--orange-50:#fff5ee;--orange-300:#ffbb8e;--orange-800:#a94f13;--red-50:#fdeeee;--red-800:#a9232b;
+  --border:rgba(0,0,0,.08);--dark:#161a22;--xxxs:4px;--xxs:6px;--xs:8px;--sm:12px;--md:16px;--lg:24px;--xl:32px;--xxl:48px;
+}
+*{box-sizing:border-box;margin:0}body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--grey-50);color:var(--black);font-size:14px;line-height:1.45}
+a{color:inherit}
+.top{position:sticky;top:0;z-index:20;height:58px;background:rgba(250,250,250,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 var(--xl)}
+.brand{font-weight:600;letter-spacing:-.01em}.brand span{color:var(--purple-700)}.links{display:flex;gap:var(--xxxs);align-items:center}.links a{color:var(--grey-600);text-decoration:none;padding:6px 9px;border-radius:var(--xxs);font-size:12px}.links a.on{color:var(--purple-700);background:var(--purple-50);font-weight:600}
+.wrap{max-width:1180px;margin:auto;padding:var(--xl) var(--lg) var(--xxl)}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--purple-700)}
+.hero{position:relative;overflow:hidden;border-radius:24px;background:radial-gradient(circle at 78% 8%,rgba(126,85,246,.32),transparent 32%),radial-gradient(circle at 12% 92%,rgba(20,157,184,.22),transparent 28%),var(--dark);color:var(--white);padding:var(--xl)}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
+.hero>*{position:relative;z-index:1}.hero .eyebrow{color:var(--purple-200)}
+.hero h1{font-size:46px;line-height:1.02;letter-spacing:-.05em;max-width:820px;margin-top:var(--sm)}.hero h1 em{font-style:normal;color:var(--purple-200)}
+.hero p{color:#c9ceda;max-width:70ch;margin-top:var(--md);font-size:15px}
+.heroStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sm);margin-top:var(--xl)}
+.heroStats div{padding:var(--md);border:1px solid rgba(255,255,255,.13);border-radius:14px;background:rgba(255,255,255,.05)}
+.heroStats span{display:block;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#aeb5c5;font-weight:700}
+.heroStats strong{display:block;font-size:24px;letter-spacing:-.04em;margin-top:var(--xxxs)}
+.heroStats small{font-size:11px;color:#c9ceda}
+.section{margin-top:var(--xxl)}
+.sectionHead{display:flex;align-items:end;justify-content:space-between;gap:var(--lg);margin-bottom:var(--lg)}
+.sectionHead h2{font-size:30px;line-height:1.08;letter-spacing:-.04em;margin-top:var(--xxxs)}
+.sectionHead p{max-width:46ch;color:var(--grey-600);font-size:13px}
+.verdict{display:inline-flex;align-items:center;gap:var(--xxs);padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+.verdict.win{background:var(--green-50);color:var(--green-800)}.verdict.fail{background:var(--red-50);color:var(--red-800)}.verdict.watch{background:var(--orange-50);color:var(--orange-800)}
+.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:var(--lg);align-items:start}
+.panel{background:var(--white);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.panelHead{display:flex;align-items:center;justify-content:space-between;gap:var(--md);padding:var(--md) var(--lg);border-bottom:1px solid var(--border)}
+.panelHead h3{font-size:16px;letter-spacing:-.02em}
+.panelHead.win{background:var(--green-50)}.panelHead.fail{background:var(--red-50)}
+.move{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--sm);padding:var(--md) var(--lg);border-top:1px solid var(--border)}
+.move:first-of-type{border-top:0}
+.move h4{font-size:14px;letter-spacing:-.01em}
+.move .why{font-size:12px;color:var(--grey-600);margin-top:var(--xxxs)}
+.move .proof{display:flex;flex-wrap:wrap;gap:var(--xxs);margin-top:var(--xs)}
+.move .proof span{font-size:11px;padding:3px 7px;border-radius:999px;background:var(--grey-100);color:var(--grey-600)}
+.move .num{text-align:right}.move .num b{display:block;font-size:20px;letter-spacing:-.03em}.move .num span{font-size:10px;color:var(--grey-500);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.move .action{grid-column:1/-1;font-size:12px;padding:var(--xs) var(--sm);border-radius:var(--xs);background:var(--purple-50);color:var(--purple-700)}
+.move .action b{font-weight:700}
+.seg{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--sm);align-items:center;padding:var(--md) var(--lg);border-top:1px solid var(--border)}
+.seg:first-of-type{border-top:0}
+.seg h4{font-size:14px}.seg p{font-size:12px;color:var(--grey-600);margin-top:var(--xxxs)}
+.seg .share{text-align:right}.seg .share b{display:block;font-size:20px;letter-spacing:-.03em}.seg .share span{font-size:10px;color:var(--grey-500);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.seg .bar{grid-column:1/-1;height:8px;border-radius:999px;background:var(--grey-100);overflow:hidden}.seg .bar i{display:block;height:100%;border-radius:inherit;background:var(--purple-500)}
+.seg .best{grid-column:1/-1;font-size:12px;color:var(--green-800)}
+.seg.vip{background:linear-gradient(90deg,var(--purple-50),transparent 60%)}
+.calendar{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--xxs);padding:var(--lg)}
+.mLabel{display:flex;align-items:center;font-size:10px;color:var(--grey-500);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.seasonRow{display:contents}
+.seasonName{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between;padding:var(--xs) 0 var(--xxxs)}
+.seasonName strong{font-size:13px}.seasonName span{font-size:11px;color:var(--grey-600)}
+.cell{height:26px;border-radius:var(--xxs);background:var(--grey-100);position:relative}
+.cell.l1{background:var(--purple-100)}.cell.l2{background:var(--purple-200)}.cell.l3{background:var(--purple-500)}
+.cell.now:after{content:"";position:absolute;inset:-3px;border:2px solid var(--dark);border-radius:8px}
+.calLegend{display:flex;gap:var(--md);align-items:center;padding:0 var(--lg) var(--lg);font-size:11px;color:var(--grey-600)}
+.calLegend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:var(--xxxs);vertical-align:-2px}
+.window{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sm);margin-top:var(--lg)}
+.windowCard{padding:var(--lg);border-radius:18px;border:1px solid var(--border);background:var(--white)}
+.windowCard.hot{background:var(--dark);color:var(--white);border-color:var(--dark)}
+.windowCard .k{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--grey-500);font-weight:700}.windowCard.hot .k{color:var(--green-300)}
+.windowCard strong{display:block;font-size:26px;letter-spacing:-.04em;margin-top:var(--xs)}
+.windowCard p{font-size:12px;color:var(--grey-600);margin-top:var(--sm)}.windowCard.hot p{color:#c9ceda}
+.miss{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:var(--md);align-items:center;padding:var(--md) var(--lg);border-top:1px solid var(--border)}
+.miss:first-of-type{border-top:0}
+.miss .rank{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--red-50);color:var(--red-800);font-weight:700;font-size:12px}
+.miss h4{font-size:14px}.miss p{font-size:12px;color:var(--grey-600);margin-top:var(--xxxs)}
+.miss .cost{text-align:right}.miss .cost b{display:block;font-size:18px;letter-spacing:-.03em;color:var(--red-800)}.miss .cost span{font-size:10px;color:var(--grey-500);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.takeaways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sm)}
+.takeaway{padding:var(--lg);border-radius:18px;background:var(--white);border:1px solid var(--border)}
+.takeaway .n{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple-700);font-weight:700}
+.takeaway h3{font-size:18px;letter-spacing:-.02em;margin-top:var(--xs)}
+.takeaway p{font-size:12px;color:var(--grey-600);margin-top:var(--sm)}
+.fine{font-size:11px;color:var(--grey-500);margin-top:var(--xl)}
+@media(max-width:900px){
+  .top{height:auto;min-height:58px;gap:var(--xs);padding:var(--xs) var(--md)}.brand{flex:0 0 112px}.links{min-width:0;flex:1;overflow-x:auto}.links a{flex-shrink:0}
+  .wrap{padding:var(--md) var(--md) var(--xxl)}.hero{padding:var(--lg)}.hero h1{font-size:34px}
+  .heroStats{grid-template-columns:1fr 1fr}.twoCol{grid-template-columns:1fr}.sectionHead{display:block}.sectionHead p{margin-top:var(--sm)}
+  .window,.takeaways{grid-template-columns:1fr}.calendar{grid-template-columns:repeat(6,1fr)}.mLabel{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="top"><div class="brand">Journey <span>Intelligence Hub</span></div><div class="links"><a href="operating-model.html">A · Operating model</a><a href="product-graph.html">B · Product graph</a><a href="ai-briefing.html">C · AI briefing</a><a href="system-core.html">D · System core</a><a class="on" href="business-read.html">E · Business read</a><a href="../index.html">Prototype</a></div></nav>
+<main class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow">Concept E · business read</div>
+    <h1>What works in this business, <em>in plain sight.</em></h1>
+    <p>Every month the engine reads 18,204 orders and answers four questions a merchant actually asks: which marketing moves make money, which ones burn it, who the customers really are, and when they are about to buy. Everything below carries a verdict and the evidence behind it.</p>
+    <div class="heroStats">
+      <div><span>Proven winners</span><strong>4</strong><small>moves worth scaling now</small></div>
+      <div><span>Proven losers</span><strong>3</strong><small>moves to stop this month</small></div>
+      <div><span>Biggest shopper group</span><strong>41%</strong><small>enter through one product</small></div>
+      <div><span>Next peak window</span><strong>18 d</strong><small>until the cold-weather surge</small></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <header class="sectionHead"><div><div class="eyebrow">Marketing strategy</div><h2>What works, and what quietly loses money.</h2></div><p>Ranked by measured lift against a holdout, not by clicks. Each move says what to do about it.</p></header>
+    <div class="twoCol">
+      <section class="panel">
+        <header class="panelHead win"><h3>Working — scale these</h3><span class="verdict win">Proven lift</span></header>
+        <article class="move"><div><h4>Compatibility cross-sell to shell owners</h4><p class="why">“This completes the shell you already own” beats every generic launch message, because it starts from something the shopper has.</p><div class="proof"><span>3.1× second-order lift</span><span>0% discount used</span><span>holdout-verified</span></div></div><div class="num"><b>44%</b><span>attach rate</span></div><p class="action"><b>Do more:</b> make this the default second-order play in every market; lead with fit, never price.</p></article>
+        <article class="move"><div><h4>Sizing help before the sale</h4><p class="why">The #1 pre-purchase question. Answering it inside the conversation converts better than any offer.</p><div class="proof"><span>+22% first-order CVR</span><span>works in all 4 markets</span></div></div><div class="num"><b>#1</b><span>question</span></div><p class="action"><b>Do more:</b> put the sizing answer in the first message for every shell and mid-layer conversation.</p></article>
+        <article class="move"><div><h4>Free shipping in the UK</h4><p class="why">UK shoppers hesitate on delivery confidence, not price. Shipping removes the doubt at a fraction of the cost of a coupon.</p><div class="proof"><span>+14% CVR vs 10% off</span><span>£6.10 cheaper per order</span></div></div><div class="num"><b>67 d</b><span>UK window</span></div><p class="action"><b>Do more:</b> keep discounts out of the UK; make free shipping the default lever there.</p></article>
+        <article class="move"><div><h4>Post-purchase inside 54 days</h4><p class="why">The relationship is still open. After day 90 the same message converts a sixth as well.</p><div class="proof"><span>38% convert in-window</span><span>6% after day 90</span></div></div><div class="num"><b>54 d</b><span>window</span></div><p class="action"><b>Do more:</b> every retention and cross-sell play fires inside this window or not at all.</p></article>
+      </section>
+      <section class="panel">
+        <header class="panelHead fail"><h3>Not working — stop these</h3><span class="verdict fail">Proven loss</span></header>
+        <article class="move"><div><h4>Flat 15% off welcome discount</h4><p class="why">It converts shoppers who would have bought anyway and trains the rest to wait. The shoppers it wins are the least likely to return.</p><div class="proof"><span>−£8.40 margin per order</span><span>19% lower 90-day repeat</span></div></div><div class="num"><b>−31%</b><span>LTV of cohort</span></div><p class="action"><b>Stop:</b> replace with sizing help + compatibility story; keep a discount only as the last lever in the US.</p></article>
+        <article class="move"><div><h4>Trail Gloves as an acquisition product</h4><p class="why">It sells, but it starts nothing. Buyers who enter through gloves almost never come back for a second category.</p><div class="proof"><span>9% return as first product</span><span>vs 41% for shell entrants</span></div></div><div class="num"><b>9%</b><span>return rate</span></div><p class="action"><b>Stop:</b> pull gloves from acquisition creative; keep them in checkout and bundles where they perform.</p></article>
+        <article class="move"><div><h4>Generic “new arrival” blasts</h4><p class="why">The same launch message to everyone converts worst of any send type and drives the highest opt-out, because it knows nothing about the reader.</p><div class="proof"><span>0.4% CVR</span><span>2.3× average opt-out</span></div></div><div class="num"><b>worst</b><span>send type</span></div><p class="action"><b>Stop:</b> no product announcement goes out without an ownership reason attached to it.</p></article>
+      </section>
+    </div>
+  </section>
+
+  <section class="section">
+    <header class="sectionHead"><div><div class="eyebrow">Shoppers</div><h2>Four groups carry this business. They are not equal.</h2></div><p>Grouped by what they do, not who they are. The engine treats each group differently because each one buys for a different reason.</p></header>
+    <section class="panel">
+      <article class="seg vip"><div><h4>System builders</h4><p>Start with a shell, add layers within two months. Highest LTV, most predictable, cheapest to keep.</p><div class="bar"><i style="width:41%"></i></div><p class="best">Best move: complete their system before day 54 — never discount them.</p></div><div class="share"><b>41%</b><span>of customers</span></div></article>
+      <article class="seg"><div><h4>Winter regulars</h4><p>Return every cold season for one technical piece. Buy full price when the forecast drops.</p><div class="bar"><i style="width:23%"></i></div><p class="best">Best move: reach them on the first sub-zero forecast with technical detail.</p></div><div class="share"><b>23%</b><span>of customers</span></div></article>
+      <article class="seg"><div><h4>Gift buyers</h4><p>One order a year, November–December. Never return, and that is fine — they are profitable if acquisition stays cheap.</p><div class="bar"><i style="width:21%"></i></div><p class="best">Best move: gift guides and delivery dates in Q4; leave them alone the rest of the year.</p></div><div class="share"><b>21%</b><span>of customers</span></div></article>
+      <article class="seg"><div><h4>Discount hunters</h4><p>Only buy on promotion. Every euro spent retaining them costs more than they return.</p><div class="bar"><i style="width:15%;background:var(--orange-300)"></i></div><p class="best">Best move: exclude from loyalty spend; they get the public sale, nothing earlier.</p></div><div class="share"><b>15%</b><span>of customers</span></div></article>
+    </section>
+  </section>
+
+  <section class="section">
+    <header class="sectionHead"><div><div class="eyebrow">Seasonality</div><h2>When money is actually made.</h2></div><p>Demand is not flat. Three moments matter, and the engine is already inside the first one.</p></header>
+    <section class="panel">
+      <div class="calendar">
+        <span class="mLabel">Sep</span><span class="mLabel">Oct</span><span class="mLabel">Nov</span><span class="mLabel">Dec</span><span class="mLabel">Jan</span><span class="mLabel">Feb</span><span class="mLabel">Mar</span><span class="mLabel">Apr</span><span class="mLabel">May</span><span class="mLabel">Jun</span><span class="mLabel">Jul</span><span class="mLabel">Aug</span>
+        <div class="seasonRow"><div class="seasonName"><strong>Shells &amp; mid-layers</strong><span>core revenue · peaks on first cold</span></div><span class="cell l1"></span><span class="cell l2 now"></span><span class="cell l3"></span><span class="cell l3"></span><span class="cell l2"></span><span class="cell l1"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell l1"></span></div>
+        <div class="seasonRow"><div class="seasonName"><strong>Gifting &amp; accessories</strong><span>Q4 only · profitable if cheap to reach</span></div><span class="cell"></span><span class="cell l1"></span><span class="cell l3"></span><span class="cell l3"></span><span class="cell l1"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span></div>
+        <div class="seasonRow"><div class="seasonName"><strong>Trail &amp; lightweight</strong><span>spring/summer · low repeat value</span></div><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell l1"></span><span class="cell l2"></span><span class="cell l3"></span><span class="cell l3"></span><span class="cell l2"></span><span class="cell l1"></span></div>
+      </div>
+      <div class="calLegend"><span><i style="background:var(--purple-100)"></i>warming</span><span><i style="background:var(--purple-200)"></i>strong</span><span><i style="background:var(--purple-500)"></i>peak</span><span><i style="border:2px solid var(--dark);background:transparent"></i>today</span></div>
+    </section>
+    <div class="window">
+      <article class="windowCard hot"><span class="k">Now · next 18 days</span><strong>Pre-cold window</strong><p>1,284 shell owners without insulation enter their first sub-zero forecast. This is the single best moment of the year for the core cross-sell.</p></article>
+      <article class="windowCard"><span class="k">In 6 weeks</span><strong>Gift surge</strong><p>Gift buyers arrive. Cheap reach only: guides, delivery dates, bundles. No loyalty spend, no early access.</p></article>
+      <article class="windowCard"><span class="k">In 5 months</span><strong>Quiet season</strong><p>Core categories cool. Cut frequency in half, run service recovery and reviews, protect margin for October.</p></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <header class="sectionHead"><div><div class="eyebrow">Money left on the table</div><h2>Three gaps, priced.</h2></div><p>What the current strategy misses each month, and the move that closes it.</p></header>
+    <section class="panel">
+      <article class="miss"><span class="rank">1</span><div><h4>Shell owners past day 54 with no second message</h4><p>176 active owners are inside the final 12 days of the window right now. Every week of silence converts a third fewer of them.</p></div><div class="cost"><b>≈$14k</b><span>per month</span></div></article>
+      <article class="miss"><span class="rank">2</span><div><h4>Discounts sent to system builders</h4><p>The highest-LTV group buys at full price when given a compatibility reason. 22% of them still received a coupon last month.</p></div><div class="cost"><b>≈$9k</b><span>per month</span></div></article>
+      <article class="miss"><span class="rank">3</span><div><h4>Acquisition spend on glove-led creative</h4><p>Glove-first customers return at 9%. Shifting that budget to shell-led creative pays back within one order cycle.</p></div><div class="cost"><b>≈$6k</b><span>per month</span></div></article>
+    </section>
+  </section>
+
+  <section class="section">
+    <div class="takeaways">
+      <article class="takeaway"><div class="n">01 · scale</div><h3>Compatibility beats novelty.</h3><p>Every winning move starts from what the shopper already owns. Make that the default reason for every second-order message.</p></article>
+      <article class="takeaway"><div class="n">02 · stop</div><h3>Price is the last lever, not the first.</h3><p>The best customers never need a discount; the worst customers only need a discount. Treat them differently or pay for both.</p></article>
+      <article class="takeaway"><div class="n">03 · time</div><h3>The calendar is the strategy.</h3><p>Pre-cold cross-sell now, gifting in six weeks, silence in spring. The engine schedules around these, not around campaign dates.</p></article>
+    </div>
+  </section>
+
+  <p class="fine">Hidden concept · All merchant data and values are fictional. This page is intentionally not linked from the main prototype navigation.</p>
+</main>
+</body>
+</html>
