@@ -2131,9 +2131,9 @@ const ACE_MODES=[
    who:"Pick this once you've read a few dozen and you trust what it's doing."}
 ];
 let aceState="auto";
-/* which domains have their plays showing. Expanded by default — the two layers
-   are the point of the screen, so they should be visible without a click. */
-let aceOpen=new Set(ACE_DOMAINS.map((_,i)=>i));
+/* which domains have their plays showing. Collapsed by default — the theme row
+   carries the folded figures, so the plays only appear on click. */
+let aceOpen=new Set();
 const rate=v=>(Math.round(v*10)/10).toFixed(1)+"%";
 /* the nav badge counts both layers: plays ACE is actually running, plus the
    custom engagements you have switched on */

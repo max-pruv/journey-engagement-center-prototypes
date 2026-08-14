@@ -34,10 +34,10 @@ out._dom={tiles:n('#repTiles .tile'),chart:n('#repChart svg'),rev:n('#revTable t
 return JSON.stringify(out)})()
 ```
 
-Every key must be `ok` and every `_dom` count must be greater than zero. Anything else means a
-screen is blank. `playRows` at zero while `domRows` is 8 is the specific failure of a collapsed
-`aceOpen` — the probe runs against a fresh load, where every theme starts expanded, so it should
-read 8 and 26.
+Every key must be `ok` and every `_dom` count must be greater than zero — **except `playRows`**.
+Themes start collapsed, so on a fresh load `domRows` is 8 and `playRows` is 0; that is the intended
+default, not a failure. To check the plays still render, expand a theme first
+(`ACE_DOMAINS.forEach((_,i)=>aceOpen.add(i)); renderAce();`) — `playRows` should then read 26.
 
 ## Check the JS parses before you look at anything
 

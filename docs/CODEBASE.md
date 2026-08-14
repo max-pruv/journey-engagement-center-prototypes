@@ -97,8 +97,8 @@ and the rows under it cannot drift apart:
 - `domPotential(d)` — the fold of every play's modelled numbers, including the off and blocked ones.
   This is what the italics show, and what the "GMV left on the table" tag sums.
 
-`aceOpen` is a `Set` of expanded theme indexes; it starts full, because the two layers are the point
-of the screen. `data-domopen` sits on the whole theme row (not just the chevron) so clicking anywhere
+`aceOpen` is a `Set` of expanded theme indexes; it starts empty — the theme row already carries the
+folded figures, so the plays only appear on click. `data-domopen` sits on the whole theme row (not just the chevron) so clicking anywhere
 on it expands or collapses that theme; it must be checked **after** the row's own controls
 (`data-dom`, `data-dominstr`) in the delegated click handler, or a click on either of those would
 just toggle the row instead of doing what it says. `#aceExpandAll` toggles every theme at once.
