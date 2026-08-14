@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intelligence Hub · System Core</title>
+<style>
+:root{
+  --white:#fff;--black:#1e242e;--grey-50:#fafafa;--grey-100:#ebecef;--grey-200:#d5d7dd;--grey-500:#6e7686;--grey-600:#5c6370;
+  --purple-50:#f1ecff;--purple-100:#dad0ff;--purple-200:#c4b7ff;--purple-500:#7e55f6;--purple-700:#683fcf;--purple-800:#4c3c9d;
+  --blue-50:#f5f9ff;--blue-100:#d8e9fd;--blue-600:#0d6cf2;--teal-50:#e8f5f8;--teal-200:#93d1de;--teal-800:#0b5665;
+  --green-50:#e9fbf5;--green-300:#74dcba;--green-500:#22c58b;--green-800:#147656;--orange-50:#fff5ee;--orange-300:#ffbb8e;--orange-800:#a94f13;
+  --border:rgba(0,0,0,.08);--dark:#161a22;--dark-2:#202633;--xxxxs:2px;--xxxs:4px;--xxs:6px;--xs:8px;--sm:12px;--md:16px;--lg:24px;--xl:32px;--xxl:48px;
+}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--grey-50);color:var(--black);font-size:14px;line-height:1.45}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}a{color:inherit}
+.top{position:sticky;top:0;z-index:20;height:58px;background:rgba(250,250,250,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 var(--xl)}
+.brand{font-weight:600;letter-spacing:-.01em}.brand span{color:var(--purple-700)}.links{display:flex;gap:var(--xxxs);align-items:center}.links a{color:var(--grey-600);text-decoration:none;padding:6px 9px;border-radius:var(--xxs);font-size:12px}.links a.on{color:var(--purple-700);background:var(--purple-50);font-weight:600}
+.wrap{max-width:1240px;margin:auto;padding:var(--xl) var(--lg) var(--xxl)}.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--purple-700)}.lead{font-size:15px;color:var(--grey-600);max-width:72ch}.small{font-size:12px;color:var(--grey-600)}.fine{font-size:11px;color:var(--grey-500);margin-top:var(--xl)}
+.hero{position:relative;overflow:hidden;border-radius:24px;background:radial-gradient(circle at 74% 12%,rgba(126,85,246,.28),transparent 30%),radial-gradient(circle at 18% 86%,rgba(20,157,184,.2),transparent 26%),var(--dark);color:var(--white);padding:var(--xl);min-height:420px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:var(--xl);align-items:stretch}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 88%)}
+.hero>*{position:relative;z-index:1}.hero .eyebrow{color:var(--purple-200)}.hero h1{font-size:52px;line-height:.98;letter-spacing:-.055em;max-width:780px;margin-top:var(--sm)}.hero h1 em{font-style:normal;color:var(--purple-200)}.hero .lead{color:#c9ceda;margin-top:var(--lg);font-size:16px}.heroActions{display:flex;flex-wrap:wrap;gap:var(--sm);margin-top:var(--xl)}.heroActions a{display:inline-flex;align-items:center;gap:var(--xs);padding:10px 12px;border-radius:9px;text-decoration:none;font-size:12px;font-weight:600}.heroActions a:first-child{background:var(--white);color:var(--black)}.heroActions a:last-child{border:1px solid rgba(255,255,255,.22);color:var(--white)}
+.core{position:relative;min-height:320px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(255,255,255,.045);padding:var(--md);overflow:hidden}.core svg{position:absolute;inset:0;width:100%;height:100%}.coreCard{position:absolute;left:var(--md);right:var(--md);bottom:var(--md);padding:var(--md);border:1px solid rgba(255,255,255,.13);border-radius:14px;background:rgba(22,26,34,.82);backdrop-filter:blur(8px)}.coreCard .k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green-300);font-weight:700}.coreCard strong{display:block;font-size:24px;letter-spacing:-.04em;margin-top:var(--xxxs)}.coreCard p{font-size:12px;color:#c9ceda;margin-top:var(--xxs)}
+.orbit{position:absolute;border:1px solid rgba(196,183,255,.18);border-radius:50%;animation:spin 18s linear infinite}.orbit.o1{width:270px;height:270px;right:30px;top:26px}.orbit.o2{width:180px;height:180px;right:75px;top:70px;animation-duration:12s;animation-direction:reverse}.orbit i{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--green-300);box-shadow:0 0 18px var(--green-300)}.orbit.o1 i{left:24px;top:30px}.orbit.o2 i{right:20px;bottom:28px;background:var(--purple-200);box-shadow:0 0 18px var(--purple-200)}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{0%,100%{opacity:.35;transform:scale(.92)}50%{opacity:1;transform:scale(1.05)}}@keyframes rise{from{transform:scaleY(.55)}to{transform:scaleY(1)}}@keyframes dash{to{stroke-dashoffset:-80}}
+.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sm);margin-top:var(--sm)}.meta div{padding:var(--md);border:1px solid var(--border);border-radius:14px;background:var(--white)}.meta span{display:block;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--grey-500);font-weight:700}.meta strong{display:block;font-size:25px;letter-spacing:-.04em;margin-top:var(--xxxs)}.meta small{font-size:11px;color:var(--grey-600)}
+.section{margin-top:var(--xxl)}.sectionHead{display:flex;align-items:end;justify-content:space-between;gap:var(--lg);margin-bottom:var(--lg)}.sectionHead h2{font-size:32px;line-height:1.06;letter-spacing:-.04em;margin-top:var(--xxxs)}.sectionHead p{max-width:48ch;color:var(--grey-600);font-size:13px}
+.intelGrid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,.55fr);gap:var(--lg);align-items:start}.panel{background:var(--white);border:1px solid var(--border);border-radius:18px;overflow:hidden}.panelHead{display:flex;align-items:start;justify-content:space-between;gap:var(--md);padding:var(--lg);border-bottom:1px solid var(--border)}.panelHead h3{font-size:20px;letter-spacing:-.025em;margin-top:var(--xxxs)}.tag{display:inline-flex;align-items:center;gap:var(--xxs);padding:4px 7px;border-radius:999px;font-size:11px;font-weight:600;background:var(--purple-50);color:var(--purple-700);white-space:nowrap}.tag.green{background:var(--green-50);color:var(--green-800)}.tag.orange{background:var(--orange-50);color:var(--orange-800)}
+.graph{position:relative;min-height:520px;background:linear-gradient(180deg,var(--white),var(--grey-50))}.graph svg{position:absolute;inset:0;width:100%;height:100%}.node{position:absolute;width:180px;padding:var(--md);border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.92);box-shadow:0 12px 30px rgba(30,36,46,.08)}.node .type{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--grey-500);font-weight:700}.node strong{display:block;font-size:15px;margin-top:var(--xxxs)}.node small{display:block;font-size:11px;color:var(--grey-600);margin-top:var(--xxs)}.node.entry{left:6%;top:38%;border-color:var(--blue-100)}.node.bridge{left:39%;top:20%;border-color:var(--purple-200);box-shadow:0 16px 38px rgba(126,85,246,.16)}.node.expand{right:6%;top:34%;border-color:var(--teal-200)}.node.risk{left:43%;bottom:7%;border-color:var(--orange-300);background:var(--orange-50)}.node .score{position:absolute;right:10px;top:10px;font-size:10px;font-weight:700;color:var(--purple-700);background:var(--purple-50);padding:3px 5px;border-radius:999px}.graphFoot{position:absolute;left:var(--lg);right:var(--lg);bottom:var(--lg);display:flex;gap:var(--sm);align-items:flex-start;padding:var(--md);border-radius:14px;background:var(--dark);color:var(--white)}.graphFoot i{flex:0 0 8px;width:8px;height:8px;border-radius:50%;background:var(--green-300);box-shadow:0 0 0 5px rgba(116,220,186,.16);margin-top:5px}.graphFoot p{font-size:12px;color:#d7dbe5}.graphFoot b{color:var(--white)}
+.liveStack{display:flex;flex-direction:column;gap:var(--sm)}.signalCard{padding:var(--md);border:1px solid var(--border);border-radius:16px;background:var(--white)}.signalTop{display:flex;align-items:center;justify-content:space-between;gap:var(--sm)}.signalTop span{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--grey-500);font-weight:700}.signalTop b{font-size:11px;color:var(--green-800)}.signalMetric{display:flex;align-items:end;justify-content:space-between;gap:var(--sm);margin-top:var(--sm)}.signalMetric strong{font-size:29px;letter-spacing:-.045em;line-height:1}.signalMetric span{font-size:11px;color:var(--green-800)}.spark{display:flex;align-items:end;gap:3px;height:30px;margin-top:var(--sm)}.spark i{width:8px;border-radius:3px 3px 1px 1px;background:var(--purple-200);transform-origin:bottom;animation:rise 1.4s ease-in-out infinite alternate}.spark i:nth-child(2){animation-delay:.12s}.spark i:nth-child(3){animation-delay:.24s}.spark i:nth-child(4){animation-delay:.36s}.spark i:nth-child(5){animation-delay:.48s}.spark i:nth-child(6){animation-delay:.6s}.spark i:last-child{background:var(--purple-500)}.signalCard p{font-size:11px;color:var(--grey-600);margin-top:var(--sm)}
+.decision{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:var(--lg)}.decisionCard{position:relative;overflow:hidden;border-radius:20px;background:var(--dark);color:var(--white);padding:var(--xl)}.decisionCard:after{content:"";position:absolute;right:-60px;top:-70px;width:210px;height:210px;border:1px solid var(--purple-200);border-radius:50%;box-shadow:0 0 0 25px rgba(196,183,255,.11),0 0 0 50px rgba(196,183,255,.06)}.decisionCard>*{position:relative;z-index:1}.decisionCard .eyebrow{color:var(--purple-200)}.decisionCard h3{font-size:28px;line-height:1.08;letter-spacing:-.04em;margin-top:var(--sm)}.decisionCard p{color:#c9ceda;margin-top:var(--md);font-size:13px}.decisionMeta{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sm);margin-top:var(--lg)}.decisionMeta div{padding:var(--sm);border:1px solid rgba(255,255,255,.13);border-radius:12px;background:rgba(255,255,255,.05)}.decisionMeta span{display:block;font-size:10px;color:#aeb5c5;text-transform:uppercase;letter-spacing:.07em;font-weight:700}.decisionMeta strong{display:block;font-size:19px;margin-top:var(--xxxs)}
+.chain{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sm)}.step{position:relative;padding:var(--md);border:1px solid var(--border);border-radius:16px;background:var(--white);min-height:154px}.step b{display:flex;align-items:center;gap:var(--xs);font-size:13px}.step b i{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--purple-50);color:var(--purple-700);font-size:11px;font-style:normal}.step p{font-size:11px;color:var(--grey-600);margin-top:var(--sm)}.step:after{content:"→";position:absolute;right:-13px;top:42%;color:var(--purple-500);font-weight:700}.step:last-child:after{display:none}
+.impact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sm)}.impactCard{padding:var(--lg);border-radius:18px;border:1px solid var(--border);background:var(--white)}.impactCard.dark{background:var(--dark);color:var(--white);border-color:var(--dark)}.impactCard .k{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--grey-500);font-weight:700}.impactCard.dark .k{color:var(--purple-200)}.impactCard strong{display:block;font-size:32px;letter-spacing:-.05em;margin-top:var(--xs)}.impactCard p{font-size:12px;color:var(--grey-600);margin-top:var(--sm)}.impactCard.dark p{color:#c9ceda}.bar{height:8px;border-radius:999px;background:var(--grey-100);overflow:hidden;margin-top:var(--md)}.bar i{display:block;height:100%;border-radius:inherit;background:var(--purple-500);animation:barIn 1.2s ease both}.impactCard.dark .bar{background:rgba(255,255,255,.12)}@keyframes barIn{from{width:0}}
+.marketTable{border:1px solid var(--border);border-radius:18px;overflow:hidden;background:var(--white)}.marketRow{display:grid;grid-template-columns:130px 100px minmax(190px,1fr) minmax(170px,.8fr);gap:var(--md);align-items:center;padding:var(--md) var(--lg);border-top:1px solid var(--border)}.marketRow:first-child{border-top:0;background:var(--grey-50);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--grey-500);font-weight:700}.marketRow strong{font-size:13px}.marketRow span{font-size:12px;color:var(--grey-600)}
+.takeaways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sm)}.takeaway{padding:var(--lg);border-radius:18px;background:var(--white);border:1px solid var(--border)}.takeaway .n{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple-700);font-weight:700}.takeaway h3{font-size:19px;letter-spacing:-.025em;margin-top:var(--xs)}.takeaway p{font-size:12px;color:var(--grey-600);margin-top:var(--sm)}
+@media(max-width:900px){.top{height:auto;min-height:58px;gap:var(--xs);padding:var(--xs) var(--md)}.brand{flex:0 0 112px}.links{min-width:0;flex:1;overflow-x:auto}.links a{flex-shrink:0}.wrap{padding:var(--md) var(--md) var(--xxl)}.hero{grid-template-columns:1fr;padding:var(--lg)}.hero h1{font-size:38px}.heroActions{display:grid;grid-template-columns:1fr}.heroActions a{justify-content:center;min-width:0}.core{min-height:280px}.meta,.chain,.impact,.takeaways{grid-template-columns:1fr}.intelGrid,.decision{grid-template-columns:1fr}.sectionHead{display:block}.sectionHead p{margin-top:var(--sm)}.graph{min-height:620px}.node{width:160px}.node.entry{left:4%;top:8%}.node.bridge{left:32%;top:27%}.node.expand{right:4%;top:49%}.node.risk{left:22%;bottom:12%}.graphFoot{left:var(--md);right:var(--md)}.step:after{display:none}.marketRow{grid-template-columns:1fr;gap:var(--xxxs)}.marketRow:first-child{display:none}}
+</style>
+</head>
+<body>
+<nav class="top"><div class="brand">Journey <span>Intelligence Hub</span></div><div class="links"><a href="operating-model.html">A · Operating model</a><a href="product-graph.html">B · Product graph</a><a href="ai-briefing.html">C · AI briefing</a><a class="on" href="system-core.html">D · System core</a><a href="../index.html">Prototype</a></div></nav>
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Concept D · system core</div>
+      <h1>The system that understands <em>how this business grows.</em></h1>
+      <p class="lead">Not a dashboard. A live model of customers, products, timing and markets — the layer ACE reasons from before it decides who should hear from you, when, and with what.</p>
+      <div class="heroActions"><a href="#decision">See the current decision</a><a href="#graph">Inspect the business graph</a></div>
+    </div>
+    <div class="core" aria-label="Live business model">
+      <div class="orbit o1"><i></i></div><div class="orbit o2"><i></i></div>
+      <svg viewBox="0 0 500 360" aria-hidden="true">
+        <defs><linearGradient id="flow" x1="0" x2="1"><stop stop-color="#93d1de"/><stop offset="1" stop-color="#c4b7ff"/></linearGradient></defs>
+        <path d="M62 210 C150 80 245 80 326 172 S440 260 468 120" fill="none" stroke="url(#flow)" stroke-width="2" stroke-dasharray="7 8" style="animation:dash 3.2s linear infinite"/>
+        <circle cx="62" cy="210" r="7" fill="#0d6cf2"/><circle cx="326" cy="172" r="9" fill="#7e55f6"/><circle cx="468" cy="120" r="7" fill="#74dcba"/>
+        <circle cx="326" cy="172" r="24" fill="none" stroke="#c4b7ff" opacity=".35" style="animation:pulse 2.4s ease-in-out infinite"/>
+      </svg>
+      <div class="coreCard"><span class="k">Live model confidence</span><strong>93%</strong><p>18,204 purchase events · 9,317 shoppers · 14 months observed · refreshed 42 seconds ago</p></div>
+    </div>
+  </section>
+  <section class="meta" aria-label="Model inputs">
+    <div><span>Relationships observed</span><strong>9,317</strong><small>real shopper histories</small></div>
+    <div><span>Products mapped</span><strong>128</strong><small>into 7 buying roles</small></div>
+    <div><span>Active moments</span><strong>1,284</strong><small> shoppers inside a valid window</small></div>
+    <div><span>Modelled upside</span><strong>$42k</strong><small>from the current path</small></div>
+  </section>
+
+  <section class="section" id="graph">
+    <header class="sectionHead"><div><div class="eyebrow">Business graph</div><h2>Customers do not buy products. They complete systems.</h2></div><p>The graph maps what a first purchase causes next. The strongest relationship is not the biggest seller — it is the product that opens a path to a second category.</p></header>
+    <div class="intelGrid">
+      <section class="panel graph" aria-label="Product relationship graph">
+        <svg viewBox="0 0 900 520" aria-hidden="true">
+          <path d="M190 250 C310 120 410 115 500 168" fill="none" stroke="#7e55f6" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 10" style="animation:dash 3s linear infinite"/>
+          <path d="M565 190 C665 205 710 225 785 245" fill="none" stroke="#149db8" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 9" style="animation:dash 3.4s linear infinite"/>
+          <path d="M245 285 C350 380 450 410 540 425" fill="none" stroke="#ffbb8e" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 8" style="animation:dash 3.8s linear infinite"/>
+          <text x="304" y="143" font-size="12" fill="#683fcf" font-weight="700">44% attach</text>
+          <text x="660" y="194" font-size="12" fill="#0b5665" font-weight="700">58% expand</text>
+          <text x="365" y="420" font-size="12" fill="#a94f13" font-weight="700">9% return as entry</text>
+        </svg>
+        <article class="node entry"><span class="score">Entry 93</span><div class="type">Opens the relationship</div><strong>Sample Hardshell</strong><small>41% of first purchases · creates the use case</small></article>
+        <article class="node bridge"><span class="score">Bridge 96</span><div class="type">Completes the system</div><strong>Cirrus Mid-layer</strong><small>Best second product when insulation is missing</small></article>
+        <article class="node expand"><span class="score">Attach 71</span><div class="type">Expands the system</div><strong>Merino accessories</strong><small>Useful after the core layers exist</small></article>
+        <article class="node risk"><span class="score">Entry 18</span><div class="type">Dead end as opener</div><strong>Trail Gloves</strong><small>Sells, but does not create a second order</small></article>
+        <footer class="graphFoot"><i></i><p><b>Model conclusion:</b> Cirrus is the shortest high-value bridge from product ownership to system ownership. Trail Gloves belong at checkout, not in acquisition.</p></footer>
+      </section>
+      <aside class="liveStack" aria-label="Live signals">
+        <article class="signalCard"><div class="signalTop"><span>Cirrus consideration</span><b>rising</b></div><div class="signalMetric"><strong>+18%</strong><span>vs. prior 7 days</span></div><div class="spark"><i style="height:28%"></i><i style="height:38%"></i><i style="height:46%"></i><i style="height:62%"></i><i style="height:55%"></i><i style="height:82%"></i></div><p>Shell owners are viewing insulated layers more often. Confidence rises, but no message sends without a valid moment.</p></article>
+        <article class="signalCard"><div class="signalTop"><span>Cold window opening</span><b>timing</b></div><div class="signalMetric"><strong>1,284</strong><span>reachable in 72 h</span></div><div class="spark"><i style="height:20%"></i><i style="height:30%"></i><i style="height:34%"></i><i style="height:58%"></i><i style="height:74%"></i><i style="height:92%"></i></div><p>Shoppers entering their first local sub-zero forecast. Timing is becoming true by region, not by campaign calendar.</p></article>
+        <article class="signalCard"><div class="signalTop"><span>Repeat window at risk</span><b>priority</b></div><div class="signalMetric"><strong>176</strong><span>day 42–54</span></div><div class="spark"><i style="height:78%"></i><i style="height:72%"></i><i style="height:62%"></i><i style="height:54%"></i><i style="height:43%"></i><i style="height:35%"></i></div><p>Active shell owners are approaching the point where a second order becomes materially less likely.</p></article>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="decision">
+    <header class="sectionHead"><div><div class="eyebrow">From understanding to action</div><h2>The model becomes a decision only when it is true for one shopper, today.</h2></div><p>This is the difference between an insight tool and AI Journey: the same business model drives a per-shopper decision, then guardrails decide whether anything may send.</p></header>
+    <div class="decision">
+      <article class="decisionCard"><div class="eyebrow">Current ACE decision</div><h3>Reach active shell owners with no insulated layer before day 54.</h3><p>Lead with compatibility: “this completes the shell you already own.” Use sizing help before price. Suppress anyone with an open ticket, a recent return, or a frequency collision.</p><div class="decisionMeta"><div><span>Audience</span><strong>2,190</strong></div><div><span>Expected lift</span><strong>3.1×</strong></div><div><span>Discount</span><strong>0%</strong></div></div></article>
+      <div class="chain">
+        <article class="step"><b><i>1</i>Detect</b><p>Owns a Sample Hardshell, has no insulated mid-layer, and is eligible to receive marketing.</p></article>
+        <article class="step"><b><i>2</i>Time</b><p>Local temperature drops, winter activity rises, or the shopper enters the final 12 days of the repeat window.</p></article>
+        <article class="step"><b><i>3</i>Choose</b><p>Compatibility in France, technical proof in Germany, delivery confidence in the UK, price only where it is needed.</p></article>
+        <article class="step"><b><i>4</i>Prove</b><p>A holdout measures lift. If the observed result disagrees, the next recommendation changes.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <header class="sectionHead"><div><div class="eyebrow">Impact model</div><h2>What changes when the system understands the path.</h2></div><p>The value is not “send more messages.” It is fewer, better-timed messages with a reason attached.</p></header>
+    <div class="impact">
+      <article class="impactCard"><span class="k">Without the model</span><strong>6%</strong><p>Second-order rate after day 90 when the relationship has cooled.</p><div class="bar"><i style="width:18%"></i></div></article>
+      <article class="impactCard dark"><span class="k">With the system path</span><strong>38%</strong><p>Second-order rate when the compatible layer is offered inside the active window.</p><div class="bar"><i style="width:76%"></i></div></article>
+      <article class="impactCard"><span class="k">Margin preserved</span><strong>0%</strong><p>Discount required for the core Cirrus path. Product fit does the work before price is touched.</p><div class="bar"><i style="width:8%;background:var(--green-500)"></i></div></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <header class="sectionHead"><div><div class="eyebrow">Market intelligence</div><h2>The path stays stable. The reason to return changes.</h2></div><p>ACE keeps the business model constant, then adapts the lever to the market and the shopper.</p></header>
+    <div class="marketTable">
+      <div class="marketRow"><span>Market</span><span>2nd order</span><span>What the shopper needs to hear</span><span>Lowest-cost lever</span></div>
+      <div class="marketRow"><strong>France</strong><span>41 days</span><span>“This completes the shell you already own.”</span><span>Compatibility story</span></div>
+      <div class="marketRow"><strong>Germany</strong><span>58 days</span><span>Technical proof about insulation and layering.</span><span>Product education</span></div>
+      <div class="marketRow"><strong>United States</strong><span>63 days</span><span>A cold-weather reason; price can close hesitation.</span><span>Controlled discount</span></div>
+      <div class="marketRow"><strong>United Kingdom</strong><span>67 days</span><span>Confidence the layer arrives when needed.</span><span>Free shipping</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="takeaways">
+      <article class="takeaway"><div class="n">01 · protect the opener</div><h3>Keep Hardshell acquisition clean.</h3><p>It earns the right to a relationship. Accessories should not carry that job.</p></article>
+      <article class="takeaway"><div class="n">02 · work the window</div><h3>Make day 54 a first-class signal.</h3><p>The second order is won while the system is still mentally open.</p></article>
+      <article class="takeaway"><div class="n">03 · preserve margin</div><h3>Use product truth before price.</h3><p>The best reason to return is compatibility, not a coupon.</p></article>
+    </div>
+  </section>
+  <p class="fine">Hidden concept · All merchant data and values are fictional. This page is intentionally not linked from the main prototype navigation.</p>
+</main>
+</body>
+</html>
