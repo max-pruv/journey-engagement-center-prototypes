@@ -389,6 +389,11 @@ tr.playRow>td:first-child{padding-left:0}
   font-size:12px;font-weight:500;border:1px solid var(--border-neutral-default);background:var(--white);color:var(--content-neutral-secondary)}
 .chip:hover{background:var(--states-hover-default)}
 .chip.on{background:var(--black);color:var(--white);border-color:var(--black)}
+/* a suggested reply that has a Learn more behind it */
+.chipLearn{border-color:var(--purple-200);color:var(--content-accent-default)}
+.chipLearn:hover{background:var(--surface-accent-default);border-color:var(--purple-500)}
+.chipQ{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;
+  background:var(--purple-100);color:var(--purple-800);font-size:9px;font-weight:700;margin-left:2px}
 .pill{display:inline-flex;align-items:center;gap:var(--xxxs);padding:3px var(--xs);border-radius:999px;
   font-size:11px;font-weight:500;background:var(--surface-neutral-secondary);color:var(--content-neutral-secondary)}
 
@@ -3780,6 +3785,7 @@ const WIZARD=[
    instruction, read-only, with "Use as my answer" prefilling the compose box so
    the merchant can personalize it before sending it back as their reply. */
 const WIZ_LEARN={
+  /* opportunity card tags */
   "opp-gap":{t:"The gap",s:"Why these 4,820 shoppers, specifically",
     ins:"Target opted-in shoppers who own a Sample hardshell (any model, ordered Oct–Feb) but have never bought an insulated mid-layer. They already trust the shell line and feel the missing-warmth gap Cirrus fills — so the message is a compatibility story, not a cold pitch. Exclude anyone with a return in the last 30 days, an open ticket, or a review of 3★ or less."},
   "opp-moment":{t:"The moment",s:"Why now, not last week or next",
@@ -3788,6 +3794,19 @@ const WIZ_LEARN={
     ins:"Lead with compatibility: Cirrus is cut to wear over the hardshell they already own, zips into the same layering system, and packs into its own pocket. Do not position it as a replacement or an upgrade — the hardshell stays the outer layer; Cirrus is the missing warm one underneath."},
   "opp-size":{t:"The size",s:"Where the ≈$42k comes from",
     ins:"Modelled, not measured: 4,820 reachable shoppers × the reply and conversion rates of your last two comparable launches, at the Cirrus price point. Treat it as a ceiling, not a forecast — the 10% holdout is what turns it into a measured number after the send."},
+  /* opening chips */
+  "chip-cirrus":{t:"Cirrus jacket launch",s:"The recommended opportunity",
+    ins:"Yes, build on the Cirrus launch — it's the strongest match for your current audience and the upcoming weather window."},
+  "chip-summit":{t:"Summit shell restock",s:"A secondary opportunity",
+    ins:"Launch a campaign for the Summit shell restock. Target shoppers who viewed the product while it was out of stock, or who have it on a wishlist."},
+  "chip-subzero":{t:"First sub-zero forecast",s:"A seasonal opportunity",
+    ins:"Prepare a campaign for the first sub-zero forecast. It targets all shoppers in cold regions with a general winter-prep story, regardless of their specific order history."},
+  /* audience chips */
+  "chip-active":{t:"Active this winter",s:"Recency refinement",
+    ins:"Only the ones still active this winter, and skip anyone who returned something in the last month. This narrows the reach to 1,840 shoppers but increases the predicted reply rate."},
+  "chip-return":{t:"Skip recent returners",s:"Sentiment refinement",
+    ins:"Skip anyone who returned an order in the last 30 days. We want to avoid pitching a new product to someone currently dealing with a fit or quality issue."},
+  /* audience card tags */
   "aud-hardshell":{t:"Bought in Hardshells",s:"The inclusion rule",
     ins:"Include shoppers with at least one delivered order containing a product in the Hardshells category. Any model counts — Summit, Ridge, Storm. Cancelled and fully-refunded orders don't."},
   "aud-window":{t:"Order date Oct–Feb",s:"Why last winter's buyers",
@@ -3800,6 +3819,14 @@ const WIZ_LEARN={
     ins:"Keep only shoppers with site or purchase activity in the current winter season. A hardshell owner who hasn't been back since March is a win-back conversation; this campaign is for people still in the habit."},
   "aud-noreturn":{t:"Exclude: return in last 30 d",s:"Why recent returners are out",
     ins:"Exclude anyone who returned any item in the last 30 days. A recent return usually means an unresolved fit or quality question — pitching them another layer before that's settled reads as not listening."},
+  /* skill chips */
+  "chip-price":{t:"Price / Offer",s:"Revision: remove price mention",
+    ins:"Don't mention price at all in the first message. If price comes up later, answer plainly and stop selling."},
+  "chip-salesy":{t:"Tone",s:"Revision: softer tone",
+    ins:"Make the tone less salesy. Lead with product education, the layering system and the recycled insulation. The only ask should be sizing help."},
+  "chip-warranty":{t:"Content",s:"Revision: add warranty",
+    ins:"Add a line about the lifetime repair warranty at the end of the product story. Keep it factual and low-pressure."},
+  /* skill card tags */
   "skill-product":{t:"Block 1 · Product",s:"What the agent says about Cirrus",
     ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation and the packable construction, and how the two pieces work together below 5°C. Ground every claim in the product data — no invented specs."},
   "skill-angle":{t:"Block 2 · Angle & tone",s:"How the agent opens and carries itself",
@@ -3807,7 +3834,12 @@ const WIZ_LEARN={
   "skill-offer":{t:"Block 3 · Offer",s:"What the agent may give away",
     ins:"No offer in the first message. If price comes up, answer plainly and stop selling — do not volunteer a discount, a code, or free shipping. The guardrails still cap anything the agent might later be allowed to give."},
   "skill-never":{t:"Block 4 · Never say",s:"The hard content limits",
-    ins:"No percentage discount, no urgency countdown, no “last chance”. Don't suggest the hardshell they own is outdated or insufficient on its own. These sit on top of the skill and can't be unlocked by it."}
+    ins:"No percentage discount, no urgency countdown, no “last chance”. Don't suggest the hardshell they own is outdated or insufficient on its own. These sit on top of the skill and can't be unlocked by it."},
+  /* A/B chips */
+  "chip-ab":{t:"A/B testing",s:"The recommended rollout",
+    ins:"A/B test three approaches. Test 10% of the audience with three different skills, wait for results, then send the winner to the remaining 90%."},
+  "chip-single":{t:"Single version",s:"Rollout refinement",
+    ins:"One version for everyone. Skip the A/B test and send the reviewed skill to the whole reachable audience at once."}
 };
 function openWizLearn(k){
   const d=WIZ_LEARN[k]; if(!d) return;
@@ -3983,14 +4015,36 @@ function campAddCard(html){
    when the page is opened via goto("campaign-new") — never at page load,
    so the thread is always fresh when a merchant starts a new campaign */
 function renderWiz(){ renderWizSteps(); }
+/* map a suggested-reply chip to its Learn more content, if it has any */
+function chipLearnKey(c){
+  c=c.toLowerCase();
+  if(/cirrus/.test(c)) return "chip-cirrus";
+  if(/summit/.test(c)) return "chip-summit";
+  if(/sub-zero/.test(c)) return "chip-subzero";
+  if(/active this winter/.test(c)) return "chip-active";
+  if(/skip recent returners/.test(c)) return "chip-return";
+  if(/price at all/.test(c)) return "chip-price";
+  if(/less salesy/.test(c)) return "chip-salesy";
+  if(/warranty/.test(c)) return "chip-warranty";
+  if(/a\/b test/.test(c)) return "chip-ab";
+  if(/one version/.test(c)) return "chip-single";
+  return null;
+}
 function askTurn(){
   if(wizIdx>=WIZARD.length) return;
   const w=WIZARD[wizIdx];
   wizStep=w.step; renderWizSteps();
   campAddAsk(`<div class="col gap-xxxs"><span class="t-md med">${w.ask}</span>
     <span class="t-sm sec">${w.hint}</span></div>`);
-  $("#campChips").innerHTML=(w.chips||[]).map(c=>`<button class="chip">${c}</button>`).join("");
+  $("#campChips").innerHTML=(w.chips||[]).map(c=>{
+    const k=chipLearnKey(c);
+    return k
+      ? `<button class="chip chipLearn" data-chiplearn="${k}">${c} <span class="chipQ">?</span></button>`
+      : `<button class="chip">${c}</button>`;
+  }).join("");
   $$("#campChips .chip").forEach(b=>b.addEventListener("click",()=>{
+    const k=b.dataset.chiplearn;
+    if(k){ openWizLearn(k); return; }   // open the Learn more; "Use as my answer" fills the box
     $("#campSay").value = b.textContent===w.chips[0]&&w.sample ? w.sample : b.textContent;
     campAnswer();
   }));

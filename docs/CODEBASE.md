@@ -333,6 +333,13 @@ read-only, with a **"Use as my answer"** action (`data-useanswer`) that prefills
 can personalize it, and sends it back as their own reply. It is the same pattern at every stage:
 the recommendation is always inspectable, and always editable before it's committed.
 
+**The suggested-reply chips do the same.** A chip that has Learn more content (mapped by
+`chipLearnKey()` from its text to a `WIZ_LEARN` key) renders as `.chipLearn` with a `?` affordance
+and **opens the panel instead of answering** — the reply is only filled (into the same compose box)
+when the merchant picks "Use as my answer". A chip with no detailed content (e.g. "I have another
+idea") keeps the old behaviour: click fills the box and sends. So a suggestion is never committed
+blind — you can always read what it actually means first.
+
 **The preview is a question, not a default block.** The wizard's last turn asks whether the
 merchant wants to see what would actually send; only a "yes" answer calls `genPreview(n)` and opens
 a scrollable side panel (`openPreviewPanel`) of n generated conversations. `genPreview(n)` builds
