@@ -55,13 +55,16 @@ Campaigns highlighted.
 
 ## Intelligence Hub and the shopper read
 
-**`page-intelligence`** is deliberately static markup — a narrative page, not a driven report. It
-argues *how the engine understood the business*: the method (events, not averages of averages), the
-purchase patterns (the 54-day first→second window, what a first purchase needs, the per-country
-rhythm), and the product paths (best seller as opener, Cirrus as deepener, Trail Gloves as the dead
-end you never open with). The numbers are invented but internally consistent, and the closing card
-ties each pattern back to a concrete engine behaviour. Because it's written once in the HTML, it has
-no render function and doesn't appear in the isolation probe — edit the markup directly.
+**`page-intelligence`** is deliberately static markup — an AI business briefing, not a driven
+report. It begins with the engine's specific current read: a Sample Hardshell owner without
+insulation is most likely to make their second purchase on Cirrus within 54 days. Everything that
+follows explains that claim: the business model (Hardshell → Cirrus → accessories), the product
+comparison (Cirrus drives repeat; Trail Gloves do not when bought first), why each behaves that way,
+and what the engine does behind the scenes — detect the ownership gap, find the moment, select the
+lowest-cost market-specific lever, then measure the result against a holdout. The final market block
+shows why the path is stable but the message changes. All numbers are fictional but internally
+consistent. It has no render function and doesn't appear in the isolation probe — edit the markup
+directly.
 
 **`shopperProfile(s)`** builds the descriptive read inside `openShopper`'s panel — the "shopper MD
 file". It's a mix of derived and written: cadence, engagement, discount sensitivity, the working

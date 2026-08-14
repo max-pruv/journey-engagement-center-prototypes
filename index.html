@@ -486,6 +486,48 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 .tierBar{display:flex;height:26px;border-radius:var(--xxs);overflow:hidden;gap:2px;background:transparent}
 .tierBar > span{display:block}
 
+/* Intelligence Hub — one current business read, then the evidence, product
+   decision and engine behaviour that follow from it. It is intentionally a
+   briefing, not a wall of unrelated dashboard cards. */
+.intelBrief{display:grid;grid-template-columns:164px minmax(0,1fr);gap:var(--xl);align-items:start}
+.intelRail{display:flex;flex-direction:column;padding-top:var(--xs)}
+.intelRail span{padding:9px var(--sm);border-left:2px solid var(--grey-200);font-size:12px;color:var(--content-neutral-tertiary)}
+.intelRail span.on{border-color:var(--purple-500);color:var(--content-accent-default);font-weight:600}
+.intelStory{display:flex;flex-direction:column;gap:var(--lg)}
+.intelCurrent{position:relative;overflow:hidden;padding:var(--xl);border-radius:16px;color:var(--white);
+  background:radial-gradient(circle at 88% 14%,var(--purple-700) 0,transparent 31%),var(--black)}
+.intelCurrent::after{content:"";position:absolute;right:-44px;bottom:-68px;width:210px;height:210px;border:1px solid var(--purple-200);border-radius:50%;opacity:.38;box-shadow:0 0 0 25px rgba(196,183,255,.11),0 0 0 50px rgba(196,183,255,.06)}
+.intelCurrent>*{position:relative;z-index:1}.intelCurrent .k{color:var(--purple-200)}
+.intelCurrent h2{font-size:25px;line-height:1.17;letter-spacing:-.025em;max-width:760px;margin-top:var(--xs)}
+.intelCurrent p{max-width:68ch;margin-top:var(--sm);color:var(--grey-200)}
+.intelCurrentEvidence{display:flex;flex-wrap:wrap;gap:var(--xs);margin-top:var(--md)}
+.intelCurrentEvidence span{font-size:11px;padding:4px 7px;border-radius:var(--xxs);color:var(--white);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)}
+.intelInsight{padding:var(--lg);border:1px solid var(--border-neutral-default);border-radius:16px;background:var(--white)}
+.intelInsightHead{display:flex;align-items:start;justify-content:space-between;gap:var(--md)}
+.intelInsight h2{font-size:20px;letter-spacing:-.02em;margin-top:var(--xxxs)}
+.intelInsight .lead{font-size:15px;line-height:1.45;max-width:68ch;margin-top:var(--md)}
+.intelPath{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr;gap:var(--xs);align-items:stretch;margin-top:var(--lg)}
+.intelPathStep{display:flex;flex-direction:column;gap:var(--xs);padding:var(--md);border-radius:12px;background:var(--grey-50)}
+.intelPathStep.entry{background:var(--blue-50)}.intelPathStep.bridge{background:var(--purple-50)}.intelPathStep.expand{background:var(--green-50)}
+.intelPathStep .k{font-size:10px;color:var(--content-neutral-tertiary)}.intelPathStep b{font-size:20px;letter-spacing:-.025em}.intelPathStep strong{font-size:13px}.intelPathStep .t-sm{color:var(--content-neutral-secondary)}
+.intelPathArrow{display:grid;place-items:center;color:var(--content-neutral-tertiary);font-size:18px}
+.intelRule{display:flex;gap:var(--sm);margin-top:var(--md);padding-top:var(--sm);border-top:1px solid var(--border-neutral-default);font-size:12px;color:var(--content-neutral-secondary)}
+.intelRule i{width:7px;height:7px;border-radius:50%;background:var(--purple-500);box-shadow:0 0 0 4px var(--purple-100);margin-top:5px;flex-shrink:0}
+.intelProducts{display:grid;grid-template-columns:1fr 1fr;gap:var(--md);margin-top:var(--lg)}
+.intelProduct{padding:var(--md);border:1px solid var(--border-neutral-default);border-radius:12px;background:var(--grey-50)}
+.intelProduct.good{background:var(--purple-50);border-color:var(--purple-200)}.intelProduct.risk{background:var(--orange-50);border-color:var(--orange-300)}
+.intelProductMetric{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sm);margin-top:var(--sm)}
+.intelProductMetric b{font-size:30px;line-height:1;letter-spacing:-.04em}.intelProductMetric span{font-size:11px;color:var(--content-neutral-secondary);text-align:right}
+.intelProduct h3{font-size:16px;margin-top:var(--sm)}.intelProduct p{font-size:12px;color:var(--content-neutral-secondary);margin-top:var(--xxs)}
+.intelTry{margin-top:var(--md);padding-top:var(--sm);border-top:1px solid rgba(0,0,0,.08)}.intelTry .k{font-size:10px;color:var(--content-accent-default)}.intelProduct.risk .intelTry .k{color:var(--content-warning-default)}
+.intelEngine{padding:var(--lg);border-radius:16px;background:var(--black);color:var(--white)}
+.intelEngine .k{color:var(--purple-200)}.intelEngine h2{font-size:21px;letter-spacing:-.02em;margin-top:var(--xxxs);max-width:35ch}.intelEngine .lead{max-width:68ch;color:var(--grey-200);margin-top:var(--sm)}
+.intelEngineFlow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sm);margin-top:var(--lg)}
+.intelEngineStep{padding-top:var(--sm);border-top:1px solid rgba(255,255,255,.2)}.intelEngineStep b{display:block;font-size:13px}.intelEngineStep span{display:block;font-size:11px;color:var(--grey-200);margin-top:var(--xxxs)}
+.intelMarkets{border:1px solid var(--border-neutral-default);border-radius:16px;overflow:hidden;background:var(--white)}
+.intelMarket{display:grid;grid-template-columns:116px 92px minmax(160px,1fr) minmax(140px,.8fr);gap:var(--md);padding:var(--sm) var(--lg);align-items:center;border-top:1px solid var(--border-neutral-default)}
+.intelMarket:first-child{border-top:0;background:var(--grey-50)}.intelMarket strong{font-size:13px}.intelMarket .t-sm{color:var(--content-neutral-secondary)}.intelMarket .k{font-size:10px}
+
 /* ============ MOBILE ============
    Below 880px the sidebar becomes an off-canvas drawer (there's no room for
    both a 272px rail and content), and every fixed-width two-column layout —
@@ -532,6 +574,12 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
   .pageHeader{padding:var(--md) var(--md) var(--md) calc(var(--md) + 44px);flex-wrap:wrap}
   .pageHeader .ttl{flex:1 1 100%}
   .pageActions{flex-wrap:wrap}
+  .intelBrief{grid-template-columns:1fr;gap:var(--md)}
+  .intelRail{flex-direction:row;overflow-x:auto;padding:0}.intelRail span{white-space:nowrap;border-left:0;border-bottom:2px solid var(--grey-200);padding:8px}.intelRail span.on{border-color:var(--purple-500)}
+  .intelCurrent{padding:var(--lg)}.intelCurrent h2{font-size:22px}
+  .intelPath{grid-template-columns:1fr;gap:var(--xs)}.intelPathArrow{height:20px;transform:rotate(90deg)}
+  .intelProducts{grid-template-columns:1fr}.intelEngineFlow{grid-template-columns:1fr 1fr}
+  .intelMarket{grid-template-columns:1fr;gap:var(--xxxs);padding:var(--sm) var(--md)}.intelMarket:first-child{display:none}
 
   /* data tables don't reflow for narrow screens — column count is the
      information, not just styling — so they scroll horizontally inside
@@ -725,8 +773,104 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
         </div>
       </section>
 
-      <!-- ======== INTELLIGENCE HUB · how the business works ======== -->
+      <!-- ======== INTELLIGENCE HUB · AI business briefing ======== -->
       <section class="page hidden" id="page-intelligence">
+        <header class="pageHeader">
+          <div class="ttl">
+            <h1 class="h-xxl">Intelligence Hub</h1>
+            <p class="t-md sec">The product and purchase patterns the engine is using to decide who to reach, when, and with what.</p>
+          </div>
+          <div class="pageActions"><span class="tag tag-purple">Model refresh · today</span></div>
+        </header>
+
+        <div class="zone top">
+          <div class="intelBrief">
+            <aside class="intelRail" aria-label="Intelligence briefing sections">
+              <span class="on">01 · Business model</span>
+              <span>02 · Product decision</span>
+              <span>03 · Engine response</span>
+              <span>04 · Market conditions</span>
+            </aside>
+
+            <div class="intelStory">
+              <section class="intelCurrent">
+                <span class="k">Current business read · 93% confidence</span>
+                <h2>For a shopper who starts with a Sample Hardshell, Cirrus Mid-layer is the product most likely to create a second order — when it is offered inside the next 54 days.</h2>
+                <p>The engine does not treat Cirrus as a generic launch. It waits for a shell owner without insulation, checks the local cold window, then leads with the compatibility of the two products before considering a price lever.</p>
+                <div class="intelCurrentEvidence">
+                  <span>18,204 purchase events</span><span>9,317 shoppers</span><span>14 months observed</span><span>2,190 shell owners reachable now</span>
+                </div>
+              </section>
+
+              <section class="intelInsight">
+                <header class="intelInsightHead">
+                  <div><span class="k">01 · Business model</span><h2>The Hardshell starts 41% of new customer relationships.</h2></div>
+                  <span class="tag tag-green">Observed, not assumed</span>
+                </header>
+                <p class="lead">The first order tells the engine what system a shopper is building. The highest-value path is not “buy another product”; it is “complete the layers around the shell they already own.” The return window has a clear expiry.</p>
+                <div class="intelPath">
+                  <article class="intelPathStep entry"><span class="k">Entry product</span><b>41%</b><strong>Sample Hardshell</strong><span class="t-sm">Starts the relationship and reveals a cold-weather use case.</span></article>
+                  <span class="intelPathArrow">→</span>
+                  <article class="intelPathStep bridge"><span class="k">Best second product</span><b>44%</b><strong>Cirrus Mid-layer</strong><span class="t-sm">Attach rate after a shell, when the shopper does not own insulation.</span></article>
+                  <span class="intelPathArrow">→</span>
+                  <article class="intelPathStep expand"><span class="k">Expansion</span><b>58%</b><strong>Accessories</strong><span class="t-sm">Become useful once the core layering system is complete.</span></article>
+                </div>
+                <div class="intelRule"><i></i><span><b>What the engine learned:</b> act before day 54. Inside that window, 38% of relevant shoppers place a second order; after day 90, only 6% do.</span></div>
+              </section>
+
+              <section class="intelInsight">
+                <header class="intelInsightHead">
+                  <div><span class="k">02 · Product decision</span><h2>Not every best seller creates the same future customer.</h2></div>
+                  <span class="tag tag-purple">Catalogue roles</span>
+                </header>
+                <div class="intelProducts">
+                  <article class="intelProduct good">
+                    <span class="k">The product that drives the most repeat purchases</span>
+                    <div class="intelProductMetric"><b>Cirrus Mid-layer</b><span>after a Sample Hardshell</span></div>
+                    <h3>Why it works</h3>
+                    <p>It closes a visible category gap. The engine can point to a shell the shopper owns, a colder local forecast, and a specific reason the two layers work together.</p>
+                    <div class="intelTry"><span class="k">What we should try</span><p>Reach active shell owners with no insulated layer; use the first sub-zero forecast as the moment; offer sizing help before any discount.</p></div>
+                  </article>
+                  <article class="intelProduct risk">
+                    <span class="k">The product that drives the least repeat purchases</span>
+                    <div class="intelProductMetric"><b>Trail Gloves</b><span>when bought as a first product</span></div>
+                    <h3>Why it underperforms</h3>
+                    <p>It solves a small standalone need. A first-time gloves buyer has no obvious next layer to complete, and only 9% return for another order.</p>
+                    <div class="intelTry"><span class="k">What we should try</span><p>Keep Gloves in checkout and bundle logic. Do not use them in acquisition or as the lead product in a reactivation message.</p></div>
+                  </article>
+                </div>
+              </section>
+
+              <section class="intelEngine">
+                <span class="k">03 · How the AI works behind the scenes</span>
+                <h2>The model becomes a decision only when it is true for this shopper, today.</h2>
+                <p class="lead">The engine combines the business model above with individual ownership, lifecycle and timing data. It does not send the same product story to everyone who ever bought a shell.</p>
+                <div class="intelEngineFlow">
+                  <div class="intelEngineStep"><b>1 · Detect the gap</b><span>Owns a Sample Hardshell, has no insulated mid-layer, and can legally be contacted.</span></div>
+                  <div class="intelEngineStep"><b>2 · Find the moment</b><span>Local temperature drops; shopper is inside the 54-day window or shows fresh winter activity.</span></div>
+                  <div class="intelEngineStep"><b>3 · Pick the least-cost lever</b><span>Compatibility in France, technical proof in Germany, price only where the model says it is needed.</span></div>
+                  <div class="intelEngineStep"><b>4 · Prove or revise</b><span>A holdout measures lift. The next recommendation changes when the observed result disagrees with the model.</span></div>
+                </div>
+              </section>
+
+              <section class="intelInsight">
+                <header class="intelInsightHead"><div><span class="k">04 · Market conditions</span><h2>The path stays stable; the reason to return changes by market.</h2></div><span class="tag tag-blue">4 markets</span></header>
+                <div class="intelMarkets" style="margin-top:var(--lg)">
+                  <div class="intelMarket"><span class="k">Market</span><span class="k">2nd order</span><span class="k">What the shopper needs to hear</span><span class="k">What the engine changes</span></div>
+                  <div class="intelMarket"><strong>France</strong><span class="t-sm">41 days</span><span class="t-sm">“This completes the shell you already own.”</span><span class="t-sm">Lead with compatibility</span></div>
+                  <div class="intelMarket"><strong>Germany</strong><span class="t-sm">58 days</span><span class="t-sm">Technical proof about insulation and layering.</span><span class="t-sm">Lead with product detail</span></div>
+                  <div class="intelMarket"><strong>United States</strong><span class="t-sm">63 days</span><span class="t-sm">A cold-weather reason; price can close hesitation.</span><span class="t-sm">Use discount last</span></div>
+                  <div class="intelMarket"><strong>United Kingdom</strong><span class="t-sm">67 days</span><span class="t-sm">Confidence that the layer will arrive when needed.</span><span class="t-sm">Use free shipping</span></div>
+                </div>
+              </section>
+              <span class="t-xs ter">All data in this prototype is fictional. The read demonstrates the shape of an explainable business model, not a real merchant analysis.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Legacy Intelligence Hub concept — retained temporarily while the selected briefing ships. -->
+      <section class="hidden" id="intelligence-legacy">
         <header class="pageHeader">
           <div class="ttl">
             <h1 class="h-xxl">Intelligence Hub</h1>
