@@ -24,7 +24,7 @@ same meetings were recoverable from Notion, which is where the material above ca
 gaps, the "instructions ask, guardrails decide" distinction, and the strategic framing.
 
 **Invented — all of it:** every number, every shopper, every conversation, every merchant name. The
-demo account is **Alpine Supply Co.**, a fiction.
+demo account is **Sample Store Co.**, a fiction.
 
 The first version of the prototype used the real alpha merchant names from the recruitment tracker.
 Those were **deliberately replaced** when the repo was made public, and should stay replaced. If you

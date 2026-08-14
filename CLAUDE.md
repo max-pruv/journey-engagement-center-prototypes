@@ -37,7 +37,7 @@ pushing confirm the live page is **byte-identical** to local — Pages gives no 
 
 ## Non-negotiables
 
-- **All data is fictional.** The demo account is "Alpine Supply Co.". Real alpha merchant names were
+- **All data is fictional.** The demo account is "Sample Store Co.". Real alpha merchant names were
   deliberately removed when the repo went public. Do not reintroduce them.
 - **Axiom tokens only** — no hex colours, no off-scale spacing, type through the `.h-*` / `.t-*`
   classes.

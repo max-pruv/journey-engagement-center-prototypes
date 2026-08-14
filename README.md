@@ -8,7 +8,7 @@ Gorgias **Axiom** design system as a single self-contained HTML file.
 Its job is to make an argument about how the product should work, in a form you can click through
 in a meeting. It is not a codebase to ship — it is a spec you can operate.
 
-> All data is fictional. The demo account, "Alpine Supply Co.", and every number, shopper,
+> All data is fictional. The demo account, "Sample Store Co.", and every number, shopper,
 > conversation and merchant name in it are invented. See [docs/CONTEXT.md](docs/CONTEXT.md) for
 > what came from real source material and what didn't.
 

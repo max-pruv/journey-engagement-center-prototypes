@@ -580,9 +580,9 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
       </div>
     </div>
     <div class="acct">
-      <div class="acctAv">AS</div>
+      <div class="acctAv">SS</div>
       <div class="col" style="min-width:0;flex:1">
-        <div class="t-md med trunc">Alpine Supply Co.</div>
+        <div class="t-md med trunc">Sample Store Co.</div>
         <div class="t-xs ter trunc">Demo account · dummy data</div>
       </div>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ter"><path d="m7 9 5-5 5 5M7 15l5 5 5-5"/></svg>
@@ -1417,7 +1417,7 @@ const PRODUCT_OPPORTUNITIES={
 const OPPORTUNITIES=[
   {id:"cirrus-launch",type:"Campaign",status:"review",age:"Today",score:98,
    title:"Cirrus launch is ready for a story",issue:"New product opportunity",volume:"4,820 shoppers · $42k potential GMV",impact:"+$42k potential GMV",
-   intro:["The Cirrus insulated jacket went live this morning. I found 4,820 opted-in shoppers who own an Alpine hardshell but no insulated mid-layer.",
+   intro:["The Cirrus insulated jacket went live this morning. I found 4,820 opted-in shoppers who own a Sample hardshell but no insulated mid-layer.",
      "The first cold-weather window starts next week. A product story — without leading on a discount — should land better than a generic launch blast."],
    user:"Show me the campaign you would create.",
    proposal:{title:"Cirrus launch · compatible shell owners",caption:"A controlled first wave, ready for review",rows:[["Audience","4,820 shell owners"],["Story","The missing warm layer"],["First wave","600 shoppers"],["Holdout","10%"],["Offer","None in message one"],["Expected GMV","$42,000"]],chips:["3 message variants","Guardrails pass","Preview 30 messages"],action:"Build campaign",act:"campaign-launch"}},
@@ -1485,7 +1485,7 @@ const STAGES=[
 ];
 
 const VARIANTS=[
-  {k:"A",n:"Product story",ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own an Alpine hardshell. Explain the new recycled insulation, the packable construction and how the two products work together below 5°C. Personalize the opening with the shell they own. Ask whether they want help choosing a size. Do not use an offer in the first message; if price comes up, answer plainly and stop selling.",
+  {k:"A",n:"Product story",ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation, the packable construction and how the two products work together below 5°C. Personalize the opening with the shell they own. Ask whether they want help choosing a size. Do not use an offer in the first message; if price comes up, answer plainly and stop selling.",
    off:"No offer",sent:137,rep:"11.7%",cvr:"6.6%",rev:"$4.82",marg:"full margin",win:true},
   {k:"B",n:"Product story + shipping",ins:"Tell the same Cirrus product story, personalized to the hardshell the shopper owns. After explaining the recycled insulation and packable construction, offer free shipping if they order this week. Make the offer secondary to the product reason. Ask if they want sizing help and never mention a percentage discount.",
    off:"Free shipping",sent:138,rep:"9.4%",cvr:"6.2%",rev:"$4.31",marg:"−$6.40 / order",win:false},
@@ -2415,21 +2415,21 @@ const GR_CATS=[
    exemption), so they live in its detail rather than a shared list. */
 const CHANNELS=[
   {n:"SMS",c:"var(--blue-200)",d:"Text-only. Works everywhere and is the fallback for every other channel.",on:true,locked:true,
-   sends:["AlpineSupply · short code 78-2001","+1 415 555 0134 · long code"],status:"Verified",tag:"tag-green"},
+   sends:["SampleStore · short code 78-2001","+1 415 555 0134 · long code"],status:"Verified",tag:"tag-green"},
   {n:"RCS",c:"var(--teal-200)",d:"Rich media, buttons and read receipts, where the carrier and device support it. Falls back to SMS automatically when it isn't.",on:true,
-   sends:["Alpine Supply Co. · verified brand agent"],status:"Verified",tag:"tag-green"},
+   sends:["Sample Store Co. · verified brand agent"],status:"Verified",tag:"tag-green"},
   {n:"Email",c:"var(--green-300)",d:"Best for longer or receipt-style sends — a different medium, not a shorter SMS.",on:true,
-   sends:["hello@alpinesupply.example.com"],status:"Domain verification pending",tag:"tag-orange",
+   sends:["hello@samplestore.example.com"],status:"Domain verification pending",tag:"tag-orange",
    extra:[["Exempt from quiet hours","An inbox doesn't buzz in someone's pocket the way a text does — let Email send on the engine's normal schedule instead of waiting for the SMS/RCS window in Guardrails → Timing.",false],
           ["Always include an unsubscribe link","Legal requirement, separate from the SMS/RCS opt-out line in Guardrails → Content.",true,true]]},
   {n:"Instagram",c:"var(--coral-400)",d:"DMs to shoppers who've messaged the account or opted in from an ad. Short, casual, image-friendly.",on:false,
-   sends:["@alpinesupplyco"],status:"Not connected",tag:"tag-grey"},
+   sends:["@samplestoreco"],status:"Not connected",tag:"tag-grey"},
   {n:"Messenger",c:"var(--purple-200)",d:"Facebook DMs — the same audience shape as Instagram, a different app.",on:false,
-   sends:["Alpine Supply Co."],status:"Not connected",tag:"tag-grey"},
+   sends:["Sample Store Co."],status:"Not connected",tag:"tag-grey"},
   {n:"TikTok",c:"var(--grey-300)",d:"DMs to shoppers who follow or have engaged with the account.",on:false,
-   sends:["@alpinesupplyco"],status:"Not connected",tag:"tag-grey"},
+   sends:["@samplestoreco"],status:"Not connected",tag:"tag-grey"},
   {n:"TikTok Shop",c:"var(--orange-300)",d:"Order and shipping updates tied to a TikTok Shop purchase.",on:false,
-   sends:["Alpine Supply Co. Shop"],status:"Not connected",tag:"tag-grey",
+   sends:["Sample Store Co. Shop"],status:"Not connected",tag:"tag-grey",
    note:"Transactional only — TikTok Shop's own policy restricts this channel to order and shipping updates, so it never carries marketing content regardless of the skill."}
 ];
 let chSel=0;
@@ -2933,7 +2933,7 @@ const PREV_FIRST=["Ana","Marc","Sam","Lena","Priya","Tom","Jonas","Chloé","Hugo
   "Ruben","Mei","Otto","Clara","Diego","Aisha","Pieter","Nora","Elias","Yuki","Tomas","Farah",
   "Bruno","Lena","Karl","Amara","Iris","Mateo","Sanne","Owen","Zoë","Rafa","Nina","Emil","Alba","Kwame","Lise","Ivan"];
 const PREV_LAST=["R.","D.","K.","P.","S.","W.","M.","B.","T.","L.","V.","N.","A.","J.","H.","F."];
-const PREV_ITEM=["the Alpine hardshell","the Summit shell","the Ridge hardshell","the Storm shell"];
+const PREV_ITEM=["the Sample hardshell","the Summit shell","the Ridge hardshell","the Storm shell"];
 const PREV_STAGE=["First-time buyer","Repeat","VIP","At risk"];
 const PREV_TIER=["Member","Silver","Gold","Summit"];
 function genPreview(n){
@@ -3306,7 +3306,7 @@ function resetWizard(){
   $("#campSend").disabled=false;
   VARIANTS.length=0;
   VARIANTS.push(
-    {k:"A",n:"Product story",ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own an Alpine hardshell. Explain the new recycled insulation, the packable construction and how the two products work together below 5°C. Personalize the opening with the shell they own. Ask whether they want help choosing a size. Do not use an offer in the first message; if price comes up, answer plainly and stop selling.",
+    {k:"A",n:"Product story",ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation, the packable construction and how the two products work together below 5°C. Personalize the opening with the shell they own. Ask whether they want help choosing a size. Do not use an offer in the first message; if price comes up, answer plainly and stop selling.",
      off:"No offer",sent:137,rep:"11.7%",cvr:"6.6%",rev:"$4.82",marg:"full margin",win:true},
     {k:"B",n:"Product story + shipping",ins:"Tell the same Cirrus product story, personalized to the hardshell the shopper owns. After explaining the recycled insulation and packable construction, offer free shipping if they order this week. Make the offer secondary to the product reason. Ask if they want sizing help and never mention a percentage discount.",
      off:"Free shipping",sent:138,rep:"9.4%",cvr:"6.2%",rev:"$4.31",marg:"−$6.40 / order",win:false},
@@ -3668,7 +3668,7 @@ function openShopper(s){
   const slug=(first+"."+last).toLowerCase().replace(/[^a-z.]/g,"");
   const orders=[
     ["#10482","Aug 3, 2026","Winter Tights · Merino Socks","$148","Delivered"],
-    ["#9821","Mar 18, 2026","Alpine Hardshell","$289","Delivered"],
+    ["#9821","Mar 18, 2026","Sample Hardshell","$289","Delivered"],
     ["#9174","Nov 6, 2025","Trail Gloves","$64","Delivered"]
   ].slice(0,Math.min(3,Math.max(1,s.orders||1)));
   openPanel(fullName, "Shopper profile · identity, commerce and conversation context", `
@@ -3683,7 +3683,7 @@ function openShopper(s){
         <div class="kv"><span class="k">Last name</span><span class="t-md med">${last}</span></div>
         <div class="kv"><span class="k">Phone</span><span class="t-md med mono">${s.id}</span></div>
         <div class="kv"><span class="k">Email</span><span class="t-md med">${slug}@example.com</span></div>
-        <div class="kv"><span class="k">Shipping address</span><span class="t-md med">42 Alpine Way<br>Chamonix 74400 · France</span></div>
+        <div class="kv"><span class="k">Shipping address</span><span class="t-md med">42 Sample Way<br>Chamonix 74400 · France</span></div>
         <div class="kv"><span class="k">Customer since</span><span class="t-md med">November 2025</span></div>
       </div>
     </div>
