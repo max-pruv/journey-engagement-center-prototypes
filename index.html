@@ -135,6 +135,10 @@ input,textarea,select{font:inherit;color:inherit}
 .tag-teal{background:var(--teal-50);color:var(--teal-800)}
 .tag-coral{background:var(--coral-100);color:var(--coral-800)}
 .tag-yellow{background:var(--yellow-50);color:var(--yellow-800)}
+/* a tag that opens a Learn more panel — same pill, with a hover affordance and a hint arrow */
+button.tagBtn{border:0;cursor:pointer;font-family:inherit}
+button.tagBtn:hover{filter:brightness(.94)}
+button.tagBtn::after{content:"→";margin-left:2px;opacity:.55;font-size:10px}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .srcSwatch{display:inline-block;width:8px;height:8px;border-radius:2px;flex-shrink:0}
 
@@ -3445,6 +3449,14 @@ document.addEventListener("click",e=>{
   const lm=e.target.closest("[data-learn]");
   if(lm){e.stopPropagation();openLearn(lm.dataset.learn);return}
 
+  const wl=e.target.closest("[data-wizlearn]");
+  if(wl){e.stopPropagation();openWizLearn(wl.dataset.wizlearn);return}
+
+  const ua=e.target.closest("[data-useanswer]");
+  if(ua){const d=WIZ_LEARN[ua.dataset.useanswer];
+    if(d){const inp=$("#campSay"); if(inp){inp.value=d.ins; inp.focus();}
+    closePanel();} return}
+
   if(e.target.closest("[data-closepanel]")) closePanel();
 
   const ex=e.target.closest("[data-excl]");
@@ -3764,16 +3776,61 @@ const WIZARD=[
    after:(a)=>{ if(/\d/.test(a)) setTimeout(()=>openPreviewPanel(),650) }},
 ];
 
+/* Every tag on a wizard recommendation opens a Learn more panel: the detailed
+   instruction, read-only, with "Use as my answer" prefilling the compose box so
+   the merchant can personalize it before sending it back as their reply. */
+const WIZ_LEARN={
+  "opp-gap":{t:"The gap",s:"Why these 4,820 shoppers, specifically",
+    ins:"Target opted-in shoppers who own a Sample hardshell (any model, ordered Oct–Feb) but have never bought an insulated mid-layer. They already trust the shell line and feel the missing-warmth gap Cirrus fills — so the message is a compatibility story, not a cold pitch. Exclude anyone with a return in the last 30 days, an open ticket, or a review of 3★ or less."},
+  "opp-moment":{t:"The moment",s:"Why now, not last week or next",
+    ins:"Send into the first sub-zero forecast of the season, in the regions where most of these shoppers live. The engine watches the 7-day forecast per shopper and fires when the local low first drops below 0°C — so the message lands the morning the cold does, not on a fixed calendar date."},
+  "opp-fit":{t:"The fit",s:"Why Cirrus is the right thing to say",
+    ins:"Lead with compatibility: Cirrus is cut to wear over the hardshell they already own, zips into the same layering system, and packs into its own pocket. Do not position it as a replacement or an upgrade — the hardshell stays the outer layer; Cirrus is the missing warm one underneath."},
+  "opp-size":{t:"The size",s:"Where the ≈$42k comes from",
+    ins:"Modelled, not measured: 4,820 reachable shoppers × the reply and conversion rates of your last two comparable launches, at the Cirrus price point. Treat it as a ceiling, not a forecast — the 10% holdout is what turns it into a measured number after the send."},
+  "aud-hardshell":{t:"Bought in Hardshells",s:"The inclusion rule",
+    ins:"Include shoppers with at least one delivered order containing a product in the Hardshells category. Any model counts — Summit, Ridge, Storm. Cancelled and fully-refunded orders don't."},
+  "aud-window":{t:"Order date Oct–Feb",s:"Why last winter's buyers",
+    ins:"Restrict to hardshell orders placed between October and February. These are shoppers who bought for real cold, still own the piece, and are about to face the same conditions again — not someone who bought a shell in a spring sale and won't need it this year."},
+  "aud-nomid":{t:"Lifetime Mid-layers = 0",s:"The gap that makes them worth reaching",
+    ins:"Include only shoppers who have never bought an insulated mid-layer, across their whole order history. That's the gap Cirrus fills — if they already own one, the message has nothing to add and they'd hear a pitch for something they have."},
+  "aud-stage":{t:"Stage in Repeat, VIP",s:"Why these two lifecycle stages",
+    ins:"Restrict to shoppers currently in the Repeat or VIP lifecycle stages — they've bought more than once and recently enough to still be warm. First-time buyers and dormant shoppers are out: the first group hasn't earned a cross-sell yet, the second needs a win-back, not a product story."},
+  "aud-active":{t:"Active this winter",s:"The recency filter",
+    ins:"Keep only shoppers with site or purchase activity in the current winter season. A hardshell owner who hasn't been back since March is a win-back conversation; this campaign is for people still in the habit."},
+  "aud-noreturn":{t:"Exclude: return in last 30 d",s:"Why recent returners are out",
+    ins:"Exclude anyone who returned any item in the last 30 days. A recent return usually means an unresolved fit or quality question — pitching them another layer before that's settled reads as not listening."},
+  "skill-product":{t:"Block 1 · Product",s:"What the agent says about Cirrus",
+    ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation and the packable construction, and how the two pieces work together below 5°C. Ground every claim in the product data — no invented specs."},
+  "skill-angle":{t:"Block 2 · Angle & tone",s:"How the agent opens and carries itself",
+    ins:"Personalize the opening with the hardshell they own. Educate first, sell second: one concrete product benefit, then a single question — do they want help choosing a size. No pressure, no urgency, no second ask."},
+  "skill-offer":{t:"Block 3 · Offer",s:"What the agent may give away",
+    ins:"No offer in the first message. If price comes up, answer plainly and stop selling — do not volunteer a discount, a code, or free shipping. The guardrails still cap anything the agent might later be allowed to give."},
+  "skill-never":{t:"Block 4 · Never say",s:"The hard content limits",
+    ins:"No percentage discount, no urgency countdown, no “last chance”. Don't suggest the hardshell they own is outdated or insufficient on its own. These sit on top of the skill and can't be unlocked by it."}
+};
+function openWizLearn(k){
+  const d=WIZ_LEARN[k]; if(!d) return;
+  openPanel(d.t, d.s, `
+    <div class="col gap-xs">
+      <span class="t-sm bold">The detailed instruction</span>
+      <p class="t-md sec" style="margin:0">${d.ins}</p>
+      <span class="t-sm ter">Read-only here. Use it as your answer and it lands in the box below, where you can edit it before sending.</span>
+    </div>`,
+    `<button class="btn btn-secondary" data-closepanel>Close</button>
+     <button class="btn btn-primary" data-useanswer="${k}">Use as my answer</button>`);
+}
+
 function opportunityCard(){
   return `<div class="card pad-md" style="max-width:640px">
     <div class="row between wrap gap-xs" style="margin-bottom:var(--sm)">
       <span class="h-sm">Why this one</span><span class="tag tag-purple">Score 98</span>
     </div>
     <div class="col gap-xs">
-      <div class="row gap-sm"><span class="k" style="min-width:104px">The gap</span><span class="t-sm sec">4,820 opted-in shoppers own a Sample hardshell but no insulated mid-layer — the exact layer Cirrus adds.</span></div>
-      <div class="row gap-sm"><span class="k" style="min-width:104px">The moment</span><span class="t-sm sec">First sub-zero forecast lands next week in the regions where most of them live.</span></div>
-      <div class="row gap-sm"><span class="k" style="min-width:104px">The fit</span><span class="t-sm sec">Cirrus is cut to wear over the hardshell they already have — a compatibility story, not a replacement one.</span></div>
-      <div class="row gap-sm"><span class="k" style="min-width:104px">The size</span><span class="t-sm sec">≈$42k potential GMV if it converts like your last two launches.</span></div>
+      <div class="row gap-sm"><span class="k" style="min-width:104px">The gap</span><span class="t-sm sec" style="flex:1">4,820 opted-in shoppers own a Sample hardshell but no insulated mid-layer — the exact layer Cirrus fills.</span><button class="tag tag-blue tagBtn" data-wizlearn="opp-gap">Learn more</button></div>
+      <div class="row gap-sm"><span class="k" style="min-width:104px">The moment</span><span class="t-sm sec" style="flex:1">First sub-zero forecast lands next week in the regions where most of them live.</span><button class="tag tag-blue tagBtn" data-wizlearn="opp-moment">Learn more</button></div>
+      <div class="row gap-sm"><span class="k" style="min-width:104px">The fit</span><span class="t-sm sec" style="flex:1">Cirrus is cut to wear over the hardshell they already have — a compatibility story, not a replacement one.</span><button class="tag tag-blue tagBtn" data-wizlearn="opp-fit">Learn more</button></div>
+      <div class="row gap-sm"><span class="k" style="min-width:104px">The size</span><span class="t-sm sec" style="flex:1">≈$42k potential GMV if it converts like your last two launches.</span><button class="tag tag-blue tagBtn" data-wizlearn="opp-size">Learn more</button></div>
     </div>
   </div>`;
 }
@@ -3785,12 +3842,12 @@ function audienceCard(answer){
       <span class="h-sm">Recommended audience</span><span class="tag tag-purple">Draft</span>
     </div>
     <div class="chips" style="margin-bottom:var(--sm)">
-      <span class="tag tag-blue">bought in <b style="margin-left:3px">Hardshells</b></span>
-      <span class="tag tag-blue">order date <b style="margin-left:3px">Oct–Feb</b></span>
-      <span class="tag tag-blue">lifetime <b style="margin-left:3px">Mid-layers</b> = 0</span>
-      <span class="tag tag-grey">stage in <b style="margin-left:3px">Repeat, VIP</b></span>
-      ${activeOnly?`<span class="tag tag-blue">active <b style="margin-left:3px">this winter</b></span>`:""}
-      ${skipRet?`<span class="tag tag-red">exclude: return in last 30 d</span>`:""}
+      <button class="tag tag-blue tagBtn" data-wizlearn="aud-hardshell">bought in <b style="margin-left:3px">Hardshells</b></button>
+      <button class="tag tag-blue tagBtn" data-wizlearn="aud-window">order date <b style="margin-left:3px">Oct–Feb</b></button>
+      <button class="tag tag-blue tagBtn" data-wizlearn="aud-nomid">lifetime <b style="margin-left:3px">Mid-layers</b> = 0</button>
+      <button class="tag tag-grey tagBtn" data-wizlearn="aud-stage">stage in <b style="margin-left:3px">Repeat, VIP</b></button>
+      ${activeOnly?`<button class="tag tag-blue tagBtn" data-wizlearn="aud-active">active <b style="margin-left:3px">this winter</b></button>`:""}
+      ${skipRet?`<button class="tag tag-red tagBtn" data-wizlearn="aud-noreturn">exclude: return in last 30 d</button>`:""}
     </div>
     <div class="row wrap gap-lg">
       <div class="kv"><span class="k">Matching</span><span class="h-md num-t">2,840</span></div>
@@ -3816,14 +3873,14 @@ function skillBlocksCard(feedback){
   const softer=/salesy|tone/i.test(feedback||"");
   const warranty=/warranty/i.test(feedback||"");
   const blocks=[
-    ["1 · Product","Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation and the packable construction, and how the two pieces work together below 5°C."],
+    ["1 · Product","Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation and the packable construction, and how the two pieces work together below 5°C.","skill-product"],
     ["2 · Angle & tone", softer
       ? "Lead with the layering system, not the sale. One concrete product benefit, then a single question: do they want help choosing a size."+(warranty?" Close with the lifetime repair warranty, one line, no pressure.":"")
-      : "Personalize the opening with the shell they own. Educate first, sell second — ask whether they want help choosing a size."+(warranty?" Close with the lifetime repair warranty, one line, no pressure.":"")],
+      : "Personalize the opening with the shell they own. Educate first, sell second — ask whether they want help choosing a size."+(warranty?" Close with the lifetime repair warranty, one line, no pressure.":""),"skill-angle"],
     ["3 · Offer", noPrice
       ? "No offer, ever, in this campaign. If price comes up, answer plainly and stop selling."
-      : "No offer in the first message. If price comes up, answer plainly and stop selling."],
-    ["4 · Never say","No percentage discount, no urgency countdown, no “last chance”. Don't suggest the hardshell they own is outdated."]
+      : "No offer in the first message. If price comes up, answer plainly and stop selling.","skill-offer"],
+    ["4 · Never say","No percentage discount, no urgency countdown, no “last chance”. Don't suggest the hardshell they own is outdated.","skill-never"]
   ];
   return `<div class="card pad-md" style="max-width:680px">
     <div class="row between wrap gap-xs" style="margin-bottom:var(--sm)">
@@ -3832,7 +3889,10 @@ function skillBlocksCard(feedback){
     </div>
     <div class="col gap-sm">
       ${blocks.map(b=>`<div class="col gap-xxxs">
-        <span class="k">${b[0]}</span>
+        <div class="row between">
+          <span class="k">${b[0]}</span>
+          <button class="tag tag-blue tagBtn" data-wizlearn="${b[2]}">Learn more</button>
+        </div>
         <p class="t-sm sec" style="margin:0">${b[1]}</p>
       </div>`).join("")}
     </div>

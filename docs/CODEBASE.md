@@ -325,6 +325,14 @@ the conversation can revisit a step's substance more than once:
    this reason) swaps its Discount-ceiling line, and `launchCampaign` marks the campaign
    "Testing 3 skills" or "One skill".
 
+**Every recommendation tag opens a Learn more.** Each tag on the opportunity, audience and
+skill-block cards is a `button.tagBtn` carrying `data-wizlearn="key"`. `WIZ_LEARN` maps the key to a
+title, a subtitle and the detailed instruction; `openWizLearn(k)` shows it in the side panel,
+read-only, with a **"Use as my answer"** action (`data-useanswer`) that prefills the compose box
+(`#campSay`) with the instruction and closes the panel — so the merchant sees the full text land,
+can personalize it, and sends it back as their own reply. It is the same pattern at every stage:
+the recommendation is always inspectable, and always editable before it's committed.
+
 **The preview is a question, not a default block.** The wizard's last turn asks whether the
 merchant wants to see what would actually send; only a "yes" answer calls `genPreview(n)` and opens
 a scrollable side panel (`openPreviewPanel`) of n generated conversations. `genPreview(n)` builds
