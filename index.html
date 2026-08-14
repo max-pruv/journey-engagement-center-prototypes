@@ -3295,19 +3295,11 @@ function landOnHash(){
 addEventListener("hashchange",landOnHash);
 /* fresh conversation every time "Create a campaign" is opened */
 function resetWizard(){
-  wizIdx=0; wizStep=1;
+  wizIdx=0; wizStep=1; wizAB=true;
   $("#campThread").innerHTML=""; delete $("#campThread").dataset.started;
   $("#campCompose").style.display="";
   $("#campSend").disabled=false;
-  VARIANTS.length=0;
-  VARIANTS.push(
-    {k:"A",n:"Product story",ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation, the packable construction and how the two products work together below 5°C. Personalize the opening with the shell they own. Ask whether they want help choosing a size. Do not use an offer in the first message; if price comes up, answer plainly and stop selling.",
-     off:"No offer",sent:137,rep:"11.7%",cvr:"6.6%",rev:"$4.82",marg:"full margin",win:true},
-    {k:"B",n:"Product story + shipping",ins:"Tell the same Cirrus product story, personalized to the hardshell the shopper owns. After explaining the recycled insulation and packable construction, offer free shipping if they order this week. Make the offer secondary to the product reason. Ask if they want sizing help and never mention a percentage discount.",
-     off:"Free shipping",sent:138,rep:"9.4%",cvr:"6.2%",rev:"$4.31",marg:"−$6.40 / order",win:false},
-    {k:"C",n:"Product story + 10%",ins:"Open with the cold-weather reason and introduce the Cirrus jacket as the compatible insulated layer for the hardshell they own. Explain one concrete product benefit before offering 10% off with a unique shopper code. State that the code expires in 5 days. Do not stack it with loyalty rewards.",
-     off:"10% discount",sent:137,rep:"8.1%",cvr:"7.1%",rev:"$4.44",marg:"−$11.90 / order",win:false}
-  );
+  resetVariants();
   renderWizSteps();
   askTurn();
 }
@@ -3713,38 +3705,46 @@ function openShopper(s){
    thread is persistent UI — everything the merchant sees is something the
    assistant showed them in response to a question. */
 const WIZARD=[
-  {step:1, ask:"Engage found three campaign opportunities. Want to start from one of them?",
-   hint:"These come from catalogue changes, shopper behaviour and seasonal timing.",
-   chips:["New product launch · Cirrus jacket","Summit shell restock","First sub-zero forecast","I have another idea"],
-   ack:(a)=>/cirrus|product/i.test(a)?"Great — I'll use the Cirrus launch as the starting point and find the strongest audience.":"Got it — we'll shape the opportunity together.",
-   card:null},
-  {step:1, ask:"Who do you want to reach?",
-   hint:"Describe them however you'd say it out loud.",
-   chips:["Hardshell buyers with no mid-layer","Lapsed subscribers, delivery issue","VIPs who haven't seen the new season"],
-   sample:"Customers who bought a hardshell last winter, still active, who have never bought a mid-layer — skip anyone who returned something in the last month.",
-   ack:"Got it — here's what that turns into.",
-   card:()=>audienceCard()},
+  {step:1, ask:"The Cirrus insulated jacket went live this morning — and 4,820 of your opted-in shoppers already own a Sample hardshell but no insulated mid-layer. That's the gap Cirrus fills. Want to build the launch on it?",
+   hint:"First cold-weather window opens next week, so the timing is real. Modelled at ≈$42k GMV if it converts like past launches.",
+   chips:["Yes, build on the Cirrus launch","Summit shell restock","First sub-zero forecast","I have another idea"],
+   ack:(a)=>/cirrus|yes/i.test(a)?"Good — it's the strongest of the three right now. Here's the audience I'd start from.":"Got it — we'll shape the opportunity together, starting from who you want to reach.",
+   card:(a)=>/cirrus|yes/i.test(a)?opportunityCard():null},
+  {step:1, ask:"Here's who I'd reach first — my recommendation, and why.",
+   hint:"Read it, then tell me what to change in your own words. Or describe a different audience entirely.",
+   chips:["Looks right, keep it","Only those active this winter","Also skip recent returners","I'll describe my own"],
+   sample:"Only the ones still active this winter, and skip anyone who returned something in the last month.",
+   ack:(a)=>/own|describe/i.test(a)?"Go ahead — describe them however you'd say it out loud, and I'll turn it into an audience.":
+     "Noted. Here's the adjusted read — tell me if I've got it right.",
+   card:(a)=>/own|describe/i.test(a)?null:audienceCard(a)},
   {step:1, ask:"Does that look right, or should I build it as exact rules instead?",
    hint:"Rules are precise; this reading is usually close enough.",
    chips:["This is right, continue","Show me as rules"],
    ack:(a)=>/rule/i.test(a) ? "Here's the same audience as rules — edit anything that's off." : "Good — that's the audience settled.",
    card:(a)=>/rule/i.test(a) ? rulesCard() : null},
   {step:2, ask:"What story do you want to tell this audience?",
-   hint:"Start with the campaign moment. I'll ask for the product and turn your answer into a complete skill.",
+   hint:"Start with the campaign moment. I'll turn your answer into a complete skill, block by block.",
    chips:["New product launch","A product is back in stock","A seasonal story","We fixed a product problem"],
    sample:"New product launch: introduce the Cirrus insulated jacket to hardshell owners who need a warmer layer. Explain what is genuinely new, why it works with what they own, and lead with product education rather than a discount.",
-   ack:"I used the audience and the Cirrus product data to build a detailed skill. Here are three approaches to test.",
-   card:()=>variantCard()},
-  {step:2, ask:"Keep all three, or change something?",
-   hint:"You can remove a variant, add one, or edit any of the skills above.",
-   chips:["Keep all three","Remove the discount one","Add a fourth"],
+   ack:"Here's the skill I drafted from that — broken into the blocks the agent will actually load. Review each one, and tell me what to change in plain words.",
+   card:()=>skillBlocksCard()},
+  {step:2, ask:"Anything to change before we decide how to test it?",
+   hint:"Comment on a block — or several — and I'll rewrite. For example: “don't mention price at all”, or “make the tone less salesy”.",
+   chips:["It's good, move on","Don't mention price at all","Make the tone less salesy","Add a line about the warranty"],
    ack:(a)=>{
-     if(/remove/i.test(a)){const d=VARIANTS.findIndex(v=>v.off!=="No offer"&&v.off!=="Free shipping");
-       if(d>=0)VARIANTS.splice(VARIANTS.length-1,1); return "Dropped the weakest one — down to "+VARIANTS.length+"."}
-     if(/add|fourth/i.test(a)){VARIANTS.push({k:String.fromCharCode(65+VARIANTS.length),n:"New approach",
-       ins:"",off:"No offer",sent:0,rep:"—",cvr:"—",rev:"$0.00",marg:"full margin",win:false});
-       return "Added a fourth slot — write its skill whenever you're ready."}
-     return "Good, all "+VARIANTS.length+" stay in."},
+     if(/price/i.test(a)) return "Done — price is out of message one entirely, and if it comes up the agent answers plainly and stops selling. Block 3 now reads: no offer, ever, in this campaign.";
+     if(/salesy|tone/i.test(a)) return "Rewritten — the angle now leads with the layering system and the recycled insulation, and the only ask is whether they want sizing help.";
+     if(/warranty/i.test(a)) return "Added — block 2 now closes with the lifetime repair warranty, one line, no pressure.";
+     return "Good — the skill is settled."},
+   card:(a)=>/price|salesy|tone|warranty/i.test(a)?skillBlocksCard(a):null},
+  {step:2, ask:"Do you want to A/B test this, or send one version to everyone?",
+   hint:"Testing sends three approaches to a slice and gives the winner to the rest. One version is simpler and reaches everyone at once.",
+   chips:["A/B test three approaches","One version for everyone"],
+   ack:(a)=>{
+     wizAB=/test|variation|a\/b|three/i.test(a);
+     if(wizAB){ resetVariants(); return "Testing it is. I wrote three approaches from the skill — different ways to carry the same story. Remove or edit any of them." }
+     VARIANTS.length=0; VARIANTS.push(singleVariant());
+     return "One version, then — the skill as you reviewed it, no test split." },
    card:()=>variantCard()},
   {step:3, ask:"How should it roll out?",
    hint:"I'd test a slice and send the winner to the rest.",
@@ -3764,17 +3764,33 @@ const WIZARD=[
    after:(a)=>{ if(/\d/.test(a)) setTimeout(()=>openPreviewPanel(),650) }},
 ];
 
-function audienceCard(){
+function opportunityCard(){
   return `<div class="card pad-md" style="max-width:640px">
     <div class="row between wrap gap-xs" style="margin-bottom:var(--sm)">
-      <span class="h-sm">Audience</span><span class="tag tag-purple">Draft</span>
+      <span class="h-sm">Why this one</span><span class="tag tag-purple">Score 98</span>
+    </div>
+    <div class="col gap-xs">
+      <div class="row gap-sm"><span class="k" style="min-width:104px">The gap</span><span class="t-sm sec">4,820 opted-in shoppers own a Sample hardshell but no insulated mid-layer — the exact layer Cirrus adds.</span></div>
+      <div class="row gap-sm"><span class="k" style="min-width:104px">The moment</span><span class="t-sm sec">First sub-zero forecast lands next week in the regions where most of them live.</span></div>
+      <div class="row gap-sm"><span class="k" style="min-width:104px">The fit</span><span class="t-sm sec">Cirrus is cut to wear over the hardshell they already have — a compatibility story, not a replacement one.</span></div>
+      <div class="row gap-sm"><span class="k" style="min-width:104px">The size</span><span class="t-sm sec">≈$42k potential GMV if it converts like your last two launches.</span></div>
+    </div>
+  </div>`;
+}
+function audienceCard(answer){
+  const skipRet=/skip|return/i.test(answer||"");
+  const activeOnly=/active|winter/i.test(answer||"");
+  return `<div class="card pad-md" style="max-width:640px">
+    <div class="row between wrap gap-xs" style="margin-bottom:var(--sm)">
+      <span class="h-sm">Recommended audience</span><span class="tag tag-purple">Draft</span>
     </div>
     <div class="chips" style="margin-bottom:var(--sm)">
       <span class="tag tag-blue">bought in <b style="margin-left:3px">Hardshells</b></span>
       <span class="tag tag-blue">order date <b style="margin-left:3px">Oct–Feb</b></span>
       <span class="tag tag-blue">lifetime <b style="margin-left:3px">Mid-layers</b> = 0</span>
       <span class="tag tag-grey">stage in <b style="margin-left:3px">Repeat, VIP</b></span>
-      <span class="tag tag-red">exclude: return in last 30 d</span>
+      ${activeOnly?`<span class="tag tag-blue">active <b style="margin-left:3px">this winter</b></span>`:""}
+      ${skipRet?`<span class="tag tag-red">exclude: return in last 30 d</span>`:""}
     </div>
     <div class="row wrap gap-lg">
       <div class="kv"><span class="k">Matching</span><span class="h-md num-t">2,840</span></div>
@@ -3784,6 +3800,7 @@ function audienceCard(){
       <div class="kv"><span class="k">Excluded</span><span class="h-md num-t">431</span>
         <span class="t-xs ter">bad reviews, open tickets</span></div>
     </div>
+    <p class="t-sm sec" style="margin:var(--sm) 0 0">Recommended because they already trust the shell line and feel the gap Cirrus fills — highest predicted reply rate of the three opportunities. Tell me what to adjust.</p>
   </div>`;
 }
 function rulesCard(){
@@ -3792,19 +3809,64 @@ function rulesCard(){
     <div class="col gap-xs" id="wizRuleList"></div>
   </div>`;
 }
-function variantCard(){
+/* the campaign skill, broken into the blocks the agent loads — so a long
+   instruction can be reviewed and revised block by block, in plain words */
+function skillBlocksCard(feedback){
+  const noPrice=/price/i.test(feedback||"");
+  const softer=/salesy|tone/i.test(feedback||"");
+  const warranty=/warranty/i.test(feedback||"");
+  const blocks=[
+    ["1 · Product","Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation and the packable construction, and how the two pieces work together below 5°C."],
+    ["2 · Angle & tone", softer
+      ? "Lead with the layering system, not the sale. One concrete product benefit, then a single question: do they want help choosing a size."+(warranty?" Close with the lifetime repair warranty, one line, no pressure.":"")
+      : "Personalize the opening with the shell they own. Educate first, sell second — ask whether they want help choosing a size."+(warranty?" Close with the lifetime repair warranty, one line, no pressure.":"")],
+    ["3 · Offer", noPrice
+      ? "No offer, ever, in this campaign. If price comes up, answer plainly and stop selling."
+      : "No offer in the first message. If price comes up, answer plainly and stop selling."],
+    ["4 · Never say","No percentage discount, no urgency countdown, no “last chance”. Don't suggest the hardshell they own is outdated."]
+  ];
   return `<div class="card pad-md" style="max-width:680px">
     <div class="row between wrap gap-xs" style="margin-bottom:var(--sm)">
-      <span class="h-sm">Approaches to test</span>
-      <span class="t-sm sec">Winner decided on revenue per recipient</span>
+      <span class="h-sm">The skill, in blocks</span>
+      <span class="t-sm sec">Comment on any block and I'll rewrite it</span>
     </div>
-    <div class="grid g-3" id="wizVariantGrid"></div>
+    <div class="col gap-sm">
+      ${blocks.map(b=>`<div class="col gap-xxxs">
+        <span class="k">${b[0]}</span>
+        <p class="t-sm sec" style="margin:0">${b[1]}</p>
+      </div>`).join("")}
+    </div>
+  </div>`;
+}
+function singleVariant(){
+  return {k:"A",n:"Product story",ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation, the packable construction and how the two products work together below 5°C. Personalize the opening with the shell they own. Ask whether they want help choosing a size. Do not use an offer in the first message; if price comes up, answer plainly and stop selling.",
+    off:"No offer",sent:0,rep:"—",cvr:"—",rev:"$0.00",marg:"full margin",win:false};
+}
+function resetVariants(){
+  VARIANTS.length=0;
+  VARIANTS.push(
+    {k:"A",n:"Product story",ins:"Introduce the Cirrus insulated jacket as the missing warm layer for shoppers who already own a Sample hardshell. Explain the new recycled insulation, the packable construction and how the two products work together below 5°C. Personalize the opening with the shell they own. Ask whether they want help choosing a size. Do not use an offer in the first message; if price comes up, answer plainly and stop selling.",
+     off:"No offer",sent:137,rep:"11.7%",cvr:"6.6%",rev:"$4.82",marg:"full margin",win:true},
+    {k:"B",n:"Product story + shipping",ins:"Tell the same Cirrus product story, personalized to the hardshell the shopper owns. After explaining the recycled insulation and packable construction, offer free shipping if they order this week. Make the offer secondary to the product reason. Ask if they want sizing help and never mention a percentage discount.",
+     off:"Free shipping",sent:138,rep:"9.4%",cvr:"6.2%",rev:"$4.31",marg:"−$6.40 / order",win:false},
+    {k:"C",n:"Product story + 10%",ins:"Open with the cold-weather reason and introduce the Cirrus jacket as the compatible insulated layer for the hardshell they own. Explain one concrete product benefit before offering 10% off with a unique shopper code. State that the code expires in 5 days. Do not stack it with loyalty rewards.",
+     off:"10% discount",sent:137,rep:"8.1%",cvr:"7.1%",rev:"$4.44",marg:"−$11.90 / order",win:false}
+  );
+}
+function variantCard(){
+  const single=VARIANTS.length===1;
+  return `<div class="card pad-md" style="max-width:680px">
+    <div class="row between wrap gap-xs" style="margin-bottom:var(--sm)">
+      <span class="h-sm">${single?"The message":"Approaches to test"}</span>
+      <span class="t-sm sec">${single?"One version, sent to everyone":"Winner decided on revenue per recipient"}</span>
+    </div>
+    <div class="grid ${single?"":"g-3"}" id="wizVariantGrid"></div>
   </div>`;
 }
 function checksCard(){
   return `<div class="card pad-md" style="max-width:640px">
     <span class="h-sm" style="display:block;margin-bottom:var(--sm)">Before anything sends</span>
-    <div class="col gap-xs">${WIZ_CHECKS.map(c=>`<div class="row between">
+    <div class="col gap-xs">${WIZ_CHECKS().map(c=>`<div class="row between">
       <div class="col gap-xxxs"><span class="t-sm med">${c[0]}</span><span class="t-sm sec">${c[1]}</span></div>
       <span class="tag ${c[2]}">${c[2]==="tag-green"?"Pass":"Deferred"}</span></div>`).join("")}</div>
   </div>`;
@@ -3819,16 +3881,20 @@ function previewCard(){
   </div>`;
 }
 
-const WIZ_CHECKS=[
-  ["Frequency","2,190 of 2,840 have headroom this week","tag-green"],
-  ["Quiet hours","Spread across each shopper's local morning","tag-green"],
-  ["Exclusions","431 removed: bad reviews, open tickets, do-not-market","tag-green"],
-  ["Discount ceiling","Variant C at 10% — inside your limit, no approval needed","tag-green"],
-  ["Collisions","64 shoppers already queued for Replenishment — they'll be deferred","tag-orange"],
-  ["Holdout","219 never messaged, so the lift is measured not modelled","tag-green"]
-];
+function WIZ_CHECKS(){
+  return [
+    ["Frequency","2,190 of 2,840 have headroom this week","tag-green"],
+    ["Quiet hours","Spread across each shopper's local morning","tag-green"],
+    ["Exclusions","431 removed: bad reviews, open tickets, do-not-market","tag-green"],
+    wizAB
+      ? ["Discount ceiling","Variant C at 10% — inside your limit, no approval needed","tag-green"]
+      : ["Discount ceiling","No offer in this campaign — nothing to approve","tag-green"],
+    ["Collisions","64 shoppers already queued for Replenishment — they'll be deferred","tag-orange"],
+    ["Holdout","219 never messaged, so the lift is measured not modelled","tag-green"]
+  ];
+}
 
-let wizIdx=0, wizStep=1;
+let wizIdx=0, wizStep=1, wizAB=true;
 const SPARK_SVG=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>`;
 
 function campScroll(){const t=$("#campThread"); if(t) t.scrollTop=t.scrollHeight}
@@ -3903,7 +3969,7 @@ function afterCardMount(w){
   if($("#wizOpenPreview")) $("#wizOpenPreview").addEventListener("click",openPreviewPanel);
 }
 function launchCampaign(){
-  CAMPAIGNS.unshift({n:"Cirrus jacket launch",aud:"Active hardshell owners, no insulated layer",sent:"286 / 2,190",reach:"89.7%",reply:"—",click:"—",cvr:"—",orders:"—",aov:"—",gmv:"$0",roi:"—",opt:"0.1%",cost:"$184",rpk:"$0",win:"Testing 3 skills",st:"Launching",prog:13});
+  CAMPAIGNS.unshift({n:"Cirrus jacket launch",aud:"Active hardshell owners, no insulated layer",sent:"286 / 2,190",reach:"89.7%",reply:"—",click:"—",cvr:"—",orders:"—",aov:"—",gmv:"$0",roi:"—",opt:"0.1%",cost:"$184",rpk:"$0",win:wizAB?"Testing 3 skills":"One skill",st:"Launching",prog:13});
   renderCampaigns();
   goto("campaigns");
 }

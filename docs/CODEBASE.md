@@ -302,6 +302,29 @@ truth, and `wizStep` is derived from it for display.
 to its starting three — so opening a new campaign is always a fresh conversation, and demoing it
 twice doesn't accumulate a stale variant list from the last run.
 
+**The flow, turn by turn.** The script is longer than three steps because the stepper is passive —
+the conversation can revisit a step's substance more than once:
+
+1. **Opening pitch** — the Cirrus launch is argued, not just named: the gap (shell owners with no
+   mid-layer), the moment (first sub-zero forecast), the fit (compatibility, not replacement), the
+   size (≈$42k). `opportunityCard()` lays out the why.
+2. **Audience, recommended first** — rather than asking the merchant to describe an audience from
+   nothing, the wizard proposes one (`audienceCard()`), states why it's the recommendation, and
+   invites adjustment in plain words. The answer re-renders the card with the adjustment applied
+   (e.g. "only those active this winter, skip recent returners" adds the two chips). A merchant who
+   wants their own says so and the next turn takes the description. Exact rules remain the fallback.
+3. **The story becomes a skill in blocks** — the answer is drafted into `skillBlocksCard()`: four
+   labelled blocks (Product / Angle & tone / Offer / Never say), because a real skill is a long,
+   complex instruction and reviewing it means reacting to specific parts, not one wall of text. The
+   next turn is the back-and-forth: the merchant comments ("don't mention price at all", "make it
+   less salesy", "add the warranty") and the matching block is rewritten and the card re-shown.
+4. **A/B test or not** — a plain question: "Do you want to A/B test this, or send one version to
+   everyone?" `wizAB` records it. Testing calls `resetVariants()` for three approaches; one version
+   collapses `VARIANTS` to a single `singleVariant()` and `variantCard()` reads "The message" /
+   "One version, sent to everyone". Downstream, `WIZ_CHECKS()` (a function, not a constant, for
+   this reason) swaps its Discount-ceiling line, and `launchCampaign` marks the campaign
+   "Testing 3 skills" or "One skill".
+
 **The preview is a question, not a default block.** The wizard's last turn asks whether the
 merchant wants to see what would actually send; only a "yes" answer calls `genPreview(n)` and opens
 a scrollable side panel (`openPreviewPanel`) of n generated conversations. `genPreview(n)` builds

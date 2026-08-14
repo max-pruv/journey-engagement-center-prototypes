@@ -48,8 +48,10 @@ trigger.
 - **Onboarding** (`onboarding.html`) is scripted: the chips prefill an answer and any typed text is
   accepted, but nothing is parsed. It argues for a shape, not a flow.
 - **Rule builder** rows render but don't compose or affect the audience estimate.
-- **The campaign wizard** does not parse what the merchant types — chips prefill a canned answer
-  and free text is accepted but not read. Same honesty gap as onboarding.html.
+- **The campaign wizard** pattern-matches the merchant's free text (regex on keywords) rather than
+  understanding it — the audience adjustment, the skill-block revisions and the A/B question all
+  branch on canned patterns, and an off-script answer falls through to a generic ack. The
+  back-and-forth shape is real; the comprehension is not.
 - **Shopper profile** is a stand-in panel. In the product it opens in a new tab; the prototype says
   so rather than faking it.
 - **Reject** in Conversations does not mutate state yet. Approve & send now moves the message to Live and updates the pending counts.
