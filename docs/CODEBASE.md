@@ -38,6 +38,7 @@ there.
 | id | Nav item | Rendered by |
 | --- | --- | --- |
 | `page-overview` | Reporting | `renderReport` → `renderTiles`, `renderRevTable`, `stackedBars`/`lines`/`hBars`; plus `renderBench` |
+| `page-intelligence` | Intelligence Hub | static markup — the business patterns the engine learned (no render function; written once in the HTML) |
 | `page-opportunities` | Opportunities | `renderOpportunities` → `renderOpportunityDetail`; actions route into campaigns, guardrails, ACE themes, lifecycle and loyalty |
 | `page-engagements` | Engagements | `renderAce` (AI tab — themes **and** their plays), `renderEng` (Custom tab) |
 | `page-campaigns` | Campaigns | `renderCampaigns` |
@@ -51,6 +52,23 @@ there.
 
 `NAV_OF` maps a page to the nav item that should look active — that's how `campaign-new` keeps
 Campaigns highlighted.
+
+## Intelligence Hub and the shopper read
+
+**`page-intelligence`** is deliberately static markup — a narrative page, not a driven report. It
+argues *how the engine understood the business*: the method (events, not averages of averages), the
+purchase patterns (the 54-day first→second window, what a first purchase needs, the per-country
+rhythm), and the product paths (best seller as opener, Cirrus as deepener, Trail Gloves as the dead
+end you never open with). The numbers are invented but internally consistent, and the closing card
+ties each pattern back to a concrete engine behaviour. Because it's written once in the HTML, it has
+no render function and doesn't appear in the isolation probe — edit the markup directly.
+
+**`shopperProfile(s)`** builds the descriptive read inside `openShopper`'s panel — the "shopper MD
+file". It's a mix of derived and written: cadence, engagement, discount sensitivity, the working
+lever and the loyalty posture are all derived from the shopper's `orders`/`ltv`/`tier`, then folded
+into one readable paragraph plus a row of tags and a written archetype ("The regular you build the
+business on."). Same shopper, same read every time — it's deterministic, so a merchant sees a
+consistent person, not a random sketch.
 
 ## Data objects
 

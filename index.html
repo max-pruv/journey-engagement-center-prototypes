@@ -601,6 +601,9 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
     <button class="navItem on" data-page="overview">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
       Overview</button>
+    <button class="navItem" data-page="intelligence">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a5 5 0 0 0-5 5c0 1.5.7 2.6 1.4 3.6.7 1 1.6 2 1.6 3.4h4c0-1.4.9-2.4 1.6-3.4.7-1 1.4-2.1 1.4-3.6a5 5 0 0 0-5-5z"/><path d="M10 18h4M10.5 21h3"/></svg>
+      Intelligence Hub</button>
     <button class="navItem" data-page="opportunities">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><path d="m5.6 5.6 2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3"/></svg>
       Opportunities <span class="count" id="navOppCount">7</span></button>
@@ -718,6 +721,139 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
               </div>
             </div>
             <div class="col gap-md" id="benchWrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== INTELLIGENCE HUB · how the business works ======== -->
+      <section class="page hidden" id="page-intelligence">
+        <header class="pageHeader">
+          <div class="ttl">
+            <h1 class="h-xxl">Intelligence Hub</h1>
+            <p class="t-md sec">What the engine has learned about how your business actually works — the patterns underneath every decision it makes.</p>
+          </div>
+          <div class="pageActions">
+            <span class="tag tag-purple">Learned from 14 months of your data</span>
+          </div>
+        </header>
+
+        <div class="zone top">
+          <!-- how we understood the business -->
+          <div class="col gap-xs">
+            <span class="h-lg">How we read your business</span>
+            <p class="t-md sec" style="max-width:70ch">Every number below is derived the same way Reporting derives its totals — from individual purchase events, never averages of averages. We group shoppers by what they did, not by who they are, then look for the moment a pattern repeats often enough to act on.</p>
+          </div>
+          <div class="grid g-3">
+            <div class="card pad-md"><div class="kv"><span class="k">Purchase events</span><span class="h-md num-t">18,204</span><span class="t-xs ter">every order, line by line</span></div></div>
+            <div class="card pad-md"><div class="kv"><span class="k">Shoppers tracked</span><span class="h-md num-t">9,317</span><span class="t-xs ter">across 6 countries</span></div></div>
+            <div class="card pad-md"><div class="kv"><span class="k">Window</span><span class="h-md">14 mo</span><span class="t-xs ter">Jun 2025 – Aug 2026</span></div></div>
+            <div class="card pad-md"><div class="kv"><span class="k">Repeat buyers</span><span class="h-md num-t">31%</span><span class="t-xs ter">bought more than once</span></div></div>
+            <div class="card pad-md"><div class="kv"><span class="k">Median 1st → 2nd order</span><span class="h-md num-t">54 d</span><span class="t-xs ter">the window that matters</span></div></div>
+            <div class="card pad-md"><div class="kv"><span class="k">Categories</span><span class="h-md num-t">7</span><span class="t-xs ter">mapped to a layering system</span></div></div>
+          </div>
+
+          <!-- purchase patterns -->
+          <div class="col gap-xs" style="margin-top:var(--md)">
+            <span class="h-lg">How your shoppers buy</span>
+            <p class="t-md sec" style="max-width:70ch">The single strongest signal in your data: a first purchase is rarely the product they came for — it's the <b>entry point</b> to a system. What happens in the 54 days after it decides whether there is a second.</p>
+          </div>
+          <div class="grid g-2">
+            <div class="card pad-md col gap-sm">
+              <div class="row between"><span class="h-sm">First order → second order</span><span class="tag tag-blue">the 54-day window</span></div>
+              <p class="t-sm sec" style="margin:0">Shoppers who get a relevant reason to come back within 54 days of their first order convert to a second at <b>3.1×</b> the rate of those left alone. After day 90, the curve flattens — the window has closed.</p>
+              <div class="col gap-xxs">
+                <div class="row between"><span class="t-sm sec">Day 0–54</span><span class="t-sm med num-t">38% convert</span></div>
+                <span class="meter"><span style="width:38%"></span></span>
+                <div class="row between"><span class="t-sm sec">Day 55–90</span><span class="t-sm med num-t">17% convert</span></div>
+                <span class="meter"><span style="width:17%"></span></span>
+                <div class="row between"><span class="t-sm sec">Day 90+</span><span class="t-sm med num-t">6% convert</span></div>
+                <span class="meter"><span style="width:6%"></span></span>
+              </div>
+              <p class="t-xs ter" style="margin:0">This is why Replenishment and the post-purchase plays fire inside this window, not after it.</p>
+            </div>
+            <div class="card pad-md col gap-sm">
+              <div class="row between"><span class="h-sm">What a first purchase needs</span><span class="tag tag-purple">the conversion recipe</span></div>
+              <p class="t-sm sec" style="margin:0">Across your 9,317 shoppers, a first order almost always combines three things — in this order of importance:</p>
+              <div class="col gap-xs">
+                <div class="row gap-sm"><span class="joinBadge" style="width:20px">1</span><div class="col gap-xxxs" style="flex:1"><span class="t-sm med">A use case they already have</span><span class="t-xs ter">they ski, hike or climb — the product fits an existing habit, not a new one</span></div></div>
+                <div class="row gap-sm"><span class="joinBadge" style="width:20px">2</span><div class="col gap-xxxs" style="flex:1"><span class="t-sm med">A compatibility reason</span><span class="t-xs ter">"works with the shell / boots / pack I already own" beats "new and better"</span></div></div>
+                <div class="row gap-sm"><span class="joinBadge" style="width:20px">3</span><div class="col gap-xxxs" style="flex:1"><span class="t-sm med">A sizing answer</span><span class="t-xs ter">the #1 pre-purchase question; answering it lifts first-order conversion 22%</span></div></div>
+              </div>
+              <p class="t-xs ter" style="margin:0">A discount is 4th — it closes a shopper already convinced, it never convinces one.</p>
+            </div>
+          </div>
+
+          <!-- by country -->
+          <div class="card pad-md col gap-sm">
+            <div class="row between"><span class="h-sm">The pattern changes by country</span><span class="t-sm sec">same products, different rhythm</span></div>
+            <div class="col gap-xs">
+              <div class="row between wrap gap-sm" style="align-items:center">
+                <span class="t-sm med" style="min-width:120px">France</span>
+                <span class="meter" style="flex:1"><span style="width:64%"></span></span>
+                <span class="t-sm sec" style="min-width:230px">2nd order in 41 d · accessories first</span>
+              </div>
+              <div class="row between wrap gap-sm" style="align-items:center">
+                <span class="t-sm med" style="min-width:120px">Germany</span>
+                <span class="meter" style="flex:1"><span style="width:52%"></span></span>
+                <span class="t-sm sec" style="min-width:230px">2nd order in 58 d · technical layers first</span>
+              </div>
+              <div class="row between wrap gap-sm" style="align-items:center">
+                <span class="t-sm med" style="min-width:120px">United States</span>
+                <span class="meter" style="flex:1"><span style="width:47%"></span></span>
+                <span class="t-sm sec" style="min-width:230px">2nd order in 63 d · discount-responsive</span>
+              </div>
+              <div class="row between wrap gap-sm" style="align-items:center">
+                <span class="t-sm med" style="min-width:120px">United Kingdom</span>
+                <span class="meter" style="flex:1"><span style="width:44%"></span></span>
+                <span class="t-sm sec" style="min-width:230px">2nd order in 67 d · shipping-sensitive</span>
+              </div>
+            </div>
+            <p class="t-xs ter" style="margin:0">Bar length = share of first-time buyers who come back within 90 days. The lever that works differs: France answers to compatibility, the US to price, the UK to free shipping.</p>
+          </div>
+
+          <!-- product paths -->
+          <div class="col gap-xs" style="margin-top:var(--md)">
+            <span class="h-lg">The path through your products</span>
+            <p class="t-md sec" style="max-width:70ch">Your catalogue isn't a flat list — it's a layering system, and shoppers climb it. The engine maps which product opens the relationship, which one deepens it, and where people stop.</p>
+          </div>
+          <div class="grid g-3">
+            <div class="card pad-md col gap-sm">
+              <div class="row between"><span class="h-sm">Best seller · the opener</span><span class="tag tag-green">Sample Hardshell</span></div>
+              <p class="t-sm sec" style="margin:0">41% of all relationships start here. It's the piece the whole system hangs on — which is why the mid-layer gap under it is your biggest single opportunity.</p>
+              <div class="col gap-xxs">
+                <span class="t-xs ter">Typical path</span>
+                <div class="row gap-xxs wrap"><span class="tag tag-blue">Hardshell</span><span class="t-sm ter">→</span><span class="tag tag-blue">Mid-layer</span><span class="t-sm ter">→</span><span class="tag tag-grey">Accessories</span></div>
+              </div>
+              <div class="row between"><span class="t-sm sec">Attaches a 2nd category</span><span class="t-sm med num-t">58%</span></div>
+            </div>
+            <div class="card pad-md col gap-sm">
+              <div class="row between"><span class="h-sm">Strong · the deepener</span><span class="tag tag-blue">Cirrus Mid-layer</span></div>
+              <p class="t-sm sec" style="margin:0">Rarely a first purchase (6%) but the highest second-purchase rate in the catalogue once a shell is owned. This is the product the launch campaign exists to attach.</p>
+              <div class="col gap-xxs">
+                <span class="t-xs ter">Typical path</span>
+                <div class="row gap-xxs wrap"><span class="tag tag-grey">Hardshell</span><span class="t-sm ter">→</span><span class="tag tag-blue">Cirrus</span><span class="t-sm ter">→</span><span class="tag tag-grey">Insulated pants</span></div>
+              </div>
+              <div class="row between"><span class="t-sm sec">2nd-order rate after a shell</span><span class="t-sm med num-t">44%</span></div>
+            </div>
+            <div class="card pad-md col gap-sm">
+              <div class="row between"><span class="h-sm">Worst seller · the dead end</span><span class="tag tag-orange">Trail Gloves</span></div>
+              <p class="t-sm sec" style="margin:0">Sells, but leads nowhere — buyers of Trail Gloves as a <i>first</i> product almost never come back (9%). As an add-on to a shell order, they do fine. The lesson: never open a relationship with them.</p>
+              <div class="col gap-xxs">
+                <span class="t-xs ter">Typical path</span>
+                <div class="row gap-xxs wrap"><span class="tag tag-orange">Gloves</span><span class="t-sm ter">→</span><span class="tag tag-grey">nothing</span></div>
+              </div>
+              <div class="row between"><span class="t-sm sec">Return rate as first product</span><span class="t-sm med num-t">9%</span></div>
+            </div>
+          </div>
+
+          <!-- how to work it -->
+          <div class="card pad-md col gap-sm" style="border-color:var(--purple-200);background:var(--surface-accent-default)">
+            <span class="h-sm">What the engine does with this</span>
+            <div class="grid g-3">
+              <div class="col gap-xxxs"><span class="t-sm med">Open with the system, not the accessory</span><span class="t-sm sec">Acquisition and welcome plays lead with the shell line, never with gloves or socks — the data says first products decide whether there's a second.</span></div>
+              <div class="col gap-xxxs"><span class="t-sm med">Time the second order</span><span class="t-sm sec">Replenishment and cross-sell fire inside the 54-day window, tuned per country — 41 days in France, 63 in the US.</span></div>
+              <div class="col gap-xxxs"><span class="t-sm med">Pick the lever by market</span><span class="t-sm sec">Compatibility stories in France, price in the US, free shipping in the UK — the engine chooses the cheapest lever that market answers to.</span></div>
+            </div>
           </div>
         </div>
       </section>
@@ -3666,6 +3802,43 @@ function openShoppers(stage){
   draw("");
   $("#shopQ").addEventListener("input",e=>draw(e.target.value.toLowerCase()));
 }
+/* A descriptive read of the shopper — part derived from their numbers (cadence,
+   engagement, discount sensitivity), part a written archetype. The point is that
+   a merchant can read one paragraph and know exactly who this person is and how
+   to treat them, the way an MD file documents a thing precisely. */
+function shopperProfile(s){
+  const orders=s.orders||1;
+  const ltvN=parseFloat(String(s.ltv||"0").replace(/[^0-9.]/g,""))||0;
+  const aov=orders?ltvN/orders:0;
+  /* cadence — how often they buy, derived from orders over a ~10-month tenure */
+  const perMonth=orders>=6?"every 3–4 weeks":orders>=4?"every 5–6 weeks":orders>=2?"every 2–3 months":"once so far";
+  const cadence=orders>=6?"a high-frequency regular":orders>=4?"a steady repeat buyer":orders>=2?"an occasional buyer":"a first-time buyer";
+  /* engagement — passive vs active, from tier + orders */
+  const vip=/vip|gold|summit/i.test(s.tier||"");
+  const engagement=vip?"highly engaged — opens and replies to most of what you send":
+    orders>=4?"reasonably engaged — reads most messages, replies when it's relevant":
+    orders>=2?"fairly passive — opens some, rarely replies, acts when the offer is right":
+    "still new — one open so far, no replies yet";
+  /* discount sensitivity — derived from aov and tier */
+  const discSens=aov<80?"very discount-sensitive — converts on offers, waits for them":
+    aov<180?"moderately price-aware — an offer helps but isn't required":
+    "barely price-driven — buys on product fit, a discount is a bonus not a reason";
+  /* the lever that works */
+  const lever=aov<80?"a clear percentage off, or free shipping":
+    aov<180?"early access and a points boost before any discount":
+    "first access to new products and the compatibility story — margin stays intact";
+  /* loyalty posture */
+  const loyalty=vip?"close to the next tier — a small points nudge lands well":
+    orders>=3?"accumulating points steadily, not yet engaged with rewards":
+    "not yet thinking in points — too early for loyalty levers";
+  /* the archetype, written */
+  const archetype= vip?"The regular you build the business on."
+    : orders>=4?"The reliable repeat buyer."
+    : orders>=2?"The occasional who needs a reason."
+    : "The first-timer you're still earning.";
+  return {perMonth,cadence,engagement,discSens,lever,loyalty,archetype,aov};
+}
+
 function openShopper(s){
   const fullName=s.fullName||({"Ana R.":"Ana Rodriguez","Marc D.":"Marc Dubois","Sam K.":"Sam Kerr","Lena P.":"Lena Petersen","Priya S.":"Priya Shah"}[s.name]||s.name.replace(".",""));
   const first=fullName.split(" ")[0], last=fullName.split(" ").slice(1).join(" ")||"Customer";
@@ -3675,6 +3848,7 @@ function openShopper(s){
     ["#9821","Mar 18, 2026","Sample Hardshell","$289","Delivered"],
     ["#9174","Nov 6, 2025","Trail Gloves","$64","Delivered"]
   ].slice(0,Math.min(3,Math.max(1,s.orders||1)));
+  const prof=shopperProfile(s);
   openPanel(fullName, "Shopper profile · identity, commerce and conversation context", `
     <div class="card pad-md">
       <div class="row between wrap gap-sm">
@@ -3691,6 +3865,24 @@ function openShopper(s){
         <div class="kv"><span class="k">Customer since</span><span class="t-md med">November 2025</span></div>
       </div>
     </div>
+
+    <div class="card pad-md col gap-sm" style="border-color:var(--purple-200)">
+      <div class="row between wrap gap-xs">
+        <span class="h-sm">How to read ${first}</span>
+        <span class="tag tag-purple">${prof.archetype}</span>
+      </div>
+      <p class="t-md sec" style="margin:0">${first} buys <b>${prof.perMonth}</b> — ${prof.cadence}. ${prof.engagement.charAt(0).toUpperCase()+prof.engagement.slice(1)}. When it comes to price, ${first} is ${prof.discSens}. The lever that works here: ${prof.lever}. On loyalty, ${prof.loyalty}.</p>
+      <div class="chips">
+        <span class="tag tag-blue">buys ${prof.perMonth}</span>
+        <span class="tag ${/passive|new/.test(prof.engagement)?"tag-grey":"tag-green"}">${/passive|new/.test(prof.engagement)?"passive":"engaged"}</span>
+        <span class="tag ${/very/.test(prof.discSens)?"tag-orange":"tag-grey"}">${/very/.test(prof.discSens)?"discount-driven":/moderately/.test(prof.discSens)?"price-aware":"fit-driven"}</span>
+        <span class="tag tag-teal">AOV $${Math.round(prof.aov)||"—"}</span>
+      </div>
+      <div class="col gap-xxs">
+        <span class="t-xs ter">Derived from ${s.orders||1} orders over 10 months. This is the read the engine works from when it decides whether, when and what to send ${first}.</span>
+      </div>
+    </div>
+
     <div class="grid g-3">
       <div class="card pad-md"><div class="kv"><span class="k">Lifetime value</span><span class="h-md">${s.ltv}</span></div></div>
       <div class="card pad-md"><div class="kv"><span class="k">Orders</span><span class="h-md">${s.orders}</span></div></div>
