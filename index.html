@@ -489,11 +489,9 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 /* Intelligence Hub — one current business read, then the evidence, product
    decision and engine behaviour that follow from it. It is intentionally a
    briefing, not a wall of unrelated dashboard cards. */
-.intelBrief{display:grid;grid-template-columns:164px minmax(0,1fr);gap:var(--xl);align-items:start}
-.intelRail{display:flex;flex-direction:column;padding-top:var(--xs)}
-.intelRail span{padding:9px var(--sm);border-left:2px solid var(--grey-200);font-size:12px;color:var(--content-neutral-tertiary)}
-.intelRail span.on{border-color:var(--purple-500);color:var(--content-accent-default);font-weight:600}
-.intelStory{display:flex;flex-direction:column;gap:var(--lg)}
+.intelBrief{align-items:start}
+.intelStory{min-width:0}
+.intelPanel{display:none;flex-direction:column;gap:var(--lg)}.intelPanel.on{display:flex}
 .intelCurrent{position:relative;overflow:hidden;padding:var(--xl);border-radius:16px;color:var(--white);
   background:radial-gradient(circle at 88% 14%,var(--purple-700) 0,transparent 31%),var(--black)}
 .intelCurrent::after{content:"";position:absolute;right:-44px;bottom:-68px;width:210px;height:210px;border:1px solid var(--purple-200);border-radius:50%;opacity:.38;box-shadow:0 0 0 25px rgba(196,183,255,.11),0 0 0 50px rgba(196,183,255,.06)}
@@ -527,6 +525,13 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 .intelMarkets{border:1px solid var(--border-neutral-default);border-radius:16px;overflow:hidden;background:var(--white)}
 .intelMarket{display:grid;grid-template-columns:116px 92px minmax(160px,1fr) minmax(140px,.8fr);gap:var(--md);padding:var(--sm) var(--lg);align-items:center;border-top:1px solid var(--border-neutral-default)}
 .intelMarket:first-child{border-top:0;background:var(--grey-50)}.intelMarket strong{font-size:13px}.intelMarket .t-sm{color:var(--content-neutral-secondary)}.intelMarket .k{font-size:10px}
+.intelLive{padding:var(--lg);border:1px solid var(--purple-200);border-radius:16px;background:var(--surface-accent-default)}
+.intelLiveHead{display:flex;align-items:start;justify-content:space-between;gap:var(--md)}.intelLive h2{font-size:20px;letter-spacing:-.02em;margin-top:var(--xxxs)}
+.intelLivePulse{display:flex;align-items:center;gap:var(--xs);font-size:11px;color:var(--content-success-default);white-space:nowrap}.intelLivePulse i{position:relative;width:7px;height:7px;border-radius:50%;background:var(--green-500)}.intelLivePulse i::after{content:"";position:absolute;inset:-4px;border:1px solid var(--green-500);border-radius:50%;animation:intelPulse 1.7s ease-out infinite}
+.intelLiveGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sm);margin-top:var(--lg)}
+.intelLiveCard{padding:var(--md);border:1px solid var(--border-neutral-default);border-radius:12px;background:var(--white)}.intelLiveCard .k{font-size:10px}.intelLiveMetric{display:flex;justify-content:space-between;align-items:end;gap:var(--sm);margin-top:var(--xs)}.intelLiveMetric b{font-size:27px;line-height:1;letter-spacing:-.04em}.intelLiveMetric span{font-size:11px;color:var(--content-success-default)}.intelLiveCard p{font-size:11px;color:var(--content-neutral-secondary);margin-top:var(--sm)}
+.intelSpark{display:flex;align-items:end;gap:3px;height:28px;margin-top:var(--sm)}.intelSpark i{width:7px;border-radius:3px 3px 1px 1px;background:var(--purple-200);animation:intelRise 1.4s ease-in-out infinite alternate}.intelSpark i:nth-child(2){animation-delay:.18s}.intelSpark i:nth-child(3){animation-delay:.36s}.intelSpark i:nth-child(4){animation-delay:.54s}.intelSpark i:nth-child(5){animation-delay:.72s}.intelSpark i:nth-child(6){animation-delay:.9s}.intelSpark i:last-child{background:var(--purple-500)}
+@keyframes intelPulse{0%{opacity:.85;transform:scale(.65)}100%{opacity:0;transform:scale(1.7)}}@keyframes intelRise{from{transform:scaleY(.65);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
 
 /* ============ MOBILE ============
    Below 880px the sidebar becomes an off-canvas drawer (there's no room for
@@ -574,11 +579,9 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
   .pageHeader{padding:var(--md) var(--md) var(--md) calc(var(--md) + 44px);flex-wrap:wrap}
   .pageHeader .ttl{flex:1 1 100%}
   .pageActions{flex-wrap:wrap}
-  .intelBrief{grid-template-columns:1fr;gap:var(--md)}
-  .intelRail{flex-direction:row;overflow-x:auto;padding:0}.intelRail span{white-space:nowrap;border-left:0;border-bottom:2px solid var(--grey-200);padding:8px}.intelRail span.on{border-color:var(--purple-500)}
   .intelCurrent{padding:var(--lg)}.intelCurrent h2{font-size:22px}
   .intelPath{grid-template-columns:1fr;gap:var(--xs)}.intelPathArrow{height:20px;transform:rotate(90deg)}
-  .intelProducts{grid-template-columns:1fr}.intelEngineFlow{grid-template-columns:1fr 1fr}
+  .intelProducts,.intelLiveGrid{grid-template-columns:1fr}.intelEngineFlow{grid-template-columns:1fr 1fr}
   .intelMarket{grid-template-columns:1fr;gap:var(--xxxs);padding:var(--sm) var(--md)}.intelMarket:first-child{display:none}
 
   /* data tables don't reflow for narrow screens — column count is the
@@ -784,15 +787,17 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
         </header>
 
         <div class="zone top">
-          <div class="intelBrief">
-            <aside class="intelRail" aria-label="Intelligence briefing sections">
-              <span class="on">01 · Business model</span>
-              <span>02 · Product decision</span>
-              <span>03 · Engine response</span>
-              <span>04 · Market conditions</span>
-            </aside>
+          <div class="lcWrap intelBrief">
+            <div class="lcList" id="intelList" aria-label="Intelligence briefing sections">
+              <button class="lcItem on" data-intel="path"><span class="bar" style="background:var(--blue-600)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Purchase path</span><span class="t-xs ter">Why people come back</span></span></button>
+              <button class="lcItem" data-intel="products"><span class="bar" style="background:var(--purple-500)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Product roles</span><span class="t-xs ter">What creates repeat</span></span></button>
+              <button class="lcItem" data-intel="live"><span class="bar" style="background:var(--green-500)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Live signals</span><span class="t-xs ter">What is moving now</span></span></button>
+              <button class="lcItem" data-intel="engine"><span class="bar" style="background:var(--teal-200)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Engine response</span><span class="t-xs ter">How the AI acts</span></span></button>
+              <button class="lcItem" data-intel="markets"><span class="bar" style="background:var(--orange-300)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Markets</span><span class="t-xs ter">What changes by country</span></span></button>
+            </div>
 
             <div class="intelStory">
+              <div class="intelPanel on" data-intel-panel="path">
               <section class="intelCurrent">
                 <span class="k">Current business read · 93% confidence</span>
                 <h2>For a shopper who starts with a Sample Hardshell, Cirrus Mid-layer is the product most likely to create a second order — when it is offered inside the next 54 days.</h2>
@@ -804,7 +809,7 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
 
               <section class="intelInsight">
                 <header class="intelInsightHead">
-                  <div><span class="k">01 · Business model</span><h2>The Hardshell starts 41% of new customer relationships.</h2></div>
+                  <div><span class="k">01 · Purchase path</span><h2>The Hardshell starts 41% of new customer relationships.</h2></div>
                   <span class="tag tag-green">Observed, not assumed</span>
                 </header>
                 <p class="lead">The first order tells the engine what system a shopper is building. The highest-value path is not “buy another product”; it is “complete the layers around the shell they already own.” The return window has a clear expiry.</p>
@@ -817,8 +822,9 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
                 </div>
                 <div class="intelRule"><i></i><span><b>What the engine learned:</b> act before day 54. Inside that window, 38% of relevant shoppers place a second order; after day 90, only 6% do.</span></div>
               </section>
+              </div>
 
-              <section class="intelInsight">
+              <section class="intelPanel" data-intel-panel="products"><div class="intelInsight">
                 <header class="intelInsightHead">
                   <div><span class="k">02 · Product decision</span><h2>Not every best seller creates the same future customer.</h2></div>
                   <span class="tag tag-purple">Catalogue roles</span>
@@ -839,9 +845,9 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
                     <div class="intelTry"><span class="k">What we should try</span><p>Keep Gloves in checkout and bundle logic. Do not use them in acquisition or as the lead product in a reactivation message.</p></div>
                   </article>
                 </div>
-              </section>
+              </div></section>
 
-              <section class="intelEngine">
+              <section class="intelPanel" data-intel-panel="engine"><div class="intelEngine">
                 <span class="k">03 · How the AI works behind the scenes</span>
                 <h2>The model becomes a decision only when it is true for this shopper, today.</h2>
                 <p class="lead">The engine combines the business model above with individual ownership, lifecycle and timing data. It does not send the same product story to everyone who ever bought a shell.</p>
@@ -851,9 +857,9 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
                   <div class="intelEngineStep"><b>3 · Pick the least-cost lever</b><span>Compatibility in France, technical proof in Germany, price only where the model says it is needed.</span></div>
                   <div class="intelEngineStep"><b>4 · Prove or revise</b><span>A holdout measures lift. The next recommendation changes when the observed result disagrees with the model.</span></div>
                 </div>
-              </section>
+              </div></section>
 
-              <section class="intelInsight">
+              <section class="intelPanel" data-intel-panel="markets"><div class="intelInsight">
                 <header class="intelInsightHead"><div><span class="k">04 · Market conditions</span><h2>The path stays stable; the reason to return changes by market.</h2></div><span class="tag tag-blue">4 markets</span></header>
                 <div class="intelMarkets" style="margin-top:var(--lg)">
                   <div class="intelMarket"><span class="k">Market</span><span class="k">2nd order</span><span class="k">What the shopper needs to hear</span><span class="k">What the engine changes</span></div>
@@ -862,8 +868,16 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
                   <div class="intelMarket"><strong>United States</strong><span class="t-sm">63 days</span><span class="t-sm">A cold-weather reason; price can close hesitation.</span><span class="t-sm">Use discount last</span></div>
                   <div class="intelMarket"><strong>United Kingdom</strong><span class="t-sm">67 days</span><span class="t-sm">Confidence that the layer will arrive when needed.</span><span class="t-sm">Use free shipping</span></div>
                 </div>
-              </section>
-              <span class="t-xs ter">All data in this prototype is fictional. The read demonstrates the shape of an explainable business model, not a real merchant analysis.</span>
+              </div></section>
+              <section class="intelPanel" data-intel-panel="live"><div class="intelLive">
+                <header class="intelLiveHead"><div><span class="k">Live signals · recalculated as events land</span><h2>Three changes the engine is watching right now.</h2></div><span class="intelLivePulse"><i></i>Live model</span></header>
+                <div class="intelLiveGrid">
+                  <article class="intelLiveCard"><span class="k">Cirrus consideration</span><div class="intelLiveMetric"><b>+18%</b><span>vs. prior 7 days</span></div><div class="intelSpark"><i style="height:28%"></i><i style="height:38%"></i><i style="height:46%"></i><i style="height:62%"></i><i style="height:55%"></i><i style="height:82%"></i></div><p>Shell owners are viewing insulated layers more often. The model raises Cirrus confidence, but will not send until a valid moment appears.</p></article>
+                  <article class="intelLiveCard"><span class="k">Cold window opening</span><div class="intelLiveMetric"><b>1,284</b><span>reachable in 72 h</span></div><div class="intelSpark"><i style="height:20%"></i><i style="height:30%"></i><i style="height:34%"></i><i style="height:58%"></i><i style="height:74%"></i><i style="height:92%"></i></div><p>These shoppers enter their first local sub-zero forecast. The engine checks product ownership and frequency before any message is proposed.</p></article>
+                  <article class="intelLiveCard"><span class="k">Repeat window at risk</span><div class="intelLiveMetric"><b>176</b><span>day 42–54</span></div><div class="intelSpark"><i style="height:78%"></i><i style="height:72%"></i><i style="height:62%"></i><i style="height:54%"></i><i style="height:43%"></i><i style="height:35%"></i></div><p>Active shell owners are approaching the point where a second order becomes less likely. This is the priority cohort for a compatibility story.</p></article>
+                </div>
+              </div></section>
+              <span class="t-xs ter">All data in this prototype is fictional. The read demonstrates the shape of an explainable purchase model, not a real merchant analysis.</span>
             </div>
           </div>
         </div>
@@ -3573,6 +3587,7 @@ function goto(page,opts={}){
   $$(".navItem").forEach(n=>n.classList.toggle("on",n.dataset.page===navPage));
   $("#scroller").scrollTop=0; closePanel();
   if(page==="campaign-new") resetWizard();
+  if(page==="intelligence") renderIntelligence();
   if(!opts.fromHash) syncHash();
 }
 function landOnHash(){
@@ -3593,6 +3608,15 @@ function resetWizard(){
   askTurn();
 }
 $$(".navItem").forEach(n=>n.addEventListener("click",()=>{goto(n.dataset.page);closeSidebar()}));
+let intelSel="path";
+function renderIntelligence(){
+  $$("#intelList [data-intel]").forEach(b=>b.classList.toggle("on",b.dataset.intel===intelSel));
+  $$("[data-intel-panel]").forEach(p=>p.classList.toggle("on",p.dataset.intelPanel===intelSel));
+}
+$("#intelList").addEventListener("click",e=>{
+  const b=e.target.closest("[data-intel]"); if(!b) return;
+  intelSel=b.dataset.intel; renderIntelligence();
+});
 
 /* the sidebar becomes an off-canvas drawer below 880px (see the MOBILE CSS
    block). Opening/closing it is independent of goto() — the drawer isn't

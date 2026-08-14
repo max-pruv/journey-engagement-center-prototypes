@@ -38,7 +38,7 @@ there.
 | id | Nav item | Rendered by |
 | --- | --- | --- |
 | `page-overview` | Reporting | `renderReport` → `renderTiles`, `renderRevTable`, `stackedBars`/`lines`/`hBars`; plus `renderBench` |
-| `page-intelligence` | Intelligence Hub | static markup — the business patterns the engine learned (no render function; written once in the HTML) |
+| `page-intelligence` | Intelligence Hub | static business briefing with `renderIntelligence()` panel selection; written once in the HTML |
 | `page-opportunities` | Opportunities | `renderOpportunities` → `renderOpportunityDetail`; actions route into campaigns, guardrails, ACE themes, lifecycle and loyalty |
 | `page-engagements` | Engagements | `renderAce` (AI tab — themes **and** their plays), `renderEng` (Custom tab) |
 | `page-campaigns` | Campaigns | `renderCampaigns` |
@@ -56,15 +56,18 @@ Campaigns highlighted.
 ## Intelligence Hub and the shopper read
 
 **`page-intelligence`** is deliberately static markup — an AI business briefing, not a driven
-report. It begins with the engine's specific current read: a Sample Hardshell owner without
-insulation is most likely to make their second purchase on Cirrus within 54 days. Everything that
-follows explains that claim: the business model (Hardshell → Cirrus → accessories), the product
-comparison (Cirrus drives repeat; Trail Gloves do not when bought first), why each behaves that way,
-and what the engine does behind the scenes — detect the ownership gap, find the moment, select the
-lowest-cost market-specific lever, then measure the result against a holdout. The final market block
-shows why the path is stable but the message changes. All numbers are fictional but internally
-consistent. It has no render function and doesn't appear in the isolation probe — edit the markup
-directly.
+report. It uses the same master/detail shape as Lifecycle: `#intelList` holds five `.lcItem` buttons
+and `renderIntelligence()` shows the matching `[data-intel-panel]` for `intelSel`. The sections are
+Purchase path (Hardshell → Cirrus → accessories), Product roles (why Cirrus drives repeat and Trail
+Gloves do not when bought first), Live signals, Engine response, and Markets. The brief begins with
+the engine's specific current read: a Sample Hardshell owner without insulation is most likely to
+make their second purchase on Cirrus within 54 days. The engine section explains the actual decision
+chain — detect the ownership gap, find the moment, select the lowest-cost market-specific lever,
+then measure against a holdout. **Live signals** is intentionally animated: CSS pulse/rising bars
+show model inputs continuing to move (consideration, cold window, repeat window at risk), while the
+copy is explicit that no signal alone sends a message. All numbers are fictional but internally
+consistent. The page has no data render function and doesn't appear in the isolation probe — edit
+the markup directly.
 
 **`shopperProfile(s)`** builds the descriptive read inside `openShopper`'s panel — the "shopper MD
 file". It's a mix of derived and written: cadence, engagement, discount sensitivity, the working
