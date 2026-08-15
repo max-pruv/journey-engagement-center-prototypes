@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intelligence Hub · Business Read</title>
+<style>
+:root{
+  --white:#fff;--black:#1e242e;--grey-50:#fafafa;--grey-100:#ebecef;--grey-200:#d5d7dd;--grey-400:#9aa0ad;--grey-500:#6e7686;--grey-600:#5c6370;
+  --purple-50:#f1ecff;--purple-100:#dad0ff;--purple-200:#c4b7ff;--purple-500:#7e55f6;--purple-700:#683fcf;
+  --blue-50:#f5f9ff;--blue-100:#d8e9fd;--blue-600:#0d6cf2;--teal-50:#e8f5f8;--teal-200:#93d1de;--teal-800:#0b5665;
+  --green-50:#e9fbf5;--green-300:#74dcba;--green-500:#22c58b;--green-800:#147656;--orange-50:#fff5ee;--orange-300:#ffbb8e;--orange-500:#ff9a57;--orange-800:#a94f13;
+  --red-50:#fdeeee;--red-500:#ff425d;--red-800:#a9232b;
+  --border:rgba(0,0,0,.08);--dark:#161a22;--xxxxs:2px;--xxxs:4px;--xxs:6px;--xs:8px;--sm:12px;--md:16px;--lg:24px;--xl:32px;--xxl:48px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--grey-50);color:var(--black);font-size:14px;line-height:1.45;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.wrap{max-width:1200px;margin:auto;padding:0 var(--lg)}
+.k{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--grey-500)}
+.k.acc{color:var(--purple-700)}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:0;z-index:40;height:58px;background:rgba(250,250,250,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 var(--xl)}
+.brand{font-weight:600;letter-spacing:-.01em}.brand span{color:var(--purple-700)}
+.pulse{display:inline-flex;align-items:center;gap:var(--xxs);font-size:11px;color:var(--grey-600)}
+.pulse i{width:6px;height:6px;border-radius:50%;background:var(--green-500);box-shadow:0 0 0 0 rgba(34,197,139,.4);animation:p 2s infinite}
+@keyframes p{0%{box-shadow:0 0 0 0 rgba(34,197,139,.4)}70%{box-shadow:0 0 0 6px rgba(34,197,139,0)}100%{box-shadow:0 0 0 0 rgba(34,197,139,0)}}
+
+/* ---------- hero & illumination ---------- */
+.heroSection{padding:var(--xl) 0;position:relative}
+.hero{position:relative;overflow:hidden;border-radius:28px;background:radial-gradient(circle at 70% 10%,rgba(126,85,246,0.12),transparent 40%),radial-gradient(circle at 20% 90%,rgba(20,157,184,0.08),transparent 30%),var(--white);border:1px solid var(--border);padding:var(--xl);display:grid;grid-template-columns:1fr 320px;gap:var(--xl);align-items:start}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--hair) 1px,transparent 1px),linear-gradient(90deg,var(--hair) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(100% 100% at 50% 0%,black,transparent)}
+.heroContent{position:relative;z-index:2}
+.hero h1{font-size:clamp(32px,5vw,52px);line-height:1.02;letter-spacing:-.05em;max-width:800px;margin-top:var(--xs)}
+.hero h1 em{font-style:normal;color:var(--purple-700)}
+.hero p{color:var(--grey-600);max-width:64ch;margin-top:var(--md);font-size:16px}
+.heroStats{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sm);margin-top:var(--xl)}
+.heroStats div{padding:var(--md);border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,0.6);backdrop-filter:blur(4px)}
+.heroStats strong{display:block;font-size:26px;letter-spacing:-.04em;margin-top:var(--xxxs)}
+
+/* counters card */
+.corePanel{background:linear-gradient(165deg,var(--purple-50),var(--white) 60%);border:1px solid var(--purple-200);border-radius:18px;padding:var(--lg);position:relative;overflow:hidden;z-index:2}
+.corePanel::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--purple-500),transparent);animation:scan 5s linear infinite}
+@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(360px)}}
+.coreRow{display:flex;justify-content:space-between;align-items:baseline;gap:var(--sm);padding:12px 0;border-bottom:1px solid var(--hair)}
+.coreRow:last-child{border-bottom:0}
+.coreRow b{font-size:18px;font-weight:600;color:var(--black)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(20px);transition:all .8s cubic-bezier(.22,1,.36,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- business sections ---------- */
+.section{margin-top:var(--xxl)}
+.sectionHead{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--lg);margin-bottom:var(--lg)}
+.sectionHead h2{font-size:32px;line-height:1.06;letter-spacing:-.04em;margin-top:var(--xxxs)}
+.sectionHead p{max-width:48ch;color:var(--grey-600);font-size:13.5px}
+
+.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:var(--lg);align-items:start}
+.panel{background:var(--white);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.02)}
+.panelHead{display:flex;align-items:center;justify-content:space-between;padding:var(--md) var(--lg);border-bottom:1px solid var(--border);font-weight:700}
+.panelHead.win{background:var(--green-50);color:var(--green-800)}
+.panelHead.fail{background:var(--red-50);color:var(--red-800)}
+
+.move{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--sm);padding:var(--lg);border-top:1px solid var(--border)}
+.move:first-of-type{border-top:0}
+.move h4{font-size:15px;letter-spacing:-.01em;font-weight:600}
+.move .why{font-size:12.5px;color:var(--grey-600);margin-top:var(--xxxs)}
+.move .proof{display:flex;flex-wrap:wrap;gap:var(--xxs);margin-top:var(--xs)}
+.move .proof span{font-size:11px;padding:3px 8px;border-radius:999px;background:var(--grey-100);color:var(--grey-600);font-weight:500}
+.move .num{text-align:right}.move .num b{display:block;font-size:22px;letter-spacing:-.03em}
+.move .action{grid-column:1/-1;font-size:12px;padding:10px 12px;border-radius:8px;background:var(--purple-50);color:var(--purple-700);margin-top:var(--xs)}
+
+/* shoppers */
+.seg{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--sm);align-items:center;padding:var(--lg);border-top:1px solid var(--border)}
+.seg:first-of-type{border-top:0}
+.seg .share{text-align:right}.seg .share b{display:block;font-size:24px;letter-spacing:-.04em}
+.seg .bar{grid-column:1/-1;height:8px;border-radius:999px;background:var(--grey-100);overflow:hidden;margin-top:var(--xs)}
+.seg .bar i{display:block;height:100%;border-radius:inherit;background:var(--purple-500);transform-origin:left;animation:revealBar 1.2s ease forwards}
+@keyframes revealBar{from{transform:scaleX(0)}}
+.seg.vip{background:linear-gradient(90deg,var(--purple-50),transparent 80%)}
+
+/* calendar */
+.calendar{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;padding:var(--lg)}
+.mLabel{font-size:10px;color:var(--grey-400);text-transform:uppercase;font-weight:700;text-align:center}
+.seasonRow{display:contents}
+.seasonName{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between;padding:12px 0 4px}
+.seasonName strong{font-size:14px}.seasonName span{font-size:11.5px;color:var(--grey-500)}
+.cell{height:30px;border-radius:6px;background:var(--grey-100);position:relative;transition:all .3s}
+.cell.l1{background:var(--purple-100)}.cell.l2{background:var(--purple-200)}.cell.l3{background:var(--purple-500)}
+.cell.now:after{content:"";position:absolute;inset:-3px;border:2px solid var(--black);border-radius:9px}
+
+.window{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sm);margin-top:var(--lg)}
+.windowCard{padding:var(--lg);border-radius:20px;border:1px solid var(--border);background:var(--white);transition:transform .3s}
+.windowCard:hover{transform:translateY(-4px)}
+.windowCard.hot{background:var(--dark);color:var(--white);border-color:var(--dark);box-shadow:0 12px 30px rgba(0,0,0,0.15)}
+.windowCard.hot .k{color:var(--green-300)}
+.windowCard strong{display:block;font-size:28px;letter-spacing:-.04em;margin-top:var(--xs)}
+
+/* money left */
+.miss{display:grid;grid-template-columns:40px 1fr auto;gap:var(--md);align-items:center;padding:var(--lg);border-top:1px solid var(--border)}
+.miss .rank{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--red-50);color:var(--red-800);font-weight:800}
+.miss .cost{text-align:right}.miss .cost b{display:block;font-size:20px;color:var(--red-500)}
+
+.takeaways{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sm)}
+.takeaway{padding:var(--lg);border-radius:20px;background:var(--white);border:1px solid var(--border)}
+.takeaway .n{font-size:10px;color:var(--purple-700);font-weight:800}
+.takeaway h3{font-size:19px;letter-spacing:-.02em;margin:8px 0}
+
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr;padding:var(--lg)}
+  .hero h1{font-size:32px}.heroStats{grid-template-columns:1fr 1fr}
+  .twoCol,.window,.takeaways{grid-template-columns:1fr}
+  .sectionHead{display:block}.sectionHead p{margin-top:var(--sm)}
+  .calendar{grid-template-columns:repeat(6,1fr)}.mLabel{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="top"><div class="brand">Journey <span>Intelligence Hub</span></div><span class="pulse"><i></i>model live</span></nav>
+
+<div class="wrap">
+  <div class="heroSection">
+    <section class="hero">
+      <div class="heroContent rv">
+        <span class="k acc">Concept E · business read</span>
+        <h1>What works in this business, <em>in plain sight.</em></h1>
+        <p>Every month the engine reads 18,204 orders and answers four questions a merchant actually asks: which marketing moves make money, which ones burn it, who the customers really are, and when they are about to buy.</p>
+        <div class="heroStats">
+          <div><span class="k">Winners</span><strong class="num" data-count="4">0</strong><small class="ter">to scale now</small></div>
+          <div><span class="k">Losers</span><strong class="num" data-count="3">0</strong><small class="ter">to stop</small></div>
+          <div><span class="k">Core Path</span><strong class="num" data-count="41">0</strong>%<small class="ter">of first orders</small></div>
+          <div><span class="k">Next Peak</span><strong class="num" data-count="18">0</strong>d<small class="ter">until cold surge</small></div>
+        </div>
+      </div>
+      <div class="corePanel rv">
+        <span class="k acc">Real-time model</span>
+        <div style="margin-top:var(--md)">
+          <div class="coreRow"><span class="sec">Orders read</span><b class="num" data-count="18204">0</b></div>
+          <div class="coreRow"><span class="sec">Shoppers tracked</span><b class="num" data-count="9317">0</b></div>
+          <div class="coreRow"><span class="sec">Decisions today</span><b class="num" id="decCount">0</b></div>
+          <div class="coreRow"><span class="sec">Active signals</span><b class="num" id="sigCount">0</b></div>
+        </div>
+        <p class="ter" style="font-size:11.5px;margin-top:var(--md);line-height:1.5">The engine continuously re-scores every customer against the business model, refreshed 42s ago.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="section">
+    <header class="sectionHead rv"><div><span class="k">01 · Marketing strategy</span><h2>Working moves, and proven losses.</h2></div><p>Ranked by measured lift against a holdout. Each move says what to do next.</p></header>
+    <div class="twoCol">
+      <section class="panel rv">
+        <header class="panelHead win"><h3>Working — scale these</h3></header>
+        <article class="move">
+          <div><h4>Compatibility cross-sell to shell owners</h4><p class="why">“This completes the shell you already own” starts from ownership.</p><div class="proof"><span>3.1× lift</span><span>0% discount</span><span>holdout verified</span></div></div>
+          <div class="num"><b>44%</b><span class="k">attach</span></div>
+          <p class="action"><b>Do more:</b> Make this the default second-order play; lead with fit.</p>
+        </article>
+        <article class="move">
+          <div><h4>Sizing help before the sale</h4><p class="why">The #1 pre-purchase question. Answering it converts better than any offer.</p><div class="proof"><span>+22% CVR</span><span>all 4 markets</span></div></div>
+          <div class="num"><b>#1</b><span class="k">query</span></div>
+          <p class="action"><b>Do more:</b> Put sizing answers in the first message for every shell conversation.</p>
+        </article>
+      </section>
+      <section class="panel rv">
+        <header class="panelHead fail"><h3>Not working — stop these</h3></header>
+        <article class="move">
+          <div><h4>Flat 15% off welcome discount</h4><p class="why">Wins the least-likely-to-return shoppers and trains the rest to wait.</p><div class="proof"><span>−£8.40 margin</span><span>19% lower repeat</span></div></div>
+          <div class="num" style="color:var(--red-500)"><b>−31%</b><span class="k">LTV</span></div>
+          <p class="action"><b>Stop:</b> Replace with sizing + compatibility; keep discount only for the US.</p>
+        </article>
+        <article class="move">
+          <div><h4>Trail Gloves as acquisition product</h4><p class="why">Sells, but leads nowhere. Buyers almost never return for a second order.</p><div class="proof"><span>9% return rate</span><span>vs 41% for shells</span></div></div>
+          <div class="num" style="color:var(--red-500)"><b>9%</b><span class="k">repeat</span></div>
+          <p class="action"><b>Stop:</b> Pull gloves from acquisition creative; keep them for checkout bundles.</p>
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="section">
+    <header class="sectionHead rv"><div><span class="k">02 · Shopper behavior</span><h2>Who actually carries this business.</h2></div><p>Grouped by what they do. The engine treats each group differently because they buy for different reasons.</p></header>
+    <section class="panel rv">
+      <article class="seg vip"><div><h4>System builders</h4><p>Start with a shell, add layers within two months. Highest LTV group.</p><div class="bar"><i style="width:41%"></i></div><p class="k" style="margin-top:var(--xs);color:var(--green-800)">Best move: complete system before day 54 · no discount</p></div><div class="share"><b>41%</b><span class="k">share</span></div></article>
+      <article class="seg"><div><h4>Winter regulars</h4><p>Return every cold season for one technical piece. Full price buyers.</p><div class="bar"><i style="width:23%"></i></div><p class="k" style="margin-top:var(--xs)">Best move: reach on first sub-zero forecast · technical detail</p></div><div class="share"><b>23%</b><span class="k">share</span></div></article>
+      <article class="seg"><div><h4>Gift buyers</h4><p>Q4 only. Never return. Profitable if acquisition is kept cheap.</p><div class="bar"><i style="width:21%"></i></div><p class="k" style="margin-top:var(--xs)">Best move: delivery dates in Q4 · leave alone rest of year</p></div><div class="share"><b>21%</b><span class="k">share</span></div></article>
+    </section>
+  </section>
+
+  <section class="section">
+    <header class="sectionHead rv"><div><span class="k">03 · Seasonality</span><h2>Demand is not flat.</h2></div><p>Three moments matter. The engine is already inside the first one.</p></header>
+    <section class="panel rv">
+      <div class="calendar">
+        <span class="mLabel">Sep</span><span class="mLabel">Oct</span><span class="mLabel">Nov</span><span class="mLabel">Dec</span><span class="mLabel">Jan</span><span class="mLabel">Feb</span><span class="mLabel">Mar</span><span class="mLabel">Apr</span><span class="mLabel">May</span><span class="mLabel">Jun</span><span class="mLabel">Jul</span><span class="mLabel">Aug</span>
+        <div class="seasonRow"><div class="seasonName"><strong>Shells &amp; mid-layers</strong><span>core revenue</span></div><span class="cell l1"></span><span class="cell l2 now"></span><span class="cell l3"></span><span class="cell l3"></span><span class="cell l2"></span><span class="cell l1"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell l1"></span></div>
+        <div class="seasonRow"><div class="seasonName"><strong>Gifting &amp; accessories</strong><span>profitable Q4</span></div><span class="cell"></span><span class="cell l1"></span><span class="cell l3"></span><span class="cell l3"></span><span class="cell l1"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span></div>
+      </div>
+    </section>
+    <div class="window rv">
+      <article class="windowCard hot"><span class="k">Now · next 18 days</span><strong>Pre-cold window</strong><p>1,284 shell owners enter their first sub-zero forecast. This is the moment for Cirrus.</p></article>
+      <article class="windowCard"><span class="k">In 6 weeks</span><strong>Gift surge</strong><p>Gift buyers arrive. Cheap reach only: guides, delivery dates. No loyalty spend.</p></article>
+      <article class="windowCard"><span class="k">In 5 months</span><strong>Quiet season</strong><p>Core categories cool. Cut frequency in half, protect margin for October.</p></article>
+    </div>
+  </section>
+
+  <section class="section rv">
+    <header class="sectionHead"><div><span class="k">04 · Money left on the table</span><h2>Gaps, priced.</h2></div></header>
+    <section class="panel">
+      <article class="miss"><span class="rank">1</span><div><h4>Shell owners past day 54 with no message</h4><p>176 active owners inside the final 12 days of the window right now.</p></div><div class="cost"><b>≈$14k</b><span class="k">/ mo</span></div></article>
+      <article class="miss"><span class="rank">2</span><div><h4>Discounts sent to system builders</h4><p>The highest-LTV group buys at full price when given a reason.</p></div><div class="cost"><b>≈$9k</b><span class="k">/ mo</span></div></article>
+    </section>
+  </section>
+
+  <footer class="rv" style="padding:var(--xxl) 0;color:var(--grey-500);font-size:12px">
+    Prototype · All data is fictional. Sample Store Co. is a demo account.
+  </footer>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const fmt=n=>Math.round(n).toLocaleString("en-US");
+
+/* live counters */
+let dec=1284, sig=214;
+const tick=()=>{
+  dec+=Math.floor(Math.random()*2);
+  sig=180+Math.floor(Math.random()*60);
+  if($("#decCount")) $("#decCount").textContent=fmt(dec);
+  if($("#sigCount")) $("#sigCount").textContent=fmt(sig);
+};
+tick(); setInterval(tick,2000);
+
+/* reveals & count-ups */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return;
+  e.target.classList.add("in");
+  $$("[data-count]",e.target).forEach(n=>{
+    if(n.dataset.done) return; n.dataset.done="1";
+    const to=+n.dataset.count; const t0=performance.now();
+    const run=t=>{
+      const k=Math.min(1,(t-t0)/1200);
+      n.textContent=fmt(to*(1-Math.pow(1-k,3)));
+      if(k<1)requestAnimationFrame(run)};
+    requestAnimationFrame(run);
+  });
+}),{threshold:.1});
+$$(".rv").forEach(n=>io.observe(n));
+</script>
+</body>
+</html>

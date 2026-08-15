@@ -1,0 +1,1200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intelligence Core — Engage</title>
+</head>
+<body data-palette="#7e55f6,#c35e4a,#149db8">
+<style>
+/* ============================================================
+   INTELLIGENCE CORE
+   Axiom light surface. Categorical set validated on ALL pairs
+   against #ffffff; the magnitude ramp validated as an ordinal
+   ramp (monotone L, step gaps, pale end clears the surface).
+   ============================================================ */
+:root{
+  --white:#ffffff; --black:#1e242e;
+  --grey-50:#fafafa; --grey-100:#ebecef; --grey-200:#d5d7dd; --grey-300:#c7cad1;
+  --grey-400:#b3b8c1; --grey-500:#6e7686; --grey-600:#5c6370; --grey-700:#4c525d;
+  --purple-50:#f1ecff; --purple-100:#dad0ff; --purple-200:#c4b7ff; --purple-300:#b7a7ff;
+  --purple-400:#9b7bff; --purple-500:#7e55f6; --purple-700:#683fcf; --purple-800:#4c3c9d;
+  --coral-50:#fef4f3; --coral-100:#ffeae6; --coral-700:#c35e4a; --coral-800:#984939;
+  --teal-50:#e8f5f8; --teal-500:#149db8; --teal-800:#0b5665;
+  --green-50:#e9fbf5; --green-500:#32c898; --green-800:#147656;
+  --orange-50:#fff5ee; --orange-500:#ff9a57; --orange-800:#a94f13;
+  --red-50:#ffecef; --red-700:#d90b28;
+
+  --bg:var(--grey-50);
+  --surface:#ffffff;
+  --hair:rgba(0,0,0,.075);
+  --hair-2:rgba(0,0,0,.12);
+  --ink:var(--black);
+  --ink-2:var(--grey-600);
+  --ink-3:var(--grey-500);
+  --ai:#7d19f0;
+
+  /* categorical — 6/6 on --pairs all vs #ffffff */
+  --dv-1:#7e55f6;  --dv-2:#c35e4a;  --dv-3:#149db8;
+  /* magnitude ramp — ordinal checks pass on #ffffff */
+  --ramp-1:#b7a7ff; --ramp-2:#9b7bff; --ramp-3:#7e55f6; --ramp-4:#683fcf; --ramp-5:#4c3c9d;
+
+  --xxxs:4px; --xxs:6px; --xs:8px; --sm:12px; --md:16px; --lg:24px; --xl:32px; --xxl:48px; --xxxl:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+::selection{background:rgba(126,85,246,.2)}
+
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(900px 540px at 18% -10%, rgba(126,85,246,.13), transparent 64%),
+    radial-gradient(720px 460px at 92% 2%, rgba(20,157,184,.08), transparent 62%),
+    radial-gradient(700px 500px at 50% 108%, rgba(126,85,246,.07), transparent 60%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55;
+  background-image:linear-gradient(rgba(0,0,0,.045) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,0,0,.045) 1px,transparent 1px);
+  background-size:68px 68px;
+  mask-image:radial-gradient(1100px 640px at 50% 0%,#000,transparent 76%)}
+.wrap{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 var(--xl)}
+
+.k{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:600;
+   letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.k.acc{color:var(--purple-700)}
+.display{font-size:clamp(30px,4.2vw,54px);line-height:1.08;font-weight:600;letter-spacing:-.028em}
+.h1{font-size:clamp(23px,2.6vw,33px);line-height:1.14;font-weight:600;letter-spacing:-.022em}
+.h2{font-size:20px;font-weight:600;letter-spacing:-.012em}
+.h3{font-size:15px;font-weight:600}
+.lede{font-size:17px;line-height:1.6;color:var(--ink-2)}
+.sec{color:var(--ink-2)} .ter{color:var(--ink-3)}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+.row{display:flex;align-items:center;gap:var(--sm)}
+.row.between{justify-content:space-between}
+.col{display:flex;flex-direction:column}
+.wrapf{flex-wrap:wrap}
+section.band{padding:var(--xxxl) 0;border-top:1px solid var(--hair);position:relative}
+.secHead{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--lg);
+  margin-bottom:var(--xl);flex-wrap:wrap}
+.secHead .col{gap:var(--xs);max-width:76ch}
+
+.rv{opacity:0;transform:translateY(15px);
+  transition:opacity .75s cubic-bezier(.22,.7,.2,1),transform .75s cubic-bezier(.22,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:40;backdrop-filter:blur(16px) saturate(1.5);
+  background:rgba(250,250,250,.78);border-bottom:1px solid var(--hair)}
+.topbar .wrap{display:flex;align-items:center;gap:var(--md);height:58px}
+.mark{width:26px;height:26px;border-radius:7px;flex-shrink:0;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--ai),var(--purple-500));
+  box-shadow:0 3px 14px rgba(126,85,246,.42)}
+.pulse{display:inline-flex;align-items:center;gap:var(--xxs);font-size:11px;color:var(--ink-2)}
+.pulse i{width:6px;height:6px;border-radius:50%;background:var(--green-500);
+  box-shadow:0 0 0 0 rgba(50,200,152,.55);animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(50,200,152,.5)}70%{box-shadow:0 0 0 7px rgba(50,200,152,0)}100%{box-shadow:0 0 0 0 rgba(50,200,152,0)}}
+.tnav{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.tnav a{font-size:12.5px;color:var(--ink-2);text-decoration:none;padding:6px 10px;border-radius:7px}
+.tnav a:hover{color:var(--ink);background:rgba(0,0,0,.045)}
+
+/* hero */
+.hero{padding:var(--xxxl) 0 var(--xxl)}
+.heroGrid{display:grid;grid-template-columns:1.55fr .95fr;gap:var(--xxl);align-items:start}
+@media(max-width:980px){.heroGrid{grid-template-columns:1fr}}
+.belief{border-left:2px solid var(--purple-500);padding-left:var(--lg);margin:var(--lg) 0}
+.conf{display:flex;align-items:center;gap:var(--sm);margin-top:var(--md);flex-wrap:wrap}
+.confBar{flex:1;max-width:190px;height:3px;border-radius:2px;background:var(--grey-100);overflow:hidden}
+.confBar i{display:block;height:100%;width:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--ramp-1),var(--ramp-4));
+  transition:width 1.5s cubic-bezier(.22,.7,.2,1)}
+.evidence{display:flex;gap:var(--xl);flex-wrap:wrap;margin-top:var(--lg);padding-top:var(--lg);
+  border-top:1px solid var(--hair)}
+.ev{display:flex;flex-direction:column;gap:2px}
+.ev b{font-size:19px;font-weight:600}
+
+.corePanel{background:linear-gradient(168deg,rgba(126,85,246,.09),var(--surface) 58%);
+  border:1px solid var(--purple-100);border-radius:14px;padding:var(--lg);
+  position:relative;overflow:hidden;box-shadow:0 10px 34px rgba(76,60,157,.07)}
+.corePanel::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(126,85,246,.85),transparent);
+  animation:scan 4.6s linear infinite}
+@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(330px)}}
+.coreRow{display:flex;justify-content:space-between;align-items:baseline;gap:var(--sm);
+  padding:11px 0;border-bottom:1px solid var(--hair)}
+.coreRow:last-child{border-bottom:0}
+.coreRow b{font-size:17px;font-weight:600}
+
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:14px;
+  box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.card.pad{padding:var(--lg)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--md)}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+.tag{display:inline-flex;align-items:center;gap:5px;height:21px;padding:0 8px;border-radius:6px;
+  font-size:11px;font-weight:500;white-space:nowrap}
+.tag-purple{background:var(--purple-50);color:var(--purple-800)}
+.tag-teal{background:var(--teal-50);color:var(--teal-800)}
+.tag-coral{background:var(--coral-100);color:var(--coral-800)}
+.tag-green{background:var(--green-50);color:var(--green-800)}
+.tag-grey{background:var(--grey-100);color:var(--ink-2)}
+.tag-warn{background:var(--orange-50);color:var(--orange-800)}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+
+/* graph */
+.graphWrap{position:relative;background:var(--surface);border:1px solid var(--hair);
+  border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.graphTools{display:flex;align-items:center;gap:var(--xs);padding:var(--sm) var(--lg);
+  border-bottom:1px solid var(--hair);flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--grey-100);border-radius:8px;padding:2px}
+.seg button{padding:6px 11px;border-radius:6px;font-size:12px;font-weight:500;color:var(--ink-2)}
+.seg button.on{background:var(--surface);color:var(--purple-700);box-shadow:0 1px 2px rgba(16,24,40,.1)}
+.graphStage{display:grid;grid-template-columns:1fr 318px}
+@media(max-width:1040px){.graphStage{grid-template-columns:1fr}}
+#graph{display:block;width:100%;height:auto}
+.gnode{cursor:pointer}
+.gnode .halo{opacity:0;transition:opacity .25s}
+.gnode:hover .halo,.gnode.sel .halo{opacity:1}
+.gnode text{pointer-events:none}
+.inspector{border-left:1px solid var(--hair);padding:var(--lg);display:flex;flex-direction:column;gap:var(--md)}
+@media(max-width:1040px){.inspector{border-left:0;border-top:1px solid var(--hair)}}
+.insRow{display:flex;justify-content:space-between;gap:var(--sm);padding:8px 0;border-bottom:1px solid var(--hair)}
+.insRow:last-of-type{border-bottom:0}
+.flowBar{height:5px;border-radius:3px;background:var(--grey-100);overflow:hidden;margin-top:5px}
+.flowBar i{display:block;height:100%;border-radius:3px;width:0;transition:width .8s cubic-bezier(.22,.7,.2,1)}
+
+/* window */
+.windowGrid{display:grid;grid-template-columns:1.6fr 1fr;gap:var(--lg)}
+@media(max-width:980px){.windowGrid{grid-template-columns:1fr}}
+#decay{display:block;width:100%;height:auto;cursor:ew-resize;touch-action:none}
+.readout{display:flex;flex-direction:column;gap:var(--md);justify-content:center}
+.readBig{font-size:44px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.costNote{border:1px solid var(--orange-500);background:var(--orange-50);border-radius:11px;padding:var(--md)}
+
+/* ---------- markets ---------- */
+.mkHead{display:flex;align-items:center;gap:var(--md);padding:var(--sm) var(--lg);
+  border-bottom:1px solid var(--hair);flex-wrap:wrap}
+.mkPlay{display:inline-flex;align-items:center;gap:var(--xxs);height:30px;padding:0 11px;
+  border-radius:7px;background:var(--purple-50);color:var(--purple-700);font-size:12px;font-weight:500}
+.seasonGrid{display:grid;grid-template-columns:186px 1fr;gap:0}
+@media(max-width:820px){.seasonGrid{grid-template-columns:1fr}}
+.monthRow{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;padding:0 var(--lg) var(--xs) 0}
+.monthRow span{font-size:10px;text-align:center;color:var(--ink-3);font-family:ui-monospace,Menlo,monospace}
+.mkRow{display:contents}
+.mkName{padding:var(--sm) var(--md) var(--sm) var(--lg);border-top:1px solid var(--hair);
+  display:flex;align-items:center;gap:var(--xs)}
+.mkStrip{padding:var(--sm) var(--lg) var(--sm) 0;border-top:1px solid var(--hair);
+  display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:center;position:relative}
+.mkCell{height:26px;border-radius:5px;background:var(--grey-100);position:relative;overflow:hidden}
+.mkCell i{position:absolute;inset:0;border-radius:5px;transform:scaleY(0);transform-origin:bottom;
+  transition:transform .9s cubic-bezier(.22,.7,.2,1)}
+.mkCell.now{box-shadow:0 0 0 2px var(--purple-500)}
+.flag{font-size:15px;line-height:1}
+.inSeason{opacity:0;transition:opacity .35s}
+.inSeason.on{opacity:1}
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--purple-500);
+  border-radius:2px;pointer-events:none;box-shadow:0 0 10px rgba(126,85,246,.7);z-index:2}
+
+.mkTable{width:100%;border-collapse:collapse}
+.mkTable th{text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);padding:var(--xs) var(--sm);border-bottom:1px solid var(--hair)}
+.mkTable td{padding:var(--sm);border-bottom:1px solid var(--hair);vertical-align:middle}
+.mkTable tr:last-child td{border-bottom:0}
+.mkTable th:first-child,.mkTable td:first-child{padding-left:var(--lg)}
+.mkTable th:last-child,.mkTable td:last-child{padding-right:var(--lg)}
+.winBar{height:5px;border-radius:3px;background:var(--grey-100);overflow:hidden;min-width:64px}
+.winBar i{display:block;height:100%;border-radius:3px;background:var(--ramp-3);width:0;
+  transition:width 1s cubic-bezier(.22,.7,.2,1)}
+
+/* works / doesn't */
+.playCard{border:1px solid var(--hair);border-radius:12px;padding:var(--md);background:var(--surface);
+  display:flex;flex-direction:column;gap:var(--xs);transition:.18s;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.playCard:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(16,24,40,.09)}
+.playCard.win{border-left:3px solid var(--green-500)}
+.playCard.lose{border-left:3px solid var(--coral-700)}
+.liftBar{height:6px;border-radius:3px;background:var(--grey-100);overflow:hidden;position:relative}
+.liftBar i{position:absolute;top:0;bottom:0;border-radius:3px;transition:width 1s cubic-bezier(.22,.7,.2,1)}
+.liftZero{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--grey-300);left:50%}
+
+/* shoppers */
+.segGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--md)}
+@media(max-width:1080px){.segGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.segGrid{grid-template-columns:1fr}}
+.segCard{border:1px solid var(--hair);border-radius:12px;padding:var(--md);background:var(--surface);
+  display:flex;flex-direction:column;gap:var(--xxs);box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.segBlob{height:52px;margin:var(--xxs) 0}
+.segBlob svg{display:block;width:100%;height:52px;overflow:visible}
+
+/* revisions */
+.rev{display:grid;grid-template-columns:118px 1fr;gap:var(--lg);padding:var(--lg) 0;
+  border-top:1px solid var(--hair)}
+@media(max-width:760px){.rev{grid-template-columns:1fr;gap:var(--sm)}}
+.was{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--grey-300)}
+
+/* stream */
+.stream{background:var(--surface);border:1px solid var(--hair);border-radius:14px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.streamHead{display:flex;align-items:center;gap:var(--sm);padding:var(--sm) var(--lg);
+  border-bottom:1px solid var(--hair);flex-wrap:wrap}
+.streamBody{height:392px;overflow:hidden;position:relative}
+.streamBody::after{content:"";position:absolute;left:0;right:0;bottom:0;height:70px;pointer-events:none;
+  background:linear-gradient(transparent,var(--surface))}
+.dec{display:grid;grid-template-columns:78px 1fr auto;gap:var(--md);align-items:start;
+  padding:var(--sm) var(--lg);border-bottom:1px solid var(--hair);
+  animation:slidein .5s cubic-bezier(.22,.7,.2,1) both}
+@keyframes slidein{from{opacity:0;transform:translateY(-9px)}to{opacity:1;transform:none}}
+.dec.drop{background:var(--grey-50)}
+.dec .why{display:flex;gap:var(--xs);flex-wrap:wrap;margin-top:5px}
+.dec .why span{font-size:11px;color:var(--ink-3);background:var(--grey-100);padding:2px 7px;border-radius:5px}
+
+/* blind */
+.blindRow{display:grid;grid-template-columns:1.1fr 84px 1fr;gap:var(--md);align-items:center;
+  padding:var(--sm) 0;border-bottom:1px solid var(--hair)}
+@media(max-width:760px){.blindRow{grid-template-columns:1fr;gap:var(--xxs)}}
+.meter{height:5px;border-radius:3px;background:var(--grey-100);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:3px;width:0;transition:width 1s cubic-bezier(.22,.7,.2,1)}
+
+footer{padding:var(--xxl) 0 var(--xxxl);border-top:1px solid var(--hair);color:var(--ink-3);font-size:12px}
+</style>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="mark">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg>
+    </span>
+    <div class="col" style="gap:0">
+      <span style="font-weight:600;letter-spacing:-.01em">Intelligence Core</span>
+      <span class="k" style="letter-spacing:.1em">Sample Store Co. · 6 markets</span>
+    </div>
+    <span class="pulse" style="margin-left:var(--md)"><i></i>model live</span>
+    <nav class="tnav">
+      <a href="#graph-s">Products</a>
+      <a href="#window-s">Timing</a>
+      <a href="#markets-s">Markets</a>
+      <a href="#plays-s">What works</a>
+      <a href="#shoppers-s">Shoppers</a>
+      <a href="#revision-s">Revisions</a>
+      <a href="#stream-s">Decisions</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="heroGrid">
+      <div class="rv in">
+        <span class="k acc">The read · rebuilt 04:12 today</span>
+        <div class="belief">
+          <h1 class="display">A shopper who starts with the Alpine Hardshell is worth
+            <span style="color:var(--purple-700)" id="heroMult">—</span> one who starts with Trail Gloves —
+            and the difference is decided in <span style="color:var(--purple-700)" id="heroWindow">—</span>.</h1>
+        </div>
+        <p class="lede">Not because the shell costs more. Because it leaves a visible hole in the
+          layering system, and a hole is something the engine can talk about. Gloves complete
+          nothing, so there is nothing true to say next.</p>
+        <div class="conf">
+          <span class="k">Confidence</span>
+          <span class="confBar"><i data-conf="93"></i></span>
+          <span class="num" style="font-weight:600">93%</span>
+          <span class="ter" style="font-size:12px">· holdout-tested across 4 markets</span>
+        </div>
+        <div class="evidence">
+          <div class="ev"><b class="num" data-count="18204">0</b><span class="k">purchase events</span></div>
+          <div class="ev"><b class="num" data-count="9317">0</b><span class="k">shoppers</span></div>
+          <div class="ev"><b class="num" data-count="6">0</b><span class="k">markets</span></div>
+          <div class="ev"><b class="num" data-count="61">0</b><span class="k">beliefs held</span></div>
+        </div>
+      </div>
+
+      <div class="corePanel rv in">
+        <span class="k acc">Right now</span>
+        <div style="margin-top:var(--md)">
+          <div class="coreRow"><span class="sec">Shoppers modelled</span><b class="num" data-count="41207">0</b></div>
+          <div class="coreRow"><span class="sec">Decisions today</span><b class="num" id="decCount">0</b></div>
+          <div class="coreRow"><span class="sec">Held back by a rail</span><b class="num" id="dropCount">0</b></div>
+          <div class="coreRow"><span class="sec">Markets in season</span><b class="num" id="seasonCount">—</b></div>
+          <div class="coreRow"><span class="sec">Signals / minute</span><b class="num" id="sigRate">0</b></div>
+        </div>
+        <p class="ter" style="font-size:12px;margin-top:var(--md);line-height:1.55">
+          The engine is not answering a question you asked. It is continuously re-deciding who is
+          worth reaching, and mostly concluding: not yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §1 GRAPH ================= -->
+  <section class="band" id="graph-s">
+    <div class="secHead rv">
+      <div class="col">
+        <span class="k acc">01 · How products are actually bought</span>
+        <h2 class="h1">The commerce graph</h2>
+        <p class="lede">Every edge is an observed transition between a first product and the next,
+          not a merchandising rule someone wrote. Thickness is how often it happens. The moving dots
+          are shoppers travelling that path right now.</p>
+      </div>
+      <div class="seg" id="graphMode">
+        <button class="on" data-gm="flow">Attach rate</button>
+        <button data-gm="value">Value at stake</button>
+        <button data-gm="risk">What dies here</button>
+      </div>
+    </div>
+
+    <div class="graphWrap rv">
+      <div class="graphTools">
+        <span class="k">Click a product to interrogate the model</span>
+        <span style="margin-left:auto" class="row wrapf">
+          <span class="tag tag-purple"><span class="dot" style="background:var(--dv-1)"></span>Entry</span>
+          <span class="tag tag-teal"><span class="dot" style="background:var(--dv-3)"></span>Bridge</span>
+          <span class="tag tag-coral"><span class="dot" style="background:var(--dv-2)"></span>Terminal</span>
+        </span>
+      </div>
+      <div class="graphStage">
+        <svg id="graph" viewBox="0 0 1000 470" role="img"
+             aria-label="Network of products and the observed transitions between them"></svg>
+        <aside class="inspector" id="inspector"></aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §2 WINDOW ================= -->
+  <section class="band" id="window-s">
+    <div class="secHead rv">
+      <div class="col">
+        <span class="k acc">02 · When they buy again</span>
+        <h2 class="h1">The window closes faster than anyone plans for</h2>
+        <p class="lede">Probability of a second order, by days since the first. Drag the line — the
+          shaded area to its right is revenue that stops being reachable if you wait that long.</p>
+      </div>
+      <span class="tag tag-grey mono">drag to scrub</span>
+    </div>
+
+    <div class="windowGrid rv">
+      <div class="card" style="padding:var(--lg) var(--lg) var(--sm)">
+        <svg id="decay" viewBox="0 0 720 320" role="img"
+             aria-label="Probability of a second order against days since the first order"></svg>
+      </div>
+      <div class="readout">
+        <div class="card pad">
+          <span class="k">If you act on day <span class="acc" id="dayLabel">54</span></span>
+          <div class="readBig num" id="probOut">—</div>
+          <span class="sec" style="font-size:13px">of these shoppers place a second order</span>
+          <div style="margin-top:var(--md);padding-top:var(--md);border-top:1px solid var(--hair)">
+            <div class="insRow"><span class="sec">Shoppers at this day</span><b class="num" id="cohortOut">—</b></div>
+            <div class="insRow"><span class="sec">Expected second orders</span><b class="num" id="ordersOut">—</b></div>
+            <div class="insRow"><span class="sec">Expected GMV</span><b class="num" id="gmvOut">—</b></div>
+          </div>
+        </div>
+        <div class="costNote">
+          <span class="k" style="color:var(--orange-800)">Cost of waiting</span>
+          <p style="margin-top:var(--xs);font-size:13px;line-height:1.6" id="costOut"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §3 MARKETS & SEASONALITY ================= -->
+  <section class="band" id="markets-s">
+    <div class="secHead rv">
+      <div class="col">
+        <span class="k acc">03 · One catalogue, six businesses</span>
+        <h2 class="h1">The same product is a different business in every market</h2>
+        <p class="lede">Demand index by month, learned per market. Watch the playhead: when it crosses
+          a market's peak, that market is in season and the engine starts acting there. Australia runs
+          the whole calendar upside down — a global send date would be wrong for half the book.</p>
+      </div>
+      <span class="tag tag-purple" id="seasonNow">—</span>
+    </div>
+
+    <div class="card rv" style="overflow:hidden;padding:0;margin-bottom:var(--md)">
+      <div class="mkHead">
+        <span class="mkPlay" id="mkPlayBtn">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" id="mkPlayIcon"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+          <span id="mkPlayLabel">Pause</span>
+        </span>
+        <span class="k">Demand index · 12 months · learned per market</span>
+        <span class="row wrapf" style="margin-left:auto">
+          <span class="tag tag-grey">Low</span>
+          <span style="display:inline-flex;gap:2px">
+            <i style="width:16px;height:8px;border-radius:2px;background:var(--ramp-1)"></i>
+            <i style="width:16px;height:8px;border-radius:2px;background:var(--ramp-2)"></i>
+            <i style="width:16px;height:8px;border-radius:2px;background:var(--ramp-3)"></i>
+            <i style="width:16px;height:8px;border-radius:2px;background:var(--ramp-4)"></i>
+            <i style="width:16px;height:8px;border-radius:2px;background:var(--ramp-5)"></i>
+          </span>
+          <span class="tag tag-grey">Peak</span>
+        </span>
+      </div>
+      <div class="seasonGrid" id="seasonGrid"></div>
+    </div>
+
+    <div class="card rv" style="overflow:hidden">
+      <table class="mkTable">
+        <thead><tr>
+          <th style="width:20%">Market</th><th>Share of GMV</th><th>Second-order window</th>
+          <th>What actually persuades</th><th>Discount ceiling</th><th>Register</th>
+        </tr></thead>
+        <tbody id="mkTableBody"></tbody>
+      </table>
+      <div style="padding:var(--sm) var(--lg);border-top:1px solid var(--hair)">
+        <p class="ter" style="font-size:12px;line-height:1.6" id="mkFooter"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §4 WHAT WORKS ================= -->
+  <section class="band" id="plays-s">
+    <div class="secHead rv">
+      <div class="col">
+        <span class="k acc">04 · Strategy, measured</span>
+        <h2 class="h1">What works here, and what only works in the deck</h2>
+        <p class="lede">Every play below was run against a holdout on this account. The bar is measured
+          lift on revenue per recipient — left of the centre line means it lost money. Several of the
+          losers are industry best practice.</p>
+      </div>
+      <div class="seg" id="playMode">
+        <button class="on" data-pm="all">All</button>
+        <button data-pm="marketing">Marketing</button>
+        <button data-pm="ecom">E-commerce</button>
+      </div>
+    </div>
+    <div class="grid2 rv">
+      <div class="col" style="gap:var(--md)">
+        <div class="row"><span class="tag tag-green">Works</span><span class="k">keep, and scale</span></div>
+        <div class="col" style="gap:var(--sm)" id="winList"></div>
+      </div>
+      <div class="col" style="gap:var(--md)">
+        <div class="row"><span class="tag tag-coral">Doesn't work here</span><span class="k">stop, or bound tightly</span></div>
+        <div class="col" style="gap:var(--sm)" id="loseList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= §5 SHOPPERS ================= -->
+  <section class="band" id="shoppers-s">
+    <div class="secHead rv">
+      <div class="col">
+        <span class="k acc">05 · Who they are</span>
+        <h2 class="h1">Five groups nobody defined — the model found them</h2>
+        <p class="lede">These are not your CRM segments. They are clusters that fall out of purchase
+          behaviour, and each one wants a different thing. The width of each shape is how spread out
+          their reorder timing is: narrow means the engine can predict the moment, wide means it has
+          to wait for a signal instead of a date.</p>
+      </div>
+    </div>
+    <div class="segGrid rv" id="segGrid"></div>
+  </section>
+
+  <!-- ================= §6 REVISIONS ================= -->
+  <section class="band" id="revision-s">
+    <div class="secHead rv">
+      <div class="col">
+        <span class="k acc">06 · What changed its mind</span>
+        <h2 class="h1">Beliefs it has since abandoned</h2>
+        <p class="lede">A model that never contradicts itself is not learning, it is asserting. These
+          are beliefs the engine dropped, what forced the change, and what the correction was worth.</p>
+      </div>
+      <span class="tag tag-purple">5 revisions · 90 days</span>
+    </div>
+    <div class="rv" id="revisions"></div>
+  </section>
+
+  <!-- ================= §7 STREAM ================= -->
+  <section class="band" id="stream-s">
+    <div class="secHead rv">
+      <div class="col">
+        <span class="k acc">07 · What it does with all of this</span>
+        <h2 class="h1">The decision stream</h2>
+        <p class="lede">One row is one person. Most of what an autonomous system does is decide
+          <em>not</em> to act — so the drops are here too, with the rail that stopped them.</p>
+      </div>
+      <span class="pulse"><i></i><span id="streamState">streaming</span></span>
+    </div>
+    <div class="stream rv">
+      <div class="streamHead">
+        <span class="k">Shopper</span>
+        <span class="k" style="margin-left:62px">Belief invoked · decision</span>
+        <span class="k" style="margin-left:auto">Outcome</span>
+      </div>
+      <div class="streamBody" id="streamBody"></div>
+    </div>
+  </section>
+
+  <!-- ================= §8 BLIND ================= -->
+  <section class="band" id="blind-s">
+    <div class="secHead rv">
+      <div class="col">
+        <span class="k acc">08 · The honest part</span>
+        <h2 class="h1">Where the model is blind, and what that costs</h2>
+        <p class="lede">Confidence is only meaningful if it can be low. These are the beliefs resting
+          on thin evidence, and the feeds that would fix them.</p>
+      </div>
+    </div>
+    <div class="grid2 rv">
+      <div class="card pad">
+        <span class="k">Belief confidence</span>
+        <div style="margin-top:var(--md)" id="confList"></div>
+      </div>
+      <div class="card pad">
+        <span class="k">Missing feeds</span>
+        <div style="margin-top:var(--md)" id="feedList"></div>
+        <p class="ter" style="font-size:12px;margin-top:var(--md);line-height:1.6">
+          The engine will not model a moment it cannot observe. A delivery-delay message is the
+          highest-intent outbound in commerce, and it does not exist here because no carrier feed is
+          connected.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="row between wrapf" style="gap:var(--md)">
+      <span>Prototype · every number, shopper, product and market is fictional. Sample Store Co. is not a real merchant.</span>
+      <span class="mono ter">palette validated on all pairs vs #ffffff</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const fmt=n=>Math.round(n).toLocaleString("en-US");
+const money=n=>"$"+fmt(n);
+const pct=v=>Math.round(v*100)+"%";
+const SVGNS="http://www.w3.org/2000/svg";
+const mk=(t,a={})=>{const e=document.createElementNS(SVGNS,t);for(const k in a)e.setAttribute(k,a[k]);return e};
+const RAMP=["var(--ramp-1)","var(--ramp-2)","var(--ramp-3)","var(--ramp-4)","var(--ramp-5)"];
+
+/* =======================================================================
+   MODEL — one source of truth. Every figure is derived from these tables.
+   ======================================================================= */
+const PRODUCTS={
+  shell:{n:"Alpine Hardshell", role:"entry",  col:0,y:110, aov:289, starts:.41, repeat:.52,
+         note:"Reveals a cold-weather use case and leaves an obvious gap underneath it."},
+  boots:{n:"Ridge Trail Boots",role:"entry",  col:0,y:250, aov:214, starts:.22, repeat:.44,
+         note:"Starts a system too, but the gap it opens is smaller and cheaper."},
+  glove:{n:"Trail Gloves",     role:"terminal",col:0,y:378, aov:46,  starts:.09, repeat:.09,
+         note:"Completes nothing. A first-time gloves buyer has no next layer to finish."},
+  mid:  {n:"Cirrus Mid-layer", role:"bridge", col:1,y:104, aov:168, starts:.06, repeat:.61,
+         note:"The single highest-value second product in the catalogue."},
+  base: {n:"Merino Base Layer",role:"bridge", col:1,y:250, aov:92,  starts:.05, repeat:.58,
+         note:"Cheaper bridge, same job — often the one that works when price is the objection."},
+  pack: {n:"Summit Pack 30L",  role:"expand", col:2,y:120, aov:145, starts:.04, repeat:.37,
+         note:"Only becomes relevant once the layering system is complete."},
+  socks:{n:"Alpine Socks",     role:"expand", col:2,y:262, aov:32,  starts:.07, repeat:.66,
+         note:"Small, frequent, and the most reliable attach after boots."},
+  care: {n:"Care Kit",         role:"loop",   col:3,y:190, aov:24,  starts:.06, repeat:.74,
+         note:"The only product that reliably buys itself again, on a 38-day rhythm."}
+};
+const EDGES=[
+  {f:"shell",t:"mid",p:.44,d:54},{f:"shell",t:"base",p:.21,d:61},{f:"shell",t:"pack",p:.12,d:88},
+  {f:"boots",t:"socks",p:.38,d:21},{f:"boots",t:"care",p:.27,d:34},
+  {f:"mid",t:"base",p:.31,d:47},{f:"base",t:"care",p:.18,d:52},
+  {f:"pack",t:"care",p:.14,d:63},{f:"socks",t:"care",p:.22,d:41},{f:"glove",t:"socks",p:.07,d:96}
+];
+const COHORT=9317;
+const ROLE_C={entry:"var(--dv-1)",bridge:"var(--dv-3)",expand:"var(--dv-3)",loop:"var(--dv-3)",terminal:"var(--dv-2)"};
+const ROLE_N={entry:"Entry",bridge:"Bridge",expand:"Expansion",loop:"Replenishment loop",terminal:"Terminal"};
+const out=k=>EDGES.filter(e=>e.f===k), inc=k=>EDGES.filter(e=>e.t===k);
+const downstream=k=>out(k).reduce((a,e)=>a+e.p*PRODUCTS[e.t].aov,0);
+const atStake=k=>COHORT*PRODUCTS[k].starts*downstream(k);
+const startValue=k=>PRODUCTS[k].aov+downstream(k);
+const HERO_MULT=startValue("shell")/startValue("glove");
+
+/* ---------------- §1 graph ---------------- */
+const COLX=[130,410,690,900];
+let gMode="flow", gSel="shell", raf=null;
+
+function drawGraph(){
+  const svg=$("#graph"); svg.innerHTML="";
+  const defs=mk("defs");
+  [["h1","--dv-1"],["h2","--dv-2"],["h3","--dv-3"]].forEach(([id,v])=>{
+    const g=mk("radialGradient",{id});
+    g.appendChild(mk("stop",{offset:"0%","stop-color":`var(${v})`,"stop-opacity":".22"}));
+    g.appendChild(mk("stop",{offset:"100%","stop-color":`var(${v})`,"stop-opacity":"0"}));
+    defs.appendChild(g);
+  });
+  svg.appendChild(defs);
+  const gE=mk("g"), gP=mk("g"), gN=mk("g");
+  const maxStake=Math.max(...Object.keys(PRODUCTS).map(atStake));
+
+  const paths=[];
+  EDGES.forEach(e=>{
+    const a=PRODUCTS[e.f], b=PRODUCTS[e.t];
+    const x1=COLX[a.col]+58, y1=a.y, x2=COLX[b.col]-58, y2=b.y, mx=(x1+x2)/2;
+    const d=`M${x1} ${y1}C${mx} ${y1},${mx} ${y2},${x2} ${y2}`;
+    const dim = gMode==="risk" && a.role!=="terminal";
+    const w = gMode==="value" ? 1+(e.p*PRODUCTS[e.t].aov)/26 : 1+e.p*13;
+    const p=mk("path",{d,fill:"none",
+      stroke:a.role==="terminal"?"var(--dv-2)":"var(--dv-1)","stroke-width":w.toFixed(2),
+      "stroke-opacity":dim?.08:(gMode==="risk"?.42:.24),"stroke-linecap":"round"});
+    gE.appendChild(p); paths.push({el:p,e,dim});
+  });
+
+  const parts=[];
+  paths.forEach(({el,e,dim})=>{
+    if(dim) return;
+    const n=Math.max(1,Math.round(e.p*7));
+    for(let i=0;i<n;i++){
+      const c=mk("circle",{r:gMode==="value"?2.4:2,
+        fill:PRODUCTS[e.f].role==="terminal"?"var(--dv-2)":"var(--dv-1)"});
+      gP.appendChild(c); parts.push({c,path:el,off:Math.random(),sp:.00055+Math.random()*.0007});
+    }
+  });
+
+  Object.entries(PRODUCTS).forEach(([k,p])=>{
+    const x=COLX[p.col], y=p.y;
+    const g=mk("g",{class:"gnode"+(k===gSel?" sel":"")});
+    g.appendChild(mk("circle",{class:"halo",cx:x,cy:y,r:56,
+      fill:`url(#${p.role==="terminal"?"h2":p.role==="entry"?"h1":"h3"})`}));
+    const r=Math.max(15, gMode==="value" ? 15+(atStake(k)/maxStake)*24 : 16+p.starts*46);
+    const dead=p.role==="terminal", col=ROLE_C[p.role];
+    if(k===gSel) g.appendChild(mk("circle",{cx:x,cy:y,r:r+9,fill:"none",stroke:col,
+      "stroke-opacity":".3","stroke-width":"1"}));
+    g.appendChild(mk("circle",{cx:x,cy:y,r,
+      fill:dead?"var(--coral-50)":"var(--purple-50)",stroke:col,
+      "stroke-width":k===gSel?"2":"1.4",
+      "stroke-opacity":gMode==="risk"&&!dead?".28":".95",
+      "stroke-dasharray":dead?"3 3":"none"}));
+    const lbl=mk("text",{x,y:y+r+19,"text-anchor":"middle",fill:"var(--ink)",
+      "font-size":"12.5","font-weight":"500"});
+    lbl.textContent=p.n; g.appendChild(lbl);
+    const sub=mk("text",{x,y:y+r+35,"text-anchor":"middle",fill:"var(--ink-3)",
+      "font-size":"10.5","font-family":"ui-monospace,Menlo,monospace"});
+    sub.textContent = gMode==="value" ? money(atStake(k))
+                    : gMode==="risk"  ? (dead?"absorbs "+pct(p.starts)+" of starts":"")
+                    : pct(p.starts)+" of starts";
+    g.appendChild(sub);
+    g.addEventListener("click",()=>{gSel=k;drawGraph();inspect(k)});
+    gN.appendChild(g);
+  });
+
+  svg.appendChild(gE); svg.appendChild(gP); svg.appendChild(gN);
+  [["Entry",130],["Bridge",410],["Expansion",690],["Loop",900]].forEach(([t,x])=>{
+    const c=mk("text",{x,y:34,"text-anchor":"middle",fill:"var(--ink-3)",
+      "font-size":"10.5","font-family":"ui-monospace,Menlo,monospace","letter-spacing":"1.6"});
+    c.textContent=t.toUpperCase(); svg.appendChild(c);
+  });
+  animate(parts);
+}
+function animate(parts){
+  if(raf) cancelAnimationFrame(raf);
+  const lens=parts.map(p=>p.path.getTotalLength());
+  const step=()=>{
+    parts.forEach((p,i)=>{
+      p.off+=p.sp; if(p.off>1) p.off-=1;
+      const pt=p.path.getPointAtLength(p.off*lens[i]);
+      p.c.setAttribute("cx",pt.x); p.c.setAttribute("cy",pt.y);
+      p.c.setAttribute("fill-opacity",(Math.min(1,Math.sin(p.off*Math.PI)*2.2)*.8).toFixed(2));
+    });
+    raf=requestAnimationFrame(step);
+  };
+  step();
+}
+function inspect(k){
+  const p=PRODUCTS[k], o=out(k), i=inc(k), ds=downstream(k);
+  const best=o.slice().sort((a,b)=>b.p-a.p)[0], maxP=Math.max(...o.map(e=>e.p),.01);
+  $("#inspector").innerHTML=`
+    <div>
+      <span class="k">${ROLE_N[p.role]}</span>
+      <h3 class="h2" style="margin-top:var(--xxs)">${p.n}</h3>
+      <p class="sec" style="font-size:13px;margin-top:var(--xs);line-height:1.6">${p.note}</p>
+    </div>
+    <div>
+      <div class="insRow"><span class="sec">Starts</span><b class="num">${pct(p.starts)} of relationships</b></div>
+      <div class="insRow"><span class="sec">Average order</span><b class="num">${money(p.aov)}</b></div>
+      <div class="insRow"><span class="sec">Buys again</span><b class="num">${pct(p.repeat)}</b></div>
+      <div class="insRow"><span class="sec">Downstream / shopper</span>
+        <b class="num" style="color:${ds>60?"var(--green-800)":ds>20?"var(--ink)":"var(--coral-800)"}">${money(ds)}</b></div>
+      <div class="insRow"><span class="sec">Value at stake</span><b class="num">${money(atStake(k))}</b></div>
+    </div>
+    ${o.length?`<div><span class="k">What it opens</span><div style="margin-top:var(--xs)">
+      ${o.slice().sort((a,b)=>b.p-a.p).map(e=>`
+        <div style="margin-bottom:10px">
+          <div class="row between" style="gap:var(--xs)">
+            <span style="font-size:13px">${PRODUCTS[e.t].n}</span>
+            <span class="num ter" style="font-size:12px">${pct(e.p)} · ${e.d}d</span>
+          </div>
+          <span class="flowBar"><i data-w="${(e.p/maxP*100).toFixed(0)}" style="background:var(--dv-1)"></i></span>
+        </div>`).join("")}</div></div>`
+    :`<div class="card pad" style="background:var(--coral-50);border-color:var(--coral-100)">
+        <span class="k" style="color:var(--coral-800)">Dead end</span>
+        <p style="font-size:13px;margin-top:var(--xxs);line-height:1.6">Nothing follows this product
+        often enough to model. Every shopper who enters here is a relationship the engine cannot
+        continue — which is why it is kept out of acquisition and out of the lead slot in any
+        reactivation.</p></div>`}
+    ${i.length?`<div><span class="k">Arrived from</span>
+      <p class="sec" style="font-size:13px;margin-top:var(--xxs)">${i.map(e=>PRODUCTS[e.f].n+" ("+pct(e.p)+")").join(" · ")}</p></div>`:""}
+    ${best?`<div class="card pad" style="background:var(--purple-50);border-color:var(--purple-100)">
+      <span class="k acc">What the engine does with this</span>
+      <p style="font-size:13px;margin-top:var(--xxs);line-height:1.6">Watch for a ${p.n} owner with no
+      ${PRODUCTS[best.t].n}, act before day ${best.d}, and lead with why the two work together — not
+      with a discount.</p></div>`:""}`;
+  requestAnimationFrame(()=>$$("#inspector .flowBar i").forEach(b=>b.style.width=b.dataset.w+"%"));
+}
+$$("#graphMode button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#graphMode button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); gMode=b.dataset.gm; drawGraph();
+}));
+
+/* ---------------- §2 decay ---------------- */
+const P0=.46, HALF=54;                    /* the halving day IS the window */
+const pAt=d=>P0*Math.exp(-Math.log(2)*d/HALF)*(d<6?d/6:1);
+const cohortAt=d=>Math.round(2600*Math.exp(-d/120));
+/* the curve ramps up for the first few days, so the halving point has to be
+   searched from the peak forward — not from day 1, which is still on the ramp */
+const PEAK_D=(()=>{let m=0,bd=0;for(let d=0;d<=120;d++){if(pAt(d)>m){m=pAt(d);bd=d}}return bd})();
+const peakP=pAt(PEAK_D);
+const WINDOW=(()=>{for(let d=PEAK_D;d<=120;d++) if(pAt(d)<=peakP/2) return d; return 120})();
+let day=WINDOW;
+
+function drawDecay(){
+  const svg=$("#decay"); svg.innerHTML="";
+  const W=720,H=320,PL=52,PR=22,PT=22,PB=44,MAXD=120;
+  const iw=W-PL-PR, ih=H-PT-PB;
+  const x=d=>PL+(d/MAXD)*iw, y=p=>PT+ih-(p/.5)*ih;
+  const defs=mk("defs");
+  const lg=mk("linearGradient",{id:"decayFill",x1:"0",y1:"0",x2:"0",y2:"1"});
+  lg.appendChild(mk("stop",{offset:"0%","stop-color":"var(--dv-1)","stop-opacity":".22"}));
+  lg.appendChild(mk("stop",{offset:"100%","stop-color":"var(--dv-1)","stop-opacity":"0"}));
+  defs.appendChild(lg); svg.appendChild(defs);
+  for(let p=0;p<=.5;p+=.125){
+    svg.appendChild(mk("line",{x1:PL,x2:PL+iw,y1:y(p),y2:y(p),stroke:"var(--hair)","stroke-width":"1"}));
+    const t=mk("text",{x:PL-10,y:y(p)+4,"text-anchor":"end",fill:"var(--ink-3)","font-size":"10.5"});
+    t.textContent=pct(p); svg.appendChild(t);
+  }
+  [0,30,60,90,120].forEach(d=>{
+    const t=mk("text",{x:x(d),y:H-18,"text-anchor":"middle",fill:"var(--ink-3)","font-size":"10.5"});
+    t.textContent=d+"d"; svg.appendChild(t);
+  });
+  let dPath="";
+  for(let d=0;d<=MAXD;d++) dPath+=(d?"L":"M")+x(d).toFixed(1)+" "+y(pAt(d)).toFixed(1);
+  svg.appendChild(mk("path",{d:dPath+`L${x(MAXD)} ${y(0)}L${x(0)} ${y(0)}Z`,fill:"url(#decayFill)"}));
+  let lost="M"+x(day).toFixed(1)+" "+y(pAt(day)).toFixed(1);
+  for(let d=day;d<=MAXD;d++) lost+="L"+x(d).toFixed(1)+" "+y(pAt(d)).toFixed(1);
+  svg.appendChild(mk("path",{d:lost+`L${x(MAXD)} ${y(0)}L${x(day)} ${y(0)}Z`,fill:"rgba(255,154,87,.17)"}));
+  const line=mk("path",{d:dPath,fill:"none",stroke:"var(--dv-1)","stroke-width":"2.2","stroke-linecap":"round"});
+  svg.appendChild(line);
+  const L=line.getTotalLength();
+  line.setAttribute("stroke-dasharray",L); line.setAttribute("stroke-dashoffset",L);
+  line.animate([{strokeDashoffset:L},{strokeDashoffset:0}],{duration:1100,easing:"cubic-bezier(.22,.7,.2,1)",fill:"forwards"});
+
+  svg.appendChild(mk("line",{x1:x(WINDOW),x2:x(WINDOW),y1:PT,y2:PT+ih,
+    stroke:"var(--grey-300)","stroke-width":"1","stroke-dasharray":"3 4"}));
+  const m=mk("text",{x:x(WINDOW)+7,y:PT+13,fill:"var(--ink-3)","font-size":"10.5",
+    "font-family":"ui-monospace,Menlo,monospace"});
+  m.textContent="WINDOW "+WINDOW+"d"; svg.appendChild(m);
+  svg.appendChild(mk("line",{x1:x(day),x2:x(day),y1:PT,y2:PT+ih,stroke:"var(--purple-500)","stroke-width":"1.5"}));
+  svg.appendChild(mk("circle",{cx:x(day),cy:y(pAt(day)),r:6,fill:"var(--dv-1)",
+    stroke:"var(--surface)","stroke-width":"2.5"}));
+
+  svg.onpointerdown=ev=>{svg.setPointerCapture(ev.pointerId);scrub(ev)};
+  svg.onpointermove=ev=>{if(ev.buttons)scrub(ev)};
+  function scrub(ev){
+    const r=svg.getBoundingClientRect();
+    day=Math.max(1,Math.min(MAXD,Math.round(((ev.clientX-r.left)/r.width*W-PL)/iw*MAXD)));
+    drawDecay(); readout();
+  }
+}
+function readout(){
+  const p=pAt(day), c=cohortAt(day), o=c*p, aov=PRODUCTS.mid.aov;
+  $("#dayLabel").textContent=day;
+  $("#probOut").textContent=pct(p);
+  $("#cohortOut").textContent=fmt(c);
+  $("#ordersOut").textContent=fmt(o);
+  $("#gmvOut").textContent=money(o*aov);
+  const now=cohortAt(14)*pAt(14)*aov, late=o*aov;
+  $("#costOut").innerHTML = day<=14
+    ? `You are inside the best window there is. Acting here is worth <b>${money(now)}</b> on this cohort.`
+    : `Acting on day 14 instead of day ${day} is worth <b style="color:var(--orange-800)">${money(now-late)}</b>
+       more on the same shoppers — about <b>${money((now-late)/(day-14))}</b> of reachable revenue for
+       every day of delay.`;
+}
+
+/* ---------------- §3 markets & seasonality ---------------- */
+const MONTHS=["J","F","M","A","M","J","J","A","S","O","N","D"];
+const MONTH_FULL=["January","February","March","April","May","June","July","August",
+  "September","October","November","December"];
+/* one northern curve; the southern one is that curve rotated six months —
+   derived, so the inversion can never drift out of sync */
+const NORTH=[.58,.46,.33,.22,.15,.12,.14,.24,.44,.74,.96,1.0];
+const rotate=(a,n)=>a.map((_,i)=>a[(i+n+12)%12]);
+const MARKETS=[
+  {n:"France",         flag:"🇫🇷",hemi:"N",share:.28,win:41,lever:"Compatibility with what they own",
+   ceil:.10,reg:"Vouvoiement, warm",curve:NORTH},
+  {n:"Germany",        flag:"🇩🇪",hemi:"N",share:.24,win:58,lever:"Technical proof on insulation",
+   ceil:.05,reg:"Sie, precise",curve:NORTH},
+  {n:"United Kingdom", flag:"🇬🇧",hemi:"N",share:.18,win:67,lever:"Certainty it arrives in time",
+   ceil:.10,reg:"Informal, dry",curve:NORTH},
+  {n:"United States",  flag:"🇺🇸",hemi:"N",share:.16,win:63,lever:"A cold-weather reason, then price",
+   ceil:.15,reg:"Direct, first-name",curve:NORTH.map(v=>Math.min(1,v*.86+.14))},
+  {n:"Japan",          flag:"🇯🇵",hemi:"N",share:.08,win:36,lever:"Fit precision and care instructions",
+   ceil:0,  reg:"Formal, deferential",curve:NORTH.map((v,i)=>i===9||i===10?Math.min(1,v*1.06):v*.94)},
+  {n:"Australia",      flag:"🇦🇺",hemi:"S",share:.06,win:49,lever:"Southern winter, not the campaign calendar",
+   ceil:.10,reg:"Informal, blunt",curve:rotate(NORTH,6)}
+];
+const rampFor=v=>RAMP[Math.min(4,Math.max(0,Math.round(v*4.99)-0+ (v<.2?0:0)))] ;
+const rampIdx=v=>v<.2?0:v<.4?1:v<.62?2:v<.85?3:4;
+
+let mkMonth=new Date().getMonth()+ .0, mkPlaying=true;
+
+function drawMarkets(){
+  /* month header + one row per market */
+  const g=$("#seasonGrid");
+  g.innerHTML=`<div></div><div class="monthRow">${MONTHS.map(m=>`<span>${m}</span>`).join("")}</div>`
+    + MARKETS.map((m,mi)=>`
+      <div class="mkName">
+        <span class="flag">${m.flag}</span>
+        <div class="col" style="gap:0;min-width:0">
+          <span style="font-size:13px;font-weight:500">${m.n}</span>
+          <span class="k" style="letter-spacing:.08em">${m.hemi==="S"?"Southern":"Northern"} · ${pct(m.share)} GMV</span>
+        </div>
+        <span class="inSeason tag tag-green" data-season="${mi}" style="margin-left:auto">In season</span>
+      </div>
+      <div class="mkStrip" data-strip="${mi}">
+        ${m.curve.map((v,i)=>`<span class="mkCell" data-cell="${mi}-${i}">
+           <i data-v="${v}" style="background:${RAMP[rampIdx(v)]}"></i></span>`).join("")}
+      </div>`).join("");
+  requestAnimationFrame(()=>$$(".mkCell i").forEach((el,i)=>{
+    setTimeout(()=>{el.style.transform="scaleY("+Math.max(.12,+el.dataset.v).toFixed(2)+")"},i*7);
+  }));
+
+  /* table */
+  const maxWin=Math.max(...MARKETS.map(m=>m.win));
+  $("#mkTableBody").innerHTML=MARKETS.map(m=>`
+    <tr>
+      <td><div class="row" style="gap:var(--xs)"><span class="flag">${m.flag}</span>
+        <span style="font-weight:500">${m.n}</span></div></td>
+      <td class="num">${pct(m.share)}</td>
+      <td><div class="row" style="gap:var(--xs)">
+        <span class="num" style="min-width:38px">${m.win}d</span>
+        <span class="winBar" style="flex:1"><i data-w="${(m.win/maxWin*100).toFixed(0)}"></i></span></div></td>
+      <td class="sec" style="font-size:13px">${m.lever}</td>
+      <td>${m.ceil===0?`<span class="tag tag-coral">Never discount</span>`
+            :`<span class="num">${pct(m.ceil)}</span>`}</td>
+      <td class="ter" style="font-size:12.5px">${m.reg}</td>
+    </tr>`).join("");
+  requestAnimationFrame(()=>$$("#mkTableBody .winBar i").forEach(b=>b.style.width=b.dataset.w+"%"));
+
+  const spread=Math.max(...MARKETS.map(m=>m.win))-Math.min(...MARKETS.map(m=>m.win));
+  const avg=MARKETS.reduce((a,m)=>a+m.win*m.share,0);
+  $("#mkFooter").innerHTML=`A single global follow-up date would be wrong everywhere: the window
+    ranges over <b>${spread} days</b> between Japan and the United Kingdom, and the GMV-weighted
+    average of <b>${Math.round(avg)} days</b> describes no actual market. The engine holds six
+    separate windows, six levers and six discount ceilings — Japan's is zero, because discounting
+    there measurably reduced repeat purchase.`;
+
+  /* playhead */
+  MARKETS.forEach((m,mi)=>{
+    const strip=$(`[data-strip="${mi}"]`);
+    if(!strip.querySelector(".playhead")) strip.appendChild(Object.assign(document.createElement("i"),{className:"playhead"}));
+  });
+}
+function tickMarkets(){
+  if(mkPlaying) mkMonth=(mkMonth+.02)%12;
+  const idx=Math.floor(mkMonth);
+  let inSeason=0;
+  MARKETS.forEach((m,mi)=>{
+    const strip=$(`[data-strip="${mi}"]`); if(!strip) return;
+    const ph=strip.querySelector(".playhead");
+    if(ph) ph.style.left=((mkMonth+.5)/12*100).toFixed(2)+"%";
+    const hot=m.curve[idx]>=.62;
+    if(hot) inSeason++;
+    const badge=$(`[data-season="${mi}"]`);
+    if(badge) badge.classList.toggle("on",hot);
+    $$(".mkCell",strip).forEach((c,ci)=>c.classList.toggle("now",ci===idx));
+  });
+  $("#seasonNow").textContent=MONTH_FULL[idx]+" · "+inSeason+" of "+MARKETS.length+" in season";
+  $("#seasonCount").textContent=inSeason+" / "+MARKETS.length;
+}
+$("#mkPlayBtn").addEventListener("click",()=>{
+  mkPlaying=!mkPlaying;
+  $("#mkPlayLabel").textContent=mkPlaying?"Pause":"Play";
+  $("#mkPlayIcon").innerHTML=mkPlaying
+    ? '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>'
+    : '<path d="M7 4v16l13-8z"/>';
+});
+
+/* ---------------- §4 what works ---------------- */
+const PLAYS=[
+  {k:"marketing",w:1,n:"Lead with what completes what they own",
+   lift:+31,note:"Naming the product they already have, and the gap under it, beat a generic seasonal push.",
+   ev:"Holdout, 4,100 shoppers, 6 weeks"},
+  {k:"ecom",w:1,n:"Attach at checkout, not by message afterwards",
+   lift:+24,note:"Socks after boots convert in-session. A message two days later mostly costs a send.",
+   ev:"In-session vs outbound split, 2,800 orders"},
+  {k:"marketing",w:1,n:"Free shipping instead of 10% off on at-risk",
+   lift:+18,note:"Recovers the same cohort at a third of the margin cost.",
+   ev:"Holdout, 1,410 at-risk shoppers"},
+  {k:"ecom",w:1,n:"Loyalty points as the incentive before cash",
+   lift:+14,note:"A points boost costs $6.40 where the equivalent discount costs $12.",
+   ev:"Matched cohorts, 90 days"},
+  {k:"marketing",w:1,n:"Wait for the local cold snap, not the campaign date",
+   lift:+22,note:"Weather-triggered sends outperformed calendar sends in every northern market.",
+   ev:"6 markets, 2 seasons"},
+  {k:"marketing",w:0,n:"Discount-led win-back",
+   lift:-9,note:"Recovers shoppers who would have returned anyway, and trains the rest to wait for a sale.",
+   ev:"Holdout, 2,200 lapsed shoppers"},
+  {k:"ecom",w:0,n:"Gloves as an acquisition product",
+   lift:-16,note:"Cheap to convert, then nothing follows. 9% ever place a second order.",
+   ev:"14 months of first-order cohorts"},
+  {k:"marketing",w:0,n:"One global send calendar",
+   lift:-12,note:"Right for France, six weeks early for the UK, and exactly backwards for Australia.",
+   ev:"Per-market attribution, 12 months"},
+  {k:"marketing",w:0,n:"Batch-and-blast the full list at peak",
+   lift:-21,note:"Lifted revenue for one week and raised opt-outs enough to shrink the reachable base for three.",
+   ev:"Opt-out cohort tracking"},
+  {k:"ecom",w:0,n:"Discounting in Japan",
+   lift:-14,note:"Repeat purchase measurably fell. Price cues read as a quality signal, not a saving.",
+   ev:"Market-level holdout, 2 quarters"}
+];
+let playMode="all";
+function drawPlays(){
+  const rows=PLAYS.filter(p=>playMode==="all"||p.k===playMode);
+  const maxAbs=Math.max(...PLAYS.map(p=>Math.abs(p.lift)));
+  const card=p=>`
+    <div class="playCard ${p.w?"win":"lose"}">
+      <div class="row between" style="gap:var(--xs);align-items:flex-start">
+        <span class="h3">${p.n}</span>
+        <span class="num" style="font-weight:600;color:${p.w?"var(--green-800)":"var(--coral-800)"}">
+          ${p.lift>0?"+":""}${p.lift}%</span>
+      </div>
+      <div class="liftBar">
+        <span class="liftZero"></span>
+        <i data-w="${(Math.abs(p.lift)/maxAbs*50).toFixed(1)}"
+           style="${p.w?"left:50%":"right:50%"};background:${p.w?"var(--green-500)":"var(--coral-700)"}"></i>
+      </div>
+      <p class="sec" style="font-size:13px;line-height:1.55">${p.note}</p>
+      <span class="k">${p.ev}</span>
+    </div>`;
+  $("#winList").innerHTML=rows.filter(p=>p.w).map(card).join("")||`<span class="ter">Nothing in this filter.</span>`;
+  $("#loseList").innerHTML=rows.filter(p=>!p.w).map(card).join("")||`<span class="ter">Nothing in this filter.</span>`;
+  requestAnimationFrame(()=>$$(".liftBar i").forEach(b=>b.style.width=b.dataset.w+"%"));
+}
+$$("#playMode button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#playMode button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); playMode=b.dataset.pm; drawPlays();
+}));
+
+/* ---------------- §5 shoppers ---------------- */
+const SEGMENTS=[
+  {n:"System builders",   share:.19, med:54, sd:14, val:412, want:"The next layer, named precisely.",
+   note:"Bought a shell, then kept completing the kit. The most valuable group and the easiest to talk to."},
+  {n:"Rhythm buyers",     share:.23, med:38, sd:6,  val:264, want:"A reminder on their own cadence.",
+   note:"Consumables on a tight, personal clock. Predictable enough to trigger on a date."},
+  {n:"Season spikers",    share:.26, med:186,sd:52, val:198, want:"A reason tied to the weather.",
+   note:"Buy once a season, heavily. The engine waits for the local cold snap rather than a date."},
+  {n:"One-and-dones",     share:.24, med:0,  sd:0,  val:52,  want:"Usually nothing.",
+   note:"Mostly gloves-first and gift orders. The model scores them low and leaves them alone."},
+  {n:"Gift senders",      share:.08, med:365,sd:24, val:143, want:"To be left out of everything else.",
+   note:"Buy for someone else, once a year. Wrong to treat as a shopper — the sizes are not theirs."}
+];
+function drawSegments(){
+  $("#segGrid").innerHTML=SEGMENTS.map((s,i)=>{
+    const W=200,H=52;
+    let blob;
+    if(s.med===0){
+      blob=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <line x1="0" y1="${H-6}" x2="${W}" y2="${H-6}" stroke="var(--grey-300)"
+          stroke-width="1.5" stroke-dasharray="4 4"/></svg>`;
+    }else{
+      const spread=Math.min(1,s.sd/60);
+      const pts=[];
+      for(let j=0;j<=44;j++){
+        const t=j/44, z=(t*4-2)/(0.35+spread*1.5);
+        pts.push([t*W, H-5-Math.exp(-.5*z*z)*(H-14)]);
+      }
+      const d=pts.map((p,j)=>(j?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join("");
+      blob=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <path d="${d}L${W} ${H}L0 ${H}Z" fill="var(--dv-1)" fill-opacity=".13"/>
+        <path class="segLine" d="${d}" fill="none" stroke="var(--dv-1)" stroke-width="1.8"
+          vector-effect="non-scaling-stroke"/></svg>`;
+    }
+    return `<div class="segCard">
+      <span class="k">${pct(s.share)} of shoppers</span>
+      <span class="h3">${s.n}</span>
+      <div class="row" style="gap:6px;align-items:baseline">
+        <b class="num" style="font-size:19px">${money(s.val)}</b>
+        <span class="ter" style="font-size:11.5px">lifetime</span>
+      </div>
+      <div class="segBlob">${blob}</div>
+      <span class="tag ${s.med===0?"tag-grey":s.sd<20?"tag-purple":"tag-teal"}" style="width:fit-content">
+        ${s.med===0?"No rhythm to learn":s.sd<20?`Predictable · ${s.med}d ±${s.sd}`:`Waits for a signal · ±${s.sd}d`}</span>
+      <p class="ter" style="font-size:12px;line-height:1.5;margin-top:var(--xxs)">${s.note}</p>
+      <p class="sec" style="font-size:12.5px;line-height:1.5"><b>Wants:</b> ${s.want}</p>
+    </div>`}).join("");
+  requestAnimationFrame(()=>$$(".segLine").forEach((p,i)=>{
+    const L=p.getTotalLength();
+    p.style.strokeDasharray=L; p.style.strokeDashoffset=L;
+    p.animate([{strokeDashoffset:L},{strokeDashoffset:0}],
+      {duration:900,delay:i*110,easing:"cubic-bezier(.22,.7,.2,1)",fill:"forwards"});
+  }));
+}
+
+/* ---------------- §6 revisions ---------------- */
+const REVISIONS=[
+  {when:"12 Aug",was:"A 10% discount is the most reliable way to recover an at-risk shopper.",
+   now:"Free shipping recovers the same cohort at a similar rate, for a third of the margin.",
+   why:"Both run against a holdout on 1,410 at-risk shoppers. Conversion differed by 0.4 points; margin differed by $5.60 an order.",
+   worth:"+$18,400 of retained margin over 90 days"},
+  {when:"29 Jul",was:"Cart abandonment should fire 45 minutes after the cart is left.",
+   now:"For carts over $200 the second touch at 20 hours does the work. The 45-minute one mostly annoys.",
+   why:"High-value carts converted 2.1× better on the delayed touch, and opt-outs on the early touch ran 3× the account average.",
+   worth:"Opt-out rate on that segment fell from 2.8% to 0.9%"},
+  {when:"14 Jul",was:"Trail Gloves are a good acquisition product — cheap and they convert.",
+   now:"They convert, and then nothing happens. Gloves-first shoppers return at 9% against 52% for shell-first.",
+   why:"Traced 14 months of first-order cohorts through to second order. The gloves cohort never developed one at any meaningful rate.",
+   worth:"Acquisition spend redirected; gloves-first shoppers now score as low-potential"},
+  {when:"02 Jul",was:"Australia can run on the European calendar with a small delay.",
+   now:"Australia is six months out of phase. Its peak is July, and the European calendar reaches it in its warmest month.",
+   why:"Southern-hemisphere demand tracked the inverse of the northern curve across two full seasons.",
+   worth:"Australian revenue per send rose 2.6× once the calendar was inverted",key:true},
+  {when:"21 Jun",was:"The second-order window is roughly 90 days.",
+   now:()=>`It is ${WINDOW}. By day ${WINDOW} the probability has halved — ${pct(pAt(WINDOW))} against ${pct(peakP)} at its peak — and by day 90 it is down to ${pct(pAt(90))}.`,
+   why:"The original figure was a mean dragged upward by a small number of very late returners. The median tells a much harsher story.",
+   worth:"The single most consequential correction the model has made",key:true}
+];
+function drawRevisions(){
+  $("#revisions").innerHTML=REVISIONS.map(r=>`
+    <div class="rev">
+      <div class="col" style="gap:var(--xxs)">
+        <span class="k">${r.when}</span>
+        ${r.key?`<span class="tag tag-purple" style="width:fit-content">Major correction</span>`:""}
+      </div>
+      <div>
+        <p class="was" style="font-size:14px">${r.was}</p>
+        <p style="font-size:15.5px;line-height:1.55;font-weight:500;margin-top:var(--xxs)">
+          ${typeof r.now==="function"?r.now():r.now}</p>
+        <p class="sec" style="font-size:13px;margin-top:var(--xs);line-height:1.6">
+          <span class="k" style="margin-right:6px">Evidence</span>${r.why}</p>
+        <p style="font-size:13px;margin-top:var(--xs);color:var(--green-800)">${r.worth}</p>
+      </div>
+    </div>`).join("");
+}
+
+/* ---------------- §7 stream ---------------- */
+const NAMES=["Ana R.","Marc D.","Sam K.","Lena P.","Priya S.","Tom W.","Jonas M.","Chloé B.",
+  "Hugo T.","Ingrid L.","Nils A.","Sofia M.","Ruben V.","Mei L.","Otto H.","Clara F."];
+const ACTS=[
+  {b:"🇫🇷 Shell owner, no insulation, day 41 of 54",a:"Cirrus offered on compatibility",o:"sent",
+   why:["ownership gap","inside window","no offer used"]},
+  {b:"🇦🇺 Southern winter opening, 9 days out",a:"Queued against the inverted calendar",o:"deferred",
+   why:["hemisphere flip","waits for local forecast"]},
+  {b:"🇯🇵 Repeat buyer, fit query last week",a:"Care instructions, no incentive",o:"sent",
+   why:["discount ceiling 0%","formal register"]},
+  {b:"🇩🇪 Shell owner, technical objection raised",a:"Insulation proof, then the layer",o:"sent",
+   why:["market lever","no price cue"]},
+  {b:"Gloves-first shopper, low downstream value",a:"Considered, then dropped",o:"drop",
+   why:["dead-end product","no true next step"]},
+  {b:"🇬🇧 Day 51, open support ticket",a:"Held",o:"drop",
+   why:["guardrail: open ticket","retry on resolve"]},
+  {b:"Gold tier, 120 points from Summit",a:"Tier progress, no discount",o:"sent",
+   why:["loyalty lever","costs $0"]},
+  {b:"At-risk, 1.7× own rhythm",a:"Free shipping, not 10% off",o:"sent",
+   why:["revised belief 12 Aug","saves $5.60 margin"]},
+  {b:"🇺🇸 Shell owner, day 96",a:"Dropped from the window cohort",o:"drop",
+   why:["past 90 days","probability under 15%"]},
+  {b:"3 messages this week already",a:"Suppressed",o:"drop",
+   why:["frequency cap","defers to next week"]}
+];
+let streamOn=true, si=0;
+function pushDecision(){
+  const body=$("#streamBody");
+  const a=ACTS[si%ACTS.length], name=NAMES[Math.floor(Math.random()*NAMES.length)]; si++;
+  const tone=a.o==="sent"?"tag-green":a.o==="deferred"?"tag-warn":"tag-grey";
+  const label=a.o==="sent"?"Sent":a.o==="deferred"?"Deferred":"No action";
+  const d=document.createElement("div");
+  d.className="dec"+(a.o==="drop"?" drop":"");
+  d.innerHTML=`
+    <div class="col" style="gap:1px">
+      <span style="font-size:13px;font-weight:500">${name}</span>
+      <span class="k" style="letter-spacing:.08em">${new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}</span>
+    </div>
+    <div class="col" style="gap:1px;min-width:0">
+      <span style="font-size:13px;color:var(--ink-2)">${a.b}</span>
+      <span style="font-size:13.5px">${a.a}</span>
+      <div class="why">${a.why.map(w=>`<span>${w}</span>`).join("")}</div>
+    </div>
+    <span class="tag ${tone}">${label}</span>`;
+  body.prepend(d);
+  while(body.children.length>9) body.lastChild.remove();
+}
+$("#streamBody").addEventListener("mouseenter",()=>{streamOn=false;$("#streamState").textContent="paused"});
+$("#streamBody").addEventListener("mouseleave",()=>{streamOn=true;$("#streamState").textContent="streaming"});
+
+/* ---------------- §8 blind ---------------- */
+const BELIEFS=[
+  {n:"Second-order window is "+WINDOW+" days",c:93},
+  {n:"Cirrus is the best bridge after a shell",c:91},
+  {n:"Australia is six months out of phase",c:88},
+  {n:"Free shipping beats 10% off on at-risk",c:84},
+  {n:"Germany responds to technical proof",c:71},
+  {n:"Weather predicts mid-layer demand",c:58},
+  {n:"Gift senders should be excluded entirely",c:49}
+];
+const FEEDS=[
+  {n:"Carrier / 3PL delivery events",s:"Not connected",cost:"≈$21,400 a quarter unreachable"},
+  {n:"On-site session behaviour",s:"Partial",cost:"Browse intent is 40% observed"},
+  {n:"Local weather by market",s:"Connected",cost:"—"},
+  {n:"Ad platform engagement",s:"Not connected",cost:"Cannot separate paid from organic intent"}
+];
+function drawBlind(){
+  $("#confList").innerHTML=BELIEFS.map(b=>{
+    const col=b.c>=85?"var(--ramp-4)":b.c>=70?"var(--ramp-3)":"var(--ramp-2)";
+    return `<div class="blindRow">
+      <span style="font-size:13px">${b.n}</span>
+      <span class="meter"><i data-w="${b.c}" style="background:${col}"></i></span>
+      <span class="num ter" style="font-size:12px">${b.c}% ${b.c<60?"· thin evidence":""}</span>
+    </div>`}).join("");
+  $("#feedList").innerHTML=FEEDS.map(f=>`
+    <div class="blindRow" style="grid-template-columns:1fr auto">
+      <div class="col" style="gap:1px">
+        <span style="font-size:13px">${f.n}</span>
+        <span class="ter" style="font-size:12px">${f.cost}</span>
+      </div>
+      <span class="tag ${f.s==="Connected"?"tag-green":f.s==="Partial"?"tag-warn":"tag-grey"}">${f.s}</span>
+    </div>`).join("");
+  requestAnimationFrame(()=>$$("#confList .meter i").forEach(b=>b.style.width=b.dataset.w+"%"));
+}
+
+/* ---------------- hero derived + boot ---------------- */
+$("#heroMult").textContent=HERO_MULT.toFixed(1)+"×";
+$("#heroWindow").textContent=WINDOW+" days";
+
+drawGraph(); inspect(gSel); drawDecay(); readout();
+drawMarkets(); tickMarkets(); setInterval(tickMarkets,60);
+drawPlays(); drawSegments(); drawRevisions(); drawBlind();
+for(let i=0;i<7;i++) pushDecision();
+setInterval(()=>{if(streamOn)pushDecision()},2600);
+
+let dec=1284, drop=3910;
+setInterval(()=>{
+  dec+=Math.floor(Math.random()*3); drop+=Math.floor(Math.random()*5);
+  $("#decCount").textContent=fmt(dec);
+  $("#dropCount").textContent=fmt(drop);
+  $("#sigRate").textContent=fmt(200+Math.floor(Math.random()*40));
+},1800);
+$("#decCount").textContent=fmt(dec); $("#dropCount").textContent=fmt(drop); $("#sigRate").textContent="214";
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return;
+  e.target.classList.add("in");
+  $$("[data-count]",e.target).forEach(n=>{
+    if(n.dataset.done) return; n.dataset.done="1";
+    const to=+n.dataset.count, t0=performance.now();
+    const run=t=>{const k=Math.min(1,(t-t0)/1100);
+      n.textContent=fmt(to*(1-Math.pow(1-k,3))); if(k<1)requestAnimationFrame(run)};
+    requestAnimationFrame(run);
+  });
+  $$("[data-conf]",e.target).forEach(n=>{
+    if(n.dataset.done) return; n.dataset.done="1";
+    setTimeout(()=>n.style.width=n.dataset.conf+"%",120);
+  });
+}),{threshold:.12});
+$$(".rv, .evidence, .corePanel").forEach(n=>io.observe(n));
+</script>
+</body>
+</html>

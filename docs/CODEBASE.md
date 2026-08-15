@@ -39,6 +39,7 @@ there.
 | --- | --- | --- |
 | `page-overview` | Reporting | `renderReport` → `renderTiles`, `renderRevTable`, `stackedBars`/`lines`/`hBars`; plus `renderBench` |
 | `page-intelligence` | Intelligence Hub | static business briefing with `renderIntelligence()` panel selection; written once in the HTML |
+| `page-intelligence` | Intelligence Hub | `renderIntelligence` — master/detail over `I_SECTIONS`; each section lazily draws (`drawIntelGraph`, `drawIntelDecay`, `drawMarkets`, `drawPlays`, `drawSegments`, `drawRevisions`, `startStream`, `drawBlind`) |
 | `page-opportunities` | Opportunities | `renderOpportunities` → `renderOpportunityDetail`; actions route into campaigns, guardrails, ACE themes, lifecycle and loyalty |
 | `page-engagements` | Engagements | `renderAce` (AI tab — themes **and** their plays), `renderEng` (Custom tab) |
 | `page-campaigns` | Campaigns | `renderCampaigns` |
@@ -105,6 +106,11 @@ Change these, not the markup, when you want different content.
 | `CAMPAIGNS`, `CAMP_METRICS`, `VARIANTS`, `RULES`, `WIZ`, `WIZ_CHECKS` | Campaigns list, selectable performance columns and the wizard |
 | `SIM_SHOPPERS` | The shoppers you can run a live test against |
 | `PREV_*` | Word pools for `genPreview(n)`, the pre-launch campaign preview |
+| `I_PRODUCTS` / `I_EDGES` | The commerce graph: products and the observed transitions between them. Every Intelligence figure derives from these |
+| `MARKETS` | Six markets with a 12-month demand curve, window, lever, discount ceiling and register. The southern curve is the northern one rotated six months, so the inversion cannot drift |
+| `PLAYS` | Marketing and e-commerce plays with measured lift — the winners and, deliberately, the losers |
+| `SEGMENTS`, `REVISIONS`, `BELIEFS`, `FEEDS` | Shopper clusters, the belief-revision log, and the confidence/blind-spot tables |
+| `ASK_Q` | The Ask-the-model shortcut. Each answer is a **function** that reads the live model objects, so it cannot contradict the page |
 
 ## The two-layer theme table
 
@@ -180,6 +186,26 @@ values from primitives so its rates stay honest.
 **Colour is bound to the member, not to its rank.** Assignment happens once at load: the four
 biggest members of each dimension take the four categorical hues, everything else is `--dv-other`.
 Changing metric or view can never repaint a series.
+
+## The Intelligence Core
+
+`I_PRODUCTS` + `I_EDGES` + the decay curve + `MARKETS` are the only inputs. Everything stated on the
+page is computed from them:
+
+- `iDown(k)` / `iStake(k)` / `iStartValue(k)` — what follows a product, and what a shopper who starts
+  there is worth. `HERO_MULT` is the ratio of two of those, not a typed number.
+- `pAt(d)` is the second-order probability curve. `PEAK_D` finds its peak, and `WINDOW` is the day the
+  probability has **halved** — searched forward from the peak, because the curve ramps up over the
+  first few days and searching from day 1 lands on the ramp.
+- The window headline, the chart's `WINDOW` marker, the scrubber readout and the revision-log entry
+  all read `WINDOW` and `pAt()`. Change the half-life and every one of them moves together.
+
+The southern-hemisphere market is `rot(NORTH,6)` — the northern curve rotated six months — so the
+seasonality inversion is structural rather than two hand-maintained arrays.
+
+**Ask the model** (`ASK_Q`, `buildAsk`, `askAnswer`) is a floating shortcut scoped to this page:
+`goto()` shows the FAB on `intelligence` and hides it everywhere else. Each answer is a function
+evaluated at call time against the same objects the page renders from.
 
 ## Mutable state
 

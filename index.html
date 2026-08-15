@@ -486,52 +486,170 @@ svg.chart .crosshair{stroke:var(--grey-400);stroke-width:1;stroke-dasharray:3 3;
 .tierBar{display:flex;height:26px;border-radius:var(--xxs);overflow:hidden;gap:2px;background:transparent}
 .tierBar > span{display:block}
 
-/* Intelligence Hub — one current business read, then the evidence, product
-   decision and engine behaviour that follow from it. It is intentionally a
-   briefing, not a wall of unrelated dashboard cards. */
-.intelBrief{align-items:start}
-.intelStory{min-width:0}
+/* ============ INTELLIGENCE CORE ============
+   The model's own read of the business: how products are bought, when people
+   come back, what changes by market, which plays actually paid. Sections are
+   a master/detail rail, the same pattern as Lifecycle, Guardrails and Loyalty.
+   The categorical trio reuses the account palette (validated on all pairs);
+   the purple ramp below is validated as an ordinal ramp against white. */
+#page-intelligence{--ramp-1:#b7a7ff;--ramp-2:#9b7bff;--ramp-3:#7e55f6;--ramp-4:#683fcf;--ramp-5:#4c3c9d;
+  --hair:var(--border-neutral-default);--ink:var(--content-neutral-default);
+  --ink-2:var(--content-neutral-secondary);--ink-3:var(--content-neutral-tertiary)}
+.intelWrap{align-items:start}
+.intelStory{min-width:0;display:flex;flex-direction:column;gap:var(--lg)}
 .intelPanel{display:none;flex-direction:column;gap:var(--lg)}.intelPanel.on{display:flex}
-.intelCurrent{position:relative;overflow:hidden;padding:var(--xl);border-radius:16px;color:var(--white);
-  background:radial-gradient(circle at 88% 14%,var(--purple-700) 0,transparent 31%),var(--black)}
-.intelCurrent::after{content:"";position:absolute;right:-44px;bottom:-68px;width:210px;height:210px;border:1px solid var(--purple-200);border-radius:50%;opacity:.38;box-shadow:0 0 0 25px rgba(196,183,255,.11),0 0 0 50px rgba(196,183,255,.06)}
-.intelCurrent>*{position:relative;z-index:1}.intelCurrent .k{color:var(--purple-200)}
-.intelCurrent h2{font-size:25px;line-height:1.17;letter-spacing:-.025em;max-width:760px;margin-top:var(--xs)}
-.intelCurrent p{max-width:68ch;margin-top:var(--sm);color:var(--grey-200)}
-.intelCurrentEvidence{display:flex;flex-wrap:wrap;gap:var(--xs);margin-top:var(--md)}
-.intelCurrentEvidence span{font-size:11px;padding:4px 7px;border-radius:var(--xxs);color:var(--white);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)}
-.intelInsight{padding:var(--lg);border:1px solid var(--border-neutral-default);border-radius:16px;background:var(--white)}
-.intelInsightHead{display:flex;align-items:start;justify-content:space-between;gap:var(--md)}
-.intelInsight h2{font-size:20px;letter-spacing:-.02em;margin-top:var(--xxxs)}
-.intelInsight .lead{font-size:15px;line-height:1.45;max-width:68ch;margin-top:var(--md)}
-.intelPath{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr;gap:var(--xs);align-items:stretch;margin-top:var(--lg)}
-.intelPathStep{display:flex;flex-direction:column;gap:var(--xs);padding:var(--md);border-radius:12px;background:var(--grey-50)}
-.intelPathStep.entry{background:var(--blue-50)}.intelPathStep.bridge{background:var(--purple-50)}.intelPathStep.expand{background:var(--green-50)}
-.intelPathStep .k{font-size:10px;color:var(--content-neutral-tertiary)}.intelPathStep b{font-size:20px;letter-spacing:-.025em}.intelPathStep strong{font-size:13px}.intelPathStep .t-sm{color:var(--content-neutral-secondary)}
-.intelPathArrow{display:grid;place-items:center;color:var(--content-neutral-tertiary);font-size:18px}
-.intelRule{display:flex;gap:var(--sm);margin-top:var(--md);padding-top:var(--sm);border-top:1px solid var(--border-neutral-default);font-size:12px;color:var(--content-neutral-secondary)}
-.intelRule i{width:7px;height:7px;border-radius:50%;background:var(--purple-500);box-shadow:0 0 0 4px var(--purple-100);margin-top:5px;flex-shrink:0}
-.intelProducts{display:grid;grid-template-columns:1fr 1fr;gap:var(--md);margin-top:var(--lg)}
-.intelProduct{padding:var(--md);border:1px solid var(--border-neutral-default);border-radius:12px;background:var(--grey-50)}
-.intelProduct.good{background:var(--purple-50);border-color:var(--purple-200)}.intelProduct.risk{background:var(--orange-50);border-color:var(--orange-300)}
-.intelProductMetric{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sm);margin-top:var(--sm)}
-.intelProductMetric b{font-size:30px;line-height:1;letter-spacing:-.04em}.intelProductMetric span{font-size:11px;color:var(--content-neutral-secondary);text-align:right}
-.intelProduct h3{font-size:16px;margin-top:var(--sm)}.intelProduct p{font-size:12px;color:var(--content-neutral-secondary);margin-top:var(--xxs)}
-.intelTry{margin-top:var(--md);padding-top:var(--sm);border-top:1px solid rgba(0,0,0,.08)}.intelTry .k{font-size:10px;color:var(--content-accent-default)}.intelProduct.risk .intelTry .k{color:var(--content-warning-default)}
-.intelEngine{padding:var(--lg);border-radius:16px;background:var(--black);color:var(--white)}
-.intelEngine .k{color:var(--purple-200)}.intelEngine h2{font-size:21px;letter-spacing:-.02em;margin-top:var(--xxxs);max-width:35ch}.intelEngine .lead{max-width:68ch;color:var(--grey-200);margin-top:var(--sm)}
-.intelEngineFlow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sm);margin-top:var(--lg)}
-.intelEngineStep{padding-top:var(--sm);border-top:1px solid rgba(255,255,255,.2)}.intelEngineStep b{display:block;font-size:13px}.intelEngineStep span{display:block;font-size:11px;color:var(--grey-200);margin-top:var(--xxxs)}
-.intelMarkets{border:1px solid var(--border-neutral-default);border-radius:16px;overflow:hidden;background:var(--white)}
-.intelMarket{display:grid;grid-template-columns:116px 92px minmax(160px,1fr) minmax(140px,.8fr);gap:var(--md);padding:var(--sm) var(--lg);align-items:center;border-top:1px solid var(--border-neutral-default)}
-.intelMarket:first-child{border-top:0;background:var(--grey-50)}.intelMarket strong{font-size:13px}.intelMarket .t-sm{color:var(--content-neutral-secondary)}.intelMarket .k{font-size:10px}
-.intelLive{padding:var(--lg);border:1px solid var(--purple-200);border-radius:16px;background:var(--surface-accent-default)}
-.intelLiveHead{display:flex;align-items:start;justify-content:space-between;gap:var(--md)}.intelLive h2{font-size:20px;letter-spacing:-.02em;margin-top:var(--xxxs)}
-.intelLivePulse{display:flex;align-items:center;gap:var(--xs);font-size:11px;color:var(--content-success-default);white-space:nowrap}.intelLivePulse i{position:relative;width:7px;height:7px;border-radius:50%;background:var(--green-500)}.intelLivePulse i::after{content:"";position:absolute;inset:-4px;border:1px solid var(--green-500);border-radius:50%;animation:intelPulse 1.7s ease-out infinite}
-.intelLiveGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sm);margin-top:var(--lg)}
-.intelLiveCard{padding:var(--md);border:1px solid var(--border-neutral-default);border-radius:12px;background:var(--white)}.intelLiveCard .k{font-size:10px}.intelLiveMetric{display:flex;justify-content:space-between;align-items:end;gap:var(--sm);margin-top:var(--xs)}.intelLiveMetric b{font-size:27px;line-height:1;letter-spacing:-.04em}.intelLiveMetric span{font-size:11px;color:var(--content-success-default)}.intelLiveCard p{font-size:11px;color:var(--content-neutral-secondary);margin-top:var(--sm)}
-.intelSpark{display:flex;align-items:end;gap:3px;height:28px;margin-top:var(--sm)}.intelSpark i{width:7px;border-radius:3px 3px 1px 1px;background:var(--purple-200);animation:intelRise 1.4s ease-in-out infinite alternate}.intelSpark i:nth-child(2){animation-delay:.18s}.intelSpark i:nth-child(3){animation-delay:.36s}.intelSpark i:nth-child(4){animation-delay:.54s}.intelSpark i:nth-child(5){animation-delay:.72s}.intelSpark i:nth-child(6){animation-delay:.9s}.intelSpark i:last-child{background:var(--purple-500)}
-@keyframes intelPulse{0%{opacity:.85;transform:scale(.65)}100%{opacity:0;transform:scale(1.7)}}@keyframes intelRise{from{transform:scaleY(.65);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
+.intelHead{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--md);flex-wrap:wrap}
+.intelHead .col{gap:var(--xxxs);max-width:74ch}
+.intelHead h2{font-size:24px;letter-spacing:-.022em;line-height:1.16}
+.intelHead .lead{font-size:14px;line-height:1.6;color:var(--ink-2)}
+.intelMono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.intelMono.acc{color:var(--content-accent-default)}
+
+/* hero read */
+.intelRead{position:relative;overflow:hidden;padding:var(--xl);border-radius:16px;
+  background:linear-gradient(150deg,var(--purple-50),var(--white) 62%);border:1px solid var(--purple-100)}
+.intelRead::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--purple-500),transparent);animation:intelScan 4.6s linear infinite}
+@keyframes intelScan{0%{transform:translateY(0)}100%{transform:translateY(300px)}}
+.intelRead h2{font-size:clamp(22px,2.5vw,32px);line-height:1.13;letter-spacing:-.026em;max-width:23ch;margin-top:var(--xs)}
+.intelRead p{max-width:66ch;margin-top:var(--sm);color:var(--ink-2);font-size:14.5px;line-height:1.6}
+.intelConf{display:flex;align-items:center;gap:var(--sm);margin-top:var(--md);flex-wrap:wrap}
+.intelConfBar{width:170px;height:3px;border-radius:2px;background:var(--grey-100);overflow:hidden}
+.intelConfBar i{display:block;height:100%;width:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--ramp-1),var(--ramp-4));transition:width 1.4s cubic-bezier(.22,.7,.2,1)}
+.intelEv{display:flex;gap:var(--xl);flex-wrap:wrap;margin-top:var(--lg);padding-top:var(--md);border-top:1px solid var(--hair)}
+.intelEv>div{display:flex;flex-direction:column;gap:1px}
+.intelEv b{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* graph */
+.intelGraph{background:var(--white);border:1px solid var(--hair);border-radius:14px;overflow:hidden}
+.intelGraphTools{display:flex;align-items:center;gap:var(--xs);padding:var(--sm) var(--lg);
+  border-bottom:1px solid var(--hair);flex-wrap:wrap}
+.intelGraphStage{display:grid;grid-template-columns:1fr 300px}
+#intelGraphSvg{display:block;width:100%;height:auto}
+.gnode{cursor:pointer}.gnode text{pointer-events:none}
+.gnode .halo{opacity:0;transition:opacity .25s}.gnode:hover .halo,.gnode.sel .halo{opacity:1}
+.intelInspector{border-left:1px solid var(--hair);padding:var(--lg);display:flex;flex-direction:column;gap:var(--md)}
+.insRow{display:flex;justify-content:space-between;gap:var(--sm);padding:7px 0;border-bottom:1px solid var(--hair)}
+.insRow:last-of-type{border-bottom:0}
+.flowBar{height:5px;border-radius:3px;background:var(--grey-100);overflow:hidden;margin-top:5px}
+.flowBar i{display:block;height:100%;border-radius:3px;width:0;transition:width .8s cubic-bezier(.22,.7,.2,1)}
+
+/* window */
+.intelWindowGrid{display:grid;grid-template-columns:1.55fr 1fr;gap:var(--md)}
+#intelDecay{display:block;width:100%;height:auto;cursor:ew-resize;touch-action:none}
+.intelReadBig{font-size:40px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.intelCost{border:1px solid var(--orange-300);background:var(--orange-50);border-radius:12px;padding:var(--md)}
+
+/* markets */
+.mkHead{display:flex;align-items:center;gap:var(--md);padding:var(--sm) var(--lg);
+  border-bottom:1px solid var(--hair);flex-wrap:wrap}
+.mkPlay{display:inline-flex;align-items:center;gap:var(--xxs);height:29px;padding:0 11px;border-radius:7px;
+  background:var(--surface-accent-default);color:var(--content-accent-default);font-size:12px;font-weight:500}
+.seasonGrid{display:grid;grid-template-columns:236px 1fr}
+.monthRow{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;padding:0 var(--lg) var(--xs) 0}
+.monthRow span{font-size:10px;text-align:center;color:var(--ink-3);font-family:ui-monospace,Menlo,monospace}
+.mkName{padding:var(--sm) var(--sm) var(--sm) var(--lg);border-top:1px solid var(--hair);
+  display:flex;align-items:center;gap:var(--xs);min-width:0}
+.mkStrip{padding:var(--sm) var(--lg) var(--sm) 0;border-top:1px solid var(--hair);
+  display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:center;position:relative}
+.mkCell{height:24px;border-radius:5px;background:var(--grey-100);position:relative;overflow:hidden}
+.mkCell i{position:absolute;inset:0;border-radius:5px;transform:scaleY(0);transform-origin:bottom;
+  transition:transform .9s cubic-bezier(.22,.7,.2,1)}
+.mkCell.now{box-shadow:0 0 0 2px var(--purple-500)}
+.flag{font-size:15px;line-height:1;flex-shrink:0}
+.inSeason{opacity:0;transition:opacity .35s;flex-shrink:0}.inSeason.on{opacity:1}
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--purple-500);border-radius:2px;
+  pointer-events:none;box-shadow:0 0 9px rgba(126,85,246,.6);z-index:2}
+.winBar{height:5px;border-radius:3px;background:var(--grey-100);overflow:hidden;min-width:56px}
+.winBar i{display:block;height:100%;border-radius:3px;background:var(--ramp-3);width:0;
+  transition:width 1s cubic-bezier(.22,.7,.2,1)}
+
+/* plays */
+.playCard{border:1px solid var(--hair);border-radius:12px;padding:var(--md);background:var(--white);
+  display:flex;flex-direction:column;gap:var(--xs);transition:.18s}
+.playCard:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(16,24,40,.09)}
+.playCard.win{border-left:3px solid var(--green-500)}
+.playCard.lose{border-left:3px solid var(--coral-700,#c35e4a)}
+.liftBar{height:6px;border-radius:3px;background:var(--grey-100);position:relative;overflow:hidden}
+.liftBar i{position:absolute;top:0;bottom:0;border-radius:3px;width:0;transition:width 1s cubic-bezier(.22,.7,.2,1)}
+.liftZero{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--grey-300);left:50%}
+
+/* shoppers */
+.segGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sm)}
+.segCard{border:1px solid var(--hair);border-radius:12px;padding:var(--md);background:var(--white);
+  display:flex;flex-direction:column;gap:var(--xxs)}
+.segBlob svg{display:block;width:100%;height:48px;overflow:visible;margin:var(--xxs) 0}
+
+/* revisions */
+.intelRev{display:grid;grid-template-columns:110px 1fr;gap:var(--md);padding:var(--md) 0;border-top:1px solid var(--hair)}
+.wasLine{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--grey-300)}
+
+/* decisions */
+.intelStream{background:var(--white);border:1px solid var(--hair);border-radius:14px;overflow:hidden}
+.intelStreamBody{height:360px;overflow:hidden;position:relative}
+.intelStreamBody::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;pointer-events:none;
+  background:linear-gradient(transparent,var(--white))}
+.dec{display:grid;grid-template-columns:76px 1fr auto;gap:var(--md);align-items:start;
+  padding:var(--sm) var(--lg);border-bottom:1px solid var(--hair);
+  animation:decIn .5s cubic-bezier(.22,.7,.2,1) both}
+@keyframes decIn{from{opacity:0;transform:translateY(-9px)}to{opacity:1;transform:none}}
+.dec.drop{background:var(--grey-50)}
+.dec .why{display:flex;gap:var(--xs);flex-wrap:wrap;margin-top:4px}
+.dec .why span{font-size:11px;color:var(--ink-3);background:var(--grey-100);padding:2px 7px;border-radius:5px}
+
+/* blind */
+.blindRow{display:grid;grid-template-columns:1.1fr 80px 1fr;gap:var(--md);align-items:center;
+  padding:var(--xs) 0;border-bottom:1px solid var(--hair)}
+.meterBar{height:5px;border-radius:3px;background:var(--grey-100);overflow:hidden}
+.meterBar i{display:block;height:100%;border-radius:3px;width:0;transition:width 1s cubic-bezier(.22,.7,.2,1)}
+
+/* ---- Ask anything: a floating shortcut to interrogate the model ---- */
+.askFab{position:fixed;right:var(--lg);bottom:var(--lg);z-index:55;display:inline-flex;align-items:center;
+  gap:var(--xs);height:46px;padding:0 var(--md);border-radius:999px;color:var(--white);font-weight:500;
+  background:linear-gradient(96deg,var(--ai-gradient),var(--purple-500));
+  box-shadow:0 8px 26px rgba(126,85,246,.42);transition:.18s}
+.askFab:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(126,85,246,.5)}
+.askFab i{width:7px;height:7px;border-radius:50%;background:#fff;opacity:.9;animation:askPulse 2.2s infinite}
+@keyframes askPulse{0%,100%{opacity:.45;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+.askPanel{position:fixed;right:var(--lg);bottom:var(--lg);z-index:56;width:min(430px,calc(100vw - 32px));
+  max-height:min(640px,calc(100vh - 48px));background:var(--white);border:1px solid var(--border-neutral-default);
+  border-radius:16px;box-shadow:0 24px 60px rgba(16,24,40,.24);display:flex;flex-direction:column;overflow:hidden;
+  opacity:0;transform:translateY(12px) scale(.98);pointer-events:none;
+  transition:opacity .22s cubic-bezier(.32,.72,0,1),transform .22s cubic-bezier(.32,.72,0,1)}
+.askPanel.on{opacity:1;transform:none;pointer-events:auto}
+.askHead{display:flex;align-items:center;gap:var(--xs);padding:var(--sm) var(--md);
+  border-bottom:1px solid var(--border-neutral-default)}
+.askBody{flex:1;overflow-y:auto;padding:var(--md);display:flex;flex-direction:column;gap:var(--sm)}
+.askQ{align-self:flex-end;max-width:82%;background:var(--surface-neutral-secondary);border-radius:13px;
+  border-bottom-right-radius:4px;padding:8px 12px;font-size:13px}
+.askA{display:flex;gap:var(--xs);align-items:flex-start}
+.askA .av{width:22px;height:22px;border-radius:6px;flex-shrink:0;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500))}
+.askA .bubble{background:var(--white);border:1px solid var(--purple-100);border-radius:13px;
+  border-top-left-radius:4px;padding:9px 12px;font-size:13px;line-height:1.55}
+.askFoot{border-top:1px solid var(--border-neutral-default);padding:var(--sm) var(--md);
+  display:flex;flex-direction:column;gap:var(--xs)}
+.askChips{display:flex;gap:var(--xxs);flex-wrap:wrap}
+.askChip{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--border-neutral-default);
+  background:var(--white);color:var(--content-neutral-secondary)}
+.askChip:hover{background:var(--surface-accent-default);border-color:var(--purple-200);color:var(--content-accent-default)}
+.askTyping{display:inline-flex;gap:4px}
+.askTyping i{width:5px;height:5px;border-radius:50%;background:var(--grey-300);animation:askBlink 1.2s infinite}
+.askTyping i:nth-child(2){animation-delay:.18s}.askTyping i:nth-child(3){animation-delay:.36s}
+@keyframes askBlink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+
+@media(max-width:1180px){.intelGraphStage{grid-template-columns:1fr}
+  .intelInspector{border-left:0;border-top:1px solid var(--hair)}
+  .segGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:880px){.intelWindowGrid{grid-template-columns:1fr}
+  .seasonGrid{grid-template-columns:1fr}
+  .mkStrip{padding-left:var(--lg)}
+  .segGrid{grid-template-columns:1fr}
+  .intelRev{grid-template-columns:1fr;gap:var(--xs)}
+  .blindRow{grid-template-columns:1fr;gap:var(--xxs)}
+  .askPanel{right:var(--xs);left:var(--xs);width:auto}}
 
 /* ============ MOBILE ============
    Below 880px the sidebar becomes an off-canvas drawer (there's no room for
@@ -776,245 +894,271 @@ body:has(#panel.on) .mobileMenuBtn{display:none}
         </div>
       </section>
 
-      <!-- ======== INTELLIGENCE HUB · AI business briefing ======== -->
+      <!-- ======== INTELLIGENCE CORE · the model's read of the business ======== -->
       <section class="page hidden" id="page-intelligence">
         <header class="pageHeader">
           <div class="ttl">
-            <h1 class="h-xxl">Intelligence Hub</h1>
-            <p class="t-md sec">The product and purchase patterns the engine is using to decide who to reach, when, and with what.</p>
-          </div>
-          <div class="pageActions"><span class="tag tag-purple">Model refresh · today</span></div>
-        </header>
-
-        <div class="zone top">
-          <div class="lcWrap intelBrief">
-            <div class="lcList" id="intelList" aria-label="Intelligence briefing sections">
-              <button class="lcItem on" data-intel="path"><span class="bar" style="background:var(--blue-600)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Purchase path</span><span class="t-xs ter">Why people come back</span></span></button>
-              <button class="lcItem" data-intel="products"><span class="bar" style="background:var(--purple-500)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Product roles</span><span class="t-xs ter">What creates repeat</span></span></button>
-              <button class="lcItem" data-intel="live"><span class="bar" style="background:var(--green-500)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Live signals</span><span class="t-xs ter">What is moving now</span></span></button>
-              <button class="lcItem" data-intel="engine"><span class="bar" style="background:var(--teal-200)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Engine response</span><span class="t-xs ter">How the AI acts</span></span></button>
-              <button class="lcItem" data-intel="markets"><span class="bar" style="background:var(--orange-300)"></span><span class="col gap-xxxs" style="flex:1;min-width:0"><span class="t-md med">Markets</span><span class="t-xs ter">What changes by country</span></span></button>
-            </div>
-
-            <div class="intelStory">
-              <div class="intelPanel on" data-intel-panel="path">
-              <section class="intelCurrent">
-                <span class="k">Current business read · 93% confidence</span>
-                <h2>For a shopper who starts with a Sample Hardshell, Cirrus Mid-layer is the product most likely to create a second order — when it is offered inside the next 54 days.</h2>
-                <p>The engine does not treat Cirrus as a generic launch. It waits for a shell owner without insulation, checks the local cold window, then leads with the compatibility of the two products before considering a price lever.</p>
-                <div class="intelCurrentEvidence">
-                  <span>18,204 purchase events</span><span>9,317 shoppers</span><span>14 months observed</span><span>2,190 shell owners reachable now</span>
-                </div>
-              </section>
-
-              <section class="intelInsight">
-                <header class="intelInsightHead">
-                  <div><span class="k">01 · Purchase path</span><h2>The Hardshell starts 41% of new customer relationships.</h2></div>
-                  <span class="tag tag-green">Observed, not assumed</span>
-                </header>
-                <p class="lead">The first order tells the engine what system a shopper is building. The highest-value path is not “buy another product”; it is “complete the layers around the shell they already own.” The return window has a clear expiry.</p>
-                <div class="intelPath">
-                  <article class="intelPathStep entry"><span class="k">Entry product</span><b>41%</b><strong>Sample Hardshell</strong><span class="t-sm">Starts the relationship and reveals a cold-weather use case.</span></article>
-                  <span class="intelPathArrow">→</span>
-                  <article class="intelPathStep bridge"><span class="k">Best second product</span><b>44%</b><strong>Cirrus Mid-layer</strong><span class="t-sm">Attach rate after a shell, when the shopper does not own insulation.</span></article>
-                  <span class="intelPathArrow">→</span>
-                  <article class="intelPathStep expand"><span class="k">Expansion</span><b>58%</b><strong>Accessories</strong><span class="t-sm">Become useful once the core layering system is complete.</span></article>
-                </div>
-                <div class="intelRule"><i></i><span><b>What the engine learned:</b> act before day 54. Inside that window, 38% of relevant shoppers place a second order; after day 90, only 6% do.</span></div>
-              </section>
-              </div>
-
-              <section class="intelPanel" data-intel-panel="products"><div class="intelInsight">
-                <header class="intelInsightHead">
-                  <div><span class="k">02 · Product decision</span><h2>Not every best seller creates the same future customer.</h2></div>
-                  <span class="tag tag-purple">Catalogue roles</span>
-                </header>
-                <div class="intelProducts">
-                  <article class="intelProduct good">
-                    <span class="k">The product that drives the most repeat purchases</span>
-                    <div class="intelProductMetric"><b>Cirrus Mid-layer</b><span>after a Sample Hardshell</span></div>
-                    <h3>Why it works</h3>
-                    <p>It closes a visible category gap. The engine can point to a shell the shopper owns, a colder local forecast, and a specific reason the two layers work together.</p>
-                    <div class="intelTry"><span class="k">What we should try</span><p>Reach active shell owners with no insulated layer; use the first sub-zero forecast as the moment; offer sizing help before any discount.</p></div>
-                  </article>
-                  <article class="intelProduct risk">
-                    <span class="k">The product that drives the least repeat purchases</span>
-                    <div class="intelProductMetric"><b>Trail Gloves</b><span>when bought as a first product</span></div>
-                    <h3>Why it underperforms</h3>
-                    <p>It solves a small standalone need. A first-time gloves buyer has no obvious next layer to complete, and only 9% return for another order.</p>
-                    <div class="intelTry"><span class="k">What we should try</span><p>Keep Gloves in checkout and bundle logic. Do not use them in acquisition or as the lead product in a reactivation message.</p></div>
-                  </article>
-                </div>
-              </div></section>
-
-              <section class="intelPanel" data-intel-panel="engine"><div class="intelEngine">
-                <span class="k">03 · How the AI works behind the scenes</span>
-                <h2>The model becomes a decision only when it is true for this shopper, today.</h2>
-                <p class="lead">The engine combines the business model above with individual ownership, lifecycle and timing data. It does not send the same product story to everyone who ever bought a shell.</p>
-                <div class="intelEngineFlow">
-                  <div class="intelEngineStep"><b>1 · Detect the gap</b><span>Owns a Sample Hardshell, has no insulated mid-layer, and can legally be contacted.</span></div>
-                  <div class="intelEngineStep"><b>2 · Find the moment</b><span>Local temperature drops; shopper is inside the 54-day window or shows fresh winter activity.</span></div>
-                  <div class="intelEngineStep"><b>3 · Pick the least-cost lever</b><span>Compatibility in France, technical proof in Germany, price only where the model says it is needed.</span></div>
-                  <div class="intelEngineStep"><b>4 · Prove or revise</b><span>A holdout measures lift. The next recommendation changes when the observed result disagrees with the model.</span></div>
-                </div>
-              </div></section>
-
-              <section class="intelPanel" data-intel-panel="markets"><div class="intelInsight">
-                <header class="intelInsightHead"><div><span class="k">04 · Market conditions</span><h2>The path stays stable; the reason to return changes by market.</h2></div><span class="tag tag-blue">4 markets</span></header>
-                <div class="intelMarkets" style="margin-top:var(--lg)">
-                  <div class="intelMarket"><span class="k">Market</span><span class="k">2nd order</span><span class="k">What the shopper needs to hear</span><span class="k">What the engine changes</span></div>
-                  <div class="intelMarket"><strong>France</strong><span class="t-sm">41 days</span><span class="t-sm">“This completes the shell you already own.”</span><span class="t-sm">Lead with compatibility</span></div>
-                  <div class="intelMarket"><strong>Germany</strong><span class="t-sm">58 days</span><span class="t-sm">Technical proof about insulation and layering.</span><span class="t-sm">Lead with product detail</span></div>
-                  <div class="intelMarket"><strong>United States</strong><span class="t-sm">63 days</span><span class="t-sm">A cold-weather reason; price can close hesitation.</span><span class="t-sm">Use discount last</span></div>
-                  <div class="intelMarket"><strong>United Kingdom</strong><span class="t-sm">67 days</span><span class="t-sm">Confidence that the layer will arrive when needed.</span><span class="t-sm">Use free shipping</span></div>
-                </div>
-              </div></section>
-              <section class="intelPanel" data-intel-panel="live"><div class="intelLive">
-                <header class="intelLiveHead"><div><span class="k">Live signals · recalculated as events land</span><h2>Three changes the engine is watching right now.</h2></div><span class="intelLivePulse"><i></i>Live model</span></header>
-                <div class="intelLiveGrid">
-                  <article class="intelLiveCard"><span class="k">Cirrus consideration</span><div class="intelLiveMetric"><b>+18%</b><span>vs. prior 7 days</span></div><div class="intelSpark"><i style="height:28%"></i><i style="height:38%"></i><i style="height:46%"></i><i style="height:62%"></i><i style="height:55%"></i><i style="height:82%"></i></div><p>Shell owners are viewing insulated layers more often. The model raises Cirrus confidence, but will not send until a valid moment appears.</p></article>
-                  <article class="intelLiveCard"><span class="k">Cold window opening</span><div class="intelLiveMetric"><b>1,284</b><span>reachable in 72 h</span></div><div class="intelSpark"><i style="height:20%"></i><i style="height:30%"></i><i style="height:34%"></i><i style="height:58%"></i><i style="height:74%"></i><i style="height:92%"></i></div><p>These shoppers enter their first local sub-zero forecast. The engine checks product ownership and frequency before any message is proposed.</p></article>
-                  <article class="intelLiveCard"><span class="k">Repeat window at risk</span><div class="intelLiveMetric"><b>176</b><span>day 42–54</span></div><div class="intelSpark"><i style="height:78%"></i><i style="height:72%"></i><i style="height:62%"></i><i style="height:54%"></i><i style="height:43%"></i><i style="height:35%"></i></div><p>Active shell owners are approaching the point where a second order becomes less likely. This is the priority cohort for a compatibility story.</p></article>
-                </div>
-              </div></section>
-              <span class="t-xs ter">All data in this prototype is fictional. The read demonstrates the shape of an explainable purchase model, not a real merchant analysis.</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Legacy Intelligence Hub concept — retained temporarily while the selected briefing ships. -->
-      <section class="hidden" id="intelligence-legacy">
-        <header class="pageHeader">
-          <div class="ttl">
-            <h1 class="h-xxl">Intelligence Hub</h1>
-            <p class="t-md sec">What the engine has learned about how your business actually works — the patterns underneath every decision it makes.</p>
+            <h1 class="h-xxl">Intelligence Core</h1>
+            <p class="t-md sec">What the engine has worked out about how this business actually runs — the patterns underneath every decision it makes.</p>
           </div>
           <div class="pageActions">
-            <span class="tag tag-purple">Learned from 14 months of your data</span>
+            <span class="tag tag-grey" id="intelBuild">Model rebuilt 04:12 today</span>
+            <button class="btn btn-secondary" data-ask="open">Ask the model</button>
           </div>
         </header>
 
         <div class="zone top">
-          <!-- how we understood the business -->
-          <div class="col gap-xs">
-            <span class="h-lg">How we read your business</span>
-            <p class="t-md sec" style="max-width:70ch">Every number below is derived the same way Reporting derives its totals — from individual purchase events, never averages of averages. We group shoppers by what they did, not by who they are, then look for the moment a pattern repeats often enough to act on.</p>
-          </div>
-          <div class="grid g-3">
-            <div class="card pad-md"><div class="kv"><span class="k">Purchase events</span><span class="h-md num-t">18,204</span><span class="t-xs ter">every order, line by line</span></div></div>
-            <div class="card pad-md"><div class="kv"><span class="k">Shoppers tracked</span><span class="h-md num-t">9,317</span><span class="t-xs ter">across 6 countries</span></div></div>
-            <div class="card pad-md"><div class="kv"><span class="k">Window</span><span class="h-md">14 mo</span><span class="t-xs ter">Jun 2025 – Aug 2026</span></div></div>
-            <div class="card pad-md"><div class="kv"><span class="k">Repeat buyers</span><span class="h-md num-t">31%</span><span class="t-xs ter">bought more than once</span></div></div>
-            <div class="card pad-md"><div class="kv"><span class="k">Median 1st → 2nd order</span><span class="h-md num-t">54 d</span><span class="t-xs ter">the window that matters</span></div></div>
-            <div class="card pad-md"><div class="kv"><span class="k">Categories</span><span class="h-md num-t">7</span><span class="t-xs ter">mapped to a layering system</span></div></div>
-          </div>
+          <div class="lcWrap intelWrap">
+            <div class="lcList" id="intelList" aria-label="Intelligence sections"></div>
+            <div class="intelStory">
 
-          <!-- purchase patterns -->
-          <div class="col gap-xs" style="margin-top:var(--md)">
-            <span class="h-lg">How your shoppers buy</span>
-            <p class="t-md sec" style="max-width:70ch">The single strongest signal in your data: a first purchase is rarely the product they came for — it's the <b>entry point</b> to a system. What happens in the 54 days after it decides whether there is a second.</p>
-          </div>
-          <div class="grid g-2">
-            <div class="card pad-md col gap-sm">
-              <div class="row between"><span class="h-sm">First order → second order</span><span class="tag tag-blue">the 54-day window</span></div>
-              <p class="t-sm sec" style="margin:0">Shoppers who get a relevant reason to come back within 54 days of their first order convert to a second at <b>3.1×</b> the rate of those left alone. After day 90, the curve flattens — the window has closed.</p>
-              <div class="col gap-xxs">
-                <div class="row between"><span class="t-sm sec">Day 0–54</span><span class="t-sm med num-t">38% convert</span></div>
-                <span class="meter"><span style="width:38%"></span></span>
-                <div class="row between"><span class="t-sm sec">Day 55–90</span><span class="t-sm med num-t">17% convert</span></div>
-                <span class="meter"><span style="width:17%"></span></span>
-                <div class="row between"><span class="t-sm sec">Day 90+</span><span class="t-sm med num-t">6% convert</span></div>
-                <span class="meter"><span style="width:6%"></span></span>
+              <!-- ---- the read ---- -->
+              <div class="intelPanel on" data-intel-panel="read">
+                <div class="intelRead">
+                  <span class="intelMono acc">The read · highest-consequence belief</span>
+                  <h2>A shopper who starts with the Alpine Hardshell is worth
+                    <span class="acc" id="heroMult">—</span> one who starts with Trail Gloves — and the
+                    difference is decided in <span class="acc" id="heroWindow">—</span>.</h2>
+                  <p>Not because the shell costs more. Because it leaves a visible hole in the layering
+                    system, and a hole is something the engine can talk about. Gloves complete nothing,
+                    so there is nothing true to say next.</p>
+                  <div class="intelConf">
+                    <span class="intelMono">Confidence</span>
+                    <span class="intelConfBar"><i data-conf="93"></i></span>
+                    <span class="t-md med num-t">93%</span>
+                    <span class="t-sm ter">· holdout-tested across 4 markets</span>
+                  </div>
+                  <div class="intelEv">
+                    <div><b data-count="18204">0</b><span class="intelMono">purchase events</span></div>
+                    <div><b data-count="9317">0</b><span class="intelMono">shoppers</span></div>
+                    <div><b data-count="6">0</b><span class="intelMono">markets</span></div>
+                    <div><b data-count="61">0</b><span class="intelMono">beliefs held</span></div>
+                  </div>
+                </div>
+                <div class="grid g-stat" id="intelLiveTiles"></div>
               </div>
-              <p class="t-xs ter" style="margin:0">This is why Replenishment and the post-purchase plays fire inside this window, not after it.</p>
-            </div>
-            <div class="card pad-md col gap-sm">
-              <div class="row between"><span class="h-sm">What a first purchase needs</span><span class="tag tag-purple">the conversion recipe</span></div>
-              <p class="t-sm sec" style="margin:0">Across your 9,317 shoppers, a first order almost always combines three things — in this order of importance:</p>
-              <div class="col gap-xs">
-                <div class="row gap-sm"><span class="joinBadge" style="width:20px">1</span><div class="col gap-xxxs" style="flex:1"><span class="t-sm med">A use case they already have</span><span class="t-xs ter">they ski, hike or climb — the product fits an existing habit, not a new one</span></div></div>
-                <div class="row gap-sm"><span class="joinBadge" style="width:20px">2</span><div class="col gap-xxxs" style="flex:1"><span class="t-sm med">A compatibility reason</span><span class="t-xs ter">"works with the shell / boots / pack I already own" beats "new and better"</span></div></div>
-                <div class="row gap-sm"><span class="joinBadge" style="width:20px">3</span><div class="col gap-xxxs" style="flex:1"><span class="t-sm med">A sizing answer</span><span class="t-xs ter">the #1 pre-purchase question; answering it lifts first-order conversion 22%</span></div></div>
-              </div>
-              <p class="t-xs ter" style="margin:0">A discount is 4th — it closes a shopper already convinced, it never convinces one.</p>
-            </div>
-          </div>
 
-          <!-- by country -->
-          <div class="card pad-md col gap-sm">
-            <div class="row between"><span class="h-sm">The pattern changes by country</span><span class="t-sm sec">same products, different rhythm</span></div>
-            <div class="col gap-xs">
-              <div class="row between wrap gap-sm" style="align-items:center">
-                <span class="t-sm med" style="min-width:120px">France</span>
-                <span class="meter" style="flex:1"><span style="width:64%"></span></span>
-                <span class="t-sm sec" style="min-width:230px">2nd order in 41 d · accessories first</span>
+              <!-- ---- products ---- -->
+              <div class="intelPanel" data-intel-panel="products">
+                <div class="intelHead">
+                  <div class="col">
+                    <span class="intelMono acc">How products are actually bought</span>
+                    <h2>The commerce graph</h2>
+                    <p class="lead">Every edge is an observed transition between a first product and the
+                      next, not a merchandising rule someone wrote. Thickness is how often it happens,
+                      and the moving dots are shoppers travelling that path right now.</p>
+                  </div>
+                  <div class="seg" id="graphMode">
+                    <button class="on" data-gm="flow">Attach rate</button>
+                    <button data-gm="value">Value at stake</button>
+                    <button data-gm="risk">What dies here</button>
+                  </div>
+                </div>
+                <div class="intelGraph">
+                  <div class="intelGraphTools">
+                    <span class="intelMono">Click a product to interrogate the model</span>
+                    <span class="row gap-xs wrap" style="margin-left:auto">
+                      <span class="tag tag-purple"><span class="dot" style="background:var(--dv-1)"></span>Entry</span>
+                      <span class="tag tag-teal"><span class="dot" style="background:var(--dv-3)"></span>Bridge</span>
+                      <span class="tag tag-coral"><span class="dot" style="background:var(--dv-2)"></span>Terminal</span>
+                    </span>
+                  </div>
+                  <div class="intelGraphStage">
+                    <svg id="intelGraphSvg" viewBox="0 0 1000 470" role="img"
+                         aria-label="Network of products and the observed transitions between them"></svg>
+                    <aside class="intelInspector" id="intelInspector"></aside>
+                  </div>
+                </div>
               </div>
-              <div class="row between wrap gap-sm" style="align-items:center">
-                <span class="t-sm med" style="min-width:120px">Germany</span>
-                <span class="meter" style="flex:1"><span style="width:52%"></span></span>
-                <span class="t-sm sec" style="min-width:230px">2nd order in 58 d · technical layers first</span>
-              </div>
-              <div class="row between wrap gap-sm" style="align-items:center">
-                <span class="t-sm med" style="min-width:120px">United States</span>
-                <span class="meter" style="flex:1"><span style="width:47%"></span></span>
-                <span class="t-sm sec" style="min-width:230px">2nd order in 63 d · discount-responsive</span>
-              </div>
-              <div class="row between wrap gap-sm" style="align-items:center">
-                <span class="t-sm med" style="min-width:120px">United Kingdom</span>
-                <span class="meter" style="flex:1"><span style="width:44%"></span></span>
-                <span class="t-sm sec" style="min-width:230px">2nd order in 67 d · shipping-sensitive</span>
-              </div>
-            </div>
-            <p class="t-xs ter" style="margin:0">Bar length = share of first-time buyers who come back within 90 days. The lever that works differs: France answers to compatibility, the US to price, the UK to free shipping.</p>
-          </div>
 
-          <!-- product paths -->
-          <div class="col gap-xs" style="margin-top:var(--md)">
-            <span class="h-lg">The path through your products</span>
-            <p class="t-md sec" style="max-width:70ch">Your catalogue isn't a flat list — it's a layering system, and shoppers climb it. The engine maps which product opens the relationship, which one deepens it, and where people stop.</p>
-          </div>
-          <div class="grid g-3">
-            <div class="card pad-md col gap-sm">
-              <div class="row between"><span class="h-sm">Best seller · the opener</span><span class="tag tag-green">Sample Hardshell</span></div>
-              <p class="t-sm sec" style="margin:0">41% of all relationships start here. It's the piece the whole system hangs on — which is why the mid-layer gap under it is your biggest single opportunity.</p>
-              <div class="col gap-xxs">
-                <span class="t-xs ter">Typical path</span>
-                <div class="row gap-xxs wrap"><span class="tag tag-blue">Hardshell</span><span class="t-sm ter">→</span><span class="tag tag-blue">Mid-layer</span><span class="t-sm ter">→</span><span class="tag tag-grey">Accessories</span></div>
+              <!-- ---- timing ---- -->
+              <div class="intelPanel" data-intel-panel="timing">
+                <div class="intelHead">
+                  <div class="col">
+                    <span class="intelMono acc">When they buy again</span>
+                    <h2>The window closes faster than anyone plans for</h2>
+                    <p class="lead">Probability of a second order, by days since the first. Drag the line —
+                      the shaded area to its right is revenue that stops being reachable if you wait.</p>
+                  </div>
+                  <span class="tag tag-grey">drag to scrub</span>
+                </div>
+                <div class="intelWindowGrid">
+                  <div class="card" style="padding:var(--md) var(--md) var(--xs)">
+                    <svg id="intelDecay" viewBox="0 0 720 320" role="img"
+                         aria-label="Probability of a second order against days since the first order"></svg>
+                  </div>
+                  <div class="col gap-md" style="justify-content:center">
+                    <div class="card pad">
+                      <span class="intelMono">If you act on day <span class="acc" id="dayLabel">—</span></span>
+                      <div class="intelReadBig num-t" id="probOut">—</div>
+                      <span class="t-sm sec">of these shoppers place a second order</span>
+                      <div style="margin-top:var(--sm);padding-top:var(--sm);border-top:1px solid var(--border-neutral-default)">
+                        <div class="insRow"><span class="t-sm sec">Shoppers at this day</span><b class="num-t" id="cohortOut">—</b></div>
+                        <div class="insRow"><span class="t-sm sec">Expected second orders</span><b class="num-t" id="ordersOut">—</b></div>
+                        <div class="insRow"><span class="t-sm sec">Expected GMV</span><b class="num-t" id="gmvOut">—</b></div>
+                      </div>
+                    </div>
+                    <div class="intelCost">
+                      <span class="intelMono" style="color:var(--content-warning-default)">Cost of waiting</span>
+                      <p class="t-sm" style="margin-top:var(--xxs);line-height:1.6" id="costOut"></p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="row between"><span class="t-sm sec">Attaches a 2nd category</span><span class="t-sm med num-t">58%</span></div>
-            </div>
-            <div class="card pad-md col gap-sm">
-              <div class="row between"><span class="h-sm">Strong · the deepener</span><span class="tag tag-blue">Cirrus Mid-layer</span></div>
-              <p class="t-sm sec" style="margin:0">Rarely a first purchase (6%) but the highest second-purchase rate in the catalogue once a shell is owned. This is the product the launch campaign exists to attach.</p>
-              <div class="col gap-xxs">
-                <span class="t-xs ter">Typical path</span>
-                <div class="row gap-xxs wrap"><span class="tag tag-grey">Hardshell</span><span class="t-sm ter">→</span><span class="tag tag-blue">Cirrus</span><span class="t-sm ter">→</span><span class="tag tag-grey">Insulated pants</span></div>
-              </div>
-              <div class="row between"><span class="t-sm sec">2nd-order rate after a shell</span><span class="t-sm med num-t">44%</span></div>
-            </div>
-            <div class="card pad-md col gap-sm">
-              <div class="row between"><span class="h-sm">Worst seller · the dead end</span><span class="tag tag-orange">Trail Gloves</span></div>
-              <p class="t-sm sec" style="margin:0">Sells, but leads nowhere — buyers of Trail Gloves as a <i>first</i> product almost never come back (9%). As an add-on to a shell order, they do fine. The lesson: never open a relationship with them.</p>
-              <div class="col gap-xxs">
-                <span class="t-xs ter">Typical path</span>
-                <div class="row gap-xxs wrap"><span class="tag tag-orange">Gloves</span><span class="t-sm ter">→</span><span class="tag tag-grey">nothing</span></div>
-              </div>
-              <div class="row between"><span class="t-sm sec">Return rate as first product</span><span class="t-sm med num-t">9%</span></div>
-            </div>
-          </div>
 
-          <!-- how to work it -->
-          <div class="card pad-md col gap-sm" style="border-color:var(--purple-200);background:var(--surface-accent-default)">
-            <span class="h-sm">What the engine does with this</span>
-            <div class="grid g-3">
-              <div class="col gap-xxxs"><span class="t-sm med">Open with the system, not the accessory</span><span class="t-sm sec">Acquisition and welcome plays lead with the shell line, never with gloves or socks — the data says first products decide whether there's a second.</span></div>
-              <div class="col gap-xxxs"><span class="t-sm med">Time the second order</span><span class="t-sm sec">Replenishment and cross-sell fire inside the 54-day window, tuned per country — 41 days in France, 63 in the US.</span></div>
-              <div class="col gap-xxxs"><span class="t-sm med">Pick the lever by market</span><span class="t-sm sec">Compatibility stories in France, price in the US, free shipping in the UK — the engine chooses the cheapest lever that market answers to.</span></div>
+              <!-- ---- markets ---- -->
+              <div class="intelPanel" data-intel-panel="markets">
+                <div class="intelHead">
+                  <div class="col">
+                    <span class="intelMono acc">One catalogue, six businesses</span>
+                    <h2>The same product is a different business in every market</h2>
+                    <p class="lead">Demand index by month, learned per market. Watch the playhead: when it
+                      crosses a market's peak, that market is in season and the engine starts acting there.
+                      Australia runs the calendar upside down — a global send date would be wrong for half
+                      the book.</p>
+                  </div>
+                  <span class="tag tag-purple" id="seasonNow">—</span>
+                </div>
+                <div class="card" style="overflow:hidden;padding:0">
+                  <div class="mkHead">
+                    <button class="mkPlay" id="mkPlayBtn">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" id="mkPlayIcon"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+                      <span id="mkPlayLabel">Pause</span>
+                    </button>
+                    <span class="intelMono">Demand index · 12 months · learned per market</span>
+                    <span class="row gap-xs wrap" style="margin-left:auto">
+                      <span class="t-xs ter">Low</span>
+                      <span style="display:inline-flex;gap:2px">
+                        <i style="width:15px;height:8px;border-radius:2px;background:var(--ramp-1)"></i>
+                        <i style="width:15px;height:8px;border-radius:2px;background:var(--ramp-2)"></i>
+                        <i style="width:15px;height:8px;border-radius:2px;background:var(--ramp-3)"></i>
+                        <i style="width:15px;height:8px;border-radius:2px;background:var(--ramp-4)"></i>
+                        <i style="width:15px;height:8px;border-radius:2px;background:var(--ramp-5)"></i>
+                      </span>
+                      <span class="t-xs ter">Peak</span>
+                    </span>
+                  </div>
+                  <div class="seasonGrid" id="seasonGrid"></div>
+                </div>
+                <div class="card" style="overflow:hidden">
+                  <table>
+                    <thead><tr><th style="width:19%">Market</th><th>Share of GMV</th>
+                      <th>Second-order window</th><th>What actually persuades</th>
+                      <th>Discount ceiling</th><th>Register</th></tr></thead>
+                    <tbody id="mkTableBody"></tbody>
+                  </table>
+                  <div style="padding:var(--sm) var(--lg);border-top:1px solid var(--border-neutral-default)">
+                    <p class="t-sm ter" style="line-height:1.6" id="mkFooter"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ---- what works ---- -->
+              <div class="intelPanel" data-intel-panel="plays">
+                <div class="intelHead">
+                  <div class="col">
+                    <span class="intelMono acc">Strategy, measured</span>
+                    <h2>What works here, and what only works in the deck</h2>
+                    <p class="lead">Every play below was run against a holdout on this account. The bar is
+                      measured lift on revenue per recipient — left of the centre line means it lost money.
+                      Several of the losers are industry best practice.</p>
+                  </div>
+                  <div class="seg" id="playMode">
+                    <button class="on" data-pm="all">All</button>
+                    <button data-pm="marketing">Marketing</button>
+                    <button data-pm="ecom">E-commerce</button>
+                  </div>
+                </div>
+                <div class="grid g-2">
+                  <div class="col gap-sm">
+                    <div class="row gap-xs"><span class="tag tag-green">Works</span><span class="intelMono">keep, and scale</span></div>
+                    <div class="col gap-sm" id="winList"></div>
+                  </div>
+                  <div class="col gap-sm">
+                    <div class="row gap-xs"><span class="tag tag-coral">Doesn't work here</span><span class="intelMono">stop, or bound tightly</span></div>
+                    <div class="col gap-sm" id="loseList"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ---- shoppers ---- -->
+              <div class="intelPanel" data-intel-panel="shoppers">
+                <div class="intelHead">
+                  <div class="col">
+                    <span class="intelMono acc">Who they are</span>
+                    <h2>Five groups nobody defined — the model found them</h2>
+                    <p class="lead">These are not your CRM segments. They are clusters that fall out of
+                      purchase behaviour, and each one wants a different thing. The width of each shape is
+                      how spread out their reorder timing is: narrow means the engine can predict the
+                      moment, wide means it has to wait for a signal instead of a date.</p>
+                  </div>
+                </div>
+                <div class="segGrid" id="segGrid"></div>
+              </div>
+
+              <!-- ---- revisions ---- -->
+              <div class="intelPanel" data-intel-panel="revisions">
+                <div class="intelHead">
+                  <div class="col">
+                    <span class="intelMono acc">What changed its mind</span>
+                    <h2>Beliefs it has since abandoned</h2>
+                    <p class="lead">A model that never contradicts itself is not learning, it is asserting.
+                      These are beliefs the engine dropped, what forced the change, and what the correction
+                      was worth.</p>
+                  </div>
+                  <span class="tag tag-purple">5 revisions · 90 days</span>
+                </div>
+                <div class="card pad" id="revisions"></div>
+              </div>
+
+              <!-- ---- decisions ---- -->
+              <div class="intelPanel" data-intel-panel="decisions">
+                <div class="intelHead">
+                  <div class="col">
+                    <span class="intelMono acc">What it does with all of this</span>
+                    <h2>The decision stream</h2>
+                    <p class="lead">One row is one person. Most of what an autonomous system does is decide
+                      <em>not</em> to act — so the drops are here too, with the rail that stopped them.</p>
+                  </div>
+                  <span class="tag tag-green"><span class="dot" style="background:var(--green-500)"></span><span id="streamState">streaming</span></span>
+                </div>
+                <div class="intelStream">
+                  <div class="intelStreamBody" id="streamBody"></div>
+                </div>
+              </div>
+
+              <!-- ---- blind spots ---- -->
+              <div class="intelPanel" data-intel-panel="blind">
+                <div class="intelHead">
+                  <div class="col">
+                    <span class="intelMono acc">The honest part</span>
+                    <h2>Where the model is blind, and what that costs</h2>
+                    <p class="lead">Confidence is only meaningful if it can be low. These are the beliefs
+                      resting on thin evidence, and the feeds that would fix them.</p>
+                  </div>
+                </div>
+                <div class="grid g-2">
+                  <div class="card pad">
+                    <span class="intelMono">Belief confidence</span>
+                    <div style="margin-top:var(--sm)" id="confList"></div>
+                  </div>
+                  <div class="card pad">
+                    <span class="intelMono">Missing feeds</span>
+                    <div style="margin-top:var(--sm)" id="feedList"></div>
+                    <p class="t-sm ter" style="margin-top:var(--sm);line-height:1.6">
+                      The engine will not model a moment it cannot observe. A delivery-delay message is the
+                      highest-intent outbound in commerce, and it does not exist here because no carrier
+                      feed is connected.</p>
+                  </div>
+                </div>
+              </div>
+
+              <span class="t-xs ter">All data in this prototype is fictional. It demonstrates the shape of an explainable commerce model, not a real merchant analysis.</span>
             </div>
           </div>
         </div>
       </section>
+
 
       <!-- ======== OPPORTUNITIES · conversational action inbox ======== -->
       <section class="page hidden" id="page-opportunities">
@@ -3587,7 +3731,12 @@ function goto(page,opts={}){
   $$(".navItem").forEach(n=>n.classList.toggle("on",n.dataset.page===navPage));
   $("#scroller").scrollTop=0; closePanel();
   if(page==="campaign-new") resetWizard();
-  if(page==="intelligence") renderIntelligence();
+  if(page==="intelligence"){ renderIntelligence(); buildAsk(); }
+  /* the Ask shortcut belongs to the Intelligence Core — it answers from that
+     page's model objects, so it should not float over unrelated screens */
+  const fab=$("#askFab"), askP=$("#askPanel");
+  if(fab) fab.style.display = (page==="intelligence" && !askOpen) ? "" : "none";
+  if(askP && page!=="intelligence"){ askP.classList.remove("on"); askOpen=false; }
   if(!opts.fromHash) syncHash();
 }
 function landOnHash(){
@@ -3608,14 +3757,711 @@ function resetWizard(){
   askTurn();
 }
 $$(".navItem").forEach(n=>n.addEventListener("click",()=>{goto(n.dataset.page);closeSidebar()}));
-let intelSel="path";
+/* =======================================================================
+   INTELLIGENCE CORE
+   One model, many projections. Everything the page states is derived from
+   PRODUCTS + EDGES + the decay curve + MARKETS — no figure is typed twice,
+   so the hero, the chart, the scrubber and the revision log cannot drift
+   apart. Same rule Reporting follows.
+   ======================================================================= */
+const iFmt=n=>Math.round(n).toLocaleString("en-US");
+const iMoney=n=>"$"+iFmt(n);
+const iPct=v=>Math.round(v*100)+"%";
+const NS="http://www.w3.org/2000/svg";
+const svgEl=(t,a={})=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e};
+const IRAMP=["var(--ramp-1)","var(--ramp-2)","var(--ramp-3)","var(--ramp-4)","var(--ramp-5)"];
+
+const I_PRODUCTS={
+  shell:{n:"Alpine Hardshell", role:"entry",  col:0,y:110, aov:289, starts:.41, repeat:.52,
+         note:"Reveals a cold-weather use case and leaves an obvious gap underneath it."},
+  boots:{n:"Ridge Trail Boots",role:"entry",  col:0,y:250, aov:214, starts:.22, repeat:.44,
+         note:"Starts a system too, but the gap it opens is smaller and cheaper."},
+  glove:{n:"Trail Gloves",     role:"terminal",col:0,y:378, aov:46,  starts:.09, repeat:.09,
+         note:"Completes nothing. A first-time gloves buyer has no next layer to finish."},
+  mid:  {n:"Cirrus Mid-layer", role:"bridge", col:1,y:104, aov:168, starts:.06, repeat:.61,
+         note:"The single highest-value second product in the catalogue."},
+  base: {n:"Merino Base Layer",role:"bridge", col:1,y:250, aov:92,  starts:.05, repeat:.58,
+         note:"Cheaper bridge, same job — often the one that works when price is the objection."},
+  pack: {n:"Summit Pack 30L",  role:"expand", col:2,y:120, aov:145, starts:.04, repeat:.37,
+         note:"Only becomes relevant once the layering system is complete."},
+  socks:{n:"Alpine Socks",     role:"expand", col:2,y:262, aov:32,  starts:.07, repeat:.66,
+         note:"Small, frequent, and the most reliable attach after boots."},
+  care: {n:"Care Kit",         role:"loop",   col:3,y:190, aov:24,  starts:.06, repeat:.74,
+         note:"The only product that reliably buys itself again, on a 38-day rhythm."}
+};
+const I_EDGES=[
+  {f:"shell",t:"mid",p:.44,d:54},{f:"shell",t:"base",p:.21,d:61},{f:"shell",t:"pack",p:.12,d:88},
+  {f:"boots",t:"socks",p:.38,d:21},{f:"boots",t:"care",p:.27,d:34},
+  {f:"mid",t:"base",p:.31,d:47},{f:"base",t:"care",p:.18,d:52},
+  {f:"pack",t:"care",p:.14,d:63},{f:"socks",t:"care",p:.22,d:41},{f:"glove",t:"socks",p:.07,d:96}
+];
+const I_COHORT=9317;
+const I_ROLE_C={entry:"var(--dv-1)",bridge:"var(--dv-3)",expand:"var(--dv-3)",loop:"var(--dv-3)",terminal:"var(--dv-2)"};
+const I_ROLE_N={entry:"Entry",bridge:"Bridge",expand:"Expansion",loop:"Replenishment loop",terminal:"Terminal"};
+const iOut=k=>I_EDGES.filter(e=>e.f===k), iInc=k=>I_EDGES.filter(e=>e.t===k);
+const iDown=k=>iOut(k).reduce((a,e)=>a+e.p*I_PRODUCTS[e.t].aov,0);
+const iStake=k=>I_COHORT*I_PRODUCTS[k].starts*iDown(k);
+const iStartValue=k=>I_PRODUCTS[k].aov+iDown(k);
+const HERO_MULT=iStartValue("shell")/iStartValue("glove");
+
+/* the decay curve — the halving day IS the window, searched from the peak
+   because the curve ramps up over the first few days */
+const I_P0=.46, I_HALF=54;
+const pAt=d=>I_P0*Math.exp(-Math.log(2)*d/I_HALF)*(d<6?d/6:1);
+const cohortAt=d=>Math.round(2600*Math.exp(-d/120));
+const PEAK_D=(()=>{let m=0,bd=0;for(let d=0;d<=120;d++){if(pAt(d)>m){m=pAt(d);bd=d}}return bd})();
+const peakP=pAt(PEAK_D);
+const WINDOW=(()=>{for(let d=PEAK_D;d<=120;d++) if(pAt(d)<=peakP/2) return d; return 120})();
+
+const I_SECTIONS=[
+  {k:"read",     n:"The read",      s:"Highest-consequence belief", c:"var(--dv-1)"},
+  {k:"products", n:"Products",      s:"How they are actually bought",c:"var(--dv-1)"},
+  {k:"timing",   n:"Timing",        s:"When they buy again",        c:"var(--dv-3)"},
+  {k:"markets",  n:"Markets",       s:"Six businesses, one catalogue",c:"var(--ramp-4)"},
+  {k:"plays",    n:"What works",    s:"Strategy, measured",         c:"var(--green-500)"},
+  {k:"shoppers", n:"Shoppers",      s:"Groups the model found",     c:"var(--dv-3)"},
+  {k:"revisions",n:"Revisions",     s:"What changed its mind",      c:"var(--dv-2)"},
+  {k:"decisions",n:"Decisions",     s:"Live, per person",           c:"var(--dv-1)"},
+  {k:"blind",    n:"Blind spots",   s:"Where evidence is thin",     c:"var(--orange-500)"}
+];
+let intelSel="read";
 function renderIntelligence(){
-  $$("#intelList [data-intel]").forEach(b=>b.classList.toggle("on",b.dataset.intel===intelSel));
+  $("#intelList").innerHTML=I_SECTIONS.map(s=>`
+    <button class="lcItem${s.k===intelSel?" on":""}" data-intel="${s.k}">
+      <span class="bar" style="background:${s.c}"></span>
+      <span class="col gap-xxxs" style="flex:1;min-width:0">
+        <span class="t-md med">${s.n}</span><span class="t-xs ter">${s.s}</span></span>
+    </button>`).join("");
   $$("[data-intel-panel]").forEach(p=>p.classList.toggle("on",p.dataset.intelPanel===intelSel));
+  const draw={read:drawIntelRead,products:drawIntelGraph,timing:drawIntelDecay,markets:drawMarkets,
+    plays:drawPlays,shoppers:drawSegments,revisions:drawRevisions,decisions:startStream,blind:drawBlind}[intelSel];
+  if(draw) draw();
+  if(intelSel==="products") intelInspect(gSel);
+  if(intelSel==="timing") intelReadout();
 }
 $("#intelList").addEventListener("click",e=>{
   const b=e.target.closest("[data-intel]"); if(!b) return;
   intelSel=b.dataset.intel; renderIntelligence();
+});
+
+/* ---------- the read ---------- */
+function drawIntelRead(){
+  $("#heroMult").textContent=HERO_MULT.toFixed(1)+"×";
+  $("#heroWindow").textContent=WINDOW+" days";
+  $("#intelLiveTiles").innerHTML=[
+    ["Shoppers modelled","41,207","every one scored nightly"],
+    ["Decisions today",iFmt(1284+Math.floor(Math.random()*40)),"most of them: not yet"],
+    ["Held back by a rail",iFmt(3910+Math.floor(Math.random()*60)),"suppression, frequency, exclusions"],
+    ["Markets in season","—","recalculated from local demand"]
+  ].map(([k,v,s],i)=>`<div class="card pad-md">
+      <div class="t-sm sec">${k}</div>
+      <div class="h-xxl num-t" style="margin-top:2px"${i===3?' id="seasonCount"':''}>${v}</div>
+      <div class="t-sm ter">${s}</div></div>`).join("");
+  $$("#page-intelligence [data-count]").forEach(n=>{
+    if(n.dataset.done) return; n.dataset.done="1";
+    const to=+n.dataset.count, t0=performance.now();
+    const run=t=>{const k=Math.min(1,(t-t0)/1100);
+      n.textContent=iFmt(to*(1-Math.pow(1-k,3))); if(k<1)requestAnimationFrame(run)};
+    requestAnimationFrame(run);
+  });
+  const cb=$("#page-intelligence [data-conf]");
+  if(cb&&!cb.dataset.done){cb.dataset.done="1";setTimeout(()=>cb.style.width=cb.dataset.conf+"%",140)}
+  tickMarkets();
+}
+
+/* ---------- graph ---------- */
+const I_COLX=[130,410,690,900];
+let gMode="flow", gSel="shell", iRaf=null;
+function drawIntelGraph(){
+  const svg=$("#intelGraphSvg"); if(!svg) return;
+  svg.innerHTML="";
+  const defs=svgEl("defs");
+  [["ih1","--dv-1"],["ih2","--dv-2"],["ih3","--dv-3"]].forEach(([id,v])=>{
+    const g=svgEl("radialGradient",{id});
+    g.appendChild(svgEl("stop",{offset:"0%","stop-color":`var(${v})`,"stop-opacity":".2"}));
+    g.appendChild(svgEl("stop",{offset:"100%","stop-color":`var(${v})`,"stop-opacity":"0"}));
+    defs.appendChild(g);
+  });
+  svg.appendChild(defs);
+  const gE=svgEl("g"), gP=svgEl("g"), gN=svgEl("g");
+  const maxStake=Math.max(...Object.keys(I_PRODUCTS).map(iStake));
+  const paths=[];
+  I_EDGES.forEach(e=>{
+    const a=I_PRODUCTS[e.f], b=I_PRODUCTS[e.t];
+    const x1=I_COLX[a.col]+58,y1=a.y,x2=I_COLX[b.col]-58,y2=b.y,mx=(x1+x2)/2;
+    const dim=gMode==="risk"&&a.role!=="terminal";
+    const w=gMode==="value"?1+(e.p*I_PRODUCTS[e.t].aov)/26:1+e.p*13;
+    const p=svgEl("path",{d:`M${x1} ${y1}C${mx} ${y1},${mx} ${y2},${x2} ${y2}`,fill:"none",
+      stroke:a.role==="terminal"?"var(--dv-2)":"var(--dv-1)","stroke-width":w.toFixed(2),
+      "stroke-opacity":dim?.08:(gMode==="risk"?.42:.24),"stroke-linecap":"round"});
+    gE.appendChild(p); paths.push({el:p,e,dim});
+  });
+  const parts=[];
+  paths.forEach(({el,e,dim})=>{
+    if(dim) return;
+    for(let i=0;i<Math.max(1,Math.round(e.p*7));i++){
+      const c=svgEl("circle",{r:gMode==="value"?2.4:2,
+        fill:I_PRODUCTS[e.f].role==="terminal"?"var(--dv-2)":"var(--dv-1)"});
+      gP.appendChild(c); parts.push({c,path:el,off:Math.random(),sp:.00055+Math.random()*.0007});
+    }
+  });
+  Object.entries(I_PRODUCTS).forEach(([k,p])=>{
+    const x=I_COLX[p.col],y=p.y;
+    const g=svgEl("g",{class:"gnode"+(k===gSel?" sel":"")});
+    g.appendChild(svgEl("circle",{class:"halo",cx:x,cy:y,r:56,
+      fill:`url(#${p.role==="terminal"?"ih2":p.role==="entry"?"ih1":"ih3"})`}));
+    const r=Math.max(15,gMode==="value"?15+(iStake(k)/maxStake)*24:16+p.starts*46);
+    const dead=p.role==="terminal", col=I_ROLE_C[p.role];
+    if(k===gSel) g.appendChild(svgEl("circle",{cx:x,cy:y,r:r+9,fill:"none",stroke:col,
+      "stroke-opacity":".3","stroke-width":"1"}));
+    g.appendChild(svgEl("circle",{cx:x,cy:y,r,fill:dead?"var(--coral-50)":"var(--purple-50)",
+      stroke:col,"stroke-width":k===gSel?"2":"1.4",
+      "stroke-opacity":gMode==="risk"&&!dead?".28":".95","stroke-dasharray":dead?"3 3":"none"}));
+    const lbl=svgEl("text",{x,y:y+r+19,"text-anchor":"middle",fill:"var(--content-neutral-default)",
+      "font-size":"12.5","font-weight":"500"});
+    lbl.textContent=p.n; g.appendChild(lbl);
+    const sub=svgEl("text",{x,y:y+r+35,"text-anchor":"middle",fill:"var(--content-neutral-tertiary)",
+      "font-size":"10.5","font-family":"ui-monospace,Menlo,monospace"});
+    sub.textContent=gMode==="value"?iMoney(iStake(k))
+      :gMode==="risk"?(dead?"absorbs "+iPct(p.starts)+" of starts":""):iPct(p.starts)+" of starts";
+    g.appendChild(sub);
+    g.addEventListener("click",()=>{gSel=k;drawIntelGraph();intelInspect(k)});
+    gN.appendChild(g);
+  });
+  svg.appendChild(gE);svg.appendChild(gP);svg.appendChild(gN);
+  [["Entry",130],["Bridge",410],["Expansion",690],["Loop",900]].forEach(([t,x])=>{
+    const c=svgEl("text",{x,y:34,"text-anchor":"middle",fill:"var(--content-neutral-tertiary)",
+      "font-size":"10.5","font-family":"ui-monospace,Menlo,monospace","letter-spacing":"1.6"});
+    c.textContent=t.toUpperCase(); svg.appendChild(c);
+  });
+  if(iRaf) cancelAnimationFrame(iRaf);
+  const lens=parts.map(p=>p.path.getTotalLength());
+  const step=()=>{
+    parts.forEach((p,i)=>{
+      p.off+=p.sp; if(p.off>1)p.off-=1;
+      const pt=p.path.getPointAtLength(p.off*lens[i]);
+      p.c.setAttribute("cx",pt.x);p.c.setAttribute("cy",pt.y);
+      p.c.setAttribute("fill-opacity",(Math.min(1,Math.sin(p.off*Math.PI)*2.2)*.8).toFixed(2));
+    });
+    iRaf=requestAnimationFrame(step);
+  };
+  step();
+}
+function intelInspect(k){
+  const host=$("#intelInspector"); if(!host) return;
+  const p=I_PRODUCTS[k],o=iOut(k),i=iInc(k),ds=iDown(k);
+  const best=o.slice().sort((a,b)=>b.p-a.p)[0],maxP=Math.max(...o.map(e=>e.p),.01);
+  host.innerHTML=`
+    <div><span class="intelMono">${I_ROLE_N[p.role]}</span>
+      <h3 class="h-lg" style="margin-top:var(--xxxs)">${p.n}</h3>
+      <p class="t-sm sec" style="margin-top:var(--xxs);line-height:1.6">${p.note}</p></div>
+    <div>
+      <div class="insRow"><span class="t-sm sec">Starts</span><b class="num-t">${iPct(p.starts)} of relationships</b></div>
+      <div class="insRow"><span class="t-sm sec">Average order</span><b class="num-t">${iMoney(p.aov)}</b></div>
+      <div class="insRow"><span class="t-sm sec">Buys again</span><b class="num-t">${iPct(p.repeat)}</b></div>
+      <div class="insRow"><span class="t-sm sec">Downstream / shopper</span>
+        <b class="num-t" style="color:${ds>60?"var(--content-success-default)":ds>20?"var(--content-neutral-default)":"var(--coral-800)"}">${iMoney(ds)}</b></div>
+      <div class="insRow"><span class="t-sm sec">Value at stake</span><b class="num-t">${iMoney(iStake(k))}</b></div>
+    </div>
+    ${o.length?`<div><span class="intelMono">What it opens</span><div style="margin-top:var(--xs)">
+      ${o.slice().sort((a,b)=>b.p-a.p).map(e=>`<div style="margin-bottom:9px">
+        <div class="row between gap-xs"><span class="t-sm">${I_PRODUCTS[e.t].n}</span>
+        <span class="t-xs ter num-t">${iPct(e.p)} · ${e.d}d</span></div>
+        <span class="flowBar"><i data-w="${(e.p/maxP*100).toFixed(0)}" style="background:var(--dv-1)"></i></span>
+      </div>`).join("")}</div></div>`
+    :`<div class="card pad-md" style="background:var(--coral-50);border-color:var(--coral-100)">
+      <span class="intelMono" style="color:var(--coral-800)">Dead end</span>
+      <p class="t-sm" style="margin-top:var(--xxs);line-height:1.6">Nothing follows this product often
+      enough to model. Every shopper who enters here is a relationship the engine cannot continue —
+      which is why it is kept out of acquisition and out of the lead slot in any reactivation.</p></div>`}
+    ${i.length?`<div><span class="intelMono">Arrived from</span>
+      <p class="t-sm sec" style="margin-top:var(--xxs)">${i.map(e=>I_PRODUCTS[e.f].n+" ("+iPct(e.p)+")").join(" · ")}</p></div>`:""}
+    ${best?`<div class="card pad-md" style="background:var(--surface-accent-default);border-color:var(--purple-100)">
+      <span class="intelMono acc">What the engine does with this</span>
+      <p class="t-sm" style="margin-top:var(--xxs);line-height:1.6">Watch for a ${p.n} owner with no
+      ${I_PRODUCTS[best.t].n}, act before day ${best.d}, and lead with why the two work together — not
+      with a discount.</p></div>`:""}`;
+  requestAnimationFrame(()=>$$("#intelInspector .flowBar i").forEach(b=>b.style.width=b.dataset.w+"%"));
+}
+
+/* ---------- decay ---------- */
+let iDay=WINDOW;
+function drawIntelDecay(){
+  const svg=$("#intelDecay"); if(!svg) return;
+  svg.innerHTML="";
+  const W=720,H=320,PL=52,PR=22,PT=22,PB=44,MAXD=120,iw=W-PL-PR,ih=H-PT-PB;
+  const x=d=>PL+(d/MAXD)*iw, y=p=>PT+ih-(p/.5)*ih;
+  const defs=svgEl("defs");
+  const lg=svgEl("linearGradient",{id:"iDecayFill",x1:"0",y1:"0",x2:"0",y2:"1"});
+  lg.appendChild(svgEl("stop",{offset:"0%","stop-color":"var(--dv-1)","stop-opacity":".22"}));
+  lg.appendChild(svgEl("stop",{offset:"100%","stop-color":"var(--dv-1)","stop-opacity":"0"}));
+  defs.appendChild(lg); svg.appendChild(defs);
+  for(let p=0;p<=.5;p+=.125){
+    svg.appendChild(svgEl("line",{x1:PL,x2:PL+iw,y1:y(p),y2:y(p),
+      stroke:"var(--border-neutral-default)","stroke-width":"1"}));
+    const t=svgEl("text",{x:PL-10,y:y(p)+4,"text-anchor":"end",
+      fill:"var(--content-neutral-tertiary)","font-size":"10.5"});
+    t.textContent=iPct(p); svg.appendChild(t);
+  }
+  [0,30,60,90,120].forEach(d=>{
+    const t=svgEl("text",{x:x(d),y:H-18,"text-anchor":"middle",
+      fill:"var(--content-neutral-tertiary)","font-size":"10.5"});
+    t.textContent=d+"d"; svg.appendChild(t);
+  });
+  let dPath="";
+  for(let d=0;d<=MAXD;d++) dPath+=(d?"L":"M")+x(d).toFixed(1)+" "+y(pAt(d)).toFixed(1);
+  svg.appendChild(svgEl("path",{d:dPath+`L${x(MAXD)} ${y(0)}L${x(0)} ${y(0)}Z`,fill:"url(#iDecayFill)"}));
+  let lost="M"+x(iDay).toFixed(1)+" "+y(pAt(iDay)).toFixed(1);
+  for(let d=iDay;d<=MAXD;d++) lost+="L"+x(d).toFixed(1)+" "+y(pAt(d)).toFixed(1);
+  svg.appendChild(svgEl("path",{d:lost+`L${x(MAXD)} ${y(0)}L${x(iDay)} ${y(0)}Z`,fill:"rgba(255,154,87,.17)"}));
+  const line=svgEl("path",{d:dPath,fill:"none",stroke:"var(--dv-1)","stroke-width":"2.2","stroke-linecap":"round"});
+  svg.appendChild(line);
+  const L=line.getTotalLength();
+  line.setAttribute("stroke-dasharray",L); line.setAttribute("stroke-dashoffset",L);
+  line.animate([{strokeDashoffset:L},{strokeDashoffset:0}],
+    {duration:1100,easing:"cubic-bezier(.22,.7,.2,1)",fill:"forwards"});
+  svg.appendChild(svgEl("line",{x1:x(WINDOW),x2:x(WINDOW),y1:PT,y2:PT+ih,
+    stroke:"var(--grey-300)","stroke-width":"1","stroke-dasharray":"3 4"}));
+  const m=svgEl("text",{x:x(WINDOW)+7,y:PT+13,fill:"var(--content-neutral-tertiary)",
+    "font-size":"10.5","font-family":"ui-monospace,Menlo,monospace"});
+  m.textContent="WINDOW "+WINDOW+"d"; svg.appendChild(m);
+  svg.appendChild(svgEl("line",{x1:x(iDay),x2:x(iDay),y1:PT,y2:PT+ih,
+    stroke:"var(--purple-500)","stroke-width":"1.5"}));
+  svg.appendChild(svgEl("circle",{cx:x(iDay),cy:y(pAt(iDay)),r:6,fill:"var(--dv-1)",
+    stroke:"var(--white)","stroke-width":"2.5"}));
+  svg.onpointerdown=ev=>{svg.setPointerCapture(ev.pointerId);iScrub(ev)};
+  svg.onpointermove=ev=>{if(ev.buttons)iScrub(ev)};
+  function iScrub(ev){
+    const r=svg.getBoundingClientRect();
+    iDay=Math.max(1,Math.min(MAXD,Math.round(((ev.clientX-r.left)/r.width*W-PL)/iw*MAXD)));
+    drawIntelDecay(); intelReadout();
+  }
+}
+function intelReadout(){
+  if(!$("#probOut")) return;
+  const p=pAt(iDay),c=cohortAt(iDay),o=c*p,aov=I_PRODUCTS.mid.aov;
+  $("#dayLabel").textContent=iDay;
+  $("#probOut").textContent=iPct(p);
+  $("#cohortOut").textContent=iFmt(c);
+  $("#ordersOut").textContent=iFmt(o);
+  $("#gmvOut").textContent=iMoney(o*aov);
+  const now=cohortAt(14)*pAt(14)*aov, late=o*aov;
+  $("#costOut").innerHTML=iDay<=14
+    ? `You are inside the best window there is. Acting here is worth <b>${iMoney(now)}</b> on this cohort.`
+    : `Acting on day 14 instead of day ${iDay} is worth <b style="color:var(--content-warning-default)">${iMoney(now-late)}</b>
+       more on the same shoppers — about <b>${iMoney((now-late)/(iDay-14))}</b> of reachable revenue for every day of delay.`;
+}
+
+/* ---------- markets ---------- */
+const I_MONTHS=["J","F","M","A","M","J","J","A","S","O","N","D"];
+const I_MONTH_FULL=["January","February","March","April","May","June","July","August",
+  "September","October","November","December"];
+const NORTH=[.58,.46,.33,.22,.15,.12,.14,.24,.44,.74,.96,1.0];
+const rot=(a,n)=>a.map((_,i)=>a[(i+n+12)%12]);
+const MARKETS=[
+  {n:"France",flag:"🇫🇷",hemi:"N",share:.28,win:41,lever:"Compatibility with what they own",ceil:.10,reg:"Vouvoiement, warm",curve:NORTH},
+  {n:"Germany",flag:"🇩🇪",hemi:"N",share:.24,win:58,lever:"Technical proof on insulation",ceil:.05,reg:"Sie, precise",curve:NORTH},
+  {n:"United Kingdom",flag:"🇬🇧",hemi:"N",share:.18,win:67,lever:"Certainty it arrives in time",ceil:.10,reg:"Informal, dry",curve:NORTH},
+  {n:"United States",flag:"🇺🇸",hemi:"N",share:.16,win:63,lever:"A cold-weather reason, then price",ceil:.15,reg:"Direct, first-name",curve:NORTH.map(v=>Math.min(1,v*.86+.14))},
+  {n:"Japan",flag:"🇯🇵",hemi:"N",share:.08,win:36,lever:"Fit precision and care instructions",ceil:0,reg:"Formal, deferential",curve:NORTH.map((v,i)=>i===9||i===10?Math.min(1,v*1.06):v*.94)},
+  {n:"Australia",flag:"🇦🇺",hemi:"S",share:.06,win:49,lever:"Southern winter, not the campaign calendar",ceil:.10,reg:"Informal, blunt",curve:rot(NORTH,6)}
+];
+const rampIdx=v=>v<.2?0:v<.4?1:v<.62?2:v<.85?3:4;
+let mkMonth=new Date().getMonth(), mkPlaying=true, mkTimer=null;
+function drawMarkets(){
+  const g=$("#seasonGrid"); if(!g) return;
+  g.innerHTML=`<div></div><div class="monthRow">${I_MONTHS.map(m=>`<span>${m}</span>`).join("")}</div>`
+    +MARKETS.map((m,mi)=>`
+      <div class="mkName">
+        <span class="flag">${m.flag}</span>
+        <div class="col" style="gap:0;min-width:0">
+          <span class="t-sm med">${m.n}</span>
+          <span class="t-xs ter">${m.hemi==="S"?"Southern":"Northern"} · ${iPct(m.share)} GMV</span>
+        </div>
+        <span class="inSeason tag tag-green" data-season="${mi}" style="margin-left:auto">In season</span>
+      </div>
+      <div class="mkStrip" data-strip="${mi}">
+        ${m.curve.map(v=>`<span class="mkCell"><i data-v="${v}" style="background:${IRAMP[rampIdx(v)]}"></i></span>`).join("")}
+        <i class="playhead"></i>
+      </div>`).join("");
+  requestAnimationFrame(()=>$$("#seasonGrid .mkCell i").forEach((el,i)=>
+    setTimeout(()=>el.style.transform="scaleY("+Math.max(.12,+el.dataset.v).toFixed(2)+")",i*6)));
+  const maxWin=Math.max(...MARKETS.map(m=>m.win));
+  $("#mkTableBody").innerHTML=MARKETS.map(m=>`
+    <tr>
+      <td><div class="row gap-xs"><span class="flag">${m.flag}</span><span class="t-md med">${m.n}</span></div></td>
+      <td class="t-md num-t">${iPct(m.share)}</td>
+      <td><div class="row gap-xs"><span class="t-md num-t" style="min-width:36px">${m.win}d</span>
+        <span class="winBar" style="flex:1"><i data-w="${(m.win/maxWin*100).toFixed(0)}"></i></span></div></td>
+      <td class="t-sm sec">${m.lever}</td>
+      <td>${m.ceil===0?`<span class="tag tag-coral">Never discount</span>`:`<span class="t-md num-t">${iPct(m.ceil)}</span>`}</td>
+      <td class="t-sm ter">${m.reg}</td>
+    </tr>`).join("");
+  requestAnimationFrame(()=>$$("#mkTableBody .winBar i").forEach(b=>b.style.width=b.dataset.w+"%"));
+  const spread=Math.max(...MARKETS.map(m=>m.win))-Math.min(...MARKETS.map(m=>m.win));
+  const avg=MARKETS.reduce((a,m)=>a+m.win*m.share,0);
+  $("#mkFooter").innerHTML=`A single global follow-up date would be wrong everywhere: the window ranges
+    over <b>${spread} days</b> between Japan and the United Kingdom, and the GMV-weighted average of
+    <b>${Math.round(avg)} days</b> describes no actual market. The engine holds six separate windows,
+    six levers and six discount ceilings — Japan's is zero, because discounting there measurably
+    reduced repeat purchase.`;
+  if(mkTimer) clearInterval(mkTimer);
+  mkTimer=setInterval(tickMarkets,60);
+  tickMarkets();
+}
+function tickMarkets(){
+  if(mkPlaying) mkMonth=(mkMonth+.02)%12;
+  const idx=Math.floor(mkMonth);
+  let inSeason=0;
+  MARKETS.forEach((m,mi)=>{
+    if(m.curve[idx]>=.62) inSeason++;
+    const strip=$(`[data-strip="${mi}"]`); if(!strip) return;
+    const ph=strip.querySelector(".playhead");
+    if(ph) ph.style.left=((mkMonth+.5)/12*100).toFixed(2)+"%";
+    const badge=$(`[data-season="${mi}"]`);
+    if(badge) badge.classList.toggle("on",m.curve[idx]>=.62);
+    $$(".mkCell",strip).forEach((c,ci)=>c.classList.toggle("now",ci===idx));
+  });
+  const now=$("#seasonNow");
+  if(now) now.textContent=I_MONTH_FULL[idx]+" · "+inSeason+" of "+MARKETS.length+" in season";
+  const cnt=$("#seasonCount");
+  if(cnt) cnt.textContent=inSeason+" / "+MARKETS.length;
+}
+document.addEventListener("click",e=>{
+  if(!e.target.closest("#mkPlayBtn")) return;
+  mkPlaying=!mkPlaying;
+  $("#mkPlayLabel").textContent=mkPlaying?"Pause":"Play";
+  $("#mkPlayIcon").innerHTML=mkPlaying
+    ? '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>'
+    : '<path d="M7 4v16l13-8z"/>';
+});
+
+/* ---------- what works ---------- */
+const PLAYS=[
+  {k:"marketing",w:1,n:"Lead with what completes what they own",lift:+31,
+   note:"Naming the product they already have, and the gap under it, beat a generic seasonal push.",ev:"Holdout, 4,100 shoppers, 6 weeks"},
+  {k:"ecom",w:1,n:"Attach at checkout, not by message afterwards",lift:+24,
+   note:"Socks after boots convert in-session. A message two days later mostly costs a send.",ev:"In-session vs outbound split, 2,800 orders"},
+  {k:"marketing",w:1,n:"Wait for the local cold snap, not the campaign date",lift:+22,
+   note:"Weather-triggered sends outperformed calendar sends in every northern market.",ev:"6 markets, 2 seasons"},
+  {k:"marketing",w:1,n:"Free shipping instead of 10% off on at-risk",lift:+18,
+   note:"Recovers the same cohort at a third of the margin cost.",ev:"Holdout, 1,410 at-risk shoppers"},
+  {k:"ecom",w:1,n:"Loyalty points as the incentive before cash",lift:+14,
+   note:"A points boost costs $6.40 where the equivalent discount costs $12.",ev:"Matched cohorts, 90 days"},
+  {k:"marketing",w:0,n:"Batch-and-blast the full list at peak",lift:-21,
+   note:"Lifted revenue for one week and raised opt-outs enough to shrink the reachable base for three.",ev:"Opt-out cohort tracking"},
+  {k:"ecom",w:0,n:"Gloves as an acquisition product",lift:-16,
+   note:"Cheap to convert, then nothing follows. 9% ever place a second order.",ev:"14 months of first-order cohorts"},
+  {k:"ecom",w:0,n:"Discounting in Japan",lift:-14,
+   note:"Repeat purchase measurably fell. Price cues read as a quality signal, not a saving.",ev:"Market-level holdout, 2 quarters"},
+  {k:"marketing",w:0,n:"One global send calendar",lift:-12,
+   note:"Right for France, six weeks early for the UK, and exactly backwards for Australia.",ev:"Per-market attribution, 12 months"},
+  {k:"marketing",w:0,n:"Discount-led win-back",lift:-9,
+   note:"Recovers shoppers who would have returned anyway, and trains the rest to wait for a sale.",ev:"Holdout, 2,200 lapsed shoppers"}
+];
+let playMode="all";
+function drawPlays(){
+  if(!$("#winList")) return;
+  const rows=PLAYS.filter(p=>playMode==="all"||p.k===playMode);
+  const maxAbs=Math.max(...PLAYS.map(p=>Math.abs(p.lift)));
+  const card=p=>`<div class="playCard ${p.w?"win":"lose"}">
+      <div class="row between gap-xs" style="align-items:flex-start">
+        <span class="t-md med">${p.n}</span>
+        <span class="t-md num-t" style="font-weight:600;color:${p.w?"var(--content-success-default)":"var(--coral-800)"}">
+          ${p.lift>0?"+":""}${p.lift}%</span></div>
+      <div class="liftBar"><span class="liftZero"></span>
+        <i data-w="${(Math.abs(p.lift)/maxAbs*50).toFixed(1)}"
+           style="${p.w?"left:50%":"right:50%"};background:${p.w?"var(--green-500)":"var(--coral-700)"}"></i></div>
+      <p class="t-sm sec" style="line-height:1.55">${p.note}</p>
+      <span class="intelMono">${p.ev}</span></div>`;
+  $("#winList").innerHTML=rows.filter(p=>p.w).map(card).join("")||`<span class="t-sm ter">Nothing in this filter.</span>`;
+  $("#loseList").innerHTML=rows.filter(p=>!p.w).map(card).join("")||`<span class="t-sm ter">Nothing in this filter.</span>`;
+  requestAnimationFrame(()=>$$("#page-intelligence .liftBar i").forEach(b=>b.style.width=b.dataset.w+"%"));
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("#playMode button"); if(!b) return;
+  $$("#playMode button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); playMode=b.dataset.pm; drawPlays();
+});
+document.addEventListener("click",e=>{
+  const b=e.target.closest("#graphMode button"); if(!b) return;
+  $$("#graphMode button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); gMode=b.dataset.gm; drawIntelGraph();
+});
+
+/* ---------- shoppers ---------- */
+const SEGMENTS=[
+  {n:"System builders",share:.19,med:54,sd:14,val:412,want:"The next layer, named precisely.",
+   note:"Bought a shell, then kept completing the kit. The most valuable group and the easiest to talk to."},
+  {n:"Rhythm buyers",share:.23,med:38,sd:6,val:264,want:"A reminder on their own cadence.",
+   note:"Consumables on a tight, personal clock. Predictable enough to trigger on a date."},
+  {n:"Season spikers",share:.26,med:186,sd:52,val:198,want:"A reason tied to the weather.",
+   note:"Buy once a season, heavily. The engine waits for the local cold snap rather than a date."},
+  {n:"One-and-dones",share:.24,med:0,sd:0,val:52,want:"Usually nothing.",
+   note:"Mostly gloves-first and gift orders. The model scores them low and leaves them alone."},
+  {n:"Gift senders",share:.08,med:365,sd:24,val:143,want:"To be left out of everything else.",
+   note:"Buy for someone else, once a year. Wrong to treat as a shopper — the sizes are not theirs."}
+];
+function drawSegments(){
+  const host=$("#segGrid"); if(!host) return;
+  host.innerHTML=SEGMENTS.map(s=>{
+    const W=200,H=48;
+    let blob;
+    if(s.med===0){
+      blob=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line x1="0" y1="${H-6}" x2="${W}" y2="${H-6}"
+        stroke="var(--grey-300)" stroke-width="1.5" stroke-dasharray="4 4"/></svg>`;
+    }else{
+      const spread=Math.min(1,s.sd/60), pts=[];
+      for(let j=0;j<=44;j++){
+        const t=j/44,z=(t*4-2)/(.35+spread*1.5);
+        pts.push([t*W,H-5-Math.exp(-.5*z*z)*(H-14)]);
+      }
+      const d=pts.map((p,j)=>(j?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join("");
+      blob=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <path d="${d}L${W} ${H}L0 ${H}Z" fill="var(--dv-1)" fill-opacity=".13"/>
+        <path class="segLine" d="${d}" fill="none" stroke="var(--dv-1)" stroke-width="1.8" vector-effect="non-scaling-stroke"/></svg>`;
+    }
+    return `<div class="segCard">
+      <span class="intelMono">${iPct(s.share)} of shoppers</span>
+      <span class="t-md med">${s.n}</span>
+      <div class="row gap-xxs" style="align-items:baseline">
+        <b class="num-t" style="font-size:19px">${iMoney(s.val)}</b><span class="t-xs ter">lifetime</span></div>
+      <div class="segBlob">${blob}</div>
+      <span class="tag ${s.med===0?"tag-grey":s.sd<20?"tag-purple":"tag-teal"}" style="width:fit-content">
+        ${s.med===0?"No rhythm to learn":s.sd<20?`Predictable · ${s.med}d ±${s.sd}`:`Waits for a signal · ±${s.sd}d`}</span>
+      <p class="t-xs ter" style="line-height:1.5">${s.note}</p>
+      <p class="t-sm sec" style="line-height:1.5"><b>Wants:</b> ${s.want}</p></div>`;
+  }).join("");
+  requestAnimationFrame(()=>$$("#segGrid .segLine").forEach((p,i)=>{
+    const L=p.getTotalLength();
+    p.style.strokeDasharray=L;p.style.strokeDashoffset=L;
+    p.animate([{strokeDashoffset:L},{strokeDashoffset:0}],
+      {duration:900,delay:i*110,easing:"cubic-bezier(.22,.7,.2,1)",fill:"forwards"});
+  }));
+}
+
+/* ---------- revisions ---------- */
+const REVISIONS=[
+  {when:"12 Aug",was:"A 10% discount is the most reliable way to recover an at-risk shopper.",
+   now:"Free shipping recovers the same cohort at a similar rate, for a third of the margin.",
+   why:"Both run against a holdout on 1,410 at-risk shoppers. Conversion differed by 0.4 points; margin differed by $5.60 an order.",
+   worth:"+$18,400 of retained margin over 90 days"},
+  {when:"29 Jul",was:"Cart abandonment should fire 45 minutes after the cart is left.",
+   now:"For carts over $200 the second touch at 20 hours does the work. The 45-minute one mostly annoys.",
+   why:"High-value carts converted 2.1× better on the delayed touch, and opt-outs on the early touch ran 3× the account average.",
+   worth:"Opt-out rate on that segment fell from 2.8% to 0.9%"},
+  {when:"14 Jul",was:"Trail Gloves are a good acquisition product — cheap and they convert.",
+   now:"They convert, and then nothing happens. Gloves-first shoppers return at 9% against 52% for shell-first.",
+   why:"Traced 14 months of first-order cohorts through to second order. The gloves cohort never developed one at any meaningful rate.",
+   worth:"Acquisition spend redirected; gloves-first shoppers now score as low-potential"},
+  {when:"02 Jul",was:"Australia can run on the European calendar with a small delay.",
+   now:"Australia is six months out of phase. Its peak is July, and the European calendar reaches it in its warmest month.",
+   why:"Southern-hemisphere demand tracked the inverse of the northern curve across two full seasons.",
+   worth:"Australian revenue per send rose 2.6× once the calendar was inverted",key:true},
+  {when:"21 Jun",was:"The second-order window is roughly 90 days.",
+   now:()=>`It is ${WINDOW}. By day ${WINDOW} the probability has halved — ${iPct(pAt(WINDOW))} against ${iPct(peakP)} at its peak — and by day 90 it is down to ${iPct(pAt(90))}.`,
+   why:"The original figure was a mean dragged upward by a small number of very late returners. The median tells a much harsher story.",
+   worth:"The single most consequential correction the model has made",key:true}
+];
+function drawRevisions(){
+  const host=$("#revisions"); if(!host) return;
+  host.innerHTML=REVISIONS.map((r,i)=>`
+    <div class="intelRev" ${i===0?'style="border-top:0;padding-top:0"':""}>
+      <div class="col gap-xxs">
+        <span class="intelMono">${r.when}</span>
+        ${r.key?`<span class="tag tag-purple" style="width:fit-content">Major correction</span>`:""}
+      </div>
+      <div>
+        <p class="t-sm wasLine">${r.was}</p>
+        <p class="t-md med" style="line-height:1.55;margin-top:var(--xxs)">${typeof r.now==="function"?r.now():r.now}</p>
+        <p class="t-sm sec" style="margin-top:var(--xxs);line-height:1.6">
+          <span class="intelMono" style="margin-right:6px">Evidence</span>${r.why}</p>
+        <p class="t-sm" style="margin-top:var(--xxs);color:var(--content-success-default)">${r.worth}</p>
+      </div></div>`).join("");
+}
+
+/* ---------- decision stream ---------- */
+const I_NAMES=["Ana R.","Marc D.","Sam K.","Lena P.","Priya S.","Tom W.","Jonas M.","Chloé B.",
+  "Hugo T.","Ingrid L.","Nils A.","Sofia M.","Ruben V.","Mei L.","Otto H.","Clara F."];
+const I_ACTS=[
+  {b:"🇫🇷 Shell owner, no insulation, day 41 of the window",a:"Cirrus offered on compatibility",o:"sent",why:["ownership gap","inside window","no offer used"]},
+  {b:"🇦🇺 Southern winter opening, 9 days out",a:"Queued against the inverted calendar",o:"deferred",why:["hemisphere flip","waits for local forecast"]},
+  {b:"🇯🇵 Repeat buyer, fit query last week",a:"Care instructions, no incentive",o:"sent",why:["discount ceiling 0%","formal register"]},
+  {b:"🇩🇪 Shell owner, technical objection raised",a:"Insulation proof, then the layer",o:"sent",why:["market lever","no price cue"]},
+  {b:"Gloves-first shopper, low downstream value",a:"Considered, then dropped",o:"drop",why:["dead-end product","no true next step"]},
+  {b:"🇬🇧 Day 51, open support ticket",a:"Held",o:"drop",why:["guardrail: open ticket","retry on resolve"]},
+  {b:"Gold tier, 120 points from Summit",a:"Tier progress, no discount",o:"sent",why:["loyalty lever","costs $0"]},
+  {b:"At-risk, 1.7× own rhythm",a:"Free shipping, not 10% off",o:"sent",why:["revised belief 12 Aug","saves $5.60 margin"]},
+  {b:"🇺🇸 Shell owner, day 96",a:"Dropped from the window cohort",o:"drop",why:["past 90 days","probability under 15%"]},
+  {b:"3 messages this week already",a:"Suppressed",o:"drop",why:["frequency cap","defers to next week"]}
+];
+let streamOn=true, iSi=0, streamTimer=null;
+function pushDecision(){
+  const body=$("#streamBody"); if(!body) return;
+  const a=I_ACTS[iSi%I_ACTS.length], name=I_NAMES[Math.floor(Math.random()*I_NAMES.length)]; iSi++;
+  const tone=a.o==="sent"?"tag-green":a.o==="deferred"?"tag-orange":"tag-grey";
+  const label=a.o==="sent"?"Sent":a.o==="deferred"?"Deferred":"No action";
+  const d=document.createElement("div");
+  d.className="dec"+(a.o==="drop"?" drop":"");
+  d.innerHTML=`
+    <div class="col" style="gap:1px">
+      <span class="t-sm med">${name}</span>
+      <span class="t-xs ter">${new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}</span></div>
+    <div class="col" style="gap:1px;min-width:0">
+      <span class="t-sm sec">${a.b}</span><span class="t-sm">${a.a}</span>
+      <div class="why">${a.why.map(w=>`<span>${w}</span>`).join("")}</div></div>
+    <span class="tag ${tone}">${label}</span>`;
+  body.prepend(d);
+  while(body.children.length>8) body.lastChild.remove();
+}
+function startStream(){
+  const body=$("#streamBody"); if(!body) return;
+  body.innerHTML=""; iSi=0;
+  for(let i=0;i<7;i++) pushDecision();
+  if(streamTimer) clearInterval(streamTimer);
+  streamTimer=setInterval(()=>{if(streamOn)pushDecision()},2600);
+  body.onmouseenter=()=>{streamOn=false;$("#streamState").textContent="paused"};
+  body.onmouseleave=()=>{streamOn=true;$("#streamState").textContent="streaming"};
+}
+
+/* ---------- blind spots ---------- */
+const BELIEFS=[
+  {n:"Second-order window is "+WINDOW+" days",c:93},
+  {n:"Cirrus is the best bridge after a shell",c:91},
+  {n:"Australia is six months out of phase",c:88},
+  {n:"Free shipping beats 10% off on at-risk",c:84},
+  {n:"Germany responds to technical proof",c:71},
+  {n:"Weather predicts mid-layer demand",c:58},
+  {n:"Gift senders should be excluded entirely",c:49}
+];
+const FEEDS=[
+  {n:"Carrier / 3PL delivery events",s:"Not connected",cost:"≈$21,400 a quarter unreachable"},
+  {n:"On-site session behaviour",s:"Partial",cost:"Browse intent is 40% observed"},
+  {n:"Local weather by market",s:"Connected",cost:"—"},
+  {n:"Ad platform engagement",s:"Not connected",cost:"Cannot separate paid from organic intent"}
+];
+function drawBlind(){
+  if(!$("#confList")) return;
+  $("#confList").innerHTML=BELIEFS.map(b=>{
+    const col=b.c>=85?"var(--ramp-4)":b.c>=70?"var(--ramp-3)":"var(--ramp-2)";
+    return `<div class="blindRow"><span class="t-sm">${b.n}</span>
+      <span class="meterBar"><i data-w="${b.c}" style="background:${col}"></i></span>
+      <span class="t-xs ter num-t">${b.c}% ${b.c<60?"· thin evidence":""}</span></div>`}).join("");
+  $("#feedList").innerHTML=FEEDS.map(f=>`
+    <div class="blindRow" style="grid-template-columns:1fr auto">
+      <div class="col" style="gap:1px"><span class="t-sm">${f.n}</span>
+        <span class="t-xs ter">${f.cost}</span></div>
+      <span class="tag ${f.s==="Connected"?"tag-green":f.s==="Partial"?"tag-orange":"tag-grey"}">${f.s}</span>
+    </div>`).join("");
+  requestAnimationFrame(()=>$$("#confList .meterBar i").forEach(b=>b.style.width=b.dataset.w+"%"));
+}
+
+/* =======================================================================
+   ASK THE MODEL — a floating shortcut that answers from the same objects
+   the page renders from, so a number here can never contradict a number
+   on screen. Canned routing, real values.
+   ======================================================================= */
+const ASK_Q=[
+  {q:"What should I do first?",
+   a:()=>`Reach the ${iFmt(cohortAt(14))} shell owners currently around day 14 with no insulated layer.
+     At that point ${iPct(pAt(14))} convert, against ${iPct(pAt(WINDOW))} once they hit day ${WINDOW} —
+     roughly ${iMoney(cohortAt(14)*pAt(14)*I_PRODUCTS.mid.aov - cohortAt(WINDOW)*pAt(WINDOW)*I_PRODUCTS.mid.aov)}
+     of difference on the same people.`},
+  {q:"Which product should I stop pushing?",
+   a:()=>`Trail Gloves as a first product. A gloves-first shopper is worth ${iMoney(iStartValue("glove"))}
+     against ${iMoney(iStartValue("shell"))} for a shell-first one — ${HERO_MULT.toFixed(1)}× — because
+     nothing reliably follows gloves. Keep them in bundles and at checkout, not in acquisition.`},
+  {q:"Why is Australia different?",
+   a:()=>`It is in the southern hemisphere, so its demand curve is the northern one rotated six months.
+     Its peak is July, when Europe is at its quietest. Running the European calendar there reaches it in
+     its warmest month — correcting that lifted Australian revenue per send 2.6×.`},
+  {q:"Where am I losing money?",
+   a:()=>{const worst=PLAYS.filter(p=>!p.w).sort((a,b)=>a.lift-b.lift)[0];
+     return `The clearest one is "${worst.n}" at ${worst.lift}% measured lift. ${worst.note}
+     Evidence: ${worst.ev.toLowerCase()}.`}},
+  {q:"How confident are you, really?",
+   a:()=>{const weak=BELIEFS.filter(b=>b.c<70).map(b=>`${b.n} (${b.c}%)`).join(", ");
+     return `Strongest belief is the ${WINDOW}-day window at 93%. The thin ones are: ${weak}. Those rest on
+     less evidence, so the engine treats them as tie-breakers rather than reasons to act.`}},
+  {q:"What is the model blind to?",
+   a:()=>`Carrier and delivery events, which is the biggest gap — a delivery-delay message is the
+     highest-intent outbound in commerce and it cannot exist here. Ad engagement is missing too, so paid
+     and organic intent cannot be separated. On-site behaviour is only 40% observed.`}
+];
+let askOpen=false;
+function buildAsk(){
+  if($("#askFab")) return;
+  const fab=document.createElement("button");
+  fab.id="askFab"; fab.className="askFab"; fab.setAttribute("data-ask","open");
+  fab.innerHTML=`<i></i>Ask the model`;
+  const panel=document.createElement("div");
+  panel.id="askPanel"; panel.className="askPanel";
+  panel.innerHTML=`
+    <div class="askHead">
+      <span style="width:22px;height:22px;border-radius:6px;display:grid;place-items:center;
+        background:linear-gradient(140deg,var(--ai-gradient),var(--purple-500))">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg></span>
+      <div class="col" style="gap:0;flex:1">
+        <span class="t-md med">Ask the model</span>
+        <span class="t-xs ter">Answers come from the same numbers on this page</span>
+      </div>
+      <button class="btn btn-tertiary sm" data-ask="close">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="askBody" id="askBody"></div>
+    <div class="askFoot">
+      <div class="askChips" id="askChips"></div>
+      <div class="row gap-xs">
+        <input class="input" id="askInput" placeholder="Ask anything about this business…">
+        <button class="btn btn-primary sm" data-ask="send">Ask</button>
+      </div>
+    </div>`;
+  document.body.appendChild(fab); document.body.appendChild(panel);
+  $("#askChips").innerHTML=ASK_Q.map((q,i)=>`<button class="askChip" data-askq="${i}">${q.q}</button>`).join("");
+  askSay("a",`I hold ${BELIEFS.length} beliefs about this business, rebuilt this morning from
+    ${iFmt(18204)} purchase events across ${MARKETS.length} markets. Ask me anything — or start with one below.`);
+  $("#askInput").addEventListener("keydown",e=>{if(e.key==="Enter")askSend()});
+}
+function askSay(kind,html){
+  const b=$("#askBody"); if(!b) return null;
+  const el=document.createElement("div");
+  if(kind==="q"){el.className="askQ";el.textContent=html}
+  else{el.className="askA";el.innerHTML=`<span class="av">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.6 6.6 2.8 2.8M14.6 14.6l2.8 2.8M17.4 6.6l-2.8 2.8M9.4 14.6l-2.8 2.8"/></svg></span>
+    <div class="bubble">${html}</div>`}
+  b.appendChild(el); b.scrollTop=b.scrollHeight; return el;
+}
+function askAnswer(text,answer){
+  askSay("q",text);
+  const t=askSay("a",`<span class="askTyping"><i></i><i></i><i></i></span>`);
+  setTimeout(()=>{
+    t.querySelector(".bubble").innerHTML=answer;
+    $("#askBody").scrollTop=$("#askBody").scrollHeight;
+  },620);
+}
+function askSend(){
+  const inp=$("#askInput"), v=inp.value.trim(); if(!v) return;
+  inp.value="";
+  const t=v.toLowerCase();
+  const hit=ASK_Q.find(q=>{
+    const words=q.q.toLowerCase().replace(/[^a-z ]/g,"").split(" ").filter(w=>w.length>3);
+    return words.some(w=>t.includes(w));
+  });
+  askAnswer(v, hit ? hit.a() :
+    `I can only answer from what the model actually holds. Try one of the suggestions below — those
+     route to a belief I can show the evidence for.`);
+}
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-ask]");
+  if(a){
+    const act=a.dataset.ask;
+    if(act==="open"){buildAsk();askOpen=true;$("#askPanel").classList.add("on");$("#askFab").style.display="none"}
+    if(act==="close"){askOpen=false;$("#askPanel").classList.remove("on");$("#askFab").style.display=""}
+    if(act==="send") askSend();
+    return;
+  }
+  const q=e.target.closest("[data-askq]");
+  if(q) askAnswer(ASK_Q[+q.dataset.askq].q, ASK_Q[+q.dataset.askq].a());
 });
 
 /* the sidebar becomes an off-canvas drawer below 880px (see the MOBILE CSS

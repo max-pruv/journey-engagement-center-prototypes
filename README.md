@@ -46,6 +46,7 @@ the data and render functions.
 | Surface | What it is |
 | --- | --- |
 | **Reporting** | Read-only KPI cards, then a report you drive: any metric × any dimension × smooth interactive time series / ranked / table |
+| **Intelligence Core** | The model's own read of the business — the commerce graph, the second-order window, six markets and their inverted seasonality, which plays measurably paid, the shopper groups it found, and the beliefs it has since abandoned. A floating *Ask the model* shortcut answers from the same objects the page renders from |
 | **Opportunities** | A conversational action inbox for detected campaigns, configuration changes, ACE modes, lifecycle gaps and loyalty improvements |
 | **Engagements** | Two tabs. **AI engagement** — ACE: one mode switch plus domains. **Custom engagement** — the scenarios the merchant defines, pre-built or self-written |
 | **Campaigns** | AI-detected opportunities, past campaigns, then a fully conversational build — Who / What / How as a status bar, everything else is question and answer. The story becomes a detailed instruction; the first 30 outbound messages can be reviewed as a scrollable send-order feed before launch |
